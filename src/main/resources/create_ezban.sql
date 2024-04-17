@@ -863,7 +863,7 @@ VALUES ('Skyline Film 屋頂電影院', 7, 1,
 	</li>
 </ul>
 ', '台北市', '信義區松壽路1號', '2024-4-2 00:00:00', '2024-9-22 08:00:00',
-        '2024-4-2 00:00:00', '2024-9-21 00:00:00', '2024-9-21 17:30:00', '2024-9-22 08:00:00', , 1, 5, 1, 0),
+        '2024-4-2 00:00:00', '2024-9-21 00:00:00', '2024-9-21 17:30:00', '2024-9-22 08:00:00', 1, 5, 1, 0),
        ('2024府城超級馬拉松', 1, 2, '<h3><strong>2024府城超級馬拉松<br />
 <img alt="" data-src="https://imagedelivery.net/aJ0ay8hJuGoaVas3rlfLyg/activity/6050-0749052ccce270691f3ffab032387138/activity_content/images/20240411-140257-0411001.jpg/public" src="https://imagedelivery.net/aJ0ay8hJuGoaVas3rlfLyg/activity/6050-0749052ccce270691f3ffab032387138/activity_content/images/20240411-140257-0411001.jpg/public" style="height:311px; width:600px" /></strong></h3>
 
@@ -1566,7 +1566,7 @@ VALUES ('Skyline Film 屋頂電影院', 7, 1,
        ('異國饗宴-道地西班牙深度料理課', 8, 7,
         '<p style="text-align:center"><span style="color:#663366"><strong><span style="font-size:24px">異國饗宴-道地西班牙深度料理課 </span></strong></span></p><p style="text-align:center"><span style="color:#663366"><strong><span style="font-size:24px">Spanish cuisine cooking class</span></strong></span></p><p style="text-align:center"><span style="color:#2c3e50"><strong>活動日期：</strong></span><br><strong>2024/04/16（二）15:30-19:30(額滿)</strong><br><strong>2024/04/21（日）15:30-19:30(最後1個名額)<br>2024/05/19（日）15:30-19:30(額滿)<br>2024/07/06（六）15:30-19:30<br>2024/10/19（六）15:30-19:30</strong><br><span style="color:#2c3e50"><strong>(單日工作坊，學習五道料理，一起分工實作學習，老師示範教學，含用餐時間一小時)<br>活動地點：久號空間(台北市中山區南京東路一段15號4樓)<br>老師：Jerry<br>對象：不限<br>人數：6人<br>價錢：2450元/人(含晚餐五道料理、講義、器材、食材)<br>主辦單位：久號｜永壽文教基金會</strong></span></p><p style="text-align:center"><span style="font-size:12px"><span style="color:#2c3e50"><strong>※完成報名後，請務必加入久號官方LINE帳號@ninenine，加入後請發送貼圖告知我們報名姓名，我們將於課程開始前發送課前通知。</strong></span></span></p><p style="text-align:center">&nbsp;</p><h2>活動介紹</h2><p>西班牙料理最大的特色就是「融合」，結合了不同國家的料理手法在其中，在過程中也能隱約品嘗到法國、中東、美洲等飲食風味。<br>我們將運用「感官」來體驗西班牙料理，不管是料理手法還是食材運用，都可以從過程中去感受西班牙國人的熱情、直爽，且不拘小節的性格。</p><p>體驗歐洲料理最大的不同就是，我們都是邊喝酒邊做菜，輕鬆愜意的方式烹飪料理，讓時間慢慢帶出食物細微層次的風味，不同於中式大火快炒瞬間激發食材的香氣，歐洲料理擅長運用時間孕育出食材的深度美味。</p><p>所以一開始課程會從示範如何自製西班牙國酒-桑格利亞，運用濃厚風味的丹魄紅酒搭配季節水果與氣泡水，清爽又不失去紅酒的迷人風味，微微氣泡口感刺激舌尖，觸發人們的口腹之慾，接下來就是動動手指創造極簡的美味囉！</p><p>此外，這次的課程我們將在一個晚上學會五道最地道的西班牙料理，從水果酒、前菜、主餐和甜點，讓大家學會做完整的西班牙料理，其中也有最受矚目的Paella，俗稱「大鍋飯」大家熟知的海鮮燉飯，同時也是西班牙國人家庭聚餐、節慶的必備家常菜。</p><p>「吃飯」是最能讓人們凝聚在一起的一件事，分享料理的喜悅從動手做開始，為自己和家人舉辦一場小盛宴吧！</p><p>讓我們一起「用料理為你的幸福加分」</p><p>&nbsp;</p><p>Menu</p><p>1.西班牙火腿番茄麵包<br>Pan con tomate<br>(歐式麵包、蒜頭、自然熟番茄、塞拉諾12個月熟成火腿、西班牙特級橄欖油）</p><p>2.經典馬鈴薯烘蛋<br>Tortilla de patatas<br>(紅皮洋芋、北海道洋蔥、西班牙橄欖油、牧場紅蛋）</p><p>3.海鮮鍋飯<br>Paella de marisco<br>(花蓮無毒女兒蝦、花枝、紐西蘭淡菜、蛤蜊、西班牙Bomba米、自然熟番茄、番紅花、西班牙煙燻紅椒粉)</p><p>4.加泰隆尼亞風味布蕾<br>Crema catalana<br>(北海道鮮乳、肉桂、日本三井製糖、黃檸檬、白蘭地、牧場紅蛋）</p><p>5.桑格利亞（西班牙水果酒）<br>(西班牙Tempranillo 丹魄紅酒、季節水果、100%柳橙汁、白蘭地、肉桂)</p><p><img alt="NinenineClass 0909 1111 Spanish cooking 04" src="https://www.ninenine.org/images/events/Class/2023/0909-1111-Spanish-cooking/NinenineClass-0909-1111-Spanish_cooking_04.jpg" style="height:1479px; width:1109px"></p><p><img alt="NinenineClass 0909 1111 Spanish cooking 05" src="https://www.ninenine.org/images/events/Class/2023/0909-1111-Spanish-cooking/NinenineClass-0909-1111-Spanish_cooking_05.jpg" style="height:1109px; width:1479px"></p><p><img alt="NinenineClass 0909 1111 Spanish cooking 06" src="https://www.ninenine.org/images/events/Class/2023/0909-1111-Spanish-cooking/NinenineClass-0909-1111-Spanish_cooking_06.jpg" style="height:1109px; width:1479px"></p><p><img alt="NinenineClass 0909 1111 Spanish cooking 07" src="https://www.ninenine.org/images/events/Class/2023/0909-1111-Spanish-cooking/NinenineClass-0909-1111-Spanish_cooking_07.jpg" style="height:1043px; width:1571px"></p><p><img alt="NinenineClass 0909 1111 Spanish cooking 08" src="https://www.ninenine.org/images/events/Class/2023/0909-1111-Spanish-cooking/NinenineClass-0909-1111-Spanish_cooking_08.jpg" style="height:1046px; width:1568px"></p><p><img src="https://static.accupass.com/eventintro/2401260629361273992429.jpg" style="height:2983px; width:4475px"></p><p><img src="https://static.accupass.com/eventintro/2401260629531056015013.jpg" style="height:3581px; width:5371px"></p><p><img src="https://static.accupass.com/eventintro/2401260630205043660690.jpg" style="height:2971px; width:4456px"></p><p><img src="https://static.accupass.com/eventintro/2401260630022997396930.jpg" style="height:3648px; width:5472px"></p><p><img alt="ninenine funds 01" src="https://www.ninenine.org/images/ninenine_funds_01.jpg" style="height:2000px; width:2000px"></p><h2>師資說明</h2><h3>Jerry</h3><p>Jerry幸福料理體驗室主理人</p><p>經歷：<br>曾赴西班牙學習當地料理<br>歐傑洛義式餐廳<br>OGGI 歐奇窯烤比薩<br>台北亞都麗緻飯店<br>北投麗禧溫泉酒店</p><p>秉信著<br>「料理是為了帶給人們幸福」<br>餐飲科系7年/職人經驗15年<br>擅長家常料理系列: 歐式、台式、部分日韓式、東南亞等料理</p><p>幸福料理體驗室在做什麼?<br>提供給喜愛料理、想學基礎烹飪的煮廚們有質感的學習環境。</p><p>體驗料理所帶來的不同感受，運用豐富的 感官經驗來組成「自己的獨特風味」。</p><p>學習不同的烹調技巧與添增風味的秘方， 不只學習食譜，更重要的是學習「如何料理」。</p>',
         '高雄市', '鹽埕區河西路1號', '2024-4-7 00:00:00', '2024-5-21 00:00:00',
-        '2024-4-7 00:00:00', '2024-5-21 00:00:00', '2024-5-22 06:00:00', '2024-5-22 12:00:00', 1, 5, 1, 0),
+        '2024-4-7 00:00:00', '2024-5-21 00:00:00', '2024-5-22 06:00:00', '2024-5-22 12:00:00', 1, 5, 1, 0);
 
 
 create table event_coupon
@@ -1857,7 +1857,7 @@ VALUES (1, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
        (11, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
        (12, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
        (12, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
-       (12, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
+       (12, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100);
 
 
 
@@ -1891,7 +1891,7 @@ VALUES (1, 1, 100, 10, 1),
        (9, 5, 350, 10, 4),
        (10, 5, 100, 10, 1),
        (11, 6, 185, 10, 2),
-       (12, 6, 350, 10, 4),
+       (12, 6, 350, 10, 4);
 
 
 create table qrcode_ticket
