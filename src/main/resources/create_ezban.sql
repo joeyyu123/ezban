@@ -1636,8 +1636,7 @@ create table member
         unique (member_phone)
 );
 
-INSERT INTO member (member_mail, member_pwd, member_name, birthday, gender, member_points, member_phone, address,
-                    member_status)
+INSERT INTO member (member_mail, member_pwd, member_name, birthday, gender, member_points, member_phone, address, common_recipient, common_recipient_phone, common_recipient_address, member_status)
 VALUES ('sarahchang456@gmail.com', 'a12345', '張雨琪', '2000-01-01', 1, 100, '0912345678', '台北市大安區復興南路一段100號','張雨琪','0912345678','台北市大安區復興南路一段100號', 1),
        ('johnwang123@gmail.com', 'b123456', '王宇軒', '2001-02-01', 0, 100, '0928765432', '新北市板橋區文化路二段50號','王宇軒','0928765432','新北市板橋區文化路二段50號', 1),
        ('emilylee999@gmail.com', 'c1234567', '李思婷', '2002-03-01', 1, 100, '0934567890', '桃園市桃園區中正路300號','李思婷','0934567890','桃園市桃園區中正路300號', 1),
