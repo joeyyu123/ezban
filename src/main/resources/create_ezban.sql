@@ -66,6 +66,7 @@ VALUES
 ( 'oy8EgoOTY2q', 'JR72fjeSNKYnX', 'zes7tkfl9dkmzub@gmail.com', '0942943961', 1),
 ( 'lE6XihvE', 'BbCqJsKgu', 'vbrdpx7u4qjv0@gmail.com', '0901244156', 1);
  
+
 create table event_category
 (
     event_category_no   int auto_increment
