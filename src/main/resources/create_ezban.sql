@@ -54,7 +54,7 @@ create table admin
 );
 
 INSERT INTO admin (admin_account, admin_pwd, admin_mail, admin_phone, admin_status)
-VALUES 
+VALUES  
 ( 'AY6KQZZh', 'NkzkVJ2JUH', 'u8yzliwj@gmail.com', '0989599470', 1),
 ( 'mE1rur8H', 'cR7eCn9dEd8rISQ', 'yeocffh6b3wj@gmail.com', '0980469290', 1),
 ( 'mX14vJUo7MYQA', 'DsPLWXZ8jKoEz', 'pygvd8xpeex8vbf@gmail.com', '0926584626', 1),
@@ -84,6 +84,8 @@ create table birthday_coupon
 insert into birthday_coupon(birthday_coupon_discount, birthday_coupon_status, valid_days)
 values (50, 0, 30),
        (50, 1, 30),
+       (50, 2, 30),
+       (50, 0, 30),
        (50, 2, 30);
 
 INSERT INTO event_category (event_category_name)
@@ -1662,7 +1664,12 @@ create table birthday_coupon_holder
 );
 
 INSERT INTO `ezban`.`birthday_coupon_holder` (`member_no`, `birthday_coupon_no`, `coupon_usage_status`, `validity_date`)
-VALUES ('1', '1', '0', DATE_ADD(CURDATE(), INTERVAL 1 MONTH));
+VALUES ('1', '1', '0', DATE_ADD(CURDATE(), INTERVAL 1 MONTH)),
+       ('2', '2', '0', DATE_ADD(CURDATE(), INTERVAL 1 MONTH)),
+       ('3', '3', '1', DATE_ADD(CURDATE(), INTERVAL 1 MONTH)),
+       ('4', '4', '1', DATE_ADD(CURDATE(), INTERVAL 1 MONTH)),
+       ('5', '5', '0', DATE_ADD(CURDATE(), INTERVAL 1 MONTH));
+
 
 create table event_comment
 (
