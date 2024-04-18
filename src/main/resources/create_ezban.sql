@@ -2084,7 +2084,7 @@ create table product_order
     product_coupon_discount         int      default 0,
     product_checkout_amount         int          not null,
     member_points                   int      default 0,
-    birthday_coupon_no              int      default 0,
+    birthday_coupon_no              int      default null,
     recipient                       varchar(50)  not null,
     recipient_phone                 varchar(15)  not null,
     recipient_address               varchar(200) not null,
@@ -2103,15 +2103,15 @@ insert into product_order (member_no, product_price, product_coupon_discount, pr
                            birthday_coupon_no, recipient, recipient_phone, recipient_address, product_orderdate,
                            product_paydate, order_closedate, product_payment_status, product_process_status,
                            product_order_allocation_amount, product_order_allocation_status)
-values (1, 1250, 0,  1250, 0,   0, '張雨琪', '0912345678', '台北市大安區復興南路一段100號',  now(), now(),  null, 1,  4,  1250, 1),
-       (3, 150,  0,  50,   100, 0, '李思婷', '0934567890', '桃園市桃園區中正路300號',       now(), now(),  null, 1,  2,  150,  1),
-       (9, 250,  0,  100,  100, 0, '許心如', '0921098765', '苗栗縣苗栗市中正路二段50號',    now(), now(),  null,  1,  0,  250,  1),
+values (1, 1250, 0,  1250, 0,   null, '張雨琪', '0912345678', '台北市大安區復興南路一段100號',  now(), now(),  null, 1,  4,  1250, 1),
+       (3, 150,  0,  50,   100, null, '李思婷', '0934567890', '桃園市桃園區中正路300號',       now(), now(),  null, 1,  2,  150,  1),
+       (9, 250,  0,  100,  100, null, '許心如', '0921098765', '苗栗縣苗栗市中正路二段50號',    now(), now(),  null,  1,  0,  250,  1),
        (7, 250,  50, 200,  0,   1, '吳雅琴', '0903210987', '宜蘭縣宜蘭市舊城路一段80號',    now(), now(),  null,  1,  2,  250,  1),
        (2, 500,  50, 450,  0,   1, '王宇軒', '0928765432', '新北市板橋區文化路二段50號',    now(), now(),  null,  1,  0,  500,  1),
-       (5, 250,  0,  250,  0,   0, '林雅琪', '0956123456', '台南市中西區民權路二段200號',   now(), now(),  null,  1,  0,  250,  1),
+       (5, 250,  0,  250,  0,   null, '林雅琪', '0956123456', '台南市中西區民權路二段200號',   now(), now(),  null,  1,  0,  250,  1),
        (7, 790,  50, 740,  0,   1, '吳雅琴', '0903210987', '宜蘭縣宜蘭市舊城路一段80號',    now(), now(),  null,  1,  0,  790,  1),
-       (3, 400,  0,  300,  100, 0, '李思婷', '0934567890', '桃園市桃園區中正路300號',       now(), now(),  null,  1, 2,  400,  1),
-       (2, 950,  0,  950,  0,   0, '王宇軒', '0928765432', '新北市板橋區文化路二段50號',    now(), now(),  null,  1,  2,  950,  1),
+       (3, 400,  0,  300,  100, null, '李思婷', '0934567890', '桃園市桃園區中正路300號',       now(), now(),  null,  1, 2,  400,  1),
+       (2, 950,  0,  950,  0,   null, '王宇軒', '0928765432', '新北市板橋區文化路二段50號',    now(), now(),  null,  1,  2,  950,  1),
        (8, 250,  50, 200,  0,   1, '蔡宗翰', '0965432109', '新竹縣竹北市中華路100號',       now(), now(),  null,  1, 0,  250,  1);
 
 
