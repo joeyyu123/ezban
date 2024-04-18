@@ -65,6 +65,7 @@ VALUES
 ( 'cznsnaRVakuaAoV', 'ZT4TMNkhLeLfuF2', 'g6gdfowqi4gpkqy@gmail.com', '0906019527', 1),
 ( 'oy8EgoOTY2q', 'JR72fjeSNKYnX', 'zes7tkfl9dkmzub@gmail.com', '0942943961', 1),
 ( 'lE6XihvE', 'BbCqJsKgu', 'vbrdpx7u4qjv0@gmail.com', '0901244156', 1);
+ 
 
 create table event_category
 (
