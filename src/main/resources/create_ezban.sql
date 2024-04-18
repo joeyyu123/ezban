@@ -2047,11 +2047,10 @@ CREATE TABLE product_img
 
 create table product_report
 (
-    product_report_no int auto_increment
-        primary key,
+    product_report_no int auto_increment primary key,
     product_no        int          not null,
     member_no         int          not null,
-    admin_no          int null,
+    admin_no          int          not null,
     report_reason     varchar(100) not null,
     report_date       datetime     not null,
     report_status     tinyint      not null,
@@ -2064,11 +2063,16 @@ create table product_report
 );
 
 insert into product_report (product_no, member_no, admin_no, report_reason, report_date, report_status)
-values (1, 1, 1, '內有不雅字眼', now(), 0),
-       (2, 1, 2, '價格不合理', now(), 1),
-       (3, 2, 3, '商品名稱太難聽', now(), 1),
-       (4, 3, 4, '我完全用不到', now(), 1),
-       (5, 3, 5, '就是想檢舉這樣商品', now(), 0);
+values (1,  1, 2, '商品描述中含有不當字眼' , 	 now(), 0),
+       (10, 6, 2, '價格太貴' ,          	     now(), 1),
+       (5,  2, 2, '商品名稱用字不當' ,     	 now(), 1),
+       (7,  3, 2, '不實用' ,             	 now(), 1),
+       (5,  3, 2, '檢舉是不需要理由的' , 		 now(), 0),
+       (18, 2, 2, '商品描述不清楚' ,     		 now(), 0),
+       (11, 4, 2, '商品照片太模糊' ,        	 now(), 0),
+       (15, 5, 2, '商品數量太少根本搶不到' ,  	 now(), 1),
+       (10, 8, 2, '商品照片放太少,不夠我參考' ,  now(), 0),
+       (5,  7, 2, '價格太便宜懷疑材質有問題' ,   now(), 0);
 
 create table product_order
 (
@@ -2078,7 +2082,7 @@ create table product_order
     product_coupon_discount         int      default 0,
     product_checkout_amount         int          not null,
     member_points                   int      default 0,
-    birthday_coupon_no              int      default null,
+    birthday_coupon_no              int      default 0,
     recipient                       varchar(50)  not null,
     recipient_phone                 varchar(15)  not null,
     recipient_address               varchar(200) not null,
@@ -2097,30 +2101,40 @@ insert into product_order (member_no, product_price, product_coupon_discount, pr
                            birthday_coupon_no, recipient, recipient_phone, recipient_address, product_orderdate,
                            product_paydate, order_closedate, product_payment_status, product_process_status,
                            product_order_allocation_amount, product_order_allocation_status)
-values (1, 5000, null, 5000, null, null, '葉先森', '0912345678', '桃園市中壢區11號', now(), now(), null, 1, 4, 4950, 1),
-       (2, 4000, null, 3950, 50, null, '陳曉捷', '0922345678', '桃園市中壢區12號', now(), now(), null, 1, 2, 3950, 0),
-       (3, 3000, null, 2900, 100, null, '余鮮聲', '0932345678', '桃園市中壢區13號', now(), now(), null, 1, 0, 2950, 0),
-       (4, 2000, 100, 1900, null, 1, '黃仙聲', '0942345678', '桃園市中壢區14號', now(), now(), null, 1, 2, 1950, 1),
-       (5, 1000, 100, 900, null, 1, '王子森', '0952345678', '桃園市中壢區15號', now(), now(), null, 1, 0, 950, 0);
+values (1, 1250, 0,  1250, 0,   0, '張雨琪', '0912345678', '台北市大安區復興南路一段100號',  now(), now(),  null, 1,  4,  1250, 1),
+       (3, 150,  0,  50,   100, 0, '李思婷', '0934567890', '桃園市桃園區中正路300號',       now(), now(),  null, 1,  2,  150,  1),
+       (9, 250,  0,  100,  100, 0, '許心如', '0921098765', '苗栗縣苗栗市中正路二段50號',    now(), now(),  null,  1,  0,  250,  1),
+       (7, 250,  50, 200,  0,   1, '吳雅琴', '0903210987', '宜蘭縣宜蘭市舊城路一段80號',    now(), now(),  null,  1,  2,  250,  1),
+       (2, 500,  50, 450,  0,   1, '王宇軒', '0928765432', '新北市板橋區文化路二段50號',    now(), now(),  null,  1,  0,  500,  1),
+       (5, 250,  0,  250,  0,   0, '林雅琪', '0956123456', '台南市中西區民權路二段200號',   now(), now(),  null,  1,  0,  250,  1),
+       (7, 790,  50, 740,  0,   1, '吳雅琴', '0903210987', '宜蘭縣宜蘭市舊城路一段80號',    now(), now(),  null,  1,  0,  790,  1),
+       (3, 400,  0,  300,  100, 0, '李思婷', '0934567890', '桃園市桃園區中正路300號',       now(), now(),  null,  1, 2,  400,  1),
+       (2, 950,  0,  950,  0,   0, '王宇軒', '0928765432', '新北市板橋區文化路二段50號',    now(), now(),  null,  1,  2,  950,  1),
+       (8, 250,  50, 200,  0,   1, '蔡宗翰', '0965432109', '新竹縣竹北市中華路100號',       now(), now(),  null,  1, 0,  250,  1);
 
 
 create table product_order_detail
 (
-    product_order_detail_no int     not null AUTO_INCREMENT PRIMARY KEY,
-    product_no              int     not null,
-    product_order_no        int     not null,
-    product_qty             int     not null,
-    product_price           int     not null,
-    comments_status         tinyint not null,
+    product_order_detail_no int primary key auto_increment not null,
+    product_no              int                            not null,
+    product_order_no        int     					   not null,
+    product_qty             int     					   not null,
+    product_price           int     					   not null,
+    comments_status         tinyint 					   not null,
     foreign key (product_no) references product (product_no),
     foreign key (product_order_no) references product_order (product_order_no)
 );
 insert into product_order_detail (product_no, product_order_no, product_qty, product_price, comments_status)
-values (1, 1001, 4, 5000, 0),
-       (2, 1002, 4, 3950, 1),
-       (3, 1003, 2, 2900, 1),
-       (4, 1004, 3, 1900, 0),
-       (5, 1005, 2, 900, 0);
+values (1,  1001, 1, 250, 0),
+       (9,  1001, 1, 100, 1),
+       (10, 1001, 2, 900, 1),
+       (4,  1002, 1, 150, 0),
+       (13, 1005, 2, 500, 1),
+       (6,  1007, 2, 440, 0),
+       (2,  1007, 1, 350, 1),
+       (17, 1008, 2, 400, 0),
+       (2,  1009, 1, 350, 1),
+       (3,  1009, 2, 600, 0);
 
 create table save_product
 (
@@ -2131,8 +2145,13 @@ create table save_product
     foreign key (product_no) references product (product_no)
 );
 insert into save_product (member_no, product_no)
-values (1, 1),
-       (2, 2),
-       (3, 3),
+values (1, 10),
+       (2, 12),
+       (3, 9),
        (4, 4),
-       (5, 5);
+       (5, 3),
+       (6, 11),
+       (7, 8),
+       (8, 16),
+       (9, 13),
+       (5, 6);
