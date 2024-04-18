@@ -2045,6 +2045,7 @@ CREATE TABLE product_img
     CONSTRAINT product_img_product_no_fk FOREIGN KEY (product_no) REFERENCES product (product_no)
 );
 
+
 create table product_report
 (
     product_report_no int auto_increment primary key,
@@ -2074,6 +2075,7 @@ values (1,  1, 2, '商品描述中含有不當字眼' , 	 now(), 0),
        (10, 8, 2, '商品照片放太少,不夠我參考' ,  now(), 0),
        (5,  7, 2, '價格太便宜懷疑材質有問題' ,   now(), 0);
 
+       
 create table product_order
 (
     product_order_no                int primary key auto_increment not null,
@@ -2124,6 +2126,7 @@ create table product_order_detail
     foreign key (product_no) references product (product_no),
     foreign key (product_order_no) references product_order (product_order_no)
 );
+
 insert into product_order_detail (product_no, product_order_no, product_qty, product_price, comments_status)
 values (1,  1001, 1, 250, 0),
        (9,  1001, 1, 100, 1),
@@ -2136,6 +2139,7 @@ values (1,  1001, 1, 250, 0),
        (2,  1009, 1, 350, 1),
        (3,  1009, 2, 600, 0);
 
+       
 create table save_product
 (
     save_product_no int not null auto_increment primary key,
@@ -2144,6 +2148,7 @@ create table save_product
     foreign key (member_no) references member (member_no),
     foreign key (product_no) references product (product_no)
 );
+
 insert into save_product (member_no, product_no)
 values (1, 10),
        (2, 12),
