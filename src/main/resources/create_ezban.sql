@@ -82,7 +82,9 @@ create table birthday_coupon
     valid_days               int     not null
 );
 insert into birthday_coupon(birthday_coupon_discount, birthday_coupon_status, valid_days)
-values (30, 1, 30);
+values (50, 0, 30),
+       (50, 1, 30),
+       (50, 2, 30);
 
 INSERT INTO event_category (event_category_name)
 VALUES ('路跑'),
@@ -105,9 +107,11 @@ create table func
 );
 
 INSERT INTO func (func_name)
-VALUES ('Function1'),
-       ('Function2'),
-       ('Function3');
+VALUES ('Manager'),
+       ('Product_activity_removed_from_shelves'),
+	   ('Order_management'),
+	   ('Birthday_certificate_management'),
+       ('Content_management');
 
 create table authority
 (
@@ -120,13 +124,12 @@ create table authority
 );
 
 INSERT INTO authority (admin_no, func_no)
-VALUES (1, 1),
-       (1, 2),
-       (1, 3),
-       (2, 1),
-       (2, 2),
-       (3, 1),
-       (3, 2);
+VALUES (CIA101001, 1),
+       (CIA101002, 2),
+       (CIA101003, 3),
+       (CIA101004, 4),
+       (CIA101005, 5);
+      
 
 
 
@@ -1667,6 +1670,9 @@ create table birthday_coupon_holder
         foreign key (member_no) references member (member_no)
 );
 
+INSERT INTO `ezban`.`birthday_coupon_holder` (`member_no`, `birthday_coupon_no`, `coupon_usage_status`, `validity_date`)
+VALUES ('1', '1', '0', DATE_ADD(CURDATE(), INTERVAL 1 MONTH));
+
 create table event_comment
 (
     event_comment_no      int auto_increment
@@ -1707,7 +1713,10 @@ create table event_comment_report
 );
 
 INSERT INTO event_comment_report (event_comment_no, member_no, report_reason, report_time, report_status)
-VALUES (1, 1, 'This is a reason', NOW(), 1);
+VALUES (1, 1, '內有不雅文字', NOW(), 1),
+       (1, 1, '內容涉嫌歧視', NOW(), 1),
+       (1, 1, '惡意言論', NOW(), 1),
+       (1, 1, '我就想檢舉', NOW(), 1);
 
 
 create table notification
@@ -1754,7 +1763,15 @@ create table qa
 );
 
 INSERT INTO qa (qa_title, qa_content)
-VALUES ('Question1', 'This is a question');
+VALUES ('忘記加入會員時設定的密碼', '點擊官網右側上端的Login,在登入頁面的【找回密碼】中可以變更密碼。
+        填入會員註冊時填寫的姓名、生日以及帳號信箱，就會發送安全驗證碼到信箱 (需與註冊時提供的帳號信箱、姓名、生日一致)。
+        最後，輸入從Email收到的安全驗證碼後就可以重新設定密碼。'),
+
+	   ('為什麼我沒有收到註冊驗證信?', '當您完成註冊步驟並將資料填妥送出後，系統約3-5分鐘內會發出認證信至您的電子信箱。若仍未收到認證信，建議您可先至垃圾郵件、社交網路、促銷內容中確認或使用重新發送驗證信功能。
+        提醒您：驗證網址的有效時間為發信後的一個小時內。'),
+       ('請問繳款後的周邊商品何時際送', '活動物資通常最晚將於活動開始前一週開始陸續寄送，若活動開始前尚未收到物資，請與主辦單位聯繫。'),
+       ('有哪些付款方式可以選擇', '請參閱各活動簡章之繳費方式，依主辦單位設定而有所不同'),
+       ('我要申請退貨，該如何處理', '為了提供用戶更優質的購物環境與消費者體驗，所有賣家皆須依照消保法提供鑑賞期服務，更詳細的情形請查詢消保法');
 
 
 create table save_event
@@ -1998,6 +2015,8 @@ create table product_comment_report
 
 
 
+
+
 CREATE TABLE product_img
 (
     product_img_no INT NOT NULL AUTO_INCREMENT,
@@ -2025,12 +2044,7 @@ create table product_report
         foreign key (product_no) references product (product_no)
 );
 
-insert into product_report (product_no, member_no, admin_no, report_reason, report_date, report_status)
-values (1, 1, 1, '內有不雅字眼', now(), 0),
-       (2, 1, 2, '價格不合理', now(), 1),
-       (3, 2, 3, '商品名稱太難聽', now(), 1),
-       (4, 3, 4, '我完全用不到', now(), 1),
-       (5, 3, 5, '就是想檢舉這樣商品', now(), 0);
+
 
 create table product_order
 (
