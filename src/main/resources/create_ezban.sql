@@ -52,7 +52,7 @@ create table admin
     constraint admin_uk_3
         unique (admin_phone)
 );
-
+ 
 INSERT INTO admin (admin_account, admin_pwd, admin_mail, admin_phone, admin_status)
 VALUES  
 ( 'AY6KQZZh', 'NkzkVJ2JUH', 'u8yzliwj@gmail.com', '0989599470', 1),
