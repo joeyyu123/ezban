@@ -53,12 +53,18 @@ create table admin
         unique (admin_phone)
 );
 
-INSERT INTO admin (admin_account, admin_pwd, admin_mail, admin_phone, admin_status)
-VALUES ('admin1', 'password1', 'admin1@mail.com', '0911111111', 1),
-       ('admin2', 'password2', 'admin2@mail.com', '0911111112', 1),
-       ('admin3', 'password3', 'admin3@mail.com', '0911111113', 1),
-       ('admin4', 'password4', 'admin4@mail.com', '0911111114', 1),
-       ('admin5', 'password5', 'admin5@mail.com', '0911111115', 1);
+INSERT INTO admin (admin_no, admin_account, admin_pwd, admin_mail, admin_phone, admin_status)
+VALUES 
+(1, 'AY6KQZZh', 'NkzkVJ2JUH', 'u8yzliwj@gmail.com', '0989599470', 1),
+(2, 'mE1rur8H', 'cR7eCn9dEd8rISQ', 'yeocffh6b3wj@gmail.com', '0980469290', 1),
+(3, 'mX14vJUo7MYQA', 'DsPLWXZ8jKoEz', 'pygvd8xpeex8vbf@gmail.com', '0926584626', 1),
+(4, 'dFOYfKRWrM', 'vOYvKXCsOlan', '6otfkc9jzl@gmail.com', '0954426431', 1),
+(5, 'oAFx5V1I', 'e3ez2mANzGY', 'ns9sxzx15rzuv@gmail.com', '0992857410', 1),
+(6, 'hSUhWbw3', 'BR8ivTB5p', '8avtoze3glac@gmail.com', '0990057569', 1),
+(7, '6KGLkBq8T', '0Bzc2bJr', 'lf4v6j4bivrokr@gmail.com', '0932655759', 1),
+(8, 'cznsnaRVakuaAoV', 'ZT4TMNkhLeLfuF2', 'g6gdfowqi4gpkqy@gmail.com', '0906019527', 1),
+(9, 'oy8EgoOTY2q', 'JR72fjeSNKYnX', 'zes7tkfl9dkmzub@gmail.com', '0942943961', 1),
+(10, 'lE6XihvE', 'BbCqJsKgu', 'vbrdpx7u4qjv0@gmail.com', '0901244156', 1);
 
 create table event_category
 (
