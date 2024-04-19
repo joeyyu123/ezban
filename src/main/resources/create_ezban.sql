@@ -52,13 +52,20 @@ create table admin
     constraint admin_uk_3
         unique (admin_phone)
 );
-
+ 
 INSERT INTO admin (admin_account, admin_pwd, admin_mail, admin_phone, admin_status)
-VALUES ('admin1', 'password1', 'admin1@mail.com', '0911111111', 1),
-       ('admin2', 'password2', 'admin2@mail.com', '0911111112', 1),
-       ('admin3', 'password3', 'admin3@mail.com', '0911111113', 1),
-       ('admin4', 'password4', 'admin4@mail.com', '0911111114', 1),
-       ('admin5', 'password5', 'admin5@mail.com', '0911111115', 1);
+VALUES  
+( 'AY6KQZZh', 'NkzkVJ2JUH', 'u8yzliwj@gmail.com', '0989599470', 1),
+( 'mE1rur8H', 'cR7eCn9dEd8rISQ', 'yeocffh6b3wj@gmail.com', '0980469290', 1),
+( 'mX14vJUo7MYQA', 'DsPLWXZ8jKoEz', 'pygvd8xpeex8vbf@gmail.com', '0926584626', 1),
+( 'dFOYfKRWrM', 'vOYvKXCsOlan', '6otfkc9jzl@gmail.com', '0954426431', 1),
+( 'oAFx5V1I', 'e3ez2mANzGY', 'ns9sxzx15rzuv@gmail.com', '0992857410', 1),
+( 'hSUhWbw3', 'BR8ivTB5p', '8avtoze3glac@gmail.com', '0990057569', 1),
+( '6KGLkBq8T', '0Bzc2bJr', 'lf4v6j4bivrokr@gmail.com', '0932655759', 1),
+( 'cznsnaRVakuaAoV', 'ZT4TMNkhLeLfuF2', 'g6gdfowqi4gpkqy@gmail.com', '0906019527', 1),
+( 'oy8EgoOTY2q', 'JR72fjeSNKYnX', 'zes7tkfl9dkmzub@gmail.com', '0942943961', 1),
+( 'lE6XihvE', 'BbCqJsKgu', 'vbrdpx7u4qjv0@gmail.com', '0901244156', 1);
+ 
 
 create table event_category
 (
@@ -76,7 +83,11 @@ create table birthday_coupon
     valid_days               int     not null
 );
 insert into birthday_coupon(birthday_coupon_discount, birthday_coupon_status, valid_days)
-values (30, 1, 30);
+values (50, 0, 30),
+       (50, 1, 30),
+       (50, 2, 30),
+       (50, 0, 30),
+       (50, 2, 30);
 
 INSERT INTO event_category (event_category_name)
 VALUES ('路跑'),
@@ -99,9 +110,12 @@ create table func
 );
 
 INSERT INTO func (func_name)
-VALUES ('Function1'),
-       ('Function2'),
-       ('Function3');
+VALUES ('Manager'),
+       ('Product activities'),
+	   ('Order_management'),
+	   ('Birthday_management'),
+       ('Content_management');
+
 
 create table authority
 (
@@ -115,12 +129,11 @@ create table authority
 
 INSERT INTO authority (admin_no, func_no)
 VALUES (1, 1),
-       (1, 2),
-       (1, 3),
-       (2, 1),
        (2, 2),
-       (3, 1),
-       (3, 2);
+       (3, 3),
+       (4, 4),
+       (5, 5);
+
 
 
 
@@ -1651,6 +1664,14 @@ create table birthday_coupon_holder
         foreign key (member_no) references member (member_no)
 );
 
+INSERT INTO `ezban`.`birthday_coupon_holder` (`member_no`, `birthday_coupon_no`, `coupon_usage_status`, `validity_date`)
+VALUES ('1', '1', '0', DATE_ADD(CURDATE(), INTERVAL 1 MONTH)),
+       ('2', '2', '0', DATE_ADD(CURDATE(), INTERVAL 1 MONTH)),
+       ('3', '3', '1', DATE_ADD(CURDATE(), INTERVAL 1 MONTH)),
+       ('4', '4', '1', DATE_ADD(CURDATE(), INTERVAL 1 MONTH)),
+       ('5', '5', '0', DATE_ADD(CURDATE(), INTERVAL 1 MONTH));
+
+
 create table event_comment
 (
     event_comment_no      int auto_increment
@@ -1765,7 +1786,16 @@ create table qa
 );
 
 INSERT INTO qa (qa_title, qa_content)
-VALUES ('Question1', 'This is a question');
+VALUES ('忘記加入會員時設定的密碼', '點擊官網右側上端的Login,在登入頁面的【找回密碼】中可以變更密碼。
+填入會員註冊時填寫的姓名、生日以及帳號信箱，就會發送安全驗證碼到信箱 (需與註冊時提供的帳號信箱、姓名、生日一致)。
+最後，輸入從Email收到的安全驗證碼後就可以重新設定密碼。'),
+
+	   ('為什麼我沒有收到註冊驗證信?', '當您完成註冊步驟並將資料填妥送出後，系統約3-5分鐘內會發出認證信至您的電子信箱。若仍未收到認證信，建議您可先至垃圾郵件、社交網路、促銷內容中確認或使用重新發送驗證信功能。
+提醒您：驗證網址的有效時間為發信後的一個小時內。'),
+       ('請問繳款後的周邊商品何時際送', '活動物資通常最晚將於活動開始前一週開始陸續寄送，若活動開始前尚未收到物資，請與主辦單位聯繫。'),
+       ('有哪些付款方式可以選擇', '請參閱各活動簡章之繳費方式，依主辦單位設定而有所不同'),
+       ('我要申請退貨，該如何處理', '為了提供用戶更優質的購物環境與消費者體驗，所有賣家皆須依照消保法提供鑑賞期服務，更詳細的情形請查詢消保法');
+
 
 
 create table save_event
