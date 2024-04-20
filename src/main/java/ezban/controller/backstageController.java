@@ -5,16 +5,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/host")
-public class hostController {
+@RequestMapping("/backstage")
+public class backstageController {
 
     @GetMapping("/")
-    public String host() {
-        return "host/hostIndex";
+    public String index() {
+        return "/backstage/index";
     }
 
-    @GetMapping("/hostTemplate")
-    public String hostTemplate() {
-        return "host/hostTemplate";
+    @GetMapping("/template")
+    public String template() {
+        return "/backstage/template";
     }
 }
