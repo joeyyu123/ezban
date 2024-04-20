@@ -52,13 +52,20 @@ create table admin
     constraint admin_uk_3
         unique (admin_phone)
 );
-
+ 
 INSERT INTO admin (admin_account, admin_pwd, admin_mail, admin_phone, admin_status)
-VALUES ('admin1', 'password1', 'admin1@mail.com', '0911111111', 1),
-       ('admin2', 'password2', 'admin2@mail.com', '0911111112', 1),
-       ('admin3', 'password3', 'admin3@mail.com', '0911111113', 1),
-       ('admin4', 'password4', 'admin4@mail.com', '0911111114', 1),
-       ('admin5', 'password5', 'admin5@mail.com', '0911111115', 1);
+VALUES  
+( 'AY6KQZZh', 'NkzkVJ2JUH', 'u8yzliwj@gmail.com', '0989599470', 1),
+( 'mE1rur8H', 'cR7eCn9dEd8rISQ', 'yeocffh6b3wj@gmail.com', '0980469290', 1),
+( 'mX14vJUo7MYQA', 'DsPLWXZ8jKoEz', 'pygvd8xpeex8vbf@gmail.com', '0926584626', 1),
+( 'dFOYfKRWrM', 'vOYvKXCsOlan', '6otfkc9jzl@gmail.com', '0954426431', 1),
+( 'oAFx5V1I', 'e3ez2mANzGY', 'ns9sxzx15rzuv@gmail.com', '0992857410', 1),
+( 'hSUhWbw3', 'BR8ivTB5p', '8avtoze3glac@gmail.com', '0990057569', 1),
+( '6KGLkBq8T', '0Bzc2bJr', 'lf4v6j4bivrokr@gmail.com', '0932655759', 1),
+( 'cznsnaRVakuaAoV', 'ZT4TMNkhLeLfuF2', 'g6gdfowqi4gpkqy@gmail.com', '0906019527', 1),
+( 'oy8EgoOTY2q', 'JR72fjeSNKYnX', 'zes7tkfl9dkmzub@gmail.com', '0942943961', 1),
+( 'lE6XihvE', 'BbCqJsKgu', 'vbrdpx7u4qjv0@gmail.com', '0901244156', 1);
+ 
 
 create table event_category
 (
@@ -76,7 +83,11 @@ create table birthday_coupon
     valid_days               int     not null
 );
 insert into birthday_coupon(birthday_coupon_discount, birthday_coupon_status, valid_days)
-values (30, 1, 30);
+values (50, 0, 30),
+       (50, 1, 30),
+       (50, 2, 30),
+       (50, 0, 30),
+       (50, 2, 30);
 
 INSERT INTO event_category (event_category_name)
 VALUES ('路跑'),
@@ -99,9 +110,12 @@ create table func
 );
 
 INSERT INTO func (func_name)
-VALUES ('Function1'),
-       ('Function2'),
-       ('Function3');
+VALUES ('Manager'),
+       ('Product activities'),
+	   ('Order_management'),
+	   ('Birthday_management'),
+       ('Content_management');
+
 
 create table authority
 (
@@ -115,12 +129,11 @@ create table authority
 
 INSERT INTO authority (admin_no, func_no)
 VALUES (1, 1),
-       (1, 2),
-       (1, 3),
-       (2, 1),
        (2, 2),
-       (3, 1),
-       (3, 2);
+       (3, 3),
+       (4, 4),
+       (5, 5);
+
 
 
 
@@ -143,16 +156,16 @@ create table host
 );
 
 INSERT INTO host (host_account, host_pwd, host_name, host_mail, host_phone, host_status)
-VALUES ('host1', 'password1', 'Host1', 'host1@gmail.com', '0911111111', 1),
-       ('host2', 'password2', 'Host2', 'host2@gmail.com', '0922222222', 1),
-       ('host3', 'password3', 'Host3', 'host3@gmail.com', '0933333333', 1),
-       ('host4', 'password4', 'Host4', 'host4@gmail.com', '0944444444', 1),
-       ('host5', 'password5', 'Host5', 'host5@gmail.com', '0955555555', 1),
-       ('host6', 'password6', 'Host6', 'host6@gmail.com', '0966666666', 1),
-       ('host7', 'password7', 'Host7', 'host7@gmail.com', '0977777777', 1),
-       ('host8', 'password8', 'Host8', 'host8@gmail.com', '0988888888', 1),
-       ('host9', 'password9', 'Host9', 'host9@gmail.com', '0999999999', 1),
-       ('host10', 'password10', 'Host10', 'host10@gmail.com', '0900000010', 1);
+VALUES ('host001', 'h123321', '星光傳媒有限公司', 'alexander23@gmail.com', '0912345678', 1),
+       ('host002', 'h456654', '璀璨文化傳媒集團', 'emily.smith@gmail.com', '0928765432', 1),
+       ('host003', 'h789987', '綠葉活動策劃有限公司', 'samuel1987@gmail.com', '0934567890', 1),
+       ('host004', 'h111222', '千禧時代活動策劃有限公司', 'sophie.jones@gmail.com', '0987654321', 1),
+       ('host005', 'h333444', '優客活動組織有限公司', 'maxwell45@gmail.com', '0956123456', 1),
+       ('host006', 'h555666', '盛世傳媒活動策劃公司', 'olivia.taylor@gmail.com', '0978654321', 1),
+       ('host007', 'h777888', '美好時光文化傳媒有限公司', 'ethan.miller@gmail.com', '0903210987', 1),
+       ('host008', 'h090909', '藍天文化傳媒有限公司', 'isabella88@gmail.com', '0965432109', 1),
+       ('host009', 'h123456', '珍珠文化傳媒有限公司', 'nathan.parker@gmail.com.com', '0921098765', 1),
+       ('host010', 'h654321', '維爾德國際活動策劃公司', 'ava.roberts@gmail.com', '0943210987', 1);
 
 
 
@@ -1651,6 +1664,14 @@ create table birthday_coupon_holder
         foreign key (member_no) references member (member_no)
 );
 
+INSERT INTO `ezban`.`birthday_coupon_holder` (`member_no`, `birthday_coupon_no`, `coupon_usage_status`, `validity_date`)
+VALUES ('1', '1', '0', DATE_ADD(CURDATE(), INTERVAL 1 MONTH)),
+       ('2', '2', '0', DATE_ADD(CURDATE(), INTERVAL 1 MONTH)),
+       ('3', '3', '1', DATE_ADD(CURDATE(), INTERVAL 1 MONTH)),
+       ('4', '4', '1', DATE_ADD(CURDATE(), INTERVAL 1 MONTH)),
+       ('5', '5', '0', DATE_ADD(CURDATE(), INTERVAL 1 MONTH));
+
+
 create table event_comment
 (
     event_comment_no      int auto_increment
@@ -1720,7 +1741,16 @@ create table notification
 );
 
 INSERT INTO notification (member_no, host_no, admin_no, notification_content, read_status, notification_time)
-VALUES (1, 1, 1, 'This is a notification', 0, NOW());
+VALUES (1, 1, 1, '系統通知：您的帳戶密碼已成功修改，請妥善保管您的新密碼。', 0, NOW()),
+	   (2, 2, 1, '系統提醒：您的訂單已成功支付，請耐心等待發貨。', 0, NOW()),
+	   (10, 1, 3, '系統提示：您有一封新的私信消息，請及時查看。', 0, NOW()),
+	   (4, 3, 1, '系統通知：您的評論已收到點讚，感謝您的支持與參與。', 0, NOW()),
+	   (1, 1, 2, '系統消息：您的預訂活動已取消，請查看詳情並聯系客服進行退款。', 0, NOW()),
+	   (5, 2, 1, '系統提醒：您的包裹已發出，請留意物流信息並準備簽收。', 0, NOW()),
+	   (7, 1, 2, '系統通知：您的評論已被檢舉，請等待管理員審核結果。', 0, NOW()),
+	   (7, 1, 3, '系統通知：您報名的活動已被取消，請查看詳情並聯系客服進行退款。', 0, NOW()),
+	   (2, 3, 2, '系統通知：您的賬戶已成功注冊，請查看您的電子郵箱以完成驗證。', 0, NOW()),
+	   (8, 1, 1, '系統消息：已收到您的檢舉，感謝您的反饋，我們會盡快處理您的請求。', 0, NOW());
 
 
 create table points_record
@@ -1756,7 +1786,16 @@ create table qa
 );
 
 INSERT INTO qa (qa_title, qa_content)
-VALUES ('Question1', 'This is a question');
+VALUES ('忘記加入會員時設定的密碼', '點擊官網右側上端的Login,在登入頁面的【找回密碼】中可以變更密碼。
+填入會員註冊時填寫的姓名、生日以及帳號信箱，就會發送安全驗證碼到信箱 (需與註冊時提供的帳號信箱、姓名、生日一致)。
+最後，輸入從Email收到的安全驗證碼後就可以重新設定密碼。'),
+
+	   ('為什麼我沒有收到註冊驗證信?', '當您完成註冊步驟並將資料填妥送出後，系統約3-5分鐘內會發出認證信至您的電子信箱。若仍未收到認證信，建議您可先至垃圾郵件、社交網路、促銷內容中確認或使用重新發送驗證信功能。
+提醒您：驗證網址的有效時間為發信後的一個小時內。'),
+       ('請問繳款後的周邊商品何時際送', '活動物資通常最晚將於活動開始前一週開始陸續寄送，若活動開始前尚未收到物資，請與主辦單位聯繫。'),
+       ('有哪些付款方式可以選擇', '請參閱各活動簡章之繳費方式，依主辦單位設定而有所不同'),
+       ('我要申請退貨，該如何處理', '為了提供用戶更優質的購物環境與消費者體驗，所有賣家皆須依照消保法提供鑑賞期服務，更詳細的情形請查詢消保法');
+
 
 
 create table save_event
@@ -2016,6 +2055,18 @@ create table product_comment
         foreign key (product_no) references product (product_no)
 );
 
+INSERT INTO product_comment (product_no, member_no, product_rate, product_comment_content,
+                           product_comment_date, product_comment_status)
+VALUES (1, 1, 5, '這個產品真的很棒！質量非常好，性價比超高！強烈推薦！', '2024-04-18 13:00:10', 1),
+	   (2, 2, 5, '很喜歡這個商品，外觀時尚，功能也很實用，非常滿意！', '2024-04-10 13:00:19', 1),
+	   (3, 3, 5, '包裝很精美，商品完好無損，物流也很快，非常滿意購物體驗！', '2024-04-13 14:01:12', 1),
+	   (2, 5, 5, '商品收到了，質量不錯，顏色也很喜歡，與描述相符，非常滿意！', '2024-04-17 13:05:16', 1),
+	   (5, 6, 5, '售後服務態度很好，對我的問題耐心解答，讓我感到很放心！', '2024-04-18 11:00:15', 1),
+	   (1, 4, 4, '產品質量一般與描述稍有差異，但客服解決問題很及時，還算滿意！', '2024-04-18 10:30:12', 1),
+	   (4, 7, 4, '商品外觀漂亮，但使用起來有些不太方便，希望能改進一下設計！', '2024-04-15 09:04:12', 1),
+	   (4, 9, 5, '物流速度很快，商品質量也不錯，很滿意這次的購物體驗！', '2024-04-15 19:00:30', 1),
+	   (1, 8, 5, '這個商品值得購買，非常實用，我很喜歡！希望能有更多的顏色選擇！', '2024-04-16 16:00:00', 1);
+
 create table product_comment_report
 (
     product_comment_report_no int auto_increment
@@ -2045,13 +2096,13 @@ CREATE TABLE product_img
     CONSTRAINT product_img_product_no_fk FOREIGN KEY (product_no) REFERENCES product (product_no)
 );
 
+
 create table product_report
 (
-    product_report_no int auto_increment
-        primary key,
+    product_report_no int auto_increment primary key,
     product_no        int          not null,
     member_no         int          not null,
-    admin_no          int null,
+    admin_no          int          not null,
     report_reason     varchar(100) not null,
     report_date       datetime     not null,
     report_status     tinyint      not null,
@@ -2064,12 +2115,18 @@ create table product_report
 );
 
 insert into product_report (product_no, member_no, admin_no, report_reason, report_date, report_status)
-values (1, 1, 1, '內有不雅字眼', now(), 0),
-       (2, 1, 2, '價格不合理', now(), 1),
-       (3, 2, 3, '商品名稱太難聽', now(), 1),
-       (4, 3, 4, '我完全用不到', now(), 1),
-       (5, 3, 5, '就是想檢舉這樣商品', now(), 0);
+values (1,  1, 2, '商品描述中含有不當字眼' , 	 now(), 0),
+       (10, 6, 2, '價格太貴' ,          	     now(), 1),
+       (5,  2, 2, '商品名稱用字不當' ,     	 now(), 1),
+       (7,  3, 2, '不實用' ,             	 now(), 1),
+       (5,  3, 2, '檢舉是不需要理由的' , 		 now(), 0),
+       (18, 2, 2, '商品描述不清楚' ,     		 now(), 0),
+       (11, 4, 2, '商品照片太模糊' ,        	 now(), 0),
+       (15, 5, 2, '商品數量太少根本搶不到' ,  	 now(), 1),
+       (10, 8, 2, '商品照片放太少,不夠我參考' ,  now(), 0),
+       (5,  7, 2, '價格太便宜懷疑材質有問題' ,   now(), 0);
 
+       
 create table product_order
 (
     product_order_no                int primary key auto_increment not null,
@@ -2097,31 +2154,43 @@ insert into product_order (member_no, product_price, product_coupon_discount, pr
                            birthday_coupon_no, recipient, recipient_phone, recipient_address, product_orderdate,
                            product_paydate, order_closedate, product_payment_status, product_process_status,
                            product_order_allocation_amount, product_order_allocation_status)
-values (1, 5000, null, 5000, null, null, '葉先森', '0912345678', '桃園市中壢區11號', now(), now(), null, 1, 4, 4950, 1),
-       (2, 4000, null, 3950, 50, null, '陳曉捷', '0922345678', '桃園市中壢區12號', now(), now(), null, 1, 2, 3950, 0),
-       (3, 3000, null, 2900, 100, null, '余鮮聲', '0932345678', '桃園市中壢區13號', now(), now(), null, 1, 0, 2950, 0),
-       (4, 2000, 100, 1900, null, 1, '黃仙聲', '0942345678', '桃園市中壢區14號', now(), now(), null, 1, 2, 1950, 1),
-       (5, 1000, 100, 900, null, 1, '王子森', '0952345678', '桃園市中壢區15號', now(), now(), null, 1, 0, 950, 0);
+values (1, 1250, 0,  1250, 0,   null, '張雨琪', '0912345678', '台北市大安區復興南路一段100號',  now(), now(),  null, 1,  4,  1250, 1),
+       (3, 150,  0,  50,   100, null, '李思婷', '0934567890', '桃園市桃園區中正路300號',       now(), now(),  null, 1,  2,  150,  1),
+       (9, 250,  0,  100,  100, null, '許心如', '0921098765', '苗栗縣苗栗市中正路二段50號',    now(), now(),  null,  1,  0,  250,  1),
+       (7, 250,  50, 200,  0,   1, '吳雅琴', '0903210987', '宜蘭縣宜蘭市舊城路一段80號',    now(), now(),  null,  1,  2,  250,  1),
+       (2, 500,  50, 450,  0,   1, '王宇軒', '0928765432', '新北市板橋區文化路二段50號',    now(), now(),  null,  1,  0,  500,  1),
+       (5, 250,  0,  250,  0,   null, '林雅琪', '0956123456', '台南市中西區民權路二段200號',   now(), now(),  null,  1,  0,  250,  1),
+       (7, 790,  50, 740,  0,   1, '吳雅琴', '0903210987', '宜蘭縣宜蘭市舊城路一段80號',    now(), now(),  null,  1,  0,  790,  1),
+       (3, 400,  0,  300,  100, null, '李思婷', '0934567890', '桃園市桃園區中正路300號',       now(), now(),  null,  1, 2,  400,  1),
+       (2, 950,  0,  950,  0,   null, '王宇軒', '0928765432', '新北市板橋區文化路二段50號',    now(), now(),  null,  1,  2,  950,  1),
+       (8, 250,  50, 200,  0,   1, '蔡宗翰', '0965432109', '新竹縣竹北市中華路100號',       now(), now(),  null,  1, 0,  250,  1);
 
 
 create table product_order_detail
 (
-    product_order_detail_no int     not null AUTO_INCREMENT PRIMARY KEY,
-    product_no              int     not null,
-    product_order_no        int     not null,
-    product_qty             int     not null,
-    product_price           int     not null,
-    comments_status         tinyint not null,
+    product_order_detail_no int primary key auto_increment not null,
+    product_no              int                            not null,
+    product_order_no        int     					   not null,
+    product_qty             int     					   not null,
+    product_price           int     					   not null,
+    comments_status         tinyint 					   not null,
     foreign key (product_no) references product (product_no),
     foreign key (product_order_no) references product_order (product_order_no)
 );
-insert into product_order_detail (product_no, product_order_no, product_qty, product_price, comments_status)
-values (1, 1001, 4, 5000, 0),
-       (2, 1002, 4, 3950, 1),
-       (3, 1003, 2, 2900, 1),
-       (4, 1004, 3, 1900, 0),
-       (5, 1005, 2, 900, 0);
 
+insert into product_order_detail (product_no, product_order_no, product_qty, product_price, comments_status)
+values (1,  1001, 1, 250, 0),
+       (9,  1001, 1, 100, 1),
+       (10, 1001, 2, 900, 1),
+       (4,  1002, 1, 150, 0),
+       (13, 1005, 2, 500, 1),
+       (6,  1007, 2, 440, 0),
+       (2,  1007, 1, 350, 1),
+       (17, 1008, 2, 400, 0),
+       (2,  1009, 1, 350, 1),
+       (3,  1009, 2, 600, 0);
+
+       
 create table save_product
 (
     save_product_no int not null auto_increment primary key,
@@ -2130,9 +2199,15 @@ create table save_product
     foreign key (member_no) references member (member_no),
     foreign key (product_no) references product (product_no)
 );
+
 insert into save_product (member_no, product_no)
-values (1, 1),
-       (2, 2),
-       (3, 3),
+values (1, 10),
+       (2, 12),
+       (3, 9),
        (4, 4),
-       (5, 5);
+       (5, 3),
+       (6, 11),
+       (7, 8),
+       (8, 16),
+       (9, 13),
+       (5, 6);
