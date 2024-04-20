@@ -156,16 +156,16 @@ create table host
 );
 
 INSERT INTO host (host_account, host_pwd, host_name, host_mail, host_phone, host_status)
-VALUES ('host1', 'password1', 'Host1', 'host1@gmail.com', '0911111111', 1),
-       ('host2', 'password2', 'Host2', 'host2@gmail.com', '0922222222', 1),
-       ('host3', 'password3', 'Host3', 'host3@gmail.com', '0933333333', 1),
-       ('host4', 'password4', 'Host4', 'host4@gmail.com', '0944444444', 1),
-       ('host5', 'password5', 'Host5', 'host5@gmail.com', '0955555555', 1),
-       ('host6', 'password6', 'Host6', 'host6@gmail.com', '0966666666', 1),
-       ('host7', 'password7', 'Host7', 'host7@gmail.com', '0977777777', 1),
-       ('host8', 'password8', 'Host8', 'host8@gmail.com', '0988888888', 1),
-       ('host9', 'password9', 'Host9', 'host9@gmail.com', '0999999999', 1),
-       ('host10', 'password10', 'Host10', 'host10@gmail.com', '0900000010', 1);
+VALUES ('host001', 'h123321', '星光傳媒有限公司', 'alexander23@gmail.com', '0912345678', 1),
+       ('host002', 'h456654', '璀璨文化傳媒集團', 'emily.smith@gmail.com', '0928765432', 1),
+       ('host003', 'h789987', '綠葉活動策劃有限公司', 'samuel1987@gmail.com', '0934567890', 1),
+       ('host004', 'h111222', '千禧時代活動策劃有限公司', 'sophie.jones@gmail.com', '0987654321', 1),
+       ('host005', 'h333444', '優客活動組織有限公司', 'maxwell45@gmail.com', '0956123456', 1),
+       ('host006', 'h555666', '盛世傳媒活動策劃公司', 'olivia.taylor@gmail.com', '0978654321', 1),
+       ('host007', 'h777888', '美好時光文化傳媒有限公司', 'ethan.miller@gmail.com', '0903210987', 1),
+       ('host008', 'h090909', '藍天文化傳媒有限公司', 'isabella88@gmail.com', '0965432109', 1),
+       ('host009', 'h123456', '珍珠文化傳媒有限公司', 'nathan.parker@gmail.com.com', '0921098765', 1),
+       ('host010', 'h654321', '維爾德國際活動策劃公司', 'ava.roberts@gmail.com', '0943210987', 1);
 
 
 
