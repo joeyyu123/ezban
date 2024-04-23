@@ -5,7 +5,7 @@
 body {
     position: relative;
     overflow-x: hidden;
-    background-color: #dedede;
+    background-color: #f4e9e6;
 }
 
 body,
@@ -126,8 +126,8 @@ html {
 
 .sidebar-nav li:hover {
     border-radius: 10px;
-    /* margin-left: 10px; */
-    margin-right: 10px;
+    /* margin-left: 10px;*/
+    /*margin-right: 10px;*/
 }
 
 .sidebar-nav li:hover:before,
@@ -171,16 +171,18 @@ html {
     position: relative;
     background: #212531;
     background: linear-gradient(to right bottom, #2f3441 50%, #212531 50%);
-    padding-top: 1em;
+    padding-top: 0.5em;
 }
 
 .sidebar-brand a {
     color: #ddd;
+    text-decoration: none;
+    font-size: 20px !important;
+
 }
 
 .sidebar-brand a:hover {
     color: #fff;
-    text-decoration: none;
 }
 
 .dropdown-header {
@@ -217,6 +219,11 @@ html {
     padding-right: 5px;
 }
 
+a[href*="backstage"]::before {
+    /*font-family: normal;*/
+    content: normal !important;
+}
+
 a[href*="#home"]::before {
     content: "\f015" !important;
 }
@@ -225,7 +232,7 @@ a[href*="#about"]::before {
     content: "\f129" !important;
 }
 
-a[href*="#events"]::before {
+a[href*="events"]::before {
     content: "\f073" !important;
 }
 
