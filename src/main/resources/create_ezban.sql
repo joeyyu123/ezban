@@ -1834,9 +1834,9 @@ create table ticket_order
     ticket_order_time              datetime not null,
     ticket_order_pay_time          datetime null,
     ticket_order_payment_status    tinyint  not null default 0,
-    ticket_order_status            int null,
+    ticket_order_status            tinyint null,
     ticket_order_allocation_amount int null,
-    ticket_order_allocation_status int null,
+    ticket_order_allocation_status tinyint null,
     constraint ticket_order_event_coupon_event_coupon_no_fk
         foreign key (event_coupon_no) references event_coupon (event_coupon_no),
     constraint ticket_order_member_member_no_fk

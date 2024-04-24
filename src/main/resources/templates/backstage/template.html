@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="backstage/index :: head">
-
+<head>
+    <link th:include="backstage/index :: head">
+    <!-- 可以在這底下加入其他 css 或是 script    -->
 </head>
 
 <body>
@@ -12,7 +13,7 @@
         <div th:insert="backstage/index :: hamburger-btn"></div>
 
 
-        <!-- 頁面內容都放在content裡面 -->
+        <!-- 頁面內容都放在 content 裡面 -->
         <div class="content">
             <!-- 這裡可以放置你想呈現的內容 -->
             <h1>Host Template</h1>
