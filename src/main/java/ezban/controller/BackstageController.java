@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/backstage")
-public class backstageController {
+public class BackstageController {
 
-    @GetMapping("/")
+    @GetMapping("")
     public String index() {
         return "/backstage/index";
     }
