@@ -1,20 +1,21 @@
-package ezban.controller;
+package com.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/backstage")
-public class backstageController {
+@RequestMapping("/frontstage")
+public class FrontstageController {
 
     @GetMapping("/")
     public String index() {
-        return "/backstage/index";
+        return "/frontstage/index2";
     }
 
     @GetMapping("/template")
     public String template() {
-        return "/backstage/template";
+        return "/frontstage/template2";
     }
+
 }
