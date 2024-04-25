@@ -51,6 +51,15 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+			<version>3.2.5</version>
+		</dependency>
+
+
+
 		<!-- 用途說明6: for log4j.properties -->
 		<!-- Spring Boot日誌系統預設是使用logback -->
 		<!-- 對於習慣了log4j的開發者，Spring Boot依然有很好的支援 -->
