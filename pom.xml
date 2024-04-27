@@ -11,7 +11,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	
-	<groupId>com.tibame</groupId>
+	<groupId>com.ezban</groupId>
 	<artifactId>ezban</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
