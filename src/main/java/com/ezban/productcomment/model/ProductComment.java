@@ -1,7 +1,10 @@
-package com.ezban.productcomment;
+package com.ezban.productcomment.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+import com.ezban.member.model.Member;
+import com.ezban.product.model.Product;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -18,12 +21,14 @@ public class ProductComment {
 		private Integer productCommentNo;
 
 		@NotNull
+		@ManyToOne(fetch = FetchType.LAZY)
 		@JoinColumn(name = "product_no", nullable = false)
-		private Integer productNo;
+		private Product product;
 
 		@NotNull
+		@ManyToOne(fetch = FetchType.LAZY)
 		@JoinColumn(name = "member_no", nullable = false)
-		private Integer memberNo;
+		private Member member;
 
 		@Column(name = "product_rate")
 		private Integer productRate;
@@ -33,7 +38,7 @@ public class ProductComment {
 
 		@NotNull
 		@Column(name = "product_comment_date", nullable = false)
-		private LocalDateTime productCommentDate;
+		private Timestamp productCommentDate;
 
 		@Column(name = "product_comment_status")
 		private Byte productCommentStatus;
@@ -43,12 +48,13 @@ public class ProductComment {
 			// TODO Auto-generated constructor stub
 		}
 
-		public Product_comment(Integer productCommentNo, Integer productNo, Integer memberNo, Integer productRate,
-				String productCommentContent, LocalDateTime productCommentDate, Byte productCommentStatus) {
+		public Product_comment(Integer productCommentNo, @NotNull Product product, @NotNull Member member,
+				Integer productRate, String productCommentContent, @NotNull Timestamp productCommentDate,
+				Byte productCommentStatus) {
 			super();
 			this.productCommentNo = productCommentNo;
-			this.productNo = productNo;
-			this.memberNo = memberNo;
+			this.product = product;
+			this.member = member;
 			this.productRate = productRate;
 			this.productCommentContent = productCommentContent;
 			this.productCommentDate = productCommentDate;
@@ -63,20 +69,20 @@ public class ProductComment {
 			this.productCommentNo = productCommentNo;
 		}
 
-		public Integer getProductNo() {
-			return productNo;
+		public Product getProduct() {
+			return product;
 		}
 
-		public void setProductNo(Integer productNo) {
-			this.productNo = productNo;
+		public void setProduct(Product product) {
+			this.product = product;
 		}
 
-		public Integer getMemberNo() {
-			return memberNo;
+		public Member getMember() {
+			return member;
 		}
 
-		public void setMemberNo(Integer memberNo) {
-			this.memberNo = memberNo;
+		public void setMember(Member member) {
+			this.member = member;
 		}
 
 		public Integer getProductRate() {
@@ -95,11 +101,11 @@ public class ProductComment {
 			this.productCommentContent = productCommentContent;
 		}
 
-		public LocalDateTime getProductCommentDate() {
+		public Timestamp getProductCommentDate() {
 			return productCommentDate;
 		}
 
-		public void setProductCommentDate(LocalDateTime productCommentDate) {
+		public void setProductCommentDate(Timestamp productCommentDate) {
 			this.productCommentDate = productCommentDate;
 		}
 
@@ -113,11 +119,13 @@ public class ProductComment {
 
 		@Override
 		public String toString() {
-			return "Product_comment [productCommentNo=" + productCommentNo + ", productNo=" + productNo + ", memberNo="
-					+ memberNo + ", productRate=" + productRate + ", productCommentContent=" + productCommentContent
+			return "Product_comment [productCommentNo=" + productCommentNo + ", product=" + product + ", member="
+					+ member + ", productRate=" + productRate + ", productCommentContent=" + productCommentContent
 					+ ", productCommentDate=" + productCommentDate + ", productCommentStatus=" + productCommentStatus
 					+ "]";
 		}
+		
+		
 	}
 
 }

@@ -1,7 +1,9 @@
-package com.ezban.pointsrecord;
+package com.ezban.pointsrecord.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
+import com.ezban.member.model.Member;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -18,27 +20,27 @@ public class PointsRecord {
 		private Integer pointsRecordNo;
 
 		@NotNull
+		@ManyToOne(fetch = FetchType.LAZY)
 		@JoinColumn(name = "member_no", nullable = false)
-		private Integer memberNo;
+		private Member member;
 
 		@NotNull
 		@Column(name = "points_changed", nullable = false)
 		private Integer pointsChanged;
 
-		@Temporal(TemporalType.DATE)
 		@Column(name = "transaction_time")
-		private LocalDateTime transactionTime;
+		private Timestamp transactionTime;
 
 		public Points_record() {
 			super();
 			// TODO Auto-generated constructor stub
 		}
 
-		public Points_record(Integer pointsRecordNo, Integer memberNo, Integer pointsChanged,
-				LocalDateTime transactionTime) {
+		public Points_record(Integer pointsRecordNo, @NotNull Member member, @NotNull Integer pointsChanged,
+				Timestamp transactionTime) {
 			super();
 			this.pointsRecordNo = pointsRecordNo;
-			this.memberNo = memberNo;
+			this.member = member;
 			this.pointsChanged = pointsChanged;
 			this.transactionTime = transactionTime;
 		}
@@ -51,12 +53,12 @@ public class PointsRecord {
 			this.pointsRecordNo = pointsRecordNo;
 		}
 
-		public Integer getMemberNo() {
-			return memberNo;
+		public Member getMember() {
+			return member;
 		}
 
-		public void setMemberNo(Integer memberNo) {
-			this.memberNo = memberNo;
+		public void setMember(Member member) {
+			this.member = member;
 		}
 
 		public Integer getPointsChanged() {
@@ -67,19 +69,20 @@ public class PointsRecord {
 			this.pointsChanged = pointsChanged;
 		}
 
-		public LocalDateTime getTransactionTime() {
+		public Timestamp getTransactionTime() {
 			return transactionTime;
 		}
 
-		public void setTransactionTime(LocalDateTime transactionTime) {
+		public void setTransactionTime(Timestamp transactionTime) {
 			this.transactionTime = transactionTime;
 		}
 
 		@Override
 		public String toString() {
-			return "Points_record [pointsRecordNo=" + pointsRecordNo + ", memberNo=" + memberNo + ", pointsChanged="
+			return "Points_record [pointsRecordNo=" + pointsRecordNo + ", member=" + member + ", pointsChanged="
 					+ pointsChanged + ", transactionTime=" + transactionTime + "]";
 		}
+		
+		
 	}
-
 }

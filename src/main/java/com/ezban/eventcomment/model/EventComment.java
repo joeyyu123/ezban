@@ -1,10 +1,12 @@
-package com.ezban.eventcomment;
+package com.ezban.eventcomment.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;   
+import com.ezban.event.model.Event;
+import com.ezban.member.model.Member;
+
+import java.sql.Timestamp; 
 
 @Entity
 @Table(name = "event_comment")
@@ -16,12 +18,14 @@ public class EventComment {
 	private Integer eventCommentNo;
 	
 	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "event_no", nullable = false)
-	private Integer eventNo;
+	private Event event;
 	
 	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_no", nullable = false)
-	private Integer memberNo;
+	private Member member;
 	
 	@Column(name = "event_comment_content")
 	private String eventCommentContent;
@@ -30,7 +34,7 @@ public class EventComment {
 	private Integer eventCommentRate;
 	
 	@Column(name = "event_comment_time")
-	private LocalDateTime eventCommentTime;
+	private Timestamp eventCommentTime;
 	
 	@Column(name = "event_comment_status")
 	private Byte eventCommentStatus;
@@ -40,12 +44,12 @@ public class EventComment {
 		// TODO Auto-generated constructor stub
 	}
 
-	public EventComment(Integer eventCommentNo, Integer eventNo, Integer memberNo, String eventCommentContent,
-			Integer eventCommentRate, LocalDateTime eventCommentTime, Byte eventCommentStatus) {
+	public EventComment(Integer eventCommentNo, @NotNull Event event, @NotNull Member member,
+			String eventCommentContent, Integer eventCommentRate, Timestamp eventCommentTime, Byte eventCommentStatus) {
 		super();
 		this.eventCommentNo = eventCommentNo;
-		this.eventNo = eventNo;
-		this.memberNo = memberNo;
+		this.event = event;
+		this.member = member;
 		this.eventCommentContent = eventCommentContent;
 		this.eventCommentRate = eventCommentRate;
 		this.eventCommentTime = eventCommentTime;
@@ -60,20 +64,20 @@ public class EventComment {
 		this.eventCommentNo = eventCommentNo;
 	}
 
-	public Integer getEventNo() {
-		return eventNo;
+	public Event getEvent() {
+		return event;
 	}
 
-	public void setEventNo(Integer eventNo) {
-		this.eventNo = eventNo;
+	public void setEvent(Event event) {
+		this.event = event;
 	}
 
-	public Integer getMemberNo() {
-		return memberNo;
+	public Member getMember() {
+		return member;
 	}
 
-	public void setMemberNo(Integer memberNo) {
-		this.memberNo = memberNo;
+	public void setMember(Member member) {
+		this.member = member;
 	}
 
 	public String getEventCommentContent() {
@@ -92,11 +96,11 @@ public class EventComment {
 		this.eventCommentRate = eventCommentRate;
 	}
 
-	public LocalDateTime getEventCommentTime() {
+	public Timestamp getEventCommentTime() {
 		return eventCommentTime;
 	}
 
-	public void setEventCommentTime(LocalDateTime eventCommentTime) {
+	public void setEventCommentTime(Timestamp eventCommentTime) {
 		this.eventCommentTime = eventCommentTime;
 	}
 
@@ -110,7 +114,7 @@ public class EventComment {
 
 	@Override
 	public String toString() {
-		return "Event_comment [eventCommentNo=" + eventCommentNo + ", eventNo=" + eventNo + ", memberNo=" + memberNo
+		return "EventComment [eventCommentNo=" + eventCommentNo + ", event=" + event + ", member=" + member
 				+ ", eventCommentContent=" + eventCommentContent + ", eventCommentRate=" + eventCommentRate
 				+ ", eventCommentTime=" + eventCommentTime + ", eventCommentStatus=" + eventCommentStatus + "]";
 	}
