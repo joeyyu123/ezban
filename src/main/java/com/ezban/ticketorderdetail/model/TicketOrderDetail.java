@@ -1,8 +1,8 @@
-package com.ezban.ticketOrderDetail.model;
+package com.ezban.ticketorderdetail.model;
 
-import com.ezban.qrcodeTicket.QrcodeTicket;
-import com.ezban.ticketOrder.model.TicketOrder;
-import com.ezban.ticketType.model.TicketType;
+import com.ezban.qrcodeticket.model.QrcodeTicket;
+import com.ezban.ticketorder.model.TicketOrder;
+import com.ezban.tickettype.model.TicketType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

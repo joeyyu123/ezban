@@ -1,4 +1,4 @@
-package com.ezban.eventCategory.model;
+package com.ezban.eventcategory.model;
 
 import com.ezban.event.model.Event;
 

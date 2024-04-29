@@ -1,9 +1,9 @@
 package com.ezban.event.model;
 
-import com.ezban.eventComment.EventComment;
+import com.ezban.eventcomment.EventComment;
 import com.ezban.host.model.Host;
-import com.ezban.eventCategory.model.EventCategory;
-import com.ezban.ticketType.model.TicketType;
+import com.ezban.eventcategory.model.EventCategory;
+import com.ezban.tickettype.model.TicketType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
