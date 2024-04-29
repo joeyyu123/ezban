@@ -14,7 +14,7 @@ public class ProductCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_category_no", nullable = false)
-    private Integer id;
+    private Integer productCategoryNo;
 
     @Column(name = "product_category_name", length = 50)
     private String productCategoryName;
@@ -22,12 +22,12 @@ public class ProductCategory {
     @OneToMany(mappedBy = "productCategory")
     private Set<Product> products = new LinkedHashSet<>();
 
-    public Integer getId() {
-        return id;
+    public Integer getProductCategoryNo() {
+        return productCategoryNo;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setProductCategoryNo(Integer productCategoryNo) {
+        this.productCategoryNo = productCategoryNo;
     }
 
     public String getProductCategoryName() {

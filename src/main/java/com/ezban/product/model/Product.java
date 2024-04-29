@@ -1,5 +1,6 @@
 package com.ezban.product.model;
 
+import com.ezban.host.model.Host;
 import com.ezban.productcategory.model.ProductCategory;
 
 import javax.persistence.*;
@@ -52,6 +53,7 @@ public class Product implements java.io.Serializable {
 
     @Column(name = "product_rating_count")
     private Integer productRatingCount;
+
 
     public Product() {
     }
