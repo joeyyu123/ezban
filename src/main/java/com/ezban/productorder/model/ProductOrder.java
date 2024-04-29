@@ -33,7 +33,7 @@ public class ProductOrder implements java.io.Serializable {
     private Integer productOrderNo;
 
     @NotNull(message = "會員編號: 請勿空白!")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name = "member_no", nullable = false)
     private Member member;
 
@@ -52,7 +52,7 @@ public class ProductOrder implements java.io.Serializable {
     @Column(name = "member_points", columnDefinition = "int default 0")
     private Integer memberPoints;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "birthday_coupon_no")
     private BirthdayCoupon birthdayCoupon;
 

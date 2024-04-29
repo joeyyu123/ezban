@@ -2,6 +2,7 @@ package com.ezban.saveproduct.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "save_product", schema = "ezban")
@@ -14,14 +15,19 @@ public class SaveProduct implements java.io.Serializable {
     private Integer saveProductNo;
 
     @NotNull(message = "會員編號: 請勿空白")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name = "member_no", nullable = false)
     private Member member;
 
     @NotNull(message = "商品編號: 請勿空白")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name = "product_no", nullable = false)
     private Product product;
+
+    @NotNull(message = "商品收藏狀態: 請勿空白")
+    @Column(name = "save_status", nullable = false)
+    @Pattern(regexp = "^[0-1]$", message = "商品收藏狀態不正確")
+    private Byte saveStatus;
 
     public SaveProduct() {
     }
@@ -48,5 +54,13 @@ public class SaveProduct implements java.io.Serializable {
 
     public void setProductVO(Product product) {
         this.product = product;
+    }
+
+    public Byte getSaveStatus() {
+        return saveStatus;
+    }
+
+    public void setSaveStatus(Byte saveStatus) {
+        this.saveStatus = saveStatus;
     }
 }
