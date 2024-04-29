@@ -3,8 +3,9 @@ package com.ezban.eventcomment.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;   
+import com.ezban.event.model.Event;
+
+import java.sql.Timestamp; 
 
 @Entity
 @Table(name = "event_comment")
@@ -18,7 +19,7 @@ public class EventComment {
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "event_no", nullable = false)
-	private Integer eventNo;
+	private Event event;
 	
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -42,11 +43,11 @@ public class EventComment {
 		// TODO Auto-generated constructor stub
 	}
 
-	public EventComment(Integer eventCommentNo, Integer eventNo, Integer memberNo, String eventCommentContent,
-			Integer eventCommentRate, Timestamp eventCommentTime, Byte eventCommentStatus) {
+	public EventComment(Integer eventCommentNo, @NotNull Event event, @NotNull Integer memberNo,
+			String eventCommentContent, Integer eventCommentRate, Timestamp eventCommentTime, Byte eventCommentStatus) {
 		super();
 		this.eventCommentNo = eventCommentNo;
-		this.eventNo = eventNo;
+		this.event = event;
 		this.memberNo = memberNo;
 		this.eventCommentContent = eventCommentContent;
 		this.eventCommentRate = eventCommentRate;
@@ -62,12 +63,12 @@ public class EventComment {
 		this.eventCommentNo = eventCommentNo;
 	}
 
-	public Integer getEventNo() {
-		return eventNo;
+	public Event getEvent() {
+		return event;
 	}
 
-	public void setEventNo(Integer eventNo) {
-		this.eventNo = eventNo;
+	public void setEvent(Event event) {
+		this.event = event;
 	}
 
 	public Integer getMemberNo() {
@@ -110,12 +111,7 @@ public class EventComment {
 		this.eventCommentStatus = eventCommentStatus;
 	}
 
-	@Override
-	public String toString() {
-		return "Event_comment [eventCommentNo=" + eventCommentNo + ", eventNo=" + eventNo + ", memberNo=" + memberNo
-				+ ", eventCommentContent=" + eventCommentContent + ", eventCommentRate=" + eventCommentRate
-				+ ", eventCommentTime=" + eventCommentTime + ", eventCommentStatus=" + eventCommentStatus + "]";
-	}
+	
 	
 	
 }
