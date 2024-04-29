@@ -1,4 +1,4 @@
-package com.ezban.ticketType.model;
+package com.ezban.tickettype.model;
 
 import com.ezban.event.model.Event;
 
