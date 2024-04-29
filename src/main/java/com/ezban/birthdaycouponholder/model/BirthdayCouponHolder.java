@@ -4,12 +4,13 @@ import com.ezban.birthdaycoupon.model.BirthdayCoupon;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.Instant;
 
 @Entity
-@Table(name = "birthday_coupon_holder", schema = "ezban")
-public class BirthdayCouponHolder {
+@Table(name = "birthday_coupon_holder")
+public class BirthdayCouponHolder implements Serializable {
     @Id
     @Column(name = "birthday_coupon_holder_no", nullable = false)
     private Integer birthdayCouponHolderNo;

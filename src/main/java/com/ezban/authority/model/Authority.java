@@ -5,10 +5,11 @@ import com.ezban.func.model.Func;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Entity
-@Table(name = "authority", schema = "ezban")
-public class Authority {
+@Table(name = "authority")
+public class Authority implements Serializable {
     @Id
     @Column(name = "authority_no", nullable = false)
     private Integer authorityNo;

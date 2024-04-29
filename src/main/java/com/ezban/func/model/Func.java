@@ -2,6 +2,7 @@ package com.ezban.func.model;
 
 import com.ezban.authority.model.Authority;
 
+import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -9,8 +10,8 @@ import javax.persistence.*;
 
 
 @Entity
-@Table(name = "func", schema = "ezban")
-public class Func {
+@Table(name = "func")
+public class Func implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

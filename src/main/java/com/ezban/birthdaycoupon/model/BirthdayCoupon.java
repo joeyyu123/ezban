@@ -5,12 +5,13 @@ import com.ezban.productorder.model.ProductOrder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "birthday_coupon", schema = "ezban")
-public class BirthdayCoupon {
+@Table(name = "birthday_coupon")
+public class BirthdayCoupon implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "birthday_coupon_no", nullable = false)

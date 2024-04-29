@@ -6,12 +6,13 @@ import com.ezban.member.model.Member;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.Instant;
 
 @Entity
-@Table(name = "event_comment_report", schema = "ezban")
-public class EventCommentReport {
+@Table(name = "event_comment_report")
+public class EventCommentReport implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_comment_report_no", nullable = false)
