@@ -1,4 +1,4 @@
-package com.ezban.member;
+package com.ezban.member.model;
 
 import java.util.Date;
 

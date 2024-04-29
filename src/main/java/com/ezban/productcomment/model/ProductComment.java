@@ -1,4 +1,4 @@
-package com.ezban.productcomment;
+package com.ezban.productcomment.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

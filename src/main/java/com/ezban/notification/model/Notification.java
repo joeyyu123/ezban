@@ -1,4 +1,4 @@
-package com.ezban.notification;
+package com.ezban.notification.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;

@@ -1,4 +1,4 @@
-package com.ezban.pointsrecord;
+package com.ezban.pointsrecord.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
