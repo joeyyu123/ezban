@@ -2195,20 +2195,22 @@ values (1,  1001, 1, 250, 0),
 create table save_product
 (
     save_product_no int not null auto_increment primary key,
-    member_no       int not null,
-    product_no      int not null,
+    member_no       int not     null,
+    product_no      int not     null,
+    save_status     tinyint not null,
+    
     foreign key (member_no) references member (member_no),
     foreign key (product_no) references product (product_no)
 );
 
-insert into save_product (member_no, product_no)
-values (1, 10),
-       (2, 12),
-       (3, 9),
-       (4, 4),
-       (5, 3),
-       (6, 11),
-       (7, 8),
-       (8, 16),
-       (9, 13),
-       (5, 6);
+insert into save_product (member_no, product_no, save_status)
+values (1, 10, 1),
+       (2, 12, 1),
+       (3, 9, 0),
+       (4, 4, 0),
+       (5, 3, 1),
+       (6, 11, 0),
+       (7, 8, 0),
+       (8, 16, 1),
+       (9, 13, 1),
+       (5, 6, 0);
