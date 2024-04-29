@@ -1,7 +1,9 @@
 package com.ezban.productreport.model;
 
-import com.ezban.saveproduct.model.Member;
-import com.ezban.saveproduct.model.Product;
+
+import com.ezban.admin.model.Admin;
+import com.ezban.member.model.Member;
+import com.ezban.product.model.Product;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;

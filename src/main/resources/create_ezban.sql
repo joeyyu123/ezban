@@ -40,8 +40,9 @@ create table admin
 (
     admin_no      int auto_increment
         primary key,
-    admin_account varchar(20) null,
-    admin_pwd     varchar(20) null,
+    admin_account varchar(20) not null,
+    admin_pwd     varchar(20) not null,
+    admin_name    varchar(50) null,
     admin_mail    varchar(50) null,
     admin_phone   varchar(15) null,
     admin_status  tinyint null,

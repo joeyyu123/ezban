@@ -1,52 +1,62 @@
 package com.ezban.admin.model;
 
-import java.io.Serializable;
+import com.ezban.authority.model.Authority;
+import com.ezban.eventcommentreport.model.EventCommentReport;
+import com.ezban.productcommentreport.model.ProductCommentReport;
+import com.ezban.productreport.model.ProductReport;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "admin")
-public class Admin implements java.io.Serializable {
-   
-
+public class Admin implements Serializable {
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "admin_no", nullable = false)
     private Integer adminNo;
 
-    @Column(name = "admin_account", nullable = false, length = 20)
+    @Size(max = 20)
     @NotNull
+    @Column(name = "admin_account", nullable = false, length = 20)
     private String adminAccount;
 
-    @Column(name = "admin_pwd", nullable = false, length = 20)
+    @Size(max = 20)
     @NotNull
+    @Column(name = "admin_pwd", nullable = false, length = 20)
     private String adminPwd;
 
-    @Column(name = "admin_name", nullable = false, length = 50)
-    @NotNull
+    @Size(max = 50)
+    @Column(name = "admin_name", length = 50)
     private String adminName;
 
-    @Column(name = "admin_mail", nullable = false, length = 50)
-    @NotNull
+    @Size(max = 50)
+    @Column(name = "admin_mail", length = 50)
     private String adminMail;
 
-    @Column(name = "admin_phone", nullable = false, length = 15)
-    @NotNull
+    @Size(max = 15)
+    @Column(name = "admin_phone", length = 15)
     private String adminPhone;
 
-    @Column(name = "admin_status", nullable = false)
-    @NotNull
+    @Column(name = "admin_status")
     private Byte adminStatus;
 
-    // Getters and Setters
+    @OneToMany(mappedBy = "admin")
+    private Set<Authority> authorities = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "admin")
+    private Set<EventCommentReport> eventCommentReports = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "admin")
+    private Set<ProductCommentReport> productCommentReports = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "admin")
+    private Set<ProductReport> productReports = new LinkedHashSet<>();
+
     public Integer getAdminNo() {
         return adminNo;
     }
@@ -101,6 +111,38 @@ public class Admin implements java.io.Serializable {
 
     public void setAdminStatus(Byte adminStatus) {
         this.adminStatus = adminStatus;
+    }
+
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public Set<EventCommentReport> getEventCommentReports() {
+        return eventCommentReports;
+    }
+
+    public void setEventCommentReports(Set<EventCommentReport> eventCommentReports) {
+        this.eventCommentReports = eventCommentReports;
+    }
+
+    public Set<ProductCommentReport> getProductCommentReports() {
+        return productCommentReports;
+    }
+
+    public void setProductCommentReports(Set<ProductCommentReport> productCommentReports) {
+        this.productCommentReports = productCommentReports;
+    }
+
+    public Set<ProductReport> getProductReports() {
+        return productReports;
+    }
+
+    public void setProductReports(Set<ProductReport> productReports) {
+        this.productReports = productReports;
     }
 
 }
