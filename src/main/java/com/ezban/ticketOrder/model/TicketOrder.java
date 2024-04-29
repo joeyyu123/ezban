@@ -1,8 +1,8 @@
-package com.ezban.ticketOrder;
+package com.ezban.ticketOrder.model;
 
 import com.ezban.eventCoupon.EventCoupon;
 import com.ezban.member.Member;
-import com.ezban.ticketOrderDetail.TicketOrderDetail;
+import com.ezban.ticketOrderDetail.model.TicketOrderDetail;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
