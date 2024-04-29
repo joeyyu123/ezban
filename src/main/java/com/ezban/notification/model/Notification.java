@@ -3,6 +3,7 @@ package com.ezban.notification.model;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
+import com.ezban.admin.model.Admin;
 import com.ezban.host.model.Host;
 import com.ezban.member.model.Member;
 

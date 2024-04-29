@@ -18,8 +18,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import com.ezban.birthdaycoupon.model.BirthdayCoupon;
+import com.ezban.member.model.Member;
 import com.ezban.productorderdetail.model.ProductOrderDetail;
-import com.ezban.saveproduct.model.Member;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity

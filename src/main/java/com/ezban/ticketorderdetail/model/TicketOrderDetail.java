@@ -39,7 +39,7 @@ public class TicketOrderDetail implements java.io.Serializable{
     @Column(name = "included_ticket_qty", nullable = false)
     private Integer includedTicketQty;
 
-    @OneToMany(mappedBy = "ticketOrderDetailNo")
+    @OneToMany(mappedBy = "ticketOrderDetail")
     private Set<QrcodeTicket> qrcodeTickets = new LinkedHashSet<>();
 
     public Integer getTicketOrderDetailNo() {

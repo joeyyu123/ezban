@@ -1,5 +1,8 @@
 package com.ezban.saveproduct.model;
 
+import com.ezban.member.model.Member;
+import com.ezban.product.model.Product;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 

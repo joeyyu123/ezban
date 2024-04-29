@@ -1,7 +1,7 @@
 package com.ezban.productorderdetail.model;
 
+import com.ezban.product.model.Product;
 import com.ezban.productorder.model.ProductOrder;
-import com.ezban.saveproduct.model.Product;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
