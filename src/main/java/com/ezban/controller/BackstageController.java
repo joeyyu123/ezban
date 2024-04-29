@@ -17,4 +17,8 @@ public class BackstageController {
     public String template() {
         return "/backstage/template";
     }
+
+    @GetMapping("/productorder/selectPage")
+    public String productOrderSelectPage() {return "/backstage/productorder/selectPage";}
+
 }
