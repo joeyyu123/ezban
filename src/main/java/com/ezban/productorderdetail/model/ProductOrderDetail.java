@@ -18,12 +18,12 @@ public class ProductOrderDetail implements java.io.Serializable {
     private Integer productOrderDetailNo;
 
     @NotNull(message = "商品編號: 請勿空白")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_no", nullable = false)
     private Product product;
 
     @NotNull(message = "商品訂單編號: 請勿空白")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_order_no", nullable = false)
     private ProductOrder productOrder;
 

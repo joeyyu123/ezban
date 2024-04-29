@@ -7,4 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface SaveProductRepository extends JpaRepository<SaveProduct,Integer> {
 
+	@Transactional
+	@Modifying
+	@Query(value = "delete from save_product where saveProductNo =?1", nativeQuery = true)
+	void deleteBySaveProductNo(int saveProductNo);
 }
