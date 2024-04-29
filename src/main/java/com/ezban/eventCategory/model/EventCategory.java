@@ -1,6 +1,6 @@
-package com.ezban.eventCategory;
+package com.ezban.eventCategory.model;
 
-import com.ezban.event.Event;
+import com.ezban.event.model.Event;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
