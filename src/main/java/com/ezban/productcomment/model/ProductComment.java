@@ -35,7 +35,7 @@ public class ProductComment {
 
 		@NotNull
 		@Column(name = "product_comment_date", nullable = false)
-		private LocalDateTime productCommentDate;
+		private Timestamp productCommentDate;
 
 		@Column(name = "product_comment_status")
 		private Byte productCommentStatus;
@@ -46,7 +46,7 @@ public class ProductComment {
 		}
 
 		public Product_comment(Integer productCommentNo, Integer productNo, Integer memberNo, Integer productRate,
-				String productCommentContent, LocalDateTime productCommentDate, Byte productCommentStatus) {
+				String productCommentContent, Timestamp productCommentDate, Byte productCommentStatus) {
 			super();
 			this.productCommentNo = productCommentNo;
 			this.productNo = productNo;
@@ -97,11 +97,11 @@ public class ProductComment {
 			this.productCommentContent = productCommentContent;
 		}
 
-		public LocalDateTime getProductCommentDate() {
+		public Timestamp getProductCommentDate() {
 			return productCommentDate;
 		}
 
-		public void setProductCommentDate(LocalDateTime productCommentDate) {
+		public void setProductCommentDate(Timestamp productCommentDate) {
 			this.productCommentDate = productCommentDate;
 		}
 

@@ -26,9 +26,8 @@ public class PointsRecord {
 		@Column(name = "points_changed", nullable = false)
 		private Integer pointsChanged;
 
-		@Temporal(TemporalType.DATE)
 		@Column(name = "transaction_time")
-		private LocalDateTime transactionTime;
+		private Timestamp transactionTime;
 
 		public Points_record() {
 			super();
@@ -36,7 +35,7 @@ public class PointsRecord {
 		}
 
 		public Points_record(Integer pointsRecordNo, Integer memberNo, Integer pointsChanged,
-				LocalDateTime transactionTime) {
+				Timestamp transactionTime) {
 			super();
 			this.pointsRecordNo = pointsRecordNo;
 			this.memberNo = memberNo;
@@ -68,11 +67,11 @@ public class PointsRecord {
 			this.pointsChanged = pointsChanged;
 		}
 
-		public LocalDateTime getTransactionTime() {
+		public Timestamp getTransactionTime() {
 			return transactionTime;
 		}
 
-		public void setTransactionTime(LocalDateTime transactionTime) {
+		public void setTransactionTime(Timestamp transactionTime) {
 			this.transactionTime = transactionTime;
 		}
 

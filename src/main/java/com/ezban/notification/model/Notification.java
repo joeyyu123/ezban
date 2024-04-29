@@ -36,7 +36,7 @@ public class Notification {
 	private Byte readStatus;
 	
 	@Column(name = "notification_time")
-	private LocalDateTime notificationTime;
+	private Timestamp notificationTime;
 	
 	public Notification() {
 		super();
@@ -44,7 +44,7 @@ public class Notification {
 	}
 
 	public Notification(Integer notificationNo, Integer memberNo, Integer hostNo, Integer adminNo,
-			String notificationContent, Byte readStatus, LocalDateTime notificationTime) {
+			String notificationContent, Byte readStatus, Timestamp notificationTime) {
 		super();
 		this.notificationNo = notificationNo;
 		this.memberNo = memberNo;
@@ -103,11 +103,11 @@ public class Notification {
 		this.readStatus = readStatus;
 	}
 
-	public LocalDateTime getNotificationTime() {
+	public Timestamp getNotificationTime() {
 		return notificationTime;
 	}
 
-	public void setNotificationTime(LocalDateTime notificationTime) {
+	public void setNotificationTime(Timestamp notificationTime) {
 		this.notificationTime = notificationTime;
 	}
 

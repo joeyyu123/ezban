@@ -32,7 +32,7 @@ public class EventComment {
 	private Integer eventCommentRate;
 	
 	@Column(name = "event_comment_time")
-	private LocalDateTime eventCommentTime;
+	private Timestamp eventCommentTime;
 	
 	@Column(name = "event_comment_status")
 	private Byte eventCommentStatus;
@@ -43,7 +43,7 @@ public class EventComment {
 	}
 
 	public EventComment(Integer eventCommentNo, Integer eventNo, Integer memberNo, String eventCommentContent,
-			Integer eventCommentRate, LocalDateTime eventCommentTime, Byte eventCommentStatus) {
+			Integer eventCommentRate, Timestamp eventCommentTime, Byte eventCommentStatus) {
 		super();
 		this.eventCommentNo = eventCommentNo;
 		this.eventNo = eventNo;
@@ -94,11 +94,11 @@ public class EventComment {
 		this.eventCommentRate = eventCommentRate;
 	}
 
-	public LocalDateTime getEventCommentTime() {
+	public Timestamp getEventCommentTime() {
 		return eventCommentTime;
 	}
 
-	public void setEventCommentTime(LocalDateTime eventCommentTime) {
+	public void setEventCommentTime(Timestamp eventCommentTime) {
 		this.eventCommentTime = eventCommentTime;
 	}
 
