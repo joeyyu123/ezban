@@ -678,9 +678,14 @@ input[type=email]:focus, input[type=password]:focus, input[type=text]:focus, inp
 .top-header {
   /* position: fixed;
   z-index: 1000; */
-  height: 70px;
+  height: 80px;
   width: 100%;
   background-color: #f4e9e6;
+}
+@media (max-width: 768px) {
+  .top-header {
+    height: 220px;
+  }
 }
 .top-header .container {
   width: 75%;
