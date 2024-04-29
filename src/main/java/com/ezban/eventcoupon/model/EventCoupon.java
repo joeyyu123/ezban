@@ -63,7 +63,7 @@ public class EventCoupon implements java.io.Serializable {
     @Column(name = "coupon_desc", length = 150)
     private String couponDesc;
 
-    @OneToMany(mappedBy = "eventCouponNo")
+    @OneToMany(mappedBy = "eventCoupon")
     private Set<TicketOrder> ticketOrders = new LinkedHashSet<>();
 
 //--------------------------------------------getters and setters--------------------------------------------

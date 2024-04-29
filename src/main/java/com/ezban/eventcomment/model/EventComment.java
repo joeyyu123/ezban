@@ -4,9 +4,12 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import com.ezban.event.model.Event;
+import com.ezban.eventcommentreport.model.EventCommentReport;
 import com.ezban.member.model.Member;
 
-import java.sql.Timestamp; 
+import java.sql.Timestamp;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "event_comment")
@@ -38,8 +41,19 @@ public class EventComment {
 	
 	@Column(name = "event_comment_status")
 	private Byte eventCommentStatus;
-	
-	public EventComment() {
+
+    @OneToMany(mappedBy = "eventComment")
+    private Set<EventCommentReport> eventCommentReports = new LinkedHashSet<>();
+
+    public Set<EventCommentReport> getEventCommentReports() {
+        return eventCommentReports;
+    }
+
+    public void setEventCommentReports(Set<EventCommentReport> eventCommentReports) {
+        this.eventCommentReports = eventCommentReports;
+    }
+
+    public EventComment() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

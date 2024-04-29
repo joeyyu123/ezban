@@ -1,6 +1,6 @@
 package com.ezban.event.model;
 
-import com.ezban.eventcomment.EventComment;
+import com.ezban.eventcomment.model.EventComment;
 import com.ezban.host.model.Host;
 import com.ezban.eventcategory.model.EventCategory;
 import com.ezban.tickettype.model.TicketType;
