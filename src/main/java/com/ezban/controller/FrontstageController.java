@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/frontstage")
 public class FrontstageController {
 
-    @GetMapping("/")
+    @GetMapping("")
     public String index() {
         return "/frontstage/index2";
     }
