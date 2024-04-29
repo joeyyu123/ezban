@@ -18,10 +18,12 @@ public class ProductComment {
 		private Integer productCommentNo;
 
 		@NotNull
+		@ManyToOne(fetch = FetchType.LAZY)
 		@JoinColumn(name = "product_no", nullable = false)
 		private Integer productNo;
 
 		@NotNull
+		@ManyToOne(fetch = FetchType.LAZY)
 		@JoinColumn(name = "member_no", nullable = false)
 		private Integer memberNo;
 

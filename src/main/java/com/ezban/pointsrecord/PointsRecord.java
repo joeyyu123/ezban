@@ -18,6 +18,7 @@ public class PointsRecord {
 		private Integer pointsRecordNo;
 
 		@NotNull
+		@ManyToOne(fetch = FetchType.LAZY)
 		@JoinColumn(name = "member_no", nullable = false)
 		private Integer memberNo;
 

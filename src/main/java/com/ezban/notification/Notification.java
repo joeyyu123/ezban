@@ -16,12 +16,15 @@ public class Notification {
 	@Column(name = "notification_no", nullable = false)
 	private Integer notificationNo;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_no")
 	private Integer memberNo;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "host_no")
 	private Integer hostNo;
 	
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "admin_no")
 	private Integer adminNo;
 	

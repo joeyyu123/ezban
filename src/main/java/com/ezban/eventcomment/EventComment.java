@@ -16,10 +16,12 @@ public class EventComment {
 	private Integer eventCommentNo;
 	
 	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "event_no", nullable = false)
 	private Integer eventNo;
 	
 	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_no", nullable = false)
 	private Integer memberNo;
 	
