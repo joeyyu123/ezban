@@ -21,17 +21,17 @@ public class ProductReport implements java.io.Serializable {
     private Integer productReportNo;
 
     @NotNull(message = "商品編號: 請勿空白")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name = "product_no", nullable = false)
     private Product product;
 
     @NotNull(message = "會員編號: 請勿空白")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name = "member_no", nullable = false)
     private Member member;
 
     @NotNull(message = "後台管理員編號: 請勿空白")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name = "admin_no", nullable = false)
     private Admin admin;
 

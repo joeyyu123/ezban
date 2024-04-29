@@ -33,7 +33,7 @@ public class ProductOrder implements java.io.Serializable {
     private Integer productOrderNo;
 
     @NotNull(message = "會員編號: 請勿空白!")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne
     @JoinColumn(name = "member_no", nullable = false)
     private Member member;
 
@@ -52,7 +52,7 @@ public class ProductOrder implements java.io.Serializable {
     @Column(name = "member_points", columnDefinition = "int default 0")
     private Integer memberPoints;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "birthday_coupon_no")
     private BirthdayCoupon birthdayCoupon;
 
@@ -70,9 +70,11 @@ public class ProductOrder implements java.io.Serializable {
     @Pattern(regexp = "^[\\u4e00-\\u9fa5a-zA-Z0-9 ]{2,200}$", message = "地址格式不正確")
     @Column(name = "recipient_address", nullable = false, length = 200)
     private String recipientAddress;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Taipei")
     @Column(name = "product_orderdate")
     private Timestamp productOrderdate = Timestamp.valueOf(LocalDateTime.now());
+    
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Taipei")
     @Column(name = "product_paydate")
     private Timestamp productPaydate = Timestamp.valueOf(LocalDateTime.now());
