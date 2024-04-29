@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import com.ezban.event.model.Event;
+import com.ezban.member.model.Member;
 
 import java.sql.Timestamp; 
 
@@ -24,7 +25,7 @@ public class EventComment {
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_no", nullable = false)
-	private Integer memberNo;
+	private Member member;
 	
 	@Column(name = "event_comment_content")
 	private String eventCommentContent;
@@ -43,12 +44,12 @@ public class EventComment {
 		// TODO Auto-generated constructor stub
 	}
 
-	public EventComment(Integer eventCommentNo, @NotNull Event event, @NotNull Integer memberNo,
+	public EventComment(Integer eventCommentNo, @NotNull Event event, @NotNull Member member,
 			String eventCommentContent, Integer eventCommentRate, Timestamp eventCommentTime, Byte eventCommentStatus) {
 		super();
 		this.eventCommentNo = eventCommentNo;
 		this.event = event;
-		this.memberNo = memberNo;
+		this.member = member;
 		this.eventCommentContent = eventCommentContent;
 		this.eventCommentRate = eventCommentRate;
 		this.eventCommentTime = eventCommentTime;
@@ -71,12 +72,12 @@ public class EventComment {
 		this.event = event;
 	}
 
-	public Integer getMemberNo() {
-		return memberNo;
+	public Member getMember() {
+		return member;
 	}
 
-	public void setMemberNo(Integer memberNo) {
-		this.memberNo = memberNo;
+	public void setMember(Member member) {
+		this.member = member;
 	}
 
 	public String getEventCommentContent() {
@@ -111,7 +112,12 @@ public class EventComment {
 		this.eventCommentStatus = eventCommentStatus;
 	}
 
-	
+	@Override
+	public String toString() {
+		return "EventComment [eventCommentNo=" + eventCommentNo + ", event=" + event + ", member=" + member
+				+ ", eventCommentContent=" + eventCommentContent + ", eventCommentRate=" + eventCommentRate
+				+ ", eventCommentTime=" + eventCommentTime + ", eventCommentStatus=" + eventCommentStatus + "]";
+	}
 	
 	
 }

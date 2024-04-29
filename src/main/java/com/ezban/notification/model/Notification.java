@@ -3,6 +3,9 @@ package com.ezban.notification.model;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
+import com.ezban.host.model.Host;
+import com.ezban.member.model.Member;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime; 
 
@@ -18,15 +21,15 @@ public class Notification {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_no")
-	private Integer memberNo;
+	private Member member;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "host_no")
-	private Integer hostNo;
+	private Host host;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "admin_no")
-	private Integer adminNo;
+	private Admin admin;
 	
 	@Size(max = 200)
 	@Column(name = "notification_content", length = 200)
@@ -43,13 +46,13 @@ public class Notification {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Notification(Integer notificationNo, Integer memberNo, Integer hostNo, Integer adminNo,
-			String notificationContent, Byte readStatus, Timestamp notificationTime) {
+	public Notification(Integer notificationNo, Member member, Host host, Admin admin,
+			@Size(max = 200) String notificationContent, Byte readStatus, Timestamp notificationTime) {
 		super();
 		this.notificationNo = notificationNo;
-		this.memberNo = memberNo;
-		this.hostNo = hostNo;
-		this.adminNo = adminNo;
+		this.member = member;
+		this.host = host;
+		this.admin = admin;
 		this.notificationContent = notificationContent;
 		this.readStatus = readStatus;
 		this.notificationTime = notificationTime;
@@ -63,28 +66,28 @@ public class Notification {
 		this.notificationNo = notificationNo;
 	}
 
-	public Integer getMemberNo() {
-		return memberNo;
+	public Member getMember() {
+		return member;
 	}
 
-	public void setMemberNo(Integer memberNo) {
-		this.memberNo = memberNo;
+	public void setMember(Member member) {
+		this.member = member;
 	}
 
-	public Integer getHostNo() {
-		return hostNo;
+	public Host getHost() {
+		return host;
 	}
 
-	public void setHostNo(Integer hostNo) {
-		this.hostNo = hostNo;
+	public void setHost(Host host) {
+		this.host = host;
 	}
 
-	public Integer getAdminNo() {
-		return adminNo;
+	public Admin getAdmin() {
+		return admin;
 	}
 
-	public void setAdminNo(Integer adminNo) {
-		this.adminNo = adminNo;
+	public void setAdmin(Admin admin) {
+		this.admin = admin;
 	}
 
 	public String getNotificationContent() {
@@ -113,9 +116,9 @@ public class Notification {
 
 	@Override
 	public String toString() {
-		return "Notification [notificationNo=" + notificationNo + ", memberNo=" + memberNo + ", hostNo=" + hostNo
-				+ ", adminNo=" + adminNo + ", notificationContent=" + notificationContent + ", readStatus=" + readStatus
-				+ ", notificationTime=" + notificationTime + "]";
+		return "Notification [notificationNo=" + notificationNo + ", member=" + member + ", host=" + host
+				+ ", notificationContent=" + notificationContent + ", readStatus=" + readStatus + ", notificationTime="
+				+ notificationTime + "]";
 	}
 	
 	

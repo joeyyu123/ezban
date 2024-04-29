@@ -3,6 +3,8 @@ package com.ezban.pointsrecord.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import com.ezban.member.model.Member;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -20,7 +22,7 @@ public class PointsRecord {
 		@NotNull
 		@ManyToOne(fetch = FetchType.LAZY)
 		@JoinColumn(name = "member_no", nullable = false)
-		private Integer memberNo;
+		private Member member;
 
 		@NotNull
 		@Column(name = "points_changed", nullable = false)
@@ -34,11 +36,11 @@ public class PointsRecord {
 			// TODO Auto-generated constructor stub
 		}
 
-		public Points_record(Integer pointsRecordNo, Integer memberNo, Integer pointsChanged,
+		public Points_record(Integer pointsRecordNo, @NotNull Member member, @NotNull Integer pointsChanged,
 				Timestamp transactionTime) {
 			super();
 			this.pointsRecordNo = pointsRecordNo;
-			this.memberNo = memberNo;
+			this.member = member;
 			this.pointsChanged = pointsChanged;
 			this.transactionTime = transactionTime;
 		}
@@ -51,12 +53,12 @@ public class PointsRecord {
 			this.pointsRecordNo = pointsRecordNo;
 		}
 
-		public Integer getMemberNo() {
-			return memberNo;
+		public Member getMember() {
+			return member;
 		}
 
-		public void setMemberNo(Integer memberNo) {
-			this.memberNo = memberNo;
+		public void setMember(Member member) {
+			this.member = member;
 		}
 
 		public Integer getPointsChanged() {
@@ -77,9 +79,10 @@ public class PointsRecord {
 
 		@Override
 		public String toString() {
-			return "Points_record [pointsRecordNo=" + pointsRecordNo + ", memberNo=" + memberNo + ", pointsChanged="
+			return "Points_record [pointsRecordNo=" + pointsRecordNo + ", member=" + member + ", pointsChanged="
 					+ pointsChanged + ", transactionTime=" + transactionTime + "]";
 		}
+		
+		
 	}
-
 }
