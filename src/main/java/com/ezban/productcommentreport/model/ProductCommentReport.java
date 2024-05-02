@@ -20,7 +20,7 @@ public class ProductCommentReport {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_comment_no", nullable = false)
-    private ProductComment.Product_comment productCommentNo;
+    private ProductComment productCommentNo;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -52,11 +52,11 @@ public class ProductCommentReport {
         this.productCommentReportNo = productCommentReportNo;
     }
 
-    public ProductComment.Product_comment getProductCommentNo() {
+    public ProductComment getProductCommentNo() {
         return productCommentNo;
     }
 
-    public void setProductCommentNo(ProductComment.Product_comment productCommentNo) {
+    public void setProductCommentNo(ProductComment productCommentNo) {
         this.productCommentNo = productCommentNo;
     }
 
