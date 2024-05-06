@@ -1,6 +1,7 @@
 package com.ezban.tickettype.model;
 
 import com.ezban.event.model.Event;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,6 +19,7 @@ public class TicketType implements java.io.Serializable{
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "event_no", nullable = false)
+    @JsonIgnore
     private Event event;
 
     @Size(max = 50)
