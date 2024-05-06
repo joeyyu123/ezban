@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link th:include="backstage/index :: head">
+    <!-- 可以在這底下加入其他 css 或是 script    -->
+</head>
+<body>
+<div id="wrapper">
+    <nav th:replace="backstage/event/event :: navbar"></nav>
+    <div th:insert="backstage/index :: hamburger-btn"></div>
+    <div class="page-content-wrapper">
+        <!-- 頁面內容都放在 content 裡面 -->
+        <div class="content">
+            <h1>這是總覽頁面</h1>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
