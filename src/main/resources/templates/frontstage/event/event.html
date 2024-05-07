@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:include="frontstage/index2 :: head">
+
+    <style>
+        .container {
+            width: 85%;
+        }
+
+        .header-background {
+            background: url('https://placehold.co/600x200') no-repeat center center;
+            background-size: cover;
+        }
+
+        .icon-bar {
+            color: #FFFFFF;
+            font-size: 14px;
+        }
+
+        .event-content {
+            padding: 20px;
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #imagePreview {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        container img{
+            width: 100%;
+        }
+
+        .other-events img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        .other-events .card {
+            width: 120px;
+            text-align: center;
+            margin: 10px;
+        }
+
+        .fixed-box {
+            position: fixed;
+            top: 100px; /* Distance from the top */
+            right: 20px; /* Distance from the right */
+            width: 200px;
+            height: auto;
+            background-color: #f8f9fa;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        #map {
+            height: 400px;
+            width: 600px;
+        }
+    </style>
+</head>
+
+<body id="body">
+<div th:replace="frontstage/index2 :: header"></div>
+
+
+<!-- 頁面內容 -->
+<section class=" section">
+    <div class="container">
+        <div class="container-fluid">
+            <div class="container">
+
+                <img id="imagePreview" class="" th:src="'data:image/jpeg;base64, '+${event.getEventImgBase64()}"
+
+                     alt="Event Banner">
+                <div class="event-content">
+
+                    <h2 class="text-primary" th:text="${event.eventName}"></h2>
+                    <div class="d-flex justify-content-between">
+                        <span><i class="far fa-calendar-alt"
+                                 th:text="${#dates.format(event.eventStartTime, 'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#dates.format(event.eventEndTime, 'yyyy-MM-dd HH:mm')}"></i> 06.01 - 06.02</span>
+                        <br>
+                        <span id="eventAddress" th:text="${event.eventCity}+${event.eventDetailedAddress}"><i
+                                class="fas fa-map-marker-alt"></i> Taipei, Taiwan</span>
+                        <div id="map"></div>
+                    </div>
+                    <hr>
+
+
+                    <p>活動介紹</p>
+                    <p th:utext="${event.eventDesc}"></p>
+
+
+                    <h3>You may like other events</h3>
+                    <div class="row">
+                        <div class="col-md-4" th:each="event : ${events}">
+                            <div class="product-item">
+                                <div class="product-thumb">
+                                    <img class="img-responsive"
+                                         th:src="'data:image/jpeg;base64, '+${event.getEventImgBase64()}"
+                                         alt="event-img"/>
+                                </div>
+                                <div class="product-content">
+                                    <p class="date"
+                                       th:text="${#dates.format(event.eventStartTime, 'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#dates.format(event.eventEndTime, 'yyyy-MM-dd HH:mm')}"></p>
+                                    <h4><a th:href="@{'/events/' + ${event.eventNo}}" th:text="${event.eventName}"></a>
+                                    </h4>
+                                    <div class="event_location">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#989797"
+                                             class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                            <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+                                        </svg>
+                                        <span class="location" th:text="${event.eventCity}"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="fixed-box">
+                <a th:href="@{'/events/' +${event.eventNo} + '/tickets' }"
+                   class="btn btn-primary btn-block">立即報名</a>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<div th:replace="frontstage/index2 :: footer"></div>
+<script th:src="@{/js/frontstage/event/event.js}"></script>
+
+<script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgLw2syYNfHKYnNdtBWsNAtjbxnryZuDM&callback=initMap"></script>
+
+</body>
+
+
+</html>
