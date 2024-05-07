@@ -4,7 +4,7 @@
 <head th:fragment="head">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ezban</title>
+    <title>ezban</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" />
@@ -15,7 +15,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.4/js/tether.min.js"></script>
-    <script th:src="@{/js/backstsage/index.js}"></script>
+    <script th:src="@{/js/backstage/index.js}"></script>
 
 </head>
 
@@ -27,13 +27,9 @@
             <ul class="nav sidebar-nav">
                 <li class="sidebar-header">
                     <div class="sidebar-brand">
-                        <a th:href="@{/backstage}">Ezban</a>
+                        <a th:href="@{/backstage}">ezban</a>
                     </div>
                 </li>
-                <li><a th:href="@{/backstage}">Home</a></li>
-                <!-- <li><a href="#about">About</a></li> -->
-                <!-- <li><a href="#events">Events</a></li> -->
-                <!-- <li><a href="#team">Team</a></li> -->
                 <li class="dropdown">
                     <a href="#events" class="dropdown-toggle" data-toggle="dropdown">活動相關設定 <span class="caret"></span
                 ></a>
@@ -59,22 +55,21 @@
                 <li><a href="#">系統通知</a></li>
                 <li><a href="#">帳號設定</a></li>
                 <li><a href="#">登出</a></li>
-                
+
 
 
             </ul>
         </nav>
-        <!-- /#sidebar-wrapper -->
 
         <!-- Page Content -->
-        <div class="page-content-wrapper">
-            <div th:fragment="hamburger-btn">
-                <button type="button" class="hamburger animated fadeInLeft is-closed" data-toggle="offcanvas">
-            <span class="hamb-top"></span>
-            <span class="hamb-middle"></span>
-            <span class="hamb-bottom"></span>
+        <div th:fragment="hamburger-btn">
+            <button type="button" class="hamburger animated fadeInLeft is-closed" data-toggle="offcanvas">
+                <span class="hamb-top"></span>
+                <span class="hamb-middle"></span>
+                <span class="hamb-bottom"></span>
             </button>
-            </div>
+        </div>
+        <div class="page-content-wrapper">
             <div class="index">
                 <h1>這是首頁</h1>
                 <p>testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest</p>

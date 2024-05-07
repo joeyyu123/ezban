@@ -1,0 +1,52 @@
+.container-fluid{
+/*    水平居中*/
+    text-align: center;
+
+}
+body {
+    font-family: 'Noto Sans TC', sans-serif;
+}
+
+.highlight-box {
+    background-color: #E0F7FA;
+    border: 1px dashed #0097A7;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.form-section {
+    background-color: #FFFFFF;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #BDBDBD;
+}
+
+.btn-primary {
+    background-color: #0097A7;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #00838F;
+}
+
+.form-control {
+    margin-bottom: 10px;
+}
+
+.map-container {
+    height: 300px;
+}
+
+.image-upload-container {
+    border: 2px dashed #BDBDBD;
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.image-preview {
+    width: 100%;
+    margin-top: 10px;
+}

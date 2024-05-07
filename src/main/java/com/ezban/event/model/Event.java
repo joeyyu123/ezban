@@ -4,11 +4,14 @@ import com.ezban.eventcomment.model.EventComment;
 import com.ezban.host.model.Host;
 import com.ezban.eventcategory.model.EventCategory;
 import com.ezban.tickettype.model.TicketType;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
+import java.util.Base64;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -32,7 +35,7 @@ public class Event implements java.io.Serializable{
     @JoinColumn(name = "event_category_no")
     private EventCategory eventCategory;
 
-    @NotNull
+//    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "host_no", nullable = false)
     private Host host;
@@ -73,6 +76,12 @@ public class Event implements java.io.Serializable{
     @Column(name = "registered_count")
     private Integer registeredCount;
 
+    /*
+     * 0表示未上架
+     * 1表示上架中
+     * 2表示已下架
+     * 3表示已結束
+     */
     @NotNull
     @Column(name = "event_status", nullable = false)
     private Byte eventStatus;
@@ -87,7 +96,7 @@ public class Event implements java.io.Serializable{
     private Byte eventCheckoutStatus;
 
     @Column(name = "event_checkout_time")
-    private Integer eventCheckoutTime;
+    private Timestamp eventCheckoutTime;
 
     @OneToMany(mappedBy = "event",cascade = CascadeType.ALL)
     private Set<EventComment> eventComments = new LinkedHashSet<>();
@@ -105,6 +114,13 @@ public class Event implements java.io.Serializable{
 
     public byte[] getEventImg() {
         return eventImg;
+    }
+
+    public String getEventImgBase64() {
+        if (eventImg == null || eventImg.length == 0) {
+            return null;
+        }
+        return Base64.getEncoder().encodeToString(eventImg);
     }
 
     public void setEventImg(byte[] eventImg) {
@@ -247,11 +263,11 @@ public class Event implements java.io.Serializable{
         this.eventCheckoutStatus = eventCheckoutStatus;
     }
 
-    public Integer getEventCheckoutTime() {
+    public Timestamp getEventCheckoutTime() {
         return eventCheckoutTime;
     }
 
-    public void setEventCheckoutTime(Integer eventCheckoutTime) {
+    public void setEventCheckoutTime(Timestamp eventCheckoutTime) {
         this.eventCheckoutTime = eventCheckoutTime;
     }
 

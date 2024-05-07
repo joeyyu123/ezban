@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link th:include="backstage/index :: head">
+    <!-- 可以在這底下加入其他 css 或是 script    -->
+    <style>
+        tr.clickable-row:hover {
+            background-color: #f5f5f5 !important;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper" class="toggled">
+        <nav th:replace="backstage/index :: navbar"></nav>
+        <div th:insert="backstage/index :: hamburger-btn"></div>
+        <div class="page-content-wrapper">
+            <!-- 頁面內容都放在 content 裡面 -->
+            <div class="content">
+                <!-- 這裡可以放置你想呈現的內容 -->
+                <div class="container">
+                    <h1>活動列表</h1>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">活動名稱</th>
+                            <th scope="col">活動開始時間</th>
+                            <th scope="col">活動結束時間</th>
+                            <th scope="col">活動狀態</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr class="clickable-row" th:each="event:${events}">
+
+                            <th scope="row" th:text="${event.eventName}"></th>
+                            <td th:text="${#dates.format(event.eventStartTime, 'yyyy-MM-dd HH:mm')}"></td>
+                            <td th:text="${#dates.format(event.eventEndTime, 'yyyy-MM-dd HH:mm')}"></td>
+                            <th:block th:switch="${event.eventStatus}">
+                                <td th:case="0" th:text="未上架"></td>
+                                <td th:case="1" th:text="上架中"></td>
+                                <td th:case="2" th:text="已下架"></td>
+                                <td th:case="3" th:text="已結束"></td>
+                            </th:block>
+                            <td>
+                                <a style="display: none;" th:href="@{'/backstage/events/' + ${event.eventNo} + '/overview'}">查看</a>
+                            </td>
+                        </tr>
+
+                    </table>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('tr').click(function() {
+                var href = $(this).find('a').attr('href');
+                if (href) {
+                    window.location = href;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
