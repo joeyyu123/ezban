@@ -78,7 +78,8 @@
         <div class="container-fluid">
             <div class="container">
 
-                <img id="imagePreview" class="" th:src="'data:image/jpeg;base64, '+${event.getEventImgBase64()}"
+                <img id="imagePreview" th:if="${event.getEventImgBase64() != null}" class="" th:src="'data:image/jpeg;base64, '+${event.getEventImgBase64()}" alt="Event Banner">
+                <img id="imagePreview" th:if="${event.getEventImgBase64() == null}" class="" th:src="@{/images/未上傳圖片.jpg}"
 
                      alt="Event Banner">
                 <div class="event-content">
