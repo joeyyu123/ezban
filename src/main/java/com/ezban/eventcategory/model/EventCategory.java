@@ -14,7 +14,7 @@ public class EventCategory implements java.io.Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_category_no", nullable = false)
-    private Integer id;
+    private Integer eventCategoryNo;
 
     @Size(max = 20)
     @NotNull
@@ -24,12 +24,12 @@ public class EventCategory implements java.io.Serializable{
     @OneToMany(mappedBy = "eventCategory",cascade = CascadeType.ALL)
     private Set<Event> events = new LinkedHashSet<>();
 
-    public Integer getId() {
-        return id;
+    public Integer getEventCategoryNo() {
+        return eventCategoryNo;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setEventCategoryNo(Integer eventCategoryNo) {
+        this.eventCategoryNo = eventCategoryNo;
     }
 
     public String getEventCategoryName() {

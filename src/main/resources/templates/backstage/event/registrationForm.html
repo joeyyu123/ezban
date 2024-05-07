@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link th:include="backstage/index :: head">
+
+
+    <style>
+        div.cloneable ul,
+        div.puttable ul {
+            list-style: none;
+            padding: 0;
+            border: 1px solid black;
+        }
+
+        div.cloneable li {
+            background: #d5d4d4;
+            margin: 10px;
+            padding: 5px 10px;
+        }
+
+        div.puttable li {
+            background: #ffffff;
+            margin: 10px;
+            padding: 5px 10px;
+            /*border: 1px solid black;*/
+        }
+
+        .sortable-ghost {
+            opacity: 0.6;
+        }
+
+        #form,
+        #examples {
+            background-color: #ffffff;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select,
+        textarea,
+        input[type="date"] {
+            width: 100%;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+    <!-- Sortable.js -->
+    <!-- https://github.com/SortableJS/Sortable?tab=readme-ov-file -->
+    <script src="https://raw.githack.com/SortableJS/Sortable/master/Sortable.js"></script>
+
+    <script>
+        $(function () {
+
+
+            Sortable.create(examples, {
+                group: {
+                    name: "examples",
+                    pull: "clone",
+                },
+                // ghostClass: "sortable-ghost",
+                animation: 100,
+                sort: false,
+            });
+
+            Sortable.create(form, {
+                group: {
+                    name: "form",
+                    put: ["examples"],
+                },
+                animation: 100,
+                draggable: ".form-item",
+                onAdd: function (evt) {
+
+
+                    let input_div = $(evt.item).find(".input")
+                    input_div.each(function () {
+                        $(this).removeClass("hidden");
+                    });
+                    let li_el = $(evt.item);
+                    $(li_el).find("button.edit-field, button.delete-field").toggleClass("hidden");
+                    $(li_el).find("input[name='required']").toggleClass("hidden");
+                    $(li_el).find("input[name='required']").closest("label").toggleClass("hidden");
+
+
+
+                },
+            });
+
+
+            // 編輯按鈕綁定事件
+            $(document).on("click", ".edit-field", function () {
+                let li_el = $(this).closest("li");
+                $(li_el).find("input[name='label']").val($(li_el).children("label").text())
+                $(li_el).find(".input").children().toggleClass("hidden");
+                $(li_el).find("label").toggleClass("hidden");
+                $(li_el).find("input[name='label']").toggleClass("hidden");
+
+            });
+
+            // 刪除按鈕綁定事件
+            $(document).on("click", ".delete-field", function () {
+                $(this).closest("li").remove();
+            });
+
+            // 必填欄位勾選
+            $(document).on("change", "input[name='required']", function () {
+                let li_el = $(this).closest("li");
+                $(li_el).find("input[name='required']").val($(this).prop("checked"));
+
+            });
+
+            // 儲存選項按鈕綁定事件
+            $(document).on("click", ".save-options", function () {
+                let li_el = $(this).closest("li");
+                // 將欄位標題的input的值取出並更新label的文字
+                let label_val = $(li_el).find("input[name='label']").val();
+                $(li_el).children("label").text(label_val);
+                $(li_el).find("input[name='label']").val(label_val);
+
+                // 將欄位的選項取出並更新input的value
+                let options = $(li_el).find("textarea[name='options']").val();
+                if (options !== undefined) {
+                    $(li_el).find("input[name='options']").val(options);
+                    options = options.substring(1, options.length - 1).split(','); // 移除方括號並分割字串
+                }
+
+                // 更新radio、checkbox、select的選項
+                let component_val = $(li_el).find("input[name='component']").val();
+                let options_div = null;
+                if (options) {
+                    switch (component_val) {
+                        case "select":
+                            let select_div = $(li_el).find("select");
+                            select_div.empty();
+                            options.forEach(function (option) {
+                                let select_el = $("<option></option>");
+                                select_el.text(option);
+                                select_el.val(option);
+                                select_div.append(select_el);
+                            });
+                            break;
+                        case "checkbox":
+                            options_div = $(li_el).find("div.options");
+                            options_div.empty();
+                            options.forEach(function (option) {
+                                let option_el = $("<div class='option'></div>");
+                                let input_el = $("<input type='checkbox'>");
+                                input_el.val(option);
+                                input_el.attr("name", "option");
+                                input_el.attr("value", option);
+                                option_el.val(option);
+                                let label_el = $("<label></label>");
+                                label_el.text(option);
+                                option_el.append(input_el);
+                                option_el.append(label_el);
+                                options_div.append(option_el);
+                            });
+                            break;
+                        case "radio":
+                            options_div = $(li_el).find("div.options");
+                            options_div.empty();
+                            options.forEach(function (option) {
+                                let option_el = $("<div class='option'></div>");
+                                let input_el = $("<input type='radio'>");
+                                input_el.val(option);
+                                input_el.attr("name", "option");
+                                input_el.attr("value", option);
+                                option_el.val(option);
+                                let label_el = $("<label></label>");
+                                label_el.text(option);
+                                option_el.append(input_el);
+                                option_el.append(label_el);
+                                options_div.append(option_el);
+                            });
+                            break;
+                    }
+                }
+
+
+                $(li_el).find(".input").children().toggleClass("hidden");
+                $(li_el).find("label.question-label").toggleClass("hidden");
+                $(li_el).find("input[name='label']").toggleClass("hidden");
+            });
+
+            // 儲存表單按鈕
+            $(document).on("click", "#save-form", function () {
+                let question_list = [];
+                let form_items = $("#form").children();
+                form_items.each(function () {
+                    let question = {};
+                    let label_input = $(this).find("input[name='label']");
+                    let component_input = $(this).find("input[name='component']");
+                    let options_input = $(this).find("textarea[name='options']");
+                    let required_input = $(this).find("input[name='required']");
+                    let orderBy_input = $(this).find("input[name='orderBy']");
+
+                    // 針對option欄位做處理
+                    let options = options_input.val();
+                    let optionsArray = [];
+                    if (options !== undefined) {
+                        optionsArray = options.substring(1, options.length - 1).split(',').map(options => options.trim());
+                    }
+
+
+                    question.label = label_input.val();
+                    question.component = component_input.val();
+                    question.options = optionsArray;
+                    question.required = required_input.val();
+                    question.orderBy = orderBy_input.val();
+
+                    question_list.push(question);
+                });
+
+
+                $.ajax({
+                    url: window.location.href,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        questions: question_list,
+                    }),
+                    success: function (result) {
+                        if (result.length > 0) {
+                            alert("儲存成功~");
+                        } else {
+                            alert("儲存失敗");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert('儲存失敗: \n' + error);
+                    }
+                });
+
+
+            });
+        });
+    </script>
+</head>
+
+<body>
+<div id="wrapper" class="toggled">
+    <nav th:replace="backstage/event/event :: navbar"></nav>
+    <div th:insert="backstage/index :: hamburger-btn"></div>
+    <div class="page-content-wrapper">
+
+
+        <!-- 頁面內容都放在 content 裡面 -->
+        <div class="content">
+            <!-- 這裡可以放置你想呈現的內容 -->
+
+            <div class="row">
+
+                <div class="puttable col">
+                    <label>您的報名表</label>
+                    <ul id="form" class="p-3">
+
+                        <th:block th:if="${registrationForm == null}">
+                            <li class="form-item">
+                                <label>姓名</label>
+                                <input type="hidden" name="label" th:value="姓名">
+
+                                <div>
+
+                                    <input type="hidden" name="component" th:value="name">
+                                    <input type="hidden" name="options">
+                                    <input type="hidden" name="required" th:value="true">
+                                    <input type="hidden" name="orderBy" th:value="0">
+                                </div>
+                                <div class="input">
+                                    <input type="text">
+
+                                </div>
+                            </li>
+                            <li class="form-item">
+                                <label>電子郵件</label>
+                                <input type="hidden" name="label" th:value="電子郵件">
+
+                                <div>
+
+                                    <input type="hidden" name="component" th:value="email">
+                                    <input type="hidden" name="options">
+                                    <input type="hidden" name="required" th:value="true">
+                                    <input type="hidden" name="orderBy" th:value="1">
+                                </div>
+                                <div class="input">
+                                    <input type="email">
+
+                                </div>
+                            </li>
+                            <li class="form-item">
+                                <label>電話</label>
+                                <input type="hidden" name="label" th:value="電話">
+
+                                <div>
+
+                                    <input type="hidden" name="component" th:value="phone">
+                                    <input type="hidden" name="options">
+                                    <input type="hidden" name="required" th:value="true">
+                                    <input type="hidden" name="orderBy" th:value="2">
+                                </div>
+                                <div class="input">
+                                    <input type="tel">
+
+                                </div>
+                            </li>
+                        </th:block>
+
+                        <th:block th:if="${registrationForm!= null}">
+                            <li class="form-item" th:each="question : ${registrationForm.questions}">
+                                <label class="question-label" th:text="${question.label}"></label>
+                                <th:block
+                                        th:if="${question.label != '姓名' and question.label != '電子郵件' and question.label != '電話'}">
+                                        <span style='float: right;'>
+                                            <label>
+                                            <input type="checkbox" name="required" th:value="${question.required}"
+                                                   th:checked="${question.required}"> 必填</label>
+                                            <button class='btn btn-outline-success btn-sm edit-field'>編輯</button>
+                                            <button class='btn btn-outline-danger btn-sm delete-field'>刪除</button>
+                                        </span>
+                                </th:block>
+                                <input class=" hidden" type="text" name="label" th:value="${question.label}"
+                                       placeholder="欄位名稱">
+
+
+                                <div>
+
+                                    <input type="hidden" name="component" th:value="${question.component}">
+                                    <input type="hidden" name="options" th:value="${question.options}">
+<!--                                    <input type="hidden" name="required" th:value="${question.required}">-->
+                                    <input type="hidden" name="orderBy" th:value="${question.orderBy}">
+                                </div>
+
+                                <div class="input" th:if="${question.component == 'name' or question.component == 'email' or question.component == 'phone'}">
+                                    <input type="text">
+                                </div>
+
+                                <div class="input" th:if="${question.component == 'select'}">
+                                    <textarea class="hidden" name='options' th:text="${question.options}"></textarea>
+                                    <button class='btn btn-outline-primary btn-sm save-options hidden'>儲存</button>
+
+                                    <select>
+                                        <option th:each="option : ${question.options}" th:value="${option}"
+                                                th:text="${option}"></option>
+                                    </select>
+                                </div>
+
+                                <div class="input" th:if="${question.component == 'checkbox'}">
+                                    <textarea class="hidden" name='options' th:text="${question.options}"></textarea>
+                                    <button class='btn btn-outline-primary btn-sm save-options hidden'>儲存</button>
+                                    <div class="options">
+                                        <div class="option" th:each="option : ${question.options}">
+                                            <input type="checkbox" th:value="${option}">
+                                            <label th:text="${option}"></label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="input" th:if="${question.component == 'radio'}">
+                                    <textarea class="hidden" name='options' th:text="${question.options}"></textarea>
+                                    <button class='btn btn-outline-primary btn-sm save-options hidden'>儲存</button>
+                                    <div class="options">
+                                        <div class="option" th:each="option : ${question.options}">
+                                            <input type="radio" th:value="${option}">
+                                            <label th:text="${option}"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="input" th:if="${question.component == 'textArea'}">
+                                    <textarea></textarea>
+                                    <button class='btn btn-outline-primary btn-sm save-options hidden'>儲存</button>
+
+                                </div>
+                                <div class="input" th:if="${question.component == 'textInput'}">
+                                    <input type="text">
+                                    <button class='btn btn-outline-primary btn-sm save-options hidden'>儲存</button>
+
+                                </div>
+                                <div class="input" th:if="${question.component == 'date'}">
+                                    <input type="date">
+                                    <button class='btn btn-outline-primary btn-sm save-options hidden'>儲存</button>
+
+                                </div>
+                            </li>
+                        </th:block>
+                    </ul>
+                    <button th:if="${registrationForm != null}" class=" btn btn-primary btn-block " id="save-form">儲存報名表</button>
+                    <button th:if="${registrationForm == null}" class=" btn btn-primary btn-block " id="save-form">建立報名表</button>
+
+
+                </div>
+
+                <div class="cloneable col">
+                    <label>範例欄位</label>
+                    <ul id="examples" class="p-3">
+                        <li class="form-item" th:each="example : ${fieldExamples}">
+                            <label class="question-label" th:text="${example.label}"></label>
+                            <span style='float: right;'>
+                                <label class="hidden">
+                                <input class="hidden" type="checkbox" name="required" th:value="${example.required}"
+                                       th:checked="${example.required}">必填</label>
+                                <button class='btn btn-outline-success btn-sm edit-field hidden'>編輯</button>
+                                <button class='btn btn-outline-danger btn-sm delete-field hidden'>刪除</button>
+                                </span>
+                            <input class=" hidden" type="text" name="label" th:value="${example.label}"
+                                   placeholder="欄位名稱">
+
+                            <div>
+                                <input type="hidden" name="component" th:value="${example.component}">
+                                <input type="hidden" name="options" th:value="${example.options}">
+                                <input type="hidden" name="required" th:value="${example.required}">
+                                <input type="hidden" name="orderBy" th:value="${example.orderBy}">
+                            </div>
+
+                            <div class="input hidden" th:if="${example.component == 'select'}">
+                                <textarea class="hidden" name='options' th:text="${example.options}"></textarea>
+                                <button class='btn btn-outline-primary btn-sm save-options hidden'>儲存</button>
+                                <select>
+                                    <option th:each="option : ${example.options}" th:value="${option}"
+                                            th:text="${option}"></option>
+                                </select>
+                            </div>
+
+                            <div class="input hidden" th:if="${example.component == 'checkbox'}">
+                                <textarea class="hidden" name='options' th:text="${example.options}"></textarea>
+                                <button class='btn btn-outline-primary btn-sm save-options hidden'>儲存</button>
+                                <div class="options">
+                                    <div class="option" th:each="option : ${example.options}">
+                                        <input type="checkbox" th:value="${option}">
+                                        <label th:text="${option}"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input hidden" th:if="${example.component == 'radio'}">
+                                <textarea class="hidden" name='options' th:text="${example.options}"></textarea>
+                                <button class='btn btn-outline-primary btn-sm save-options hidden'>儲存</button>
+
+                                <div class="options">
+                                    <div class="option" th:each="option : ${example.options}">
+                                        <input type="radio" th:value="${option}">
+                                        <label th:text="${option}"></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input hidden" th:if="${example.component == 'textArea'}">
+                                <textarea></textarea>
+                                <button class='btn btn-outline-primary btn-sm save-options hidden'>儲存</button>
+                            </div>
+                            <div class="input hidden" th:if="${example.component == 'textInput'}">
+                                <button class='btn btn-outline-primary btn-sm save-options hidden'>儲存</button>
+                                <input type="text">
+                            </div>
+                            <div class="input hidden" th:if="${example.component == 'date'}">
+                                <button class='btn btn-outline-primary btn-sm save-options hidden'>儲存</button>
+                                <input type="date">
+                            </div>
+
+                        </li>
+
+                    </ul>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

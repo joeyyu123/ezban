@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link th:include="backstage/index :: head">
+    <!-- 可以在這底下加入其他 css 或是 script    -->
+    <script th:src="@{/plugins/ckeditor/ckeditor.js}"></script>
+
+</head>
+
+<body>
+<div id="wrapper" class="toggled">
+    <nav th:replace="backstage/event/event :: navbar"></nav>
+    <div th:insert="backstage/index :: hamburger-btn"></div>
+    <div class="page-content-wrapper">
+        <!-- 頁面內容都放在 content 裡面 -->
+        <div class="content">
+            <!-- 這裡可以放置你想呈現的內容 -->
+            <h2>活動內容</h2>
+            <div id="editor" th:utext="${event.eventDesc}"></div>
+
+            <input type="submit" class="btn btn-primary btn-lg" id="save" value="儲存">
+        </div>
+
+    </div>
+</div>
+<script>
+    ClassicEditor
+        .create(document.querySelector(
+            '#editor'))
+        .then(editor => {
+            window.editor = editor;
+
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    document.getElementById('save').addEventListener('click', function () {
+        let eventDesc = editor.getData();
+        let eventNo = window.location.pathname.split('/')[3];
+
+        fetch(window.location.pathname, {
+            method: "put",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                eventDesc: eventDesc
+            })
+        }).then(function (response) {
+                if (!response.ok) {
+                    throw new Error(response.status);
+                }
+                return response.text(); //回傳promise物件
+            })
+            .then(function (result) { //此例, server端回傳的是一個字串
+                if (result.indexOf("success") >= 0) {
+                    alert("儲存成功~");
+                }
+            })
+            .catch(function (error) {
+                console.error('儲存失敗:', error);
+            })
+    });
+
+
+</script>
+</body>
+
+</html>
