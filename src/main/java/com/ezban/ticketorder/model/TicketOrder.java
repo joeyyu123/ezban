@@ -45,10 +45,23 @@ public class TicketOrder implements java.io.Serializable{
     @Column(name = "ticket_order_pay_time")
     private Timestamp ticketOrderPayTime;
 
+    /**
+     * 0 未付款
+     * 1 付款失敗
+     * 2 超過付款時間
+     * 3 已付款
+     * 4 退款中
+     * 5 已退款
+     */
     @NotNull
     @Column(name = "ticket_order_payment_status", nullable = false)
     private Byte ticketOrderPaymentStatus;
 
+    /**
+     * 0 處理中
+     * 1 已完成
+     * 2 已取消
+     */
     @Column(name = "ticket_order_status")
     private Byte ticketOrderStatus;
 
