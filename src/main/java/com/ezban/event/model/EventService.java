@@ -41,4 +41,9 @@ public class EventService implements ServiceDemo<Event> {
         return repository.findByEventStatus(status);
     }
 
+    // 查詢該類別上架中的活動
+    public List<Event> findByEventCategoryNo(Integer categoryNo){
+        return repository.findByEventCategoryEventCategoryNoAndEventStatus(categoryNo, (byte) 1);
+    }
+
 }
