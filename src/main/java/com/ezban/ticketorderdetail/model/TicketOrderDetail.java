@@ -94,6 +94,19 @@ public class TicketOrderDetail implements java.io.Serializable{
         return qrcodeTickets;
     }
 
+    @Override
+    public String toString() {
+        return "TicketOrderDetail{" +
+                "ticketOrderDetailNo=" + ticketOrderDetailNo +
+                ", ticketType=" + ticketType +
+                ", ticketOrder=" + ticketOrder +
+                ", ticketTypePrice=" + ticketTypePrice +
+                ", ticketTypeQty=" + ticketTypeQty +
+                ", includedTicketQty=" + includedTicketQty +
+                ", qrcodeTickets=" + qrcodeTickets +
+                '}';
+    }
+
     public void setQrcodeTickets(Set<QrcodeTicket> qrcodeTickets) {
         this.qrcodeTickets = qrcodeTickets;
     }
