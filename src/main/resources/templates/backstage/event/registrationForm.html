@@ -334,6 +334,9 @@
                                     <input type="hidden" name="orderBy" th:value="${question.orderBy}">
                                 </div>
 
+                                <div class="input" th:if="${question.component == 'name' or question.component == 'email' or question.component == 'phone'}">
+                                    <input type="text">
+                                </div>
 
                                 <div class="input" th:if="${question.component == 'select'}">
                                     <textarea class="hidden" name='options' th:text="${question.options}"></textarea>
@@ -384,7 +387,8 @@
                             </li>
                         </th:block>
                     </ul>
-                    <button class=" btn btn-primary btn-block " id="save-form">儲存報名表</button>
+                    <button th:if="${registrationForm != null}" class=" btn btn-primary btn-block " id="save-form">儲存報名表</button>
+                    <button th:if="${registrationForm == null}" class=" btn btn-primary btn-block " id="save-form">建立報名表</button>
 
 
                 </div>
