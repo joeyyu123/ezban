@@ -54,6 +54,9 @@ public class TicketType implements java.io.Serializable{
     @Column(name = "remaining_ticket_qty")
     private Integer remainingTicketQty;
 
+    @Column(name="purchase_quantity_limit")
+    private Integer purchaseQuantityLimit;
+
     public Integer getTicketTypeNo() {
         return ticketTypeNo;
     }
@@ -134,4 +137,11 @@ public class TicketType implements java.io.Serializable{
         this.remainingTicketQty = remainingTicketQty;
     }
 
+    public Integer getPurchaseQuantityLimit() {
+        return purchaseQuantityLimit;
+    }
+
+    public void setPurchaseQuantityLimit(Integer purchaseQuantityLimit) {
+        this.purchaseQuantityLimit = purchaseQuantityLimit;
+    }
 }
