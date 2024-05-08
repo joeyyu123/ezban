@@ -19,8 +19,11 @@ public class ProductCategory {
     @Column(name = "product_category_name", length = 50)
     private String productCategoryName;
 
-    @OneToMany(mappedBy = "productCategory")
+    @OneToMany(mappedBy = "productCategory", cascade = CascadeType.ALL)
     private Set<Product> products = new LinkedHashSet<>();
+
+    public ProductCategory() {
+    }
 
     public Integer getProductCategoryNo() {
         return productCategoryNo;

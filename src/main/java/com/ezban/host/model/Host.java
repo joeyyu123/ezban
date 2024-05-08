@@ -1,7 +1,11 @@
 package com.ezban.host.model;
 
+import com.ezban.product.model.Product;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "host")
@@ -34,7 +38,11 @@ public class Host {
 	
 	@Column(name = "host_status")
 	private Byte hostStatus;
-	
+
+	@OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
+	private Set<Product> products = new LinkedHashSet<>();
+
+
 	public Host() {
 		super();
 	}
@@ -105,6 +113,14 @@ public class Host {
 
 	public void setHostStatus(Byte hostStatus) {
 		this.hostStatus = hostStatus;
+	}
+
+	public Set<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
 	}
 
 	@Override
