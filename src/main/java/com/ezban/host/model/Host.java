@@ -1,7 +1,11 @@
 package com.ezban.host.model;
 
+import com.ezban.eventcoupon.model.EventCoupon;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "host")
@@ -34,7 +38,11 @@ public class Host {
 	
 	@Column(name = "host_status")
 	private Byte hostStatus;
-	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "host")
+	@OrderBy("eventCouponNo asc")
+	private Set<EventCoupon> eventCoupons = new HashSet<EventCoupon>();
+
+
 	public Host() {
 		super();
 	}
@@ -111,6 +119,14 @@ public class Host {
 	public String toString() {
 		return "Host [hostNo=" + hostNo + ", hostAccount=" + hostAccount + ", hostPwd=" + hostPwd + ", hostName="
 				+ hostName + ", hostMail=" + hostMail + ", hostPhone=" + hostPhone + ", hostStatus=" + hostStatus + "]";
+	}
+
+	public Set<EventCoupon> getEventCoupons() {
+		return this.eventCoupons;
+	}
+
+	public void setEventCoupons(Set<EventCoupon> eventCoupons) {
+		this.eventCoupons = eventCoupons;
 	}
 
 }
