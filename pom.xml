@@ -44,7 +44,6 @@
 			<scope>test</scope>
 		</dependency>
 
-
 		<!-- 用途說明5: Starter for using Spring Data JPA with Hibernate -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -272,10 +271,30 @@
 			<!-- <version>2.9.0</version> -->
 		</dependency>
 
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+
+
+		<!--
+		========================================================================================== -->
+		<!-- ●以下為 Qr code 用● -->
+
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>3.5.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>javase</artifactId>
+			<version>3.5.3</version>
+		</dependency>
+
+
 
 	</dependencies>
 
