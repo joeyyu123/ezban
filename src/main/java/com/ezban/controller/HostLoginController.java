@@ -24,7 +24,7 @@ public class HostLoginController {
     @Autowired
     private PasswordEncoder passwordEncoder;  
 
-    @PostMapping("/login")
+    @PostMapping("/host/login")
     @Transactional  
     public ResponseEntity<String> login(@RequestBody Host loginDetails) {
         Optional<Host> optionalHost = hostRepository.findByHostAccount(loginDetails.getHostAccount());

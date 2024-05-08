@@ -1,12 +1,17 @@
 package com.ezban.host.model;
 
 import java.time.LocalDateTime;
+import com.ezban.product.model.Product;
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 
 @Entity
 @Table(name = "host")
 public class Host {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +47,9 @@ public class Host {
 
     @Column(name = "host_status", nullable = false)
     private Byte hostStatus = 1;
+    
+    @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
+	private Set<Product> products = new LinkedHashSet<>();
 
     // Default constructor
     public Host() {}
@@ -82,6 +90,14 @@ public class Host {
     public void setHostPwd(String hostPwd) {
         this.hostPwd = hostPwd;
     }
+	public Set<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
+	}
+
 
     public String getHostName() {
         return hostName;

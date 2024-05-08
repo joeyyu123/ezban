@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link th:include="backstage/index :: head">
+    <!-- 可以在這底下加入其他 css 或是 script    -->
+</head>
+
+<body>
+<div id="wrapper">
+    <nav th:replace="backstage/index :: navbar"></nav>
+    <div th:insert="backstage/index :: hamburger-btn"></div>
+    <div class="page-content-wrapper">
+
+
+        <!-- 頁面內容都放在 content 裡面 -->
+        <div class="content">
+            <!-- 這裡可以放置你想呈現的內容 -->
+            <h1>Host Template</h1>
+
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
