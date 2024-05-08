@@ -22,6 +22,7 @@ public class MemberController {
 	
 	@GetMapping("/{memberNo}")
 	public Member getMemberById(@PathVariable Integer memberNo) {
+		
 	    return memservice.getMemberById(memberNo);
 	}
 

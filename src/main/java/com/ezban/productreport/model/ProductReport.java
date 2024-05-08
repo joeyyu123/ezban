@@ -7,6 +7,8 @@ import com.ezban.product.model.Product;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
@@ -48,7 +50,8 @@ public class ProductReport implements java.io.Serializable {
 
     @NotNull(message = "商品檢舉狀態: 請勿空白")
     @Column(name = "report_status", nullable = false)
-    @Pattern(regexp = "^[0-2]$", message = "商品檢舉狀態不正確")
+    @Min(value = 0, message = "商品檢舉狀態不正確")
+    @Max(value = 2, message = "商品檢舉狀態不正確")
     private Byte reportStatus;
 
     public ProductReport() {
@@ -62,27 +65,27 @@ public class ProductReport implements java.io.Serializable {
         this.productReportNo = productReportNo;
     }
 
-    public Product getProductVO() {
+    public Product getProduct() {
         return this.product;
     }
 
-    public void setProductVO(Product product) {
+    public void setProduct(Product product) {
         this.product = product;
     }
 
-    public Member getMemberVO() {
+    public Member getMember() {
         return this.member;
     }
 
-    public void setMemberVO(Member member) {
+    public void setMember(Member member) {
         this.member = member;
     }
 
-    public Admin getAdminVO() {
+    public Admin getAdmin() {
         return this.admin;
     }
 
-    public void setAdminVO(Admin admin) {
+    public void setAdmin(Admin admin) {
         this.admin = admin;
     }
 
@@ -109,4 +112,5 @@ public class ProductReport implements java.io.Serializable {
     public void setReportStatus(Byte reportStatus) {
         this.reportStatus = reportStatus;
     }
+
 }
