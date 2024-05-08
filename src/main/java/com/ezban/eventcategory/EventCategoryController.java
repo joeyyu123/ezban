@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class EventCategoryController {
 
-    @GetMapping
-    public String getEventCategoryPage() {
-        return "/backstage/eventCategory/eventCategory";
-    }
+//    @GetMapping()
+//    public String getEventCategoryPage() {
+//        return "/backstage/eventCategory/eventCategory";
+//    }
 
 }
