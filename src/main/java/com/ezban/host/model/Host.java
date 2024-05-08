@@ -8,10 +8,10 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 
+
 @Entity
 @Table(name = "host")
 public class Host {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -97,6 +97,7 @@ public class Host {
 	public void setProducts(Set<Product> products) {
 		this.products = products;
 	}
+
 
 
     public String getHostName() {

@@ -24,6 +24,7 @@ public class HostLoginController {
     @Autowired
     private PasswordEncoder passwordEncoder;  
 
+
     @PostMapping("/host/login")
     @Transactional  
     public ResponseEntity<String> login(@RequestBody Host loginDetails) {
