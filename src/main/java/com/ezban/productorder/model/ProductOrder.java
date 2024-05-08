@@ -6,7 +6,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,12 +13,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import com.ezban.birthdaycoupon.model.BirthdayCoupon;
 import com.ezban.member.model.Member;
+import com.ezban.product.model.Product;
 import com.ezban.productorderdetail.model.ProductOrderDetail;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -59,23 +60,23 @@ public class ProductOrder implements java.io.Serializable {
 
     @NotNull(message = "收件人: 請勿空白!")
     @Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9)]{2,10}$", message = "姓名: 只能是中、英文字母 , 且長度必需在2到10之間")
-    @Column(name = "recipient", nullable = false, length = 50)
+    @Column(name = "recipient", nullable = false)
     private String recipient;
 
     @NotNull(message = "收件人電話: 請勿空白!")
-    @Pattern(regexp = "^0[0-9]{8,9}$", message = "電話號碼格式不正確")
-    @Column(name = "recipient_phone", nullable = false, length = 15)
+    @Pattern(regexp = "^0[0-9]{8,15}$", message = "電話號碼格式不正確")
+    @Column(name = "recipient_phone", nullable = false)
     private String recipientPhone;
 
     @NotNull(message = "收件人地址: 請勿空白!")
     @Pattern(regexp = "^[\\u4e00-\\u9fa5a-zA-Z0-9 ]{2,200}$", message = "地址格式不正確")
-    @Column(name = "recipient_address", nullable = false, length = 200)
+    @Column(name = "recipient_address", nullable = false)
     private String recipientAddress;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Taipei")
     @Column(name = "product_orderdate")
     private Timestamp productOrderdate = Timestamp.valueOf(LocalDateTime.now());
-    
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Taipei")
     @Column(name = "product_paydate")
     private Timestamp productPaydate = Timestamp.valueOf(LocalDateTime.now());
@@ -86,12 +87,14 @@ public class ProductOrder implements java.io.Serializable {
 
     @NotNull(message = "商品訂單付款狀態: 請勿空白!")
     @Column(name = "product_payment_status", nullable = false)
-    @Pattern(regexp = "^[0-2]$", message = "商品訂單付款狀態不正確")
+    @Min(value = 0, message = "商品訂單付款狀態不正確")
+    @Max(value = 1, message = "商品訂單付款狀態不正確")
     private Byte productPaymentStatus;
 
     @NotNull(message = "商品訂單處理狀態: 請勿空白!")
     @Column(name = "product_process_status", nullable = false)
-    @Pattern(regexp = "^[0-4]$", message = "商品訂單處理狀態不正確")
+    @Min(value = 0, message = "商品訂單處理狀態不正確")
+    @Max(value = 4, message = "商品訂單處理狀態不正確")
     private Byte productProcessStatus;
 
     @NotNull(message = "商品訂單撥款金額: 請勿空白!")
@@ -100,14 +103,14 @@ public class ProductOrder implements java.io.Serializable {
 
     @NotNull(message = "商品訂單撥款狀態: 請勿空白!")
     @Column(name = "product_order_allocation_status", nullable = false)
-    @Pattern(regexp = "^[0-1]$", message = "商品訂單撥款狀態不正確")
+    @Min(value = 0, message = "商品訂單撥款狀態不正確")
+    @Max(value = 1, message = "商品訂單撥款狀態不正確")
     private Byte productOrderAllocationStatus;
 
     @OneToMany(mappedBy = "productOrder")
     private List<ProductOrderDetail> productOrderDetails;
 
     public ProductOrder() {
-
     }
 
     public Integer getProductOrderNo() {
@@ -162,7 +165,7 @@ public class ProductOrder implements java.io.Serializable {
         return birthdayCoupon;
     }
 
-    public void setBirthdayCouponVO(BirthdayCoupon birthdayCoupon) {
+    public void setBirthdayCoupon(BirthdayCoupon birthdayCoupon) {
         this.birthdayCoupon = birthdayCoupon;
     }
 
@@ -244,13 +247,5 @@ public class ProductOrder implements java.io.Serializable {
 
     public void setProductOrderAllocationStatus(Byte productOrderAllocationStatus) {
         this.productOrderAllocationStatus = productOrderAllocationStatus;
-    }
-
-    public List<ProductOrderDetail> getProductOrderDetails() {
-        return productOrderDetails;
-    }
-
-    public void setProductOrderDetails(List<ProductOrderDetail> productOrderDetails) {
-        this.productOrderDetails = productOrderDetails;
     }
 }

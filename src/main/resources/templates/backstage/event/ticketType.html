@@ -70,6 +70,8 @@
                             <label class="col">票種價格(NT$)</label>
                             <label class="col">票種數量</label>
                             <label class="col">票種為幾人套票</label>
+                            <label class="col">每人可購買張數</label>
+
                             <label class="col">操作</label>
                         </div>
 
@@ -79,6 +81,7 @@
                             <input type="number" class="col" name="ticketTypePrice" th:value="${ticketType.ticketTypePrice}" placeholder="請輸入票種價格">
                             <input type="number" class="col" name="ticketTypeQty" th:value="${ticketType.ticketTypeQty}" placeholder="請輸入票種數量">
                             <input type="number" class="col" name="includedTickets" th:value="${ticketType.includedTickets}" placeholder="票種為幾人套票">
+                            <input type="number" class="col" name="purchaseQuantityLimit" th:value="${ticketType.purchaseQuantityLimit}" placeholder="每人可購買張數">
                             <div class="col d-flex justify-content-center">
                                 <button class="btn btn-sm setting-button" th:data-id="${ticketType.ticketTypeNo}">
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i> <!-- 設定 -->
@@ -138,16 +141,20 @@
                 <div class="row ticket-type-new" >
                         <input type="text" class="col" name="ticketTypeName"
 
-                               placeholder="請輸入票種名稱">
+                               placeholder="票種名稱">
                         <input type="number" class="col"
                                name="ticketTypePrice"
-                               placeholder="請輸入票種價格">
+                               placeholder="票種價格">
                         <input type="number" class="col" name="ticketTypeQty"
 
-                               placeholder="請輸入票種數量">
+                               placeholder="票種數量">
                         <input type="number" class="col"
                                name="includedTickets"
-                               placeholder="票種為幾人套票"
+                               placeholder="幾人套票"
+                               value="1">
+                        <input type="number" class="col"
+                               name="purchaseQuantityLimit"
+                               placeholder="每人可購買張數"
                                value="1">
                         <div class="col d-flex justify-content-center">
                             <button class="btn btn-sm setting-button">
@@ -213,7 +220,8 @@
                         includedTickets: $(this).find('input[name="includedTickets"]').val(),
                         ticketTypeInfo: $(this).find('textarea[name="ticketTypeInfo"]').val(),
                         purchaseStartTime: new Date($(this).find('input[name="purchaseStartTime"]').val()),
-                        purchaseEndTime: new Date($(this).find('input[name="purchaseEndTime"]').val())
+                        purchaseEndTime: new Date($(this).find('input[name="purchaseEndTime"]').val()),
+                        purchaseQuantityLimit: $(this).find('input[name="purchaseQuantityLimit"]').val()
                     };
                     ticketTypes.push(ticketType);
                 });
@@ -226,7 +234,8 @@
                         includedTickets: $(this).find('input[name="includedTickets"]').val(),
                         ticketTypeInfo: $(this).find('textarea[name="ticketTypeInfo"]').val(),
                         purchaseStartTime: new Date($(this).find('input[name="purchaseStartTime"]').val()),
-                        purchaseEndTime: new Date($(this).find('input[name="purchaseEndTime"]').val())
+                        purchaseEndTime: new Date($(this).find('input[name="purchaseEndTime"]').val()),
+                        purchaseQuantityLimit: $(this).find('input[name="purchaseQuantityLimit"]').val()
                     };
                     ticketTypes.push(ticketType);
                 });
