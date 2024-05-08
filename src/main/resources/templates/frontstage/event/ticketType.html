@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link th:include="frontstage/index2 :: head">
+
+    <style>
+        .event-header {
+            background-color: #f3eceb;
+            color: black;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .event-body {
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #dee2e6;
+            margin-bottom: 10px;
+        }
+
+        .event-date {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .ticket-name {
+            font-size: 24px;
+            color: black;
+
+        }
+
+        .ticket-price {
+            font-size: 20px;
+            color: black;
+        }
+
+        .toggle-switch {
+            float: right;
+        }
+
+        .ticket-type {
+            /*border: 1px solid black;*/
+            background-color: #f3eceb;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin: 15px;
+        }
+
+        .btn-circle {
+            width: 30px;
+            height: 30px;
+            padding: 6px 0px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.42857;
+        }
+
+        /*.btn-container {*/
+        /*    display: flex;*/
+        /*    flex-direction: column;*/
+        /*}*/
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* 水平置中 */
+            align-items: center; /* 垂直置中 */
+        }
+
+        .btn-plus {
+            color: #007bff;
+            background-color: white;
+            border: 1px solid #007bff;
+            margin: 5px;
+        }
+
+        .btn-minus {
+            color: white;
+            background-color: #007bff;
+            border: 1px solid #007bff;
+            margin: 5px;
+        }
+
+        .quantity-info {
+            text-align: center;
+            font-size: 16px;
+            color: #007bff;
+        }
+
+        .total-qty {
+            text-align: center;
+            font-size: 16px;
+            color: #007bff;
+            padding: 10px;
+
+        }
+
+        .total-price {
+            text-align: center;
+            font-size: 16px;
+            color: #007bff;
+            padding: 10px;
+        }
+
+        .fixed-bottom {
+            /*position: fixed;*/
+            /*bottom: 0;*/
+            width: 100%;
+            /*background-color: #007bff;*/
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 20px;
+        }
+
+        .sold-out {
+            color: red;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* 水平置中 */
+            align-items: center; /* 垂直置中 */
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+    <script th:src="@{/js/frontstage/event/ticketType.js}"></script>
+</head>
+
+<body id="body">
+<div th:replace="frontstage/index2 :: header"></div>
+
+
+<!-- 頁面內容 -->
+<section class=" section">
+    <div class="container">
+
+        <div class="event-header">
+            <div>
+                <strong th:text="${event.eventName}"></strong>
+                <br>
+                <span class="event-date"
+                      th:text="${#dates.format(event.eventStartTime, 'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#dates.format(event.eventEndTime, 'yyyy-MM-dd HH:mm')}"></span>
+            </div>
+
+        </div>
+        <div class="event-body">
+            <div class="row ticket-type" th:each="ticketType : ${ticketTypes}">
+                <input type="hidden" name="ticketTypeNo" th:value="${ticketType.ticketTypeNo}">
+                <input type="hidden" name="ticketTypeQty" value="0">
+                <input type="hidden" id="ticketTypePrice" th:value="${ticketType.ticketTypePrice}">
+                <div class="col-8">
+                    <div class="ticket-name" th:text="${ticketType.ticketTypeName}"></div>
+                    <span class="event-date"
+                          th:text="'售票時間: ' +${#dates.format(ticketType.purchaseStartTime, 'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#dates.format(ticketType.purchaseEndTime, 'yyyy-MM-dd HH:mm')}"></span>
+
+                    <div class="event-date" th:text="${ticketType.ticketTypeInfo}"></div>
+                    <div>
+                        <span class="ticket-price" th:text="'NT$ ' + ${ticketType.ticketTypePrice}"></span>
+                        <span class="quantity-info hidden">x</span>
+                        <span class="quantity-info hidden" id="ticketTypeQtyLabel">0</span>
+                    </div>
+                </div>
+                <div th:if="${ticketType.remainingTicketQty > 0}" class="col-4 btn-container">
+                    <button class="btn btn-circle btn-plus">+</button>
+                    <button class="btn btn-circle btn-minus">-</button>
+                </div>
+
+                <div th:if="${ticketType.remainingTicketQty == 0}" class="sold-out">已售完</div>
+                <div th:if="${ticketType.remainingTicketQty == 0}" class="col-4 btn-container">
+                    <button class="btn btn-primary">候補</button>
+                    <span>如果有人取消訂票，將以email通知您</span>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="fixed-bottom">
+            <div class="total-price"></div>
+            <button type="submit" id="buyTicketBtn" class="btn btn-primary btn-large" th:href="@{/event/payment}"
+                    disabled>立即購票
+            </button>
+        </div>
+    </div>
+</section>
+
+
+<div th:replace="frontstage/index2 :: footer"></div>
+</body>
+
+</html>
