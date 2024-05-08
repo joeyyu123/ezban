@@ -11,6 +11,8 @@ import com.ezban.member.model.MemberRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Optional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
@@ -29,7 +31,7 @@ public class RegisterController {
 	@PostMapping("/register")
 	public ResponseEntity<String> registerMember(@RequestBody Member member) {
 		try {
-			Member existingMember = memrepository.findByMemberMail(member.getMemberMail());
+			Optional<Member> existingMember = memrepository.findByMemberMail(member.getMemberMail());
 			if (existingMember != null) {
 				return ResponseEntity.status(HttpStatus.CONFLICT).body("該電子郵件已被使用");
 			}
