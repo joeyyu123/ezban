@@ -4,6 +4,8 @@ import com.ezban.member.model.Member;
 import com.ezban.product.model.Product;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -29,7 +31,8 @@ public class SaveProduct implements java.io.Serializable {
 
     @NotNull(message = "商品收藏狀態: 請勿空白")
     @Column(name = "save_status", nullable = false)
-    @Pattern(regexp = "^[0-1]$", message = "商品收藏狀態不正確")
+    @Min(value = 0, message = "商品收藏狀態不正確")
+    @Max(value = 1, message = "商品收藏狀態不正確")
     private Byte saveStatus;
 
     public SaveProduct() {
