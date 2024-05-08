@@ -44,6 +44,7 @@
 			<scope>test</scope>
 		</dependency>
 
+
 		<!-- 用途說明5: Starter for using Spring Data JPA with Hibernate -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
