@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Integer> {
@@ -14,6 +15,8 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 	Optional<Member> findByMemberName(String memberName);
 
 	Optional<Member> findByMemberPhone(String memberPhone);
+
+	List<Member> findByMemberStatus(Byte memberStatus);
 
 	@Modifying
 	@Transactional

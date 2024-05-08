@@ -34,6 +34,10 @@ public class MemberService {
 		Optional<Member> optionalMember = memrepository.findByMemberPhone(memberPhone);
 		return optionalMember.orElse(null);
 	}
+	
+	public List<Member> getMembersByStatus(Byte memberStatus) {
+        return memrepository.findByMemberStatus(memberStatus);
+    }
 
 	public void updateMemberStatus(Byte memberStatus, String memberMail) {
 		memrepository.updateMemberStatus(memberStatus, memberMail);

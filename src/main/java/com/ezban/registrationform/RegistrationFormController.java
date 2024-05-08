@@ -39,8 +39,8 @@ public class RegistrationFormController {
             registrationForm = new RegistrationForm();
         }
         List<FieldExample> questions = request.get("questions");
-        registrationForm.setEventNo(eventNo);
-        registrationForm.setQuestions(questions);
+//        registrationForm.setEventNo(eventNo);
+//        registrationForm.setQuestions(questions);
         registrationFormService.save(registrationForm);
 
         return "success";

@@ -43,6 +43,12 @@ public class MemberController {
 
 		return memservice.getMemberByMemberPhone(memberPhone);
 	}
+	
+	@GetMapping("/getstatus/{memberStatus}")
+	public List<Member> getMembersByStatus(@PathVariable Byte memberStatus) {
+		
+		return memservice.getMembersByStatus(memberStatus);
+	}
 
 	@PutMapping("/status/{memberMail}")
 	public void updateMemberStatus(@RequestParam Byte memberStatus, @PathVariable String memberMail) {

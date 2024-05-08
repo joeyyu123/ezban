@@ -2,6 +2,7 @@ package com.ezban.product.model;
 
 import com.ezban.host.model.Host;
 import com.ezban.productcategory.model.ProductCategory;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -16,15 +17,17 @@ public class Product implements java.io.Serializable {
     @Column(name = "product_no")
     private Integer productNo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_category_no", referencedColumnName = "product_category_no")
+    @JsonIgnore
     private ProductCategory productCategory;
 
     @Column(name = "product_name")
     private String productName;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "host_no", referencedColumnName = "host_no")
+    @JsonIgnore
     private Host host;
 
     @Column(name = "product_desc" ,columnDefinition = "text")

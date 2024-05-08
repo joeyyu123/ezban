@@ -21,6 +21,9 @@ public class ProductImg {
     @Column(name = "product_img", columnDefinition = "longblob")
     private byte[] productImg;
 
+    public ProductImg() {
+    }
+
     public Integer getProductImgNo() {
         return productImgNo;
     }
