@@ -148,6 +148,8 @@ create table host
     host_mail    varchar(50) null,
     host_phone   varchar(15) null,
     host_status  tinyint null,
+    host_login   DATETIME null,
+    
     constraint host_uk_1
         unique (host_account),
     constraint host_uk_2
