@@ -37,7 +37,7 @@ public class HostSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/hostlogin", "/hostregister", "/forgot_password").permitAll()
+                .antMatchers("/hostlogin", "/hostregister", "/passwordreset").permitAll()
                 .antMatchers("/backstage/**", "/backstage").authenticated()
                 .and()
             .formLogin()
@@ -68,4 +68,6 @@ public class HostSecurityConfig extends WebSecurityConfigurerAdapter {
         failureHandler.setUseForward(false);
         return failureHandler;
     }
+    
+    
 }

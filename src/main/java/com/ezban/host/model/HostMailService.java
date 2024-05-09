@@ -26,11 +26,19 @@ public class HostMailService {
         }
     }
 
-    public void sendRandomPasswordEmail(String to, String subject) {
+//  還未做忘記密碼前的
+//    public void sendRandomPasswordEmail(String to, String subject) {
+//        String randomPassword = HostPassRandom.generatePassword(10); // 生成10位的隨機密碼
+//        sendEmail(to, subject, "Your random password is: " + randomPassword);
+//    }
+
+    public String sendRandomPasswordEmail(String to, String subject) {
         String randomPassword = HostPassRandom.generatePassword(10); // 生成10位的隨機密碼
         sendEmail(to, subject, "Your random password is: " + randomPassword);
+        return randomPassword; // 返回生成的隨機密碼
     }
 
+    
     public String sendVerificationCodeEmail(String to) {
         String verificationCode = HostPassRandom.generateVerificationCode(); // 生成6位數的驗證碼
         try {
