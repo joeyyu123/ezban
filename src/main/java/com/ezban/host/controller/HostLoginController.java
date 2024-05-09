@@ -1,4 +1,4 @@
-package com.ezban.controller;
+package com.ezban.host.controller;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -31,7 +31,7 @@ public class HostLoginController {
         if (optionalHost.isPresent()) {
             Host host = optionalHost.get();
             if (passwordEncoder.matches(loginDetails.getHostPwd(), host.getHostPwd())) {
-                host.setLastLogin(LocalDateTime.now());  
+                host.sethostlogin(LocalDateTime.now());  
                 hostRepository.save(host);  
                 return ResponseEntity.ok("登入成功！");
             }

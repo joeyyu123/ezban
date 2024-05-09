@@ -1,4 +1,4 @@
-package com.ezban.controller;
+package com.ezban.host.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.validation.Valid;
 
+
 @RestController
 @RequestMapping("/api/host")
 public class HostController {
@@ -35,7 +36,7 @@ public class HostController {
 
     private final Map<String, String> verificationCodes = new ConcurrentHashMap<>();
 
-    @PostMapping("/register")
+    @PostMapping("/hostregister")
     public ResponseEntity<?> registerHost(@RequestBody @Valid Host host) {
         Map<String, Object> response = new HashMap<>();
         try {
