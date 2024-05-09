@@ -74,7 +74,6 @@
 
                             <label class="col">操作</label>
                         </div>
-
                         <div class="row ticket-type" th:each="ticketType:${ticketTypes}">
                             <input type="hidden" name="ticketTypeNo" th:value="${ticketType.ticketTypeNo}">
                             <input type="text" class="col" name="ticketTypeName" th:value="${ticketType.ticketTypeName}" placeholder="請輸入票種名稱">
