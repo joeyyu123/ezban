@@ -93,7 +93,7 @@
                             <div class="ticketForm hidden">
                                 <div class="form-group">
                                     <label class="form-label" for="ticketTypeInfo">票種描述</label>
-                                    <textarea class="form-control" id="ticketTypeInfo" name="ticketTypeInfo" th:value="${ticketType.ticketTypeInfo}" placeholder="請輸入票種描述"></textarea>
+                                    <textarea class="form-control" id="ticketTypeInfo" name="ticketTypeInfo" th:text="${ticketType.ticketTypeInfo}" placeholder="請輸入票種描述"></textarea>
 
                                     <div>
                                         <label>販售時間</label>
