@@ -42,8 +42,8 @@ public class Host {
     @Column(name = "host_phone", length = 15, unique = true, nullable = false)
     private String hostPhone;
 
-    @Column(name = "last_login")
-    private LocalDateTime lastLogin;
+    @Column(name = "host_login")
+    private LocalDateTime hostlogin;
 
     @Column(name = "host_status", nullable = false)
     private Byte hostStatus = 1;
@@ -124,11 +124,11 @@ public class Host {
     }
 
     public LocalDateTime getLastLogin() {
-        return lastLogin;
+        return hostlogin;
     }
 
-    public void setLastLogin(LocalDateTime lastLogin) {
-        this.lastLogin = lastLogin;
+    public void sethostlogin(LocalDateTime hostlogin) {
+        this.hostlogin = hostlogin;
     }
 
     public Byte getHostStatus() {
@@ -148,7 +148,7 @@ public class Host {
                 ", hostName='" + hostName + '\'' +
                 ", hostMail='" + hostMail + '\'' +
                 ", hostPhone='" + hostPhone + '\'' +
-                ", lastLogin=" + lastLogin +
+                ", lastLogin=" + hostlogin +
                 ", hostStatus=" + hostStatus +
                 '}';
     }
