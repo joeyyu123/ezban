@@ -1,4 +1,4 @@
-package com.ezban.controller;
+package com.ezban.member;
 
 import java.util.Map;
 import java.util.HashMap;

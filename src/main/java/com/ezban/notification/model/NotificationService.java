@@ -26,7 +26,7 @@ public class NotificationService {
     
     public List<Notification> findByMemberMemberNo(Integer memberNo){
     	
-    	return notifyrepository.findByMemberNo(memberNo);
+    	return notifyrepository.findByMemberMemberNo(memberNo);
     }
     
     public List<Notification> findByHostHostNo(Integer hostNo){

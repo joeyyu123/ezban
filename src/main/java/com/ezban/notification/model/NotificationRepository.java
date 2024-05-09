@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
 	
-	List<Notification> findByMemberNo(Integer memberNo);
+	List<Notification> findByMemberMemberNo(Integer memberNo);
 	
 	List<Notification> findByHostHostNo(Integer hostNo);
 	

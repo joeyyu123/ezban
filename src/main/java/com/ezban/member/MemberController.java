@@ -1,4 +1,4 @@
-package com.ezban.controller;
+package com.ezban.member;
 
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberService;
