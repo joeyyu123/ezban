@@ -1,133 +1,139 @@
 package com.ezban.host.model;
 
-import com.ezban.product.model.Product;
-
+import java.time.LocalDateTime;
 import javax.persistence.*;
-import javax.validation.constraints.Size;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import javax.validation.constraints.*;
 
 @Entity
 @Table(name = "host")
 public class Host {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "host_no", nullable = false)
-	private Integer hostNo;
-	
-	@Size(max = 20)
-	@Column(name = "host_account", length = 20)
-	private String hostAccount;
-	
-	@Size(max = 20)
-	@Column(name = "host_pwd", length = 20)
-	private String hostPwd;
-	
-	@Size(max = 50)
-	@Column(name = "host_name", length = 50)
-	private String hostName;
-	
-	@Size(max = 50)
-	@Column(name = "host_mail", length = 50)
-	private String hostMail;
-	
-	@Size(max = 15)
-	@Column(name = "host_phone", length = 15)
-	private String hostPhone;
-	
-	@Column(name = "host_status")
-	private Byte hostStatus;
 
-	@OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
-	private Set<Product> products = new LinkedHashSet<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "host_no", nullable = false)
+    private Integer hostNo;
 
+    @NotBlank(message = "帳號不能為空")
+    @Size(max = 20, message = "帳號最大長度為 20")
+    @Column(name = "host_account", length = 20, unique = true, nullable = false)
+    private String hostAccount;
 
-	public Host() {
-		super();
-	}
+    @Size(max = 60, message = "密碼最大長度為 60")
+    @Column(name = "host_pwd", length = 60)
+    private String hostPwd;
 
-	public Host(Integer hostNo, String hostAccount, String hostPwd, String hostName, String hostMail, String hostPhone,
-			Byte hostStatus) {
-		super();
-		this.hostNo = hostNo;
-		this.hostAccount = hostAccount;
-		this.hostPwd = hostPwd;
-		this.hostName = hostName;
-		this.hostMail = hostMail;
-		this.hostPhone = hostPhone;
-		this.hostStatus = hostStatus;
-	}
+    @NotBlank(message = "名稱不能為空")
+    @Size(max = 50, message = "名稱最大長度為 50")
+    @Column(name = "host_name", length = 50, unique = true, nullable = false)
+    private String hostName;
 
-	public Integer getHostNo() {
-		return hostNo;
-	}
+    @NotBlank(message = "電子郵件不能為空")
+    @Email(message = "無效的電子郵件格式")
+    @Column(name = "host_mail", length = 50, unique = true, nullable = false)
+    private String hostMail;
 
-	public void setHostNo(Integer hostNo) {
-		this.hostNo = hostNo;
-	}
+    @NotBlank(message = "電話不能為空")
+    @Pattern(regexp = "\\d{10}", message = "電話必須是 10 位數字")
+    @Column(name = "host_phone", length = 15, unique = true, nullable = false)
+    private String hostPhone;
 
-	public String getHostAccount() {
-		return hostAccount;
-	}
+    @Column(name = "last_login")
+    private LocalDateTime lastLogin;
 
-	public void setHostAccount(String hostAccount) {
-		this.hostAccount = hostAccount;
-	}
+    @Column(name = "host_status", nullable = false)
+    private Byte hostStatus = 1;
 
-	public String getHostPwd() {
-		return hostPwd;
-	}
+    // Default constructor
+    public Host() {}
 
-	public void setHostPwd(String hostPwd) {
-		this.hostPwd = hostPwd;
-	}
+    // Constructor with parameters
+    public Host(Integer hostNo, String hostAccount, String hostPwd, String hostName, String hostMail, String hostPhone,
+                Byte hostStatus) {
+        this.hostNo = hostNo;
+        this.hostAccount = hostAccount;
+        this.hostPwd = hostPwd;
+        this.hostName = hostName;
+        this.hostMail = hostMail;
+        this.hostPhone = hostPhone;
+        this.hostStatus = hostStatus;
+    }
 
-	public String getHostName() {
-		return hostName;
-	}
+    // Getters and setters
+    public Integer getHostNo() {
+        return hostNo;
+    }
 
-	public void setHostName(String hostName) {
-		this.hostName = hostName;
-	}
+    public void setHostNo(Integer hostNo) {
+        this.hostNo = hostNo;
+    }
 
-	public String getHostMail() {
-		return hostMail;
-	}
+    public String getHostAccount() {
+        return hostAccount;
+    }
 
-	public void setHostMail(String hostMail) {
-		this.hostMail = hostMail;
-	}
+    public void setHostAccount(String hostAccount) {
+        this.hostAccount = hostAccount;
+    }
 
-	public String getHostPhone() {
-		return hostPhone;
-	}
+    public String getHostPwd() {
+        return hostPwd;
+    }
 
-	public void setHostPhone(String hostPhone) {
-		this.hostPhone = hostPhone;
-	}
+    public void setHostPwd(String hostPwd) {
+        this.hostPwd = hostPwd;
+    }
 
-	public Byte getHostStatus() {
-		return hostStatus;
-	}
+    public String getHostName() {
+        return hostName;
+    }
 
-	public void setHostStatus(Byte hostStatus) {
-		this.hostStatus = hostStatus;
-	}
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
 
-	public Set<Product> getProducts() {
-		return products;
-	}
+    public String getHostMail() {
+        return hostMail;
+    }
 
-	public void setProducts(Set<Product> products) {
-		this.products = products;
-	}
+    public void setHostMail(String hostMail) {
+        this.hostMail = hostMail;
+    }
 
-	@Override
-	public String toString() {
-		return "Host [hostNo=" + hostNo + ", hostAccount=" + hostAccount + ", hostPwd=" + hostPwd + ", hostName="
-				+ hostName + ", hostMail=" + hostMail + ", hostPhone=" + hostPhone + ", hostStatus=" + hostStatus + "]";
-	}
+    public String getHostPhone() {
+        return hostPhone;
+    }
 
+    public void setHostPhone(String hostPhone) {
+        this.hostPhone = hostPhone;
+    }
+
+    public LocalDateTime getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(LocalDateTime lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public Byte getHostStatus() {
+        return hostStatus;
+    }
+
+    public void setHostStatus(Byte hostStatus) {
+        this.hostStatus = hostStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "Host{" +
+                "hostNo=" + hostNo +
+                ", hostAccount='" + hostAccount + '\'' +
+                ", hostPwd='" + hostPwd + '\'' +
+                ", hostName='" + hostName + '\'' +
+                ", hostMail='" + hostMail + '\'' +
+                ", hostPhone='" + hostPhone + '\'' +
+                ", lastLogin=" + lastLogin +
+                ", hostStatus=" + hostStatus +
+                '}';
+    }
 }
-
