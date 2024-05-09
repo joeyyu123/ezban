@@ -1,133 +1,148 @@
 package com.ezban.host.model;
 
+import com.ezban.eventcoupon.model.EventCoupon;
 import com.ezban.product.model.Product;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "host")
 public class Host {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "host_no", nullable = false)
-	private Integer hostNo;
-	
-	@Size(max = 20)
-	@Column(name = "host_account", length = 20)
-	private String hostAccount;
-	
-	@Size(max = 20)
-	@Column(name = "host_pwd", length = 20)
-	private String hostPwd;
-	
-	@Size(max = 50)
-	@Column(name = "host_name", length = 50)
-	private String hostName;
-	
-	@Size(max = 50)
-	@Column(name = "host_mail", length = 50)
-	private String hostMail;
-	
-	@Size(max = 15)
-	@Column(name = "host_phone", length = 15)
-	private String hostPhone;
-	
-	@Column(name = "host_status")
-	private Byte hostStatus;
 
-	@OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
-	private Set<Product> products = new LinkedHashSet<>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "host_no", nullable = false)
+    private Integer hostNo;
+
+    @Size(max = 20)
+    @Column(name = "host_account", length = 20)
+    private String hostAccount;
+
+    @Size(max = 20)
+    @Column(name = "host_pwd", length = 20)
+    private String hostPwd;
+
+    @Size(max = 50)
+    @Column(name = "host_name", length = 50)
+    private String hostName;
+
+    @Size(max = 50)
+    @Column(name = "host_mail", length = 50)
+    private String hostMail;
+
+    @Size(max = 15)
+    @Column(name = "host_phone", length = 15)
+    private String hostPhone;
+
+    @Column(name = "host_status")
+    private Byte hostStatus;
+
+    @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
+    private Set<Product> products = new LinkedHashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "host")
+    @OrderBy("eventCouponNo asc")
+    private Set<EventCoupon> eventCoupons = new HashSet<EventCoupon>();
 
 
-	public Host() {
-		super();
-	}
+    public Host() {
+        super();
+    }
 
-	public Host(Integer hostNo, String hostAccount, String hostPwd, String hostName, String hostMail, String hostPhone,
-			Byte hostStatus) {
-		super();
-		this.hostNo = hostNo;
-		this.hostAccount = hostAccount;
-		this.hostPwd = hostPwd;
-		this.hostName = hostName;
-		this.hostMail = hostMail;
-		this.hostPhone = hostPhone;
-		this.hostStatus = hostStatus;
-	}
+    public Host(Integer hostNo, String hostAccount, String hostPwd, String hostName, String hostMail, String hostPhone,
+                Byte hostStatus) {
+        super();
+        this.hostNo = hostNo;
+        this.hostAccount = hostAccount;
+        this.hostPwd = hostPwd;
+        this.hostName = hostName;
+        this.hostMail = hostMail;
+        this.hostPhone = hostPhone;
+        this.hostStatus = hostStatus;
+    }
 
-	public Integer getHostNo() {
-		return hostNo;
-	}
+    public Integer getHostNo() {
+        return hostNo;
+    }
 
-	public void setHostNo(Integer hostNo) {
-		this.hostNo = hostNo;
-	}
+    public void setHostNo(Integer hostNo) {
+        this.hostNo = hostNo;
+    }
 
-	public String getHostAccount() {
-		return hostAccount;
-	}
+    public String getHostAccount() {
+        return hostAccount;
+    }
 
-	public void setHostAccount(String hostAccount) {
-		this.hostAccount = hostAccount;
-	}
+    public void setHostAccount(String hostAccount) {
+        this.hostAccount = hostAccount;
+    }
 
-	public String getHostPwd() {
-		return hostPwd;
-	}
+    public String getHostPwd() {
+        return hostPwd;
+    }
 
-	public void setHostPwd(String hostPwd) {
-		this.hostPwd = hostPwd;
-	}
+    public void setHostPwd(String hostPwd) {
+        this.hostPwd = hostPwd;
+    }
 
-	public String getHostName() {
-		return hostName;
-	}
+    public String getHostName() {
+        return hostName;
+    }
 
-	public void setHostName(String hostName) {
-		this.hostName = hostName;
-	}
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
 
-	public String getHostMail() {
-		return hostMail;
-	}
+    public String getHostMail() {
+        return hostMail;
+    }
 
-	public void setHostMail(String hostMail) {
-		this.hostMail = hostMail;
-	}
+    public void setHostMail(String hostMail) {
+        this.hostMail = hostMail;
+    }
 
-	public String getHostPhone() {
-		return hostPhone;
-	}
+    public String getHostPhone() {
+        return hostPhone;
+    }
 
-	public void setHostPhone(String hostPhone) {
-		this.hostPhone = hostPhone;
-	}
+    public void setHostPhone(String hostPhone) {
+        this.hostPhone = hostPhone;
+    }
 
-	public Byte getHostStatus() {
-		return hostStatus;
-	}
+    public Byte getHostStatus() {
+        return hostStatus;
+    }
 
-	public void setHostStatus(Byte hostStatus) {
-		this.hostStatus = hostStatus;
-	}
+    public void setHostStatus(Byte hostStatus) {
+        this.hostStatus = hostStatus;
+    }
 
-	public Set<Product> getProducts() {
-		return products;
-	}
+    public Set<Product> getProducts() {
+        return products;
+    }
 
-	public void setProducts(Set<Product> products) {
-		this.products = products;
-	}
+    public void setProducts(Set<Product> products) {
+        this.products = products;
+    }
 
-	@Override
-	public String toString() {
-		return "Host [hostNo=" + hostNo + ", hostAccount=" + hostAccount + ", hostPwd=" + hostPwd + ", hostName="
-				+ hostName + ", hostMail=" + hostMail + ", hostPhone=" + hostPhone + ", hostStatus=" + hostStatus + "]";
-	}
+    @Override
+    public String toString() {
+        return "Host [hostNo=" + hostNo + ", hostAccount=" + hostAccount + ", hostPwd=" + hostPwd + ", hostName="
+                + hostName + ", hostMail=" + hostMail + ", hostPhone=" + hostPhone + ", hostStatus=" + hostStatus + "]";
+    }
+
+
+    public Set<EventCoupon> getEventCoupons() {
+        return this.eventCoupons;
+    }
+
+    public void setEventCoupons(Set<EventCoupon> eventCoupons) {
+        this.eventCoupons = eventCoupons;
+    }
 
 }
 
