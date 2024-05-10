@@ -96,7 +96,7 @@
                 let li_el = $(this).closest("li");
                 $(li_el).find("input[name='label']").val($(li_el).children("label").text())
                 $(li_el).find(".input").children().toggleClass("hidden");
-                $(li_el).find("label").toggleClass("hidden");
+                $(li_el).find("label.question-label").toggleClass("hidden");
                 $(li_el).find("input[name='label']").toggleClass("hidden");
 
             });
@@ -112,6 +112,9 @@
                 $(li_el).find("input[name='required']").val($(this).prop("checked"));
 
             });
+
+            let radioQuestionCount = 1;
+
 
             // 儲存選項按鈕綁定事件
             $(document).on("click", ".save-options", function() {
@@ -167,7 +170,7 @@
                                 let option_el = $("<div class='option'></div>");
                                 let input_el = $("<input type='radio'>");
                                 input_el.val(option);
-                                input_el.attr("name", "option");
+                                input_el.attr("name", "option"+radioQuestionCount);
                                 input_el.attr("value", option);
                                 option_el.val(option);
                                 let label_el = $("<label></label>");
@@ -176,6 +179,7 @@
                                 option_el.append(label_el);
                                 options_div.append(option_el);
                             });
+                            radioQuestionCount = radioQuestionCount + 1;
                             break;
                     }
                 }
@@ -351,7 +355,7 @@
                                         <button class='btn btn-outline-primary btn-sm save-options hidden'>儲存</button>
                                         <div class="options">
                                             <div class="option" th:each="option : ${question.options}">
-                                                <input type="checkbox" th:value="${option}">
+                                                <input type="checkbox" th:value="${option}" th:name="${questionStat.count}" >
                                                 <label th:text="${option}"></label>
                                             </div>
                                         </div>
@@ -362,7 +366,7 @@
                                         <button class='btn btn-outline-primary btn-sm save-options hidden'>儲存</button>
                                         <div class="options">
                                             <div class="option" th:each="option : ${question.options}">
-                                                <input type="radio" th:value="${option}">
+                                                <input type="radio" th:value="${option}" th:name="${questionStat.count}">
                                                 <label th:text="${option}"></label>
                                             </div>
                                         </div>
@@ -438,7 +442,7 @@
 
                                     <div class="options">
                                         <div class="option" th:each="option : ${example.options}">
-                                            <input type="radio" th:value="${option}">
+                                            <input type="radio" th:value="${option}" th:name="${exampleStat.count}" >
                                             <label th:text="${option}"></label>
                                         </div>
                                     </div>
