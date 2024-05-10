@@ -44,8 +44,8 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
         ticketOrder.setMember(member);
         ticketOrder.setTicketOrderTime(new Timestamp(System.currentTimeMillis()));
         ticketOrder.setTicketOrderAmount(this.calculateTotalAmount(orderDetailList));
-        ticketOrder.setTicketOrderStatus((byte) 0);
-        ticketOrder.setTicketOrderPaymentStatus((byte) 0);
+        ticketOrder.setTicketOrderStatus(TicketOrderStatus.PROCESSING);
+        ticketOrder.setTicketOrderPaymentStatus(TicketOrderPaymentStatus.UNPAID);
         ticketOrder.setTicketCheckoutAmount(0);
 
         ticketOrder = this.add(ticketOrder);
