@@ -1,4 +1,4 @@
-package com.ezban.controller;
+package com.ezban.notification;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,19 +30,19 @@ public class NotificationController {
     @GetMapping("/mem-notification/{memberNo}")
     public List<Notification> findByMemberNo(@PathVariable Integer memberNo){
     	
-    	return notifyservice.findByMemberNo(memberNo);
+    	return notifyservice.findByMemberMemberNo(memberNo);
     }
     
     @GetMapping("/host-notification/{hostNo}")
     public List<Notification> findByHostNo(@PathVariable Integer hostNo){
     	
-    	return notifyservice.findByHostNo(hostNo);
+    	return notifyservice.findByHostHostNo(hostNo);
     }
     
     @GetMapping("/admin-notification/{adminNo}")
     public List<Notification> findByAdminNo(@PathVariable Integer adminNo){
     	
-    	return notifyservice.findByAdminNo(adminNo);
+    	return notifyservice.findByAdminAdminNo(adminNo);
     }
     
     public List<Notification> findAllByOrderByNotificationTimeDesc(){
