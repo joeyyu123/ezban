@@ -1,10 +1,10 @@
 package com.ezban.registrationform.model;
 
 import com.ezban.fieldExample.model.FieldExample;
+import com.ezban.ticketorder.model.dto.Question;
 import com.ezban.ticketorder.model.dto.TicketOrderRegistrationForm;
 import com.ezban.ticketorderdetail.model.TicketOrderDetail;
 import com.ezban.ticketorderdetail.model.TicketOrderDetailService;
-import com.ezban.ticketregistration.dto.Question;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
