@@ -102,4 +102,31 @@ public class HostService {
             return false;
         }
     }
+    
+    public Host login(String account, String password) {
+        return hostRepository.findByHostAccount(account)
+                .filter(host -> passwordEncoder.matches(password, host.getHostPwd()))
+                .orElse(null);
+    }
+    
+    public boolean changePassword(String username, String oldPassword, String newPassword) {
+        Optional<Host> hostOptional = hostRepository.findByHostAccount(username);
+        if (hostOptional.isPresent()) {
+            Host host = hostOptional.get();
+            if (passwordEncoder.matches(oldPassword, host.getHostPwd())) {
+                host.setHostPwd(passwordEncoder.encode(newPassword));
+                hostRepository.save(host);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public Optional<Host> findHostByAccount(String account) {
+        return hostRepository.findByHostAccount(account);
+    }
+    
+    public void saveHost(Host host) {
+        hostRepository.save(host);
+    }
 }

@@ -20,5 +20,10 @@ public class HostPageController {
     public String showpasswordreset() {
     	return "backstage/HostLogin/passwordreset";
     }
+    
+    @GetMapping("/hostpassrevise")
+    public String showhostpassrevise() {
+    	return "backstage/HostLogin/hostpassrevise";
+    }
 }
 	
