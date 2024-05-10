@@ -84,7 +84,7 @@ public class Event implements java.io.Serializable{
      */
     @NotNull
     @Column(name = "event_status", nullable = false)
-    private Byte eventStatus;
+    private EventStatus eventStatus;
 
     @Column(name = "total_rating")
     private Integer totalRating;
@@ -93,7 +93,7 @@ public class Event implements java.io.Serializable{
     private Integer eventRatingCount;
 
     @Column(name = "event_checkout_status")
-    private Byte eventCheckoutStatus;
+    private EventCheckoutStatus eventCheckoutStatus;
 
     @Column(name = "event_checkout_time")
     private Timestamp eventCheckoutTime;
@@ -231,11 +231,11 @@ public class Event implements java.io.Serializable{
         this.registeredCount = registeredCount;
     }
 
-    public Byte getEventStatus() {
+    public EventStatus getEventStatus() {
         return eventStatus;
     }
 
-    public void setEventStatus(Byte eventStatus) {
+    public void setEventStatus(EventStatus eventStatus) {
         this.eventStatus = eventStatus;
     }
 
@@ -255,11 +255,11 @@ public class Event implements java.io.Serializable{
         this.eventRatingCount = eventRatingCount;
     }
 
-    public Byte getEventCheckoutStatus() {
+    public EventCheckoutStatus getEventCheckoutStatus() {
         return eventCheckoutStatus;
     }
 
-    public void setEventCheckoutStatus(Byte eventCheckoutStatus) {
+    public void setEventCheckoutStatus(EventCheckoutStatus eventCheckoutStatus) {
         this.eventCheckoutStatus = eventCheckoutStatus;
     }
 

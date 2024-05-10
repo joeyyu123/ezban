@@ -9,8 +9,8 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
     List<Event> findByEventCity(String eventCity);
 
-    List<Event> findByEventStatus(Byte eventStatus);
+    List<Event> findByEventStatus(EventStatus eventStatus);
 
-    List<Event> findByEventCategoryEventCategoryNoAndEventStatus(Integer eventCategoryNo, Byte eventStatus);
+    List<Event> findByEventCategoryEventCategoryNoAndEventStatus(Integer eventCategoryNo, EventStatus eventStatus);
 
 }
