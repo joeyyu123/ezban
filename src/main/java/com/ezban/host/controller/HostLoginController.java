@@ -31,8 +31,9 @@ public class HostLoginController {
         Optional<Host> optionalHost = hostRepository.findByHostAccount(username);
         if (optionalHost.isPresent()) {
             Host host = optionalHost.get();
-            if (passwordEncoder.matches(password, host.getHostPwd())) {
-                host.sethostlogin(LocalDateTime.now());
+           //加密邏輯 if (passwordEncoder.matches(password, host.getHostPwd())) {
+            if (password.equals(host.getHostPwd())) { // 直接比較未加密的密碼
+            	host.sethostlogin(LocalDateTime.now());
                 hostRepository.save(host);
                 return new RedirectView("/backstage"); // 更新重定向到 backstage/index.html
             }

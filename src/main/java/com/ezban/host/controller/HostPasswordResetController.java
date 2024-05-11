@@ -33,8 +33,10 @@ public class HostPasswordResetController {
             Host host = hostOptional.get();
             String randomPassword = hostMailService.sendRandomPasswordEmail(host.getHostMail(), "Password Reset");
             
-            String encryptedPassword = passwordEncoder.encode(randomPassword); // 加密密碼
-            host.setHostPwd(encryptedPassword); // 設置加密後密碼
+//            String encryptedPassword = passwordEncoder.encode(randomPassword); // 加密密碼
+//            host.setHostPwd(encryptedPassword); // 設置加密後密碼
+            
+            host.setHostPwd(randomPassword); // 直接使用未加密的隨機密碼
             
             hostRepository.save(host); // 儲存更新後的資料
             return "新密碼已發送到您的電子郵件。";

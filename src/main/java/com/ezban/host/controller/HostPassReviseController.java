@@ -35,9 +35,13 @@ public class HostPassReviseController {
         Optional<Host> hostOptional = hostService.findHostByAccount(request.getAccount());
         if (hostOptional.isPresent()) {
             Host host = hostOptional.get();
-            if (passwordEncoder.matches(request.getOldPassword(), host.getHostPwd())) {
-                host.setHostPwd(passwordEncoder.encode(request.getNewPassword()));
-                hostService.saveHost(host);
+//   加密邏輯      if (passwordEncoder.matches(request.getOldPassword(), host.getHostPwd())) {
+//                host.setHostPwd(passwordEncoder.encode(request.getNewPassword()));
+           
+            if (request.getOldPassword().equals(host.getHostPwd())) {//使用未加密密碼
+            	host.setHostPwd(request.getNewPassword());           //使用未加密密碼
+            
+            	hostService.saveHost(host);
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", true);
                 response.put("message", "密碼更新成功。");

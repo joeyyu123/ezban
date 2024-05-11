@@ -211,7 +211,7 @@
 
     console.log("Sending JSON Data:", jsonData);
 
-    // 發送表單資料
+ // 發送表單資料
     fetch('http://localhost:8080/api/host/hostregister', {
         method: 'POST',
         body: JSON.stringify(jsonData),
@@ -219,17 +219,13 @@
             'Content-Type': 'application/json'
         }
     })
-    .then(response => {
-        if (!response.ok) {
-            console.error(`HTTP error! status: ${response.status}`);
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
         if (data.success) {
             alert('註冊成功');
-            console.log(data);
+            setTimeout(() => {
+                window.location.href = '/hostlogin'; // 成功後1秒跳轉
+            }, 500);
         } else {
             const message = data.message || '註冊失敗，請重試。';
             document.getElementById('errorMessage').textContent = message;
