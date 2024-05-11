@@ -2,12 +2,10 @@ package com.ezban.saveproduct.model;
 
 import com.ezban.member.model.Member;
 import com.ezban.product.model.Product;
-
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "save_product", schema = "ezban")
@@ -35,38 +33,35 @@ public class SaveProduct implements java.io.Serializable {
     @Max(value = 1, message = "商品收藏狀態不正確")
     private Byte saveStatus;
 
-    public SaveProduct() {
-    }
+	public SaveProduct() {
+		super();
+	}
+	public Integer getSaveProductNo() {
+		return saveProductNo;
+	}
+	public void setSaveProductNo(Integer saveProductNo) {
+		this.saveProductNo = saveProductNo;
+	}
+	public Member getMember() {
+		return member;
+	}
+	public void setMember(Member member) {
+		this.member = member;
+	}
+	public Product getProduct() {
+		return product;
+	}
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+	public Byte getSaveStatus() {
+		return saveStatus;
+	}
+	public void setSaveStatus(Byte saveStatus) {
+		this.saveStatus = saveStatus;
+	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
-    public Integer getSaveProductNo() {
-        return this.saveProductNo;
-    }
-
-    public void setSaveProductNo(Integer saveProductNo) {
-        this.saveProductNo = saveProductNo;
-    }
-
-    public Member getMemberVO() {
-        return this.member;
-    }
-
-    public void setMemberVO(Member member) {
-        this.member = member;
-    }
-
-    public Product getProductVO() {
-        return this.product;
-    }
-
-    public void setProductVO(Product product) {
-        this.product = product;
-    }
-
-    public Byte getSaveStatus() {
-        return saveStatus;
-    }
-
-    public void setSaveStatus(Byte saveStatus) {
-        this.saveStatus = saveStatus;
-    }
 }
