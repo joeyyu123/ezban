@@ -9,7 +9,7 @@
 </head>
 
 <body>
-<div id="wrapper" class="toggled">
+<div id="wrapper" class="">
     <nav th:replace="backstage/event/event :: navbar"></nav>
     <div th:insert="backstage/index :: hamburger-btn"></div>
     <div class="page-content-wrapper">
@@ -52,10 +52,10 @@
                 if (!response.ok) {
                     throw new Error(response.status);
                 }
-                return response.text(); //回傳promise物件
+                return response;
             })
-            .then(function (result) { //此例, server端回傳的是一個字串
-                if (result.indexOf("success") >= 0) {
+            .then(function (result) { //此例, server端回傳的是一個ResponseEntity
+                if (result.ok) {
                     alert("儲存成功~");
                 }
             })

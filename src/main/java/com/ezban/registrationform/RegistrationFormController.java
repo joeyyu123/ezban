@@ -5,6 +5,7 @@ import com.ezban.fieldExample.model.FieldExampleService;
 import com.ezban.registrationform.model.RegistrationForm;
 import com.ezban.registrationform.model.RegistrationFormService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,16 +34,18 @@ public class RegistrationFormController {
 
     @PostMapping("{eventNo}/form")
     @ResponseBody
-    public String saveOrUpdate(Model model, @PathVariable String eventNo, @RequestBody Map<String, List<FieldExample>> request) {
+    public ResponseEntity<String> saveOrUpdate(Model model, @PathVariable String eventNo, @RequestBody Map<String, List<FieldExample>> request) {
         RegistrationForm registrationForm = registrationFormService.findByEventNo(eventNo);
         if (registrationForm == null) {
             registrationForm = new RegistrationForm();
+            registrationForm.setEventNo(eventNo);
         }
+
         List<FieldExample> questions = request.get("questions");
-//        registrationForm.setEventNo(eventNo);
-//        registrationForm.setQuestions(questions);
+        registrationForm.setQuestions(questions);
+
         registrationFormService.save(registrationForm);
 
-        return "success";
+        return ResponseEntity.ok("success");
     }
 }

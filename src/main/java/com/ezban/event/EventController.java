@@ -2,6 +2,7 @@ package com.ezban.event;
 
 import com.ezban.event.model.Event;
 import com.ezban.event.model.EventService;
+import com.ezban.event.model.EventStatus;
 import com.ezban.tickettype.model.TicketType;
 import com.ezban.tickettype.model.TicketTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class EventController {
 
     @GetMapping("")
     public String getEvents(Model model) {
-        List<Event> events = eventService.findByEventStatus((byte) 1);
+        List<Event> events = eventService.findByEventStatus(EventStatus.PUBLISHED);
         model.addAttribute("events", events);
         return "/frontstage/event/events";
     }

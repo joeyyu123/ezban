@@ -26,7 +26,7 @@ public class BackstageTicketTypeController {
         List<TicketType> ticketTypes = ticketTypeService.findByEventNo(eventNo);
         model.addAttribute("ticketTypes", ticketTypes);
         model.addAttribute("eventNo", eventNo);
-        model.addAttribute("event", ticketTypeService.findByEventNo(eventNo).get(0).getEvent());
+        model.addAttribute("event", eventService.findById(eventNo));
 
         return "/backstage/event/ticketType";
     }
