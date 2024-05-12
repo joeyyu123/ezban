@@ -35,4 +35,8 @@ public class TicketOrderDetailService implements ServiceDemo<TicketOrderDetail> 
     public List<TicketOrderDetail> saveAll(Iterable<TicketOrderDetail> ticketOrderDetails) {
         return repository.saveAll(ticketOrderDetails);
     }
+
+    public List<TicketOrderDetail> findByOrderNo(Integer orderNo){
+        return repository.findByTicketOrderTicketOrderNo(orderNo);
+    }
 }

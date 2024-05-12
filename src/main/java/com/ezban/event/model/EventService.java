@@ -37,13 +37,13 @@ public class EventService implements ServiceDemo<Event> {
         return repository.findByHostHostNo(hostNo);
     }
 
-    public List<Event> findByEventStatus(Byte status) {
+    public List<Event> findByEventStatus(EventStatus status) {
         return repository.findByEventStatus(status);
     }
 
     // 查詢該類別上架中的活動
     public List<Event> findByEventCategoryNo(Integer categoryNo){
-        return repository.findByEventCategoryEventCategoryNoAndEventStatus(categoryNo, (byte) 1);
+        return repository.findByEventCategoryEventCategoryNoAndEventStatus(categoryNo, EventStatus.PUBLISHED);
     }
 
 }

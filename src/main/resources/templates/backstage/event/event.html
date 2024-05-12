@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <div id="wrapper" class="toggled">
+    <div id="wrapper" class="">
         <nav th:fragment="navbar" class="navbar navbar-inverse fixed-top" id="sidebar-wrapper" role="navigation">
             <ul class="nav sidebar-nav">
                 <li class="sidebar-header">
@@ -45,10 +45,86 @@
                 <div class="container">
                     <div class="highlight-box">
 <!--                        <i class="fas fa-file-alt fa-3x" style="color: #0097A7;"></i>-->
-                        <p class="mt-3">請填寫以下活動資訊！</p>
+                        <p class="mt-3" th:text="${message}"></p>
+                        <p class="mt-3" th:if="${message == null}">請填寫以下活動資訊！</p>
                     </div>
 
-                    <div class="form-section">
+                    <div class="form-section" th:if="${event == null}">
+                        <h5 class="mb-3">活動資訊設定</h5>
+                        <form th:method="post" th:action="@{'/backstage/event'}" enctype="multipart/form-data">
+
+                            <!-- 先把主辦廠商寫死-->
+                            <!-- <input type="hidden" id="hostNo" name="hostNo" th:value="${session.hostNo}"> -->
+                            <input type="hidden" id="hostNo" name="hostNo" th:value="${1}">
+
+                            <div class="image-upload-container mb-3" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);" onclick="document.getElementById('eventImg').click();">
+                                <label class="form-label">
+                                    <i class="fas fa-cloud-upload-alt fa-2x"></i>
+                                    <span>拖曳圖片至此或點擊框框 <span class="text-primary" style="cursor: pointer;"></span></span>
+                                </label>
+                                <input type="file" id="eventImg" name="eventImg" style="display: none;" multiple onchange="previewImage();" accept=".jpeg,.jpg">
+                                <img id="imagePreview" class="image-preview" alt="Image Preview" style="display: none;">
+
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="eventName">活動名稱</label>
+                                <input type="text" class="form-control" id="eventName" name="eventName" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="eventCategory">活動類別</label>
+                                <select class="form-control" id="eventCategory" name="eventCategory">
+                                    <th:block th:each="category : ${categories}">
+                                        <option th:value="${category.eventCategoryNo}" th:text="${category.eventCategoryName}" ></option>
+                                    </th:block>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="eventAddTime">活動上架時間</label>
+                                <input type="datetime-local" class="form-control" id="eventAddTime" name="eventAddTime"  required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="eventRemoveTime">活動下架時間</label>
+                                <input type="datetime-local" class="form-control" id="eventRemoveTime" name="eventRemoveTime" required />
+                            </div>
+                            <div class="mb-3">
+                                <label for="eventStartTime">活動開始時間</label>
+                                <input type="datetime-local" class="form-control" id="eventStartTime" name="eventStartTime" required/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="eventEndTime">活動結束時間</label>
+                                <input type="datetime-local" class="form-control" id="eventEndTime" name="eventEndTime" required/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="registrationStartTime">報名開始時間</label>
+                                <input type="datetime-local" class="form-control" id="registrationStartTime" name="registrationStartTime" required/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="registrationEndTime">報名結束時間</label>
+                                <input type="datetime-local" class="form-control" id="registrationEndTime" name="registrationEndTime" required/>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="eventCity" class="form-label">活動所在城市</label>
+                                <input type="text" class="form-control" id="eventCity" name="eventCity" placeholder="輸入活動所在城市" required />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="eventDetailedAddress">活動地址</label>
+                                <input type="text" id="eventDetailedAddress" name="eventDetailedAddress" class="form-control" placeholder="輸入活動地址" required />
+                            </div>
+
+                            <div class="map-container mb-3" id="map">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.033297881887!2d120.9820178150023!3d24.79424598408304!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3468353620138e6f%3A0x7d3fb9d0a1e150cf!2sNational%20Chiao%20Tung%20University!5e0!3m2!1sen!2stw!4v1615296342245!5m2!1sen!2stw"
+                                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">儲存</button>
+                        </form>
+                    </div>
+
+                    <div class="form-section" th:if="${event!= null}">
                         <h5 class="mb-3">活動資訊設定</h5>
                         <form th:method="put" th:action="@{'/backstage/events/'+${event.eventNo}}" enctype="multipart/form-data">
                             <input type="hidden" id="eventNo" name="eventNo" th:value="${event.eventNo}">
@@ -67,7 +143,7 @@
 
                             <div class="mb-3">
                                 <label for="eventName">活動名稱</label>
-                                <input type="text" class="form-control" id="eventName" name="eventName" th:value="${event.eventName}" />
+                                <input type="text" class="form-control" id="eventName" name="eventName" th:value="${event.eventName}" required />
                             </div>
                             <div class="mb-3">
                                 <label for="eventCategory">活動類別</label>
@@ -80,37 +156,37 @@
 
                             <div class="mb-3">
                                 <label for="eventAddTime">活動上架時間</label>
-                                <input type="datetime-local" class="form-control" id="eventAddTime" name="eventAddTime" th:value="${event.eventAddTime}" />
+                                <input type="datetime-local" class="form-control" id="eventAddTime" name="eventAddTime" th:value="${event.eventAddTime}" required />
                             </div>
                             <div class="mb-3">
                                 <label for="eventRemoveTime">活動下架時間</label>
-                                <input type="datetime-local" class="form-control" id="eventRemoveTime" name="eventRemoveTime" th:value="${event.eventRemoveTime}" />
+                                <input type="datetime-local" class="form-control" id="eventRemoveTime" name="eventRemoveTime" th:value="${event.eventRemoveTime}" required />
                             </div>
                             <div class="mb-3">
                                 <label for="eventStartTime">活動開始時間</label>
-                                <input type="datetime-local" class="form-control" id="eventStartTime" name="eventStartTime" th:value="${event.eventStartTime}" />
+                                <input type="datetime-local" class="form-control" id="eventStartTime" name="eventStartTime" th:value="${event.eventStartTime}" required/>
                             </div>
                             <div class="mb-3">
                                 <label for="eventEndTime">活動結束時間</label>
-                                <input type="datetime-local" class="form-control" id="eventEndTime" name="eventEndTime" th:value="${event.eventEndTime}" />
+                                <input type="datetime-local" class="form-control" id="eventEndTime" name="eventEndTime" th:value="${event.eventEndTime}" required/>
                             </div>
                             <div class="mb-3">
                                 <label for="registrationStartTime">報名開始時間</label>
-                                <input type="datetime-local" class="form-control" id="registrationStartTime" name="registrationStartTime" th:value="${event.registrationStartTime}" />
+                                <input type="datetime-local" class="form-control" id="registrationStartTime" name="registrationStartTime" th:value="${event.registrationStartTime}" required/>
                             </div>
                             <div class="mb-3">
                                 <label for="registrationEndTime">報名結束時間</label>
-                                <input type="datetime-local" class="form-control" id="registrationEndTime" name="registrationEndTime" th:value="${event.registrationEndTime}" />
+                                <input type="datetime-local" class="form-control" id="registrationEndTime" name="registrationEndTime" th:value="${event.registrationEndTime}" required/>
                             </div>
 
                             <div class="mb-3">
                                 <label for="eventCity" class="form-label">活動所在城市</label>
-                                <input type="text" class="form-control" id="eventCity" name="eventCity" placeholder="輸入活動所在城市" th:value="${event.eventCity}">
+                                <input type="text" class="form-control" id="eventCity" name="eventCity" placeholder="輸入活動所在城市" th:value="${event.eventCity}" required />
                             </div>
 
                             <div class="mb-3">
                                 <label for="eventDetailedAddress">活動地址</label>
-                                <input type="text" id="eventDetailedAddress" name="eventDetailedAddress" class="form-control" placeholder="輸入活動地址" th:value="${event.eventDetailedAddress}" />
+                                <input type="text" id="eventDetailedAddress" name="eventDetailedAddress" class="form-control" placeholder="輸入活動地址" th:value="${event.eventDetailedAddress}" required />
                             </div>
 
                             <div class="map-container mb-3" id="map">

@@ -55,7 +55,7 @@ public class TicketOrder implements java.io.Serializable{
      */
     @NotNull
     @Column(name = "ticket_order_payment_status", nullable = false)
-    private Byte ticketOrderPaymentStatus;
+    private TicketOrderPaymentStatus ticketOrderPaymentStatus;
 
     /**
      * 0 處理中
@@ -63,13 +63,13 @@ public class TicketOrder implements java.io.Serializable{
      * 2 已取消
      */
     @Column(name = "ticket_order_status")
-    private Byte ticketOrderStatus;
+    private TicketOrderStatus ticketOrderStatus;
 
     @Column(name = "ticket_order_allocation_amount")
     private Integer ticketOrderAllocationAmount;
 
     @Column(name = "ticket_order_allocation_status")
-    private Byte ticketOrderAllocationStatus;
+    private TicketOrderAllocationStatus ticketOrderAllocationStatus;
 
     @OneToMany(mappedBy = "ticketOrder")
     private Set<TicketOrderDetail> ticketOrderDetails = new LinkedHashSet<>();
@@ -138,19 +138,19 @@ public class TicketOrder implements java.io.Serializable{
         this.ticketOrderPayTime = ticketOrderPayTime;
     }
 
-    public Byte getTicketOrderPaymentStatus() {
+    public TicketOrderPaymentStatus getTicketOrderPaymentStatus() {
         return ticketOrderPaymentStatus;
     }
 
-    public void setTicketOrderPaymentStatus(Byte ticketOrderPaymentStatus) {
+    public void setTicketOrderPaymentStatus(TicketOrderPaymentStatus ticketOrderPaymentStatus) {
         this.ticketOrderPaymentStatus = ticketOrderPaymentStatus;
     }
 
-    public Byte getTicketOrderStatus() {
+    public TicketOrderStatus getTicketOrderStatus() {
         return ticketOrderStatus;
     }
 
-    public void setTicketOrderStatus(Byte ticketOrderStatus) {
+    public void setTicketOrderStatus(TicketOrderStatus ticketOrderStatus) {
         this.ticketOrderStatus = ticketOrderStatus;
     }
 
@@ -162,11 +162,11 @@ public class TicketOrder implements java.io.Serializable{
         this.ticketOrderAllocationAmount = ticketOrderAllocationAmount;
     }
 
-    public Byte getTicketOrderAllocationStatus() {
+    public TicketOrderAllocationStatus getTicketOrderAllocationStatus() {
         return ticketOrderAllocationStatus;
     }
 
-    public void setTicketOrderAllocationStatus(Byte ticketOrderAllocationStatus) {
+    public void setTicketOrderAllocationStatus(TicketOrderAllocationStatus ticketOrderAllocationStatus) {
         this.ticketOrderAllocationStatus = ticketOrderAllocationStatus;
     }
 
