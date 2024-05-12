@@ -126,17 +126,6 @@ public class BackstageEventController {
         return ResponseEntity.status(HttpStatus.OK).body("儲存成功");
     }
 
-    // @PostMapping("/backstage/events/{eventNo}")
-    // public String create(Model model, @PathVariable Integer eventNo,
-    //                      @RequestParam Map<String, String> allParams,
-    //                      @RequestParam(value = "eventImg", required = false) MultipartFile eventImg) {
-
-    //     Event event = new Event();
-
-    //     return "redirect:/backstage/events/" + eventNo;
-    // }
-
-
     /**
      * 更新活動基本資料
      */
@@ -166,7 +155,7 @@ public class BackstageEventController {
         }
         // 儲存更新的活動
         eventService.update(event);
-        model.addAttribute("event", event);
+//        model.addAttribute("event", event);
         redirectAttributes.addFlashAttribute("message", "儲存成功");
         return "redirect:/backstage/events/" + eventNo;
     }
