@@ -54,18 +54,19 @@ create table admin
         unique (admin_phone)
 );
 
-INSERT INTO admin (admin_account, admin_pwd, admin_mail, admin_phone, admin_status)
+INSERT INTO admin (admin_account, admin_pwd, admin_mail, admin_phone, admin_status, admin_name)
+
 VALUES  
-( 'AY6KQZZh', 'NkzkVJ2JUH', 'u8yzliwj@gmail.com', '0989599470', 1),
-( 'mE1rur8H', 'cR7eCn9dEd8rISQ', 'yeocffh6b3wj@gmail.com', '0980469290', 1),
-( 'mX14vJUo7MYQA', 'DsPLWXZ8jKoEz', 'pygvd8xpeex8vbf@gmail.com', '0926584626', 1),
-( 'dFOYfKRWrM', 'vOYvKXCsOlan', '6otfkc9jzl@gmail.com', '0954426431', 1),
-( 'oAFx5V1I', 'e3ez2mANzGY', 'ns9sxzx15rzuv@gmail.com', '0992857410', 1),
-( 'hSUhWbw3', 'BR8ivTB5p', '8avtoze3glac@gmail.com', '0990057569', 1),
-( '6KGLkBq8T', '0Bzc2bJr', 'lf4v6j4bivrokr@gmail.com', '0932655759', 1),
-( 'cznsnaRVakuaAoV', 'ZT4TMNkhLeLfuF2', 'g6gdfowqi4gpkqy@gmail.com', '0906019527', 1),
-( 'oy8EgoOTY2q', 'JR72fjeSNKYnX', 'zes7tkfl9dkmzub@gmail.com', '0942943961', 1),
-( 'lE6XihvE', 'BbCqJsKgu', 'vbrdpx7u4qjv0@gmail.com', '0901244156', 1);
+( 'AY6KQZZh', 'NkzkVJ2JUH', 'u8yzliwj@gmail.com', '0989599470', 1,'陳昊天'),
+( 'mE1rur8H', 'cR7eCn9dEd8rISQ', 'yeocffh6b3wj@gmail.com', '0980469290', 1, '王晨曦'),
+( 'mX14vJUo7MYQA', 'DsPLWXZ8jKoEz', 'pygvd8xpeex8vbf@gmail.com', '0926584626', 1, '張宇宸'),
+( 'dFOYfKRWrM', 'vOYvKXCsOlan', '6otfkc9jzl@gmail.com', '0954426431', 1, '李雅琳'),
+( 'oAFx5V1I', 'e3ez2mANzGY', 'ns9sxzx15rzuv@gmail.com', '0992857410', 1, '劉悅心'),
+( 'hSUhWbw3', 'BR8ivTB5p', '8avtoze3glac@gmail.com', '0990057569', 1, '黃宇航'),
+( '6KGLkBq8T', '0Bzc2bJr', 'lf4v6j4bivrokr@gmail.com', '0932655759', 1, '蔡欣怡'),
+( 'cznsnaRVakuaAoV', 'ZT4TMNkhLeLfuF2', 'g6gdfowqi4gpkqy@gmail.com', '0906019527', 1, '林啟航'),
+( 'oy8EgoOTY2q', 'JR72fjeSNKYnX', 'zes7tkfl9dkmzub@gmail.com', '0942943961', 1, '陳心悅'),
+( 'lE6XihvE', 'BbCqJsKgu', 'vbrdpx7u4qjv0@gmail.com', '0901244156', 1, '鄭晨星');
  
 
 create table event_category
@@ -142,11 +143,13 @@ create table host
     host_no      int auto_increment
         primary key,
     host_account varchar(20) null,
-    host_pwd     varchar(20) null,
+    host_pwd     varchar(60) null,
     host_name    varchar(50) null,
     host_mail    varchar(50) null,
     host_phone   varchar(15) null,
     host_status  tinyint     null,
+    host_login   DATETIME null,
+    
     constraint host_uk_1
         unique (host_account),
     constraint host_uk_2
@@ -2100,11 +2103,11 @@ create table product_report
 (
     product_report_no int auto_increment primary key,
     product_no        int          not null,
-    member_no         int          not null,
-    admin_no          int          not null,
+    member_no         int,
+    admin_no          int,
     report_reason     varchar(100) not null,
     report_date       datetime     not null,
-    report_status     tinyint      not null,
+    report_status     tinyint default 0 not null ,
     constraint product_report_admin_admin_no_fk
         foreign key (admin_no) references admin (admin_no),
     constraint product_report_member_member_no_fk
@@ -2141,10 +2144,10 @@ create table product_order
     product_orderdate               dateTime default now(),
     product_paydate                 dateTime default now(),
     order_closedate                 dateTime default null,
-    product_payment_status          tinyint      not null,
-    product_process_status          tinyint      not null,
+    product_payment_status          tinyint  default 0  not null,
+    product_process_status          tinyint  default 0  not null,
     product_order_allocation_amount int          not null,
-    product_order_allocation_status tinyint      not null,
+    product_order_allocation_status tinyint  default 0  not null,
     foreign key (member_no) references member (member_no),
     foreign key (birthday_coupon_no) references birthday_coupon (birthday_coupon_no)
 ) auto_increment = 1001;
@@ -2172,7 +2175,7 @@ create table product_order_detail
     product_order_no        int     					   not null,
     product_qty             int     					   not null,
     product_price           int     					   not null,
-    comments_status         tinyint 					   not null,
+    comments_status         tinyint default 0	   	       not null,
     foreign key (product_no) references product (product_no),
     foreign key (product_order_no) references product_order (product_order_no)
 );

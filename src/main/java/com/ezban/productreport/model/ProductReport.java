@@ -29,14 +29,12 @@ public class ProductReport implements java.io.Serializable {
     @JoinColumn(name = "product_no", nullable = false)
     private Product product;
 
-    @NotNull(message = "會員編號: 請勿空白")
     @ManyToOne
-    @JoinColumn(name = "member_no", nullable = false)
+    @JoinColumn(name = "member_no")
     private Member member;
 
-    @NotNull(message = "後台管理員編號: 請勿空白")
     @ManyToOne
-    @JoinColumn(name = "admin_no", nullable = false)
+    @JoinColumn(name = "admin_no")
     private Admin admin;
 
     @NotNull(message = "檢舉原因: 請勿空白")
