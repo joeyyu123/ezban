@@ -15,7 +15,7 @@ public class BirthdayCoupon implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "birthday_coupon_no", nullable = false)
-    private Integer birthdayCouponNo;
+    private String birthdayCouponNo;
 
     @NotNull
     @Column(name = "birthday_coupon_discount", nullable = false)
@@ -35,11 +35,11 @@ public class BirthdayCoupon implements Serializable {
     @OneToMany(mappedBy = "birthdayCoupon")
     private Set<ProductOrder> productOrders = new LinkedHashSet<>();
 
-    public Integer getBirthdayCouponNo() {
+    public String getBirthdayCouponNo() {
         return birthdayCouponNo;
     }
 
-    public void setBirthdayCouponNo(Integer birthdayCouponNo) {
+    public void setBirthdayCouponNo(String birthdayCouponNo) {
         this.birthdayCouponNo = birthdayCouponNo;
     }
 
