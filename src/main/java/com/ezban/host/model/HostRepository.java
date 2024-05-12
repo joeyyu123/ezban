@@ -8,4 +8,5 @@ public interface HostRepository extends JpaRepository<Host, Integer> {
     Optional<Host> findByHostName(String hostName);
     Optional<Host> findByHostMail(String hostMail);
     Optional<Host> findByHostPhone(String hostPhone);
+    Optional<Host> findByHostAccountAndHostMail(String account, String email);
 }

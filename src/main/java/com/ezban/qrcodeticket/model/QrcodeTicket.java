@@ -35,6 +35,12 @@ public class QrcodeTicket implements java.io.Serializable{
     @Column(name = "ticket_valid_time", nullable = false)
     private Timestamp ticketValidTime;
 
+    public class TicketUsageStatus {
+        public static final byte UNUSED = 0;   // 未使用
+        public static final byte USED = 1;     // 已使用
+        public static final byte EXPIRED = 2;  // 已失效
+    }
+
     //--------------------------------------------getters and setters--------------------------------------------
     public QrcodeTicket() {   //必需有一個不傳參數建構子(JavaBean基本知識)
     }

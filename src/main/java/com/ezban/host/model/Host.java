@@ -1,8 +1,13 @@
 package com.ezban.host.model;
 
 import java.time.LocalDateTime;
+import com.ezban.product.model.Product;
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+
 
 @Entity
 @Table(name = "host")
@@ -37,11 +42,14 @@ public class Host {
     @Column(name = "host_phone", length = 15, unique = true, nullable = false)
     private String hostPhone;
 
-    @Column(name = "last_login")
-    private LocalDateTime lastLogin;
+    @Column(name = "host_login")
+    private LocalDateTime hostlogin;
 
     @Column(name = "host_status", nullable = false)
     private Byte hostStatus = 1;
+    
+    @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
+	private Set<Product> products = new LinkedHashSet<>();
 
     // Default constructor
     public Host() {}
@@ -82,6 +90,15 @@ public class Host {
     public void setHostPwd(String hostPwd) {
         this.hostPwd = hostPwd;
     }
+	public Set<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
+	}
+
+
 
     public String getHostName() {
         return hostName;
@@ -108,11 +125,11 @@ public class Host {
     }
 
     public LocalDateTime getLastLogin() {
-        return lastLogin;
+        return hostlogin;
     }
 
-    public void setLastLogin(LocalDateTime lastLogin) {
-        this.lastLogin = lastLogin;
+    public void sethostlogin(LocalDateTime hostlogin) {
+        this.hostlogin = hostlogin;
     }
 
     public Byte getHostStatus() {
@@ -132,7 +149,7 @@ public class Host {
                 ", hostName='" + hostName + '\'' +
                 ", hostMail='" + hostMail + '\'' +
                 ", hostPhone='" + hostPhone + '\'' +
-                ", lastLogin=" + lastLogin +
+                ", lastLogin=" + hostlogin +
                 ", hostStatus=" + hostStatus +
                 '}';
     }
