@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.4/css/tether.min.css" />
     <link rel="stylesheet" th:href="@{/css/backstage/index.css}" />
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
@@ -38,9 +39,9 @@
                         <!-- <div class="dropdown-header">Dropdown heading</div> -->
                         <li><a href="#events">辦活動</a></li>
                         <li><a th:href="@{/backstage/events}">活動列表</a></li>
-                        <li><a th:href="@{/backstage/eventcoupon/select_page}">優惠券管理</a></li>
-                        <li><a href="#events">客服聊天室</a></li>
-                        <li><a th:href="@{/backstage/qrcodeticket/listAllQrcodeTicket}">驗票</a></li>
+                        <li><a th:href="@{/backstage/eventcoupon/select_page}"><i class="fa-sharp fa-solid fa-ticket fa-spin fa-spin-reverse" style="color: #FFD43B;"></i> 優惠券管理</a></li>
+                        <li><a href="#events"><i class="fa-solid fa-headset fa-shake" style="color: #ffffff;"></i> 客服聊天室</a></li>
+                        <li><a th:href="@{/backstage/qrcodeticket/listAllQrcodeTicket}"><i class="fa-solid fa-qrcode fa-bounce" style="color: #63E6BE;"></i>  驗票</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
