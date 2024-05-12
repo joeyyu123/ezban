@@ -396,7 +396,12 @@
 </body>
 <script>
     function submitProductReport(productNo) {
-        var reportReason = $("#reportReason").val();
+        var reportReason = $("#reportReason").val().trim();
+        // 檢查 reportReason 是否為空白
+        if (reportReason === "") {
+            Swal.fire('提交失敗', '檢舉原因不可為空白', 'error');
+            return;
+        }
         var formData = {
             productNo: productNo,
             reportReason: reportReason
