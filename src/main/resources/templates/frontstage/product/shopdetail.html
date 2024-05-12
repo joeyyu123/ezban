@@ -3,6 +3,36 @@
 <html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="frontstage/index2 :: head">
+    <!-- Modal開始(點擊我要檢舉觸發彈窗) -->
+    <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel" style="color: red; font-weight: bold; font-size: 30px;"><center>請 輸 入 檢 舉 原 因</center></h5>
+                </div>
+                <div class="modal-body">
+                    <!-- 表單 -->
+                    <form id="productReportForm" method="post" action="/productreport/insert">
+                        <div class="mb-3"><label for="reportReason" class="col-form-label">原因說明:</label>
+                            <textarea class="form-control" id="reportReason" name="reportReason" ></textarea></div>
+                        <!-- 隱藏的输入字段用於储存訂單編號 -->
+                        <input type="hidden" id="productNo" name="productNo" value="">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <br>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                            onclick="window.location.href='/product/shopdetail'">放棄檢舉
+                    </button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                            th:onclick="submitProductReport([[${product.productNo}]])">送出檢舉
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal結束 -->
     <style>
         .cart_btn {
             border: 1px solid black;
@@ -137,9 +167,8 @@
                         </ul>
                     </div>
                     <a href="cart.html" class="btn btn-main mt-20" style="margin-right: 5px;">加入購物車</a>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" style="margin-top: 20px; height: 45px; border-radius: 0; background-color: #000; font-size: 11px;">
-                        我要檢舉
-                    </button>
+                    <button type="button" id="productReport" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#staticBackdrop" style="margin-top: 20px; height: 45px; border-radius: 0; background-color: #000; font-size: 11px;">
+                        我要檢舉</button>
                 </div>
             </div>
         </div>
@@ -365,4 +394,45 @@
 <div th:replace="frontstage/index2 :: footer"></div>
 
 </body>
+<script>
+    function submitProductReport(productNo) {
+        var reportReason = $("#reportReason").val().trim();
+        // 檢查 reportReason 是否為空白
+        if (reportReason === "") {
+            Swal.fire('提交失敗', '檢舉原因不可為空白', 'error');
+            return;
+        }
+        var formData = {
+            productNo: productNo,
+            reportReason: reportReason
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/productreport/insert',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                console.log('Success response received:', response);
+                Swal.fire({
+                    title: '提交成功',
+                    text: "檢舉資料已成功送出。",
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: '確定',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log('AJAX error response:', status, error);
+                Swal.fire('提交失敗', '請檢查輸入資料是否正確。', 'error');
+            }
+        });
+    }
+</script>
 </html>

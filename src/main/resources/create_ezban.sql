@@ -2100,11 +2100,11 @@ create table product_report
 (
     product_report_no int auto_increment primary key,
     product_no        int          not null,
-    member_no         int          not null,
-    admin_no          int          not null,
+    member_no         int,
+    admin_no          int,
     report_reason     varchar(100) not null,
     report_date       datetime     not null,
-    report_status     tinyint      not null,
+    report_status     tinyint default 0 not null ,
     constraint product_report_admin_admin_no_fk
         foreign key (admin_no) references admin (admin_no),
     constraint product_report_member_member_no_fk
@@ -2141,10 +2141,10 @@ create table product_order
     product_orderdate               dateTime default now(),
     product_paydate                 dateTime default now(),
     order_closedate                 dateTime default null,
-    product_payment_status          tinyint      not null,
-    product_process_status          tinyint      not null,
+    product_payment_status          tinyint  default 0  not null,
+    product_process_status          tinyint  default 0  not null,
     product_order_allocation_amount int          not null,
-    product_order_allocation_status tinyint      not null,
+    product_order_allocation_status tinyint  default 0  not null,
     foreign key (member_no) references member (member_no),
     foreign key (birthday_coupon_no) references birthday_coupon (birthday_coupon_no)
 ) auto_increment = 1001;
@@ -2172,7 +2172,7 @@ create table product_order_detail
     product_order_no        int     					   not null,
     product_qty             int     					   not null,
     product_price           int     					   not null,
-    comments_status         tinyint 					   not null,
+    comments_status         tinyint default 0	   	       not null,
     foreign key (product_no) references product (product_no),
     foreign key (product_order_no) references product_order (product_order_no)
 );
