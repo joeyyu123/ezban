@@ -24,7 +24,7 @@ public class ProductReport implements java.io.Serializable {
     @Column(name = "product_report_no", nullable = false)
     private Integer productReportNo;
 
-    @NotNull(message = "商品編號: 請勿空白")
+    @NotNull(message = "* 商品編號: 請勿空白 !")
     @ManyToOne
     @JoinColumn(name = "product_no", nullable = false)
     private Product product;
@@ -37,19 +37,18 @@ public class ProductReport implements java.io.Serializable {
     @JoinColumn(name = "admin_no")
     private Admin admin;
 
-    @NotNull(message = "檢舉原因: 請勿空白")
+    @NotNull(message = "* 檢舉原因: 請勿空白 !")
     @Column(name = "report_reason", nullable = false, length = 100)
     private String reportReason;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Taipei")
-    @NotNull(message = "檢舉日期: 請勿空白")
+    @NotNull(message = "* 檢舉日期: 請勿空白 !")
     @Column(name = "report_date", nullable = false)
     private Timestamp reportDate = Timestamp.valueOf(LocalDateTime.now());
 
-    @NotNull(message = "商品檢舉狀態: 請勿空白")
-    @Column(name = "report_status", nullable = false)
-    @Min(value = 0, message = "商品檢舉狀態不正確")
-    @Max(value = 2, message = "商品檢舉狀態不正確")
+    @Column(name = "report_status", insertable = false)
+    @Min(value = 0, message = "* 商品檢舉狀態不正確 !")
+    @Max(value = 2, message = "* 商品檢舉狀態不正確 !")
     private Byte reportStatus;
 
     public ProductReport() {
