@@ -3,6 +3,8 @@ package com.ezban.ticketorder.model;
 import com.ezban.eventcoupon.model.EventCoupon;
 import com.ezban.member.model.Member;
 import com.ezban.ticketorderdetail.model.TicketOrderDetail;
+import com.ezban.tickettype.model.Views;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -16,6 +18,7 @@ public class TicketOrder implements java.io.Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ticket_order_no", nullable = false)
+    @JsonView(Views.Public.class)
     private Integer ticketOrderNo;
 
     @NotNull

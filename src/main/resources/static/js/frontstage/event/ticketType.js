@@ -12,7 +12,7 @@ $(document).ready(function () {
             totalQty += qty;
             totalPrice += qty * price;
         });
-        $(".total-price").text('共 ' + totalQty + ' 張，' + 'NT$ ' + totalPrice);
+        $(".ticketType-total-price").text('共 ' + totalQty + ' 張，' + 'NT$ ' + totalPrice);
 
         if (totalQty === 0) {
             $("#buyTicketBtn").prop("disabled", true);
@@ -93,6 +93,7 @@ $(document).ready(function () {
                 form.append("<input type='hidden' name='eventNo' value='" + eventNo + "'>");
                 form.append("<input type='hidden' name='ticketOrderNo' value='" + ticketOrderNo + "'>");
                 form.append("<h2>報名表單</h2>");
+                form.append("<h3>請於一個小時內完成資料填寫以及付款，逾時將取消訂單</h3>");
                 form.append("<h3>每個報名的人都需要填寫一份資料，請填寫完畢後再送出。</h3>");
 
                 let nameQuestionCount = 0;
@@ -276,13 +277,130 @@ $(document).ready(function () {
             contentType: "application/json",
             data: JSON.stringify(formData),
             success: function (response) {
-                alert("報名表送出成功！");
+                // 將付款選擇頁面渲染給前端
+                let orderDetails = response;
+                let ticketOrderNo = orderDetails[0].ticketOrder.ticketOrderNo;
+                let totalPrice = 0;
+
+                if (Array.isArray(orderDetails)) {
+                    orderDetails.forEach(function (orderDetail) {
+                        let price = parseInt(orderDetail.ticketTypePrice);
+                        let qty = parseInt(orderDetail.ticketTypeQty);
+                        totalPrice += price * qty;
+                    });
+                }
+
+
+                let divContainer = $("div.event-container");
+                divContainer.empty();
+                let paymentContainer = $(`
+                <div class='payment-container'>
+                    <input type="hidden" name="ticketOrderNo" value="${ticketOrderNo}">
+                    <input type="hidden" name="couponCode">
+                </div>`);
+                let coupon = $(
+                    `<div class="card">
+                        <div class="card-body mb-3">
+                            <label for="coupon-code" class="form-label">優惠券代碼</label>
+                            <input type="text" class="form-control" id="coupon-code" name="couponCode" placeholder="請輸入優惠券代碼">
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-outline-secondary" id="apply-coupon-btn">兌換</button>
+                        </div>
+                    </div>`);
+
+                let orderDetails_div = $(
+                    `<div class='card order-details'>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th>數量</th>
+                                <th>價格</th>
+                                <th>小計</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>`)
+
+
+                if (Array.isArray(orderDetails)) {
+                    orderDetails.forEach(function (orderDetail) {
+                        orderDetails_div.find('table tbody').append(`
+                        <tr>
+                            <th scope="row" >${orderDetail.ticketType.ticketTypeName}</th>
+                            <td >${orderDetail.ticketTypeQty}</td>
+                            <td >NT$ ${orderDetail.ticketTypePrice}</td>
+                            <td >NT$ ${orderDetail.ticketTypePrice * orderDetail.ticketTypeQty}</td>
+                        </tr>
+                        `);
+                    });
+                }
+                let totalPrice_div = $(
+                    `<div class="card mt-4">
+                        <div class="card-body order-details">
+                            <h5 class="form-label">結帳金額</h5>
+                            <span class="total">NT$${totalPrice}</span>
+                        </div>
+                    </div>`)
+
+                orderDetails_div.find('table').append(`
+                    <tfoot class="table-group-divider">
+                        <tr>
+                          <th scope="row">結帳金額</th>
+                          <td></td>
+                          <td></td>
+                          <td class="total">NT$ ${totalPrice}</td>
+                        </tr>
+                    </tfoot>
+                `);
+
+                let paymentMethod = $(`
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary" id="goto-payment-btn">前往付款 (NT$ ${totalPrice})</button>
+                    </div>
+                `)
+
+                paymentContainer.append(coupon);
+                paymentContainer.append(orderDetails_div);
+                paymentContainer.append(paymentMethod);
+                divContainer.append(paymentContainer);
+
             },
             error: function (error) {
                 // 處理錯誤的回應
                 alert("伺服器忙碌中，請稍後再試。")
             }
         });
+    });
+
+    // 優惠券兌換
+    $(document).on("click", "#apply-coupon-btn", function () {
+
+    });
+
+
+    // 前往付款
+    $(document).on("click","#goto-payment-btn", function () {
+        let data = {
+            ticketOrderNo: $("input[name='ticketOrderNo']").val(),
+            couponCode: $("#coupon-code").val()
+        }
+        $.ajax({
+            url: "/events/ticketOrder/payment",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function (response) {
+                $("div.container").html(response);
+                $("#allPayAPIForm").submit();
+            },
+            error: function (error) {
+                alert("伺服器忙碌中，請稍後再試。")
+            }
+        })
     });
 
 });
