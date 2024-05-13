@@ -4,21 +4,27 @@ import com.ezban.ecpay.service.EcpayService;
 import com.ezban.member.model.Member;
 import com.ezban.qrcodeticket.model.QrcodeTicketService;
 import com.ezban.registrationform.model.RegistrationFormService;
-import com.ezban.ticketorder.model.*;
+import com.ezban.ticketorder.model.InsufficientTicketQuantityException;
 import com.ezban.ticketorder.model.Service.TicketOrderEmailService;
 import com.ezban.ticketorder.model.Service.TicketOrderService;
+import com.ezban.ticketorder.model.TicketOrder;
 import com.ezban.ticketorder.model.dto.Dto;
 import com.ezban.ticketorder.model.dto.TicketOrderRegistrationForm;
 import com.ezban.ticketorderdetail.model.TicketOrderDetail;
 import com.ezban.ticketorderdetail.model.TicketOrderDetailService;
-import com.ezban.util.MailService;
 import com.google.gson.Gson;
+import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,10 +33,6 @@ import java.util.Map;
 @Controller
 //@RequestMapping("/events/order")
 public class TicketOrderController {
-
-    @Autowired
-    private MailService mailService;
-
     @Autowired
     private TicketOrderService ticketOrderService;
 
@@ -100,6 +102,13 @@ public class TicketOrderController {
         return aioCheckOutALLForm;
     }
 
+    /**
+     * 付款完成後回傳給使用者付款結果
+     * @param rtnCode if return code is 1, payment is successful. Otherwise, payment is failed.
+     * @param merchantTradeNo 訂單編號
+     * @param paymentDate 付款日期時間
+     * @return 付款結果頁面
+     */
     @PostMapping("/events/order-result")
     public String orderResult(Model model, @RequestParam(value = "RtnCode") Integer rtnCode, @RequestParam("MerchantTradeNo") String merchantTradeNo, @RequestParam("PaymentDate") String paymentDate) {
 
@@ -107,15 +116,18 @@ public class TicketOrderController {
         if (rtnCode == 1) {
             model.addAttribute("message", "付款成功，請至我的票券查看");
 
-            // 修改訂單狀態 以下這段在正式上線後應註解掉，改成在EcpayController中更新訂單狀態
+            // TODO 修改訂單狀態 以下這段在正式上線後應註解掉，由EcpayController中更新訂單狀態
             TicketOrder ticketOrder = ticketOrderService.findById(Integer.valueOf(merchantTradeNo.substring(14)));
             ticketOrder = ticketOrderService.finishOrder(ticketOrder,paymentDate);
 
             // 儲存QRCode票券到資料庫
             ticketOrderService.createQrcodeTickets(ticketOrder);
 
-            // TODO 寄送付款成功的郵件以及QRCode票券給購票人
-//            ticketOrderEmailService.sendOrderEmail(ticketOrder);
+            try {
+                ticketOrderEmailService.sendOrderEmail(ticketOrder);
+            } catch (MessagingException | IOException | WriterException e) {
+                System.out.println(e.getMessage());
+            }
 
             // =================================================================================
 

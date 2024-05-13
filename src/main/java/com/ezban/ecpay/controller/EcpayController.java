@@ -1,27 +1,30 @@
 package com.ezban.ecpay.controller;
 
 import com.ezban.ecpay.service.EcpayService;
-import com.ezban.ticketorder.model.TicketOrder;
+import com.ezban.ticketorder.model.Service.TicketOrderEmailService;
 import com.ezban.ticketorder.model.Service.TicketOrderService;
+import com.ezban.ticketorder.model.TicketOrder;
 import com.ezban.ticketorderdetail.model.TicketOrderDetailService;
+import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.Map;
 
 @Controller
 public class EcpayController {
-
-
-    @Autowired
-    private EcpayService ecpayService;
-
     @Autowired
     private TicketOrderService ticketOrderService;
 
+
     @Autowired
-    private TicketOrderDetailService ticketOrderDetailService;
+    private TicketOrderEmailService ticketOrderEmailService;
 
     // 用來測試能不能連接到伺服器用，之後可以移除
     @GetMapping("/ecpay/return")
@@ -56,8 +59,13 @@ public class EcpayController {
             // 儲存QRCode票券到資料庫
             ticketOrderService.createQrcodeTickets(ticketOrder);
 
-            // TODO 寄送付款成功的郵件以及QRCode票券給購票人
-//            ticketOrderEmailService.sendOrderEmail(ticketOrder);
+
+            // 發送電子郵件通知訂單完成
+            try {
+                ticketOrderEmailService.sendOrderEmail(ticketOrder);
+            } catch (MessagingException | IOException | WriterException e) {
+                System.out.println(e.getMessage());
+            }
 
             // =================================================================================
 
