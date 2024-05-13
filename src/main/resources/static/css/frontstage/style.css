@@ -1101,11 +1101,12 @@ section.products {
 }
 .products .product-item .product-thumb .preview-meta li a:hover, .product-item .product-thumb .preview-meta li span:hover {
   color: white;
-  font-size: 25px;
+  /*font-size: 25px;*/
 }
 .products .product-item .product-thumb .preview-meta li a:hover, .product-item .product-thumb .preview-meta li svg:hover {
-  width: 25px;
-  height: 25px;
+  /*width: 25px;*/
+  /*height: 25px;*/
+  color: #f49292;
 }
 .products .product-item:hover .product-thumb:before {
   opacity: 1;
