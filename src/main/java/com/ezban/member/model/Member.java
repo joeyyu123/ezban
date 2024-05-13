@@ -63,6 +63,10 @@ public class Member {
 
 	@Column(name = "member_points")
 	private Integer memberPoints;
+	
+	@Size(max = 200)
+	@Column(name = "reset_token")
+    private String resetToken;
 
 	public Member() {
 		super();
@@ -73,7 +77,7 @@ public class Member {
 			@NotNull @Size(max = 20) String memberPwd, @Size(max = 50) String memberName, Date birthday, Integer gender,
 			@Size(max = 15) String memberPhone, @Size(max = 200) String address, @Size(max = 50) String commonRecipient,
 			@Size(max = 15) String commonRecipientPhone, @Size(max = 200) String commonRecipientAddress,
-			Byte memberStatus, Integer memberPoints) {
+			Byte memberStatus, Integer memberPoints, @Size(max = 200) String resetToken) {
 		super();
 		this.memberNo = memberNo;
 		this.memberMail = memberMail;
@@ -88,6 +92,7 @@ public class Member {
 		this.commonRecipientAddress = commonRecipientAddress;
 		this.memberStatus = memberStatus;
 		this.memberPoints = memberPoints;
+		this.resetToken = resetToken;
 	}
 
 	public Integer getMemberNo() {
@@ -194,14 +199,25 @@ public class Member {
 		this.memberPoints = memberPoints;
 	}
 
+	public String getResetToken() {
+		return resetToken;
+	}
+
+	public void setResetToken(String resetToken) {
+		this.resetToken = resetToken;
+	}
+
 	@Override
 	public String toString() {
 		return "Member [memberNo=" + memberNo + ", memberMail=" + memberMail + ", memberPwd=" + memberPwd
 				+ ", memberName=" + memberName + ", birthday=" + birthday + ", gender=" + gender + ", memberPhone="
 				+ memberPhone + ", address=" + address + ", commonRecipient=" + commonRecipient
 				+ ", commonRecipientPhone=" + commonRecipientPhone + ", commonRecipientAddress="
-				+ commonRecipientAddress + ", memberStatus=" + memberStatus + ", memberPoints=" + memberPoints + "]";
+				+ commonRecipientAddress + ", memberStatus=" + memberStatus + ", memberPoints=" + memberPoints
+				+ ", resetToken=" + resetToken + "]";
 	}
+
+
 
 	
 }
