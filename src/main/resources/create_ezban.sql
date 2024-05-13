@@ -183,8 +183,8 @@ create table event
     event_desc              longtext     null,
     event_city              varchar(15)  null,
     event_detailed_address  varchar(250) null,
-    event_add_time          datetime     not null,
-    event_remove_time       datetime     not null,
+    event_add_time          datetime     null,
+    event_remove_time       datetime     null,
     registration_start_time datetime     null,
     registration_end_time   datetime     null,
     event_start_time        datetime     not null,
@@ -1848,17 +1848,17 @@ create table ticket_order
 
 INSERT INTO ticket_order (member_no, event_coupon_no, ticket_order_amount, event_coupon_discount,
                           ticket_checkout_amount, ticket_order_time,
-                          ticket_order_pay_time, ticket_order_payment_status)
-VALUES (1, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3),
-       (1, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3),
-       (2, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3),
-       (2, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3),
-       (3, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3),
-       (3, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3),
-       (4, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3),
-       (4, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3),
-       (5, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3),
-       (5, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3);
+                          ticket_order_pay_time, ticket_order_payment_status,ticket_order_status)
+VALUES (1, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1),
+       (1, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1),
+       (2, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1),
+       (2, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1),
+       (3, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1),
+       (3, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1),
+       (4, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1),
+       (4, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1),
+       (5, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1),
+       (5, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1);
 
 
 create table ticket_type

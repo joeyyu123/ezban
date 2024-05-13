@@ -9,7 +9,6 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -117,4 +116,8 @@ public class QrcodeTicketService {
     }
 
 
+    public List<QrcodeTicket> findByOrderDetailNo(Integer ticketOrderDetailNo) {
+
+        return qrcodeTicketrepository.findByTicketOrderDetailTicketOrderDetailNo(ticketOrderDetailNo);
+    }
 }

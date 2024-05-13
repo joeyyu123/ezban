@@ -1,5 +1,9 @@
-package com.ezban.event.model;
+package com.ezban.event.model.Service;
 
+import com.ezban.event.model.Event;
+import com.ezban.event.model.EventRepository;
+import com.ezban.event.model.EventStatus;
+import com.ezban.event.model.ServiceDemo;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 

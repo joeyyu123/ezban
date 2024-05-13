@@ -18,10 +18,12 @@ public class TicketRegistrationService {
         registrationFormRepository.save(ticketRegistration);
     }
 
-    public void saveAll(String request) {
+    public TicketRegistration saveAll(String request) {
         Gson gson = new Gson();
         TicketRegistration ticketRegistration = gson.fromJson(request, TicketRegistration.class);
-        registrationFormRepository.save(ticketRegistration);
+        ticketRegistration = registrationFormRepository.save(ticketRegistration);
+
+        return ticketRegistration;
     }
 }
 
