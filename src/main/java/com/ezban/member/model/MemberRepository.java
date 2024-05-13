@@ -28,6 +28,4 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 	@Query("UPDATE Member m SET m.memberPoints = ?1 WHERE m.memberMail = ?2")
 	void updateMemberPoints(Integer memberPoints, String memberMail);
 
-	void save(Optional<Member> mem);
-
 }
