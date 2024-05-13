@@ -1,7 +1,11 @@
-package com.ezban.ticketorder.model;
+package com.ezban.ticketorder.model.Service;
 
 import com.ezban.event.model.ServiceDemo;
 import com.ezban.member.model.Member;
+import com.ezban.member.model.MemberService;
+import com.ezban.qrcodeticket.model.QrcodeTicket;
+import com.ezban.qrcodeticket.model.QrcodeTicketRepository;
+import com.ezban.ticketorder.model.*;
 import com.ezban.ticketorderdetail.model.TicketOrderDetail;
 import com.ezban.ticketorderdetail.model.TicketOrderDetailService;
 import com.ezban.ticketregistration.TicketRegistration;
@@ -16,6 +20,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
 public class TicketOrderService implements ServiceDemo<TicketOrder> {
@@ -31,6 +36,12 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
 
     @Autowired
     private TicketTypeRepository ticketTypeRepository;
+
+    @Autowired
+    private MemberService memberService;
+
+    @Autowired
+    private QrcodeTicketRepository qrcodeTicketrepository;
 
     @Override
     @Transactional
@@ -106,5 +117,55 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
         return totalAmount;
     }
 
+
+    @Transactional
+    public TicketOrder finishOrder(TicketOrder ticketOrder, String paymentDate) {
+        ticketOrder.setTicketOrderPaymentStatus(TicketOrderPaymentStatus.PAID);
+        ticketOrder.setTicketOrderStatus(TicketOrderStatus.FINISHED);
+        // 將"YYYY/MM/DD HH:mm:ss" 轉換成 "YYYY-MM-DD HH:mm:ss"
+        paymentDate = paymentDate.replace("/", "-");
+        Timestamp ticketOrderPayTime = Timestamp.valueOf(paymentDate);
+        ticketOrder.setTicketOrderPayTime(ticketOrderPayTime);
+
+        ticketOrder = this.update(ticketOrder);
+        return ticketOrder;
+    }
+
+    /**
+     * 根據 ticketOrder  建立對應的qrcodeTickets到資料庫
+     */
+    public List<QrcodeTicket> createQrcodeTickets(TicketOrder ticketOrder) {
+        Set<TicketOrderDetail> ticketOrderDetails = ticketOrder.getTicketOrderDetails();
+        List<QrcodeTicket> qrcodeTickets = new ArrayList<>();
+
+        // 取得活動結束時間
+        Timestamp eventEndTime = ticketOrderDetails.iterator().next().getTicketType().getEvent().getEventEndTime();
+
+        for (TicketOrderDetail ticketOrderDetail : ticketOrderDetails) {
+            if (qrcodeTicketrepository.findByTicketOrderDetailTicketOrderDetailNo(ticketOrderDetail.getTicketOrderDetailNo()).isEmpty()) {
+                // 每個票種有幾張， 乘上該票種為幾人套票
+                int i = ticketOrderDetail.getTicketTypeQty() * ticketOrderDetail.getIncludedTicketQty();
+                for (int j = 0; j < i; j++) {
+                    QrcodeTicket qrcodeTicket = new QrcodeTicket();
+                    qrcodeTicket.setTicketOrderDetail(ticketOrderDetail);
+                    // TODO: 先用1號會員， 之後改成從session 取得 memberNo
+                    Member member = memberService.getMemberById(1);
+
+                    qrcodeTicket.setMember(member);
+                    qrcodeTicket.setTicketUsageStatus((byte) 0);
+                    qrcodeTicket.setTicketValidTime(eventEndTime);
+
+                    qrcodeTickets.add(qrcodeTicket);
+                }
+                qrcodeTickets = qrcodeTicketrepository.saveAll(qrcodeTickets);
+            } else {
+                // 已經有qrcodeTicket了， 就不用再建立了
+
+                qrcodeTickets.addAll(qrcodeTicketrepository.findByTicketOrderDetailTicketOrderDetailNo(ticketOrderDetail.getTicketOrderDetailNo()));
+
+            }
+        }
+        return qrcodeTickets;
+    }
 
 }
