@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="frontstage/index2 :: head"></head>
+<link rel="stylesheet" th:href="@{/css/frontstage/product/shopall.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<body id="body">
+<div th:replace="frontstage/index2 :: header"></div>
+
+<!--breadcrumb-->
+<section class="page-header">
+    <div class="container" style="width: 75%;">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h1 class="page-name">周邊商品</h1>
+                    <ol class="breadcrumb">
+                        <li><a th:href="@{/}">首頁</a></li>
+                        <li class="active">周邊商品</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--product sidebar-->
+<section class="products section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="widget product-category">
+                    <h4 class="widget-title" style="font-size: 16px;">篩選商品</h4>
+                    <div class="panel-group commonAccordion" id="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" role="tab" id="allProducts">
+                                <h4 class="panel-title allProducts">
+                                    <a role="button" href="#!" onclick="resetAllProducts()" aria-expanded="true" aria-controls="collapseOne">
+                                        所有商品
+                                    </a>
+                                </h4>
+                            </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="headingTwo">
+                                    <h4 class="panel-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                            商品類別
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                    <div class="panel-body">
+                                        <ul class="categories">
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="row" id="product-container">
+                </div>
+                <nav class="page" aria-label="Page navigation example">
+                    <ul class="pagination" style="display: flex; justify-content: center;">
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<div th:replace="frontstage/index2 :: footer"></div>
+
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', getAllProducts);
+    document.addEventListener('DOMContentLoaded', showProductsByCategories);
+
+    /* 存從API取得的所有商品 */
+    let allProducts = [];
+
+    function getAllProducts() {
+        let url = "/product/getAllProducts";
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                allProducts = data.map(product => ({
+                    product_no: product.productNo,
+                    product_name: product.productName,
+                    product_url: `/product/shopdetail?productNo=${product.productNo}`,
+                    product_img: `/product/getFirstImage/${product.productNo}`,
+                    price: product.productPrice
+                }));
+                //設定一開始為第一頁
+                changePage(1);
+            })
+            .catch(error => console.error("取得商品失敗:", error));
+    }
+
+
+    /* 根據回傳的商品更新頁面 */
+    function showAllProducts(products) {
+        let container = document.getElementById('product-container');
+        container.innerHTML = '';
+        products.forEach(product => {
+            console.log(product.product_no)
+            let card = `
+            <div class="col-md-4">
+                <div class="product-item">
+                    <div class="product-thumb">
+                        <img class="img-responsive" src=${product.product_img} alt="product-img"/>
+                        <div class="preview-meta">
+                            <ul>
+                                <li>
+                                    <a href="#" ><i class="tf-ion-ios-heart"></i></a>
+                                </li>
+                                <li>
+                                    <a href="#!" onclick="addToCart(this)" data-product-no="${product.product_no}">
+                                        <i class="tf-ion-android-cart"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <h4><a href=${product.product_url}>${product.product_name}</a></h4>
+                        <p class="price">$${product.price}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+            container.innerHTML += card;
+        });
+    }
+
+    /* 設定分頁 */
+    function setupPagination(currentPage, totalItems, itemsPerPage) {
+        let pageCount = Math.ceil(totalItems / itemsPerPage);
+        let paginationUl = document.querySelector('.pagination');
+        paginationUl.innerHTML = '';
+        if (currentPage > 1) {
+            paginationUl.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${currentPage - 1})">&laquo;</a></li>`;
+        }
+
+        for (let i = 1; i <= pageCount; i++) {
+            paginationUl.innerHTML += `<li class="page-item ${i === currentPage ? 'active' : ''}"><a class="page-link" href="#" onclick="changePage(${i})">${i}</a></li>`;
+        }
+
+        if (currentPage < pageCount) {
+            paginationUl.innerHTML += `<li class="page-item"><a class="page-link" href="#" onclick="changePage(${currentPage + 1})">&raquo;</a></li>`;
+        }
+    }
+
+    function changePage(pageIndex) {
+        let itemsPerPage = 9;
+        let startIndex = (pageIndex - 1) * itemsPerPage;
+        let endIndex = startIndex + itemsPerPage;
+        showAllProducts(allProducts.slice(startIndex, endIndex));
+        setupPagination(pageIndex, allProducts.length, itemsPerPage);
+    }
+
+    /* 根據商品類別顯示商品 */
+    function showProductsByCategories() {
+        let url = "/product/getAllProductCategories";
+        fetch(url)
+            .then(response => response.json())
+            .then(categories => {
+                let categories_ul = document.querySelector('.categories');
+                categories.forEach(category => {
+                    let category_li = document.createElement('li');
+                    let category_a = document.createElement('a');
+                    category_a.href = "#";
+                    category_a.innerText = category.productCategoryName;
+
+                    // onclick 事件觸發取得該類別商品
+                    category_a.onclick = () => {
+                        let url = `/product/getProductsByCategory?productCategoryNo=${category.productCategoryNo}`;
+                        fetch(url)
+                            .then(response => response.json())
+                            .then(data => {
+                                allProducts = data.map(product => ({
+                                    product_name: product.productName,
+                                    product_url: `/product/shopdetail?productNo=${product.productNo}`,
+                                    product_img: `/backstage/product/getFirstImage/${product.productNo}`,
+                                    price: product.productPrice
+                                }));
+                                changePage(1);
+                            })
+                            .catch(error => console.error("取得商品失敗: ", error));
+                    };
+                    category_li.appendChild(category_a);
+                    categories_ul.appendChild(category_li);
+                });
+            })
+            .catch(error => console.error("取得商品類別失敗: ", error));
+    }
+
+    /* 點擊 sidebar "所有商品" 顯示所有商品*/
+    function resetAllProducts() {
+        getAllProducts();
+    }
+
+    /* 點擊商品購物車 icon 加入購物車 */
+    function addToCart(element) {
+        let productNo = element.getAttribute('data-product-no');
+        let quantity = 1;
+        let data = {productNo: parseInt(productNo, 10), quantity: quantity};
+        let url = `/cart/addToCart?productNo=${productNo}`;
+        fetch(url,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        position: 'top',
+                        icon: 'success',
+                        title: data.message,
+                        showConfirmButton: false,
+                        timer: 1000,
+                        showClass: {
+                            popup: `
+                                animate__animated
+                                animate__fadeInDown
+                                animate__faster
+                                `
+                        },
+                        hideClass: {
+                            popup: `
+                              animate__animated
+                              animate__fadeOutUp
+                              animate__faster
+                            `
+                        },
+                        customClass: {
+                            popup: 'swal2-custom',
+                            title: 'swal2-title-custom'
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        text: data.message
+                    });
+                }
+            })
+            .catch(error => {
+                console.error("加入購物車失敗: ", error);
+                Swal.fire({
+                    icon: 'error',
+                    text: '無法加入購物車'
+                });
+            });
+    }
+
+</script>
+</html>
