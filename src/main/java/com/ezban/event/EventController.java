@@ -1,9 +1,8 @@
 package com.ezban.event;
 
 import com.ezban.event.model.Event;
-import com.ezban.event.model.EventService;
+import com.ezban.event.model.Service.EventService;
 import com.ezban.event.model.EventStatus;
-import com.ezban.tickettype.model.TicketType;
 import com.ezban.tickettype.model.TicketTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

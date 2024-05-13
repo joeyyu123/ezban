@@ -1,7 +1,7 @@
 package com.ezban.event;
 
 import com.ezban.event.model.Event;
-import com.ezban.event.model.EventService;
+import com.ezban.event.model.Service.EventService;
 import com.ezban.event.model.EventStatus;
 import com.ezban.eventcategory.model.EventCategory;
 import com.ezban.eventcategory.model.EventCategoryService;
