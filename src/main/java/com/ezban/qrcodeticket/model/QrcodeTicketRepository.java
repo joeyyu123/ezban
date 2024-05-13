@@ -5,9 +5,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface QrcodeTicketRepository extends JpaRepository<QrcodeTicket,Long> {
     @Transactional
     @Modifying
     @Query(value = "delete from qrcode_ticket where ticket_no =?1", nativeQuery = true)
     void deleteByQrcodeTicketNo(long ticketNo);
+
+    List<QrcodeTicket> findByTicketOrderDetailTicketOrderDetailNo(Integer ticketOrderDetailNo);
 }
