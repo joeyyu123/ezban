@@ -2,14 +2,12 @@ package com.ezban.ecpay.controller;
 
 import com.ezban.ecpay.service.EcpayService;
 import com.ezban.ticketorder.model.TicketOrder;
-import com.ezban.ticketorder.model.TicketOrderPaymentStatus;
-import com.ezban.ticketorder.model.TicketOrderService;
+import com.ezban.ticketorder.model.Service.TicketOrderService;
+import com.ezban.ticketorderdetail.model.TicketOrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @Controller
@@ -22,6 +20,9 @@ public class EcpayController {
     @Autowired
     private TicketOrderService ticketOrderService;
 
+    @Autowired
+    private TicketOrderDetailService ticketOrderDetailService;
+
     // 用來測試能不能連接到伺服器用，之後可以移除
     @GetMapping("/ecpay/return")
     @ResponseBody
@@ -29,28 +30,37 @@ public class EcpayController {
         return "OK";
     }
 
-    // 票券訂單付款成功後，ECPay會將付款結果通知到此處 需等到正式上線後才接的到request
+    /**
+     * 處理ECPay票券訂單付款完成後的回傳
+     * 票券訂單付款成功後，ECPay會將付款結果通知到此處 需等到正式上線後才接的到request
+     * @param params 付款完成後ECpay的回傳參數
+     * @return 接受到訊息後傳"1|OK"給ECPay
+     */
     @PostMapping("/ecpay/return")
     @ResponseBody
-    public String ecpay(
-            @RequestParam Map<String, String> params) {
+    public String ecpay(@RequestParam Map<String, String> params) {
+        // 取得付款結果參數
         int rtnCode = Integer.parseInt((params.get("RtnCode")));
         String merchantTradeNo = params.get("MerchantTradeNo");
         String paymentDate = params.get("PaymentDate");
 
         // 將"YYYY/MM/DD HH:mm:ss" 轉換成 "YYYY-MM-DD HH:mm:ss"
         paymentDate = paymentDate.replace("/", "-");
-        Timestamp ticketOrderPayTime = Timestamp.valueOf(paymentDate);
+
 
         if (rtnCode == 1) {
-            // 回傳的merchantTradeNo 格視為 yyyyMMddHHmmss+數字，數字為訂單編號
+
             TicketOrder ticketOrder = ticketOrderService.findById(Integer.valueOf(merchantTradeNo.substring(14)));
-            ticketOrder.setTicketOrderPaymentStatus(TicketOrderPaymentStatus.PAID);
-            ticketOrder.setTicketOrderPayTime(ticketOrderPayTime);
+            ticketOrder = ticketOrderService.finishOrder(ticketOrder, paymentDate);
 
-            ticketOrderService.update(ticketOrder);
+            // 儲存QRCode票券到資料庫
+            ticketOrderService.createQrcodeTickets(ticketOrder);
 
-            // TODO 寄送包含QRCoder的email給使用者
+            // TODO 寄送付款成功的郵件以及QRCode票券給購票人
+//            ticketOrderEmailService.sendOrderEmail(ticketOrder);
+
+            // =================================================================================
+
         }
 
         return "1|OK";

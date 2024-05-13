@@ -1,7 +1,7 @@
 package com.ezban.ecpay.service;
 
 import com.ezban.ticketorder.model.TicketOrder;
-import com.ezban.ticketorder.model.TicketOrderService;
+import com.ezban.ticketorder.model.Service.TicketOrderService;
 import ecpay.payment.integration.AllInOne;
 import ecpay.payment.integration.domain.AioCheckOutALL;
 import org.springframework.beans.factory.annotation.Autowired;
