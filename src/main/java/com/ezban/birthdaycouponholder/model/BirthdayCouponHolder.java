@@ -1,33 +1,43 @@
 package com.ezban.birthdaycouponholder.model;
 
-import com.ezban.birthdaycoupon.model.BirthdayCoupon;
+import java.time.LocalDate;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.sql.Timestamp;
-import java.time.Instant;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.ezban.birthdaycoupon.model.BirthdayCoupon;
+import com.ezban.member.model.Member;
 
 @Entity
 @Table(name = "birthday_coupon_holder")
-public class BirthdayCouponHolder implements Serializable {
+public class BirthdayCouponHolder {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "birthday_coupon_holder_no", nullable = false)
     private Integer birthdayCouponHolderNo;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_no")
+    private Member member;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "birthday_coupon_no", nullable = false)
     private BirthdayCoupon birthdayCoupon;
 
-    @NotNull
-    @Column(name = "coupon_usage_status", nullable = false)
+    @Column(nullable = false)
     private Byte couponUsageStatus;
 
-    @NotNull
-    @Column(name = "validity_date", nullable = false)
-    private Timestamp validityDate;
+    @Column(name = "validity_date") 
+    private LocalDate validityDate;
 
+    // Getters and setters
     public Integer getBirthdayCouponHolderNo() {
         return birthdayCouponHolderNo;
     }
@@ -36,13 +46,14 @@ public class BirthdayCouponHolder implements Serializable {
         this.birthdayCouponHolderNo = birthdayCouponHolderNo;
     }
 
-    public BirthdayCoupon getBirthdayCoupon() {
-        return birthdayCoupon;
+    public Member getMember() {
+        return member;
     }
 
-    public void setBirthdayCoupon(BirthdayCoupon birthdayCoupon) {
-        this.birthdayCoupon = birthdayCoupon;
+    public void setMember(Member member) {
+        this.member = member;
     }
+
 
     public Byte getCouponUsageStatus() {
         return couponUsageStatus;
@@ -52,12 +63,21 @@ public class BirthdayCouponHolder implements Serializable {
         this.couponUsageStatus = couponUsageStatus;
     }
 
-    public Timestamp getValidityDate() {
+    public LocalDate getValidityDate() {
         return validityDate;
     }
 
-    public void setValidityDate(Timestamp validityDate) {
+    public void setValidityDate(LocalDate validityDate) {
         this.validityDate = validityDate;
     }
 
+	public BirthdayCoupon getBirthdayCoupon() {
+		return birthdayCoupon;
+	}
+
+	public void setBirthdayCoupon(BirthdayCoupon birthdayCoupon) {
+		this.birthdayCoupon = birthdayCoupon;
+	}
+    
+    
 }
