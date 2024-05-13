@@ -28,7 +28,7 @@ public class RegistrationFormController {
     public String registration(Model model, @PathVariable String eventNo) {
 //        model.addAttribute("event", eventService.findById(eventNo));
         model.addAttribute("registrationForm", registrationFormService.findByEventNo(eventNo));
-        model.addAttribute("fieldExamples", fieldExampleService.findAll());
+        model.addAttribute("fieldExamples", fieldExampleService.findAllSortByIdNumber());
         return "/backstage/event/registrationForm";
     }
 

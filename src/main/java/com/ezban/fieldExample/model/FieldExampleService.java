@@ -2,6 +2,7 @@ package com.ezban.fieldExample.model;
 
 import com.ezban.event.model.ServiceDemo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class FieldExampleService {
 
 
 
-    public List<FieldExample> findAll() {
-        return repository.findAll();
+    public List<FieldExample> findAllSortByIdNumber() {
+        return repository.findAll(Sort.by("idNumber"));
     }
 }
