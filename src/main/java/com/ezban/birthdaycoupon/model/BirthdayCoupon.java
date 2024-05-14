@@ -1,13 +1,19 @@
 package com.ezban.birthdaycoupon.model;
 
-import com.ezban.birthdaycouponholder.model.BirthdayCouponHolder;
-import com.ezban.productorder.model.ProductOrder;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.LinkedHashSet;
-import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import com.ezban.member.model.Member;
 
 @Entity
 @Table(name = "birthday_coupon")
@@ -15,7 +21,7 @@ public class BirthdayCoupon implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "birthday_coupon_no", nullable = false)
-    private String birthdayCouponNo;
+    private Integer birthdayCouponNo;
 
     @NotNull
     @Column(name = "birthday_coupon_discount", nullable = false)
@@ -29,17 +35,17 @@ public class BirthdayCoupon implements Serializable {
     @Column(name = "valid_days", nullable = false)
     private Integer validDays;
 
-    @OneToMany(mappedBy = "birthdayCoupon")
-    private Set<BirthdayCouponHolder> birthdayCouponHolders = new LinkedHashSet<>();
+    // Optional: Relationship with Member (if each coupon is directly linked to a Member)
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "member_no")
+//    private Member member;
 
-    @OneToMany(mappedBy = "birthdayCoupon")
-    private Set<ProductOrder> productOrders = new LinkedHashSet<>();
-
-    public String getBirthdayCouponNo() {
+    // Getters and Setters
+    public Integer getBirthdayCouponNo() {
         return birthdayCouponNo;
     }
 
-    public void setBirthdayCouponNo(String birthdayCouponNo) {
+    public void setBirthdayCouponNo(Integer birthdayCouponNo) {
         this.birthdayCouponNo = birthdayCouponNo;
     }
 
@@ -67,20 +73,11 @@ public class BirthdayCoupon implements Serializable {
         this.validDays = validDays;
     }
 
-    public Set<BirthdayCouponHolder> getBirthdayCouponHolders() {
-        return birthdayCouponHolders;
-    }
-
-    public void setBirthdayCouponHolders(Set<BirthdayCouponHolder> birthdayCouponHolders) {
-        this.birthdayCouponHolders = birthdayCouponHolders;
-    }
-
-    public Set<ProductOrder> getProductOrders() {
-        return productOrders;
-    }
-
-    public void setProductOrders(Set<ProductOrder> productOrders) {
-        this.productOrders = productOrders;
-    }
-
+//    public Member getMember() {
+//        return member;
+//    }
+//
+//    public void setMember(Member member) {
+//        this.member = member;
+//    }
 }
