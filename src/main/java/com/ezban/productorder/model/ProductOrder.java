@@ -34,12 +34,12 @@ public class ProductOrder implements java.io.Serializable {
     @Column(name = "product_order_no", nullable = false)
     private Integer productOrderNo;
 
-    @NotNull(message = "會員編號: 請勿空白!")
+    @NotNull(message = "* 會員編號: 請勿空白 !")
     @ManyToOne
     @JoinColumn(name = "member_no", nullable = false)
     private Member member;
 
-    @NotNull(message = "商品金額: 請勿空白!")
+    @NotNull(message = " 商品金額: 請勿空白 !")
     @Min(value = 1, message = "商品金額: 不能小於{value}")
     @Column(name = "product_price", nullable = false)
     private Integer productPrice;
@@ -47,7 +47,7 @@ public class ProductOrder implements java.io.Serializable {
     @Column(name = "product_coupon_discount", columnDefinition = "int default 0")
     private Integer productCouponDiscount;
 
-    @NotNull(message = "結帳金額: 請勿空白!")
+    @NotNull(message = " 結帳金額: 請勿空白 !")
     @Column(name = "product_checkout_amount", nullable = false)
     private Integer productCheckoutAmount;
 
@@ -58,18 +58,18 @@ public class ProductOrder implements java.io.Serializable {
     @JoinColumn(name = "birthday_coupon_no")
     private BirthdayCoupon birthdayCoupon;
 
-    @NotNull(message = "收件人: 請勿空白!")
-    @Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9)]{2,10}$", message = "姓名: 只能是中、英文字母 , 且長度必需在2到10之間")
+    @NotNull(message = "* 收件人: 請勿空白 !")
+    @Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9)]{2,10}$", message = "* 姓名: 只能是中、英文字母 , 且長度必需在2到10之間 !")
     @Column(name = "recipient", nullable = false)
     private String recipient;
 
-    @NotNull(message = "收件人電話: 請勿空白!")
-    @Pattern(regexp = "^0[0-9]{8,15}$", message = "電話號碼格式不正確")
+    @NotNull(message = "* 收件人電話: 請勿空白 !")
+    @Pattern(regexp = "^0[0-9]{8,15}$", message = "* 電話號碼格式不正確 !")
     @Column(name = "recipient_phone", nullable = false)
     private String recipientPhone;
 
-    @NotNull(message = "收件人地址: 請勿空白!")
-    @Pattern(regexp = "^[\\u4e00-\\u9fa5a-zA-Z0-9 ]{2,200}$", message = "地址格式不正確")
+    @NotNull(message = "* 收件人地址: 請勿空白 !")
+    @Pattern(regexp = "^[\\u4e00-\\u9fa5a-zA-Z0-9 ]{2,200}$", message = "* 地址格式不正確 !")
     @Column(name = "recipient_address", nullable = false)
     private String recipientAddress;
 
@@ -85,26 +85,25 @@ public class ProductOrder implements java.io.Serializable {
     @Column(name = "order_closedate", nullable = true)
     private Timestamp orderClosedate;
 
-    @NotNull(message = "商品訂單付款狀態: 請勿空白!")
+    @NotNull(message = "* 商品訂單付款狀態: 請勿空白 !")
     @Column(name = "product_payment_status", nullable = false)
-    @Min(value = 0, message = "商品訂單付款狀態不正確")
-    @Max(value = 1, message = "商品訂單付款狀態不正確")
+    @Min(value = 0, message = "* 商品訂單付款狀態不正確 !")
+    @Max(value = 1, message = "* 商品訂單付款狀態不正確 !")
     private Byte productPaymentStatus;
 
-    @NotNull(message = "商品訂單處理狀態: 請勿空白!")
-    @Column(name = "product_process_status", nullable = false)
-    @Min(value = 0, message = "商品訂單處理狀態不正確")
-    @Max(value = 4, message = "商品訂單處理狀態不正確")
+    @Column(name = "product_process_status", insertable = false)
+    @Min(value = 0, message = "* 商品訂單處理狀態不正確 !")
+    @Max(value = 4, message = "* 商品訂單處理狀態不正確 !")
     private Byte productProcessStatus;
 
-    @NotNull(message = "商品訂單撥款金額: 請勿空白!")
+    @NotNull(message = "* 商品訂單撥款金額: 請勿空白 !")
     @Column(name = "product_order_allocation_amount", nullable = false)
     private Integer productOrderAllocationAmount;
 
-    @NotNull(message = "商品訂單撥款狀態: 請勿空白!")
+    @NotNull(message = "* 商品訂單撥款狀態: 請勿空白 !")
     @Column(name = "product_order_allocation_status", nullable = false)
-    @Min(value = 0, message = "商品訂單撥款狀態不正確")
-    @Max(value = 1, message = "商品訂單撥款狀態不正確")
+    @Min(value = 0, message = "* 商品訂單撥款狀態不正確 !")
+    @Max(value = 1, message = "* 商品訂單撥款狀態不正確 !")
     private Byte productOrderAllocationStatus;
 
     @OneToMany(mappedBy = "productOrder")

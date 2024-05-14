@@ -18,20 +18,20 @@ public class SaveProduct implements java.io.Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer saveProductNo;
 
-    @NotNull(message = "會員編號: 請勿空白")
+    @NotNull(message = "* 會員編號: 請勿空白 !")
     @ManyToOne
     @JoinColumn(name = "member_no", nullable = false)
     private Member member;
 
-    @NotNull(message = "商品編號: 請勿空白")
+    @NotNull(message = "* 商品編號: 請勿空白 !")
     @ManyToOne
     @JoinColumn(name = "product_no", nullable = false)
     private Product product;
 
-    @NotNull(message = "商品收藏狀態: 請勿空白")
+    @NotNull(message = "* 商品收藏狀態: 請勿空白 !")
     @Column(name = "save_status", nullable = false)
-    @Min(value = 0, message = "商品收藏狀態不正確")
-    @Max(value = 1, message = "商品收藏狀態不正確")
+    @Min(value = 0, message = "* 商品收藏狀態不正確 !")
+    @Max(value = 1, message = "* 商品收藏狀態不正確 !")
     private Byte saveStatus;
 
     public SaveProduct() {
