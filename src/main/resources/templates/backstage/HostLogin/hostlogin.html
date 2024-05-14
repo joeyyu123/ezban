@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企業登入</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-control {
+            height: calc(2.25rem + 2px);
+        }
+
+        .btn-primary {
+            width: 100%;
+        }
+
+        .text-center {
+            margin-top: 1rem;
+        }
+
+        .error-message {
+            color: red;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2 class="text-center">企業登入</h2>
+
+        <form action="/login" method="post">
+            <div class="form-group">
+                <label for="username">使用者名稱：</label>
+                <input type="text" id="username" name="username" class="form-control" placeholder="請輸入使用者名稱">
+            </div>
+            <div class="form-group">
+                <label for="password">密碼：</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="請輸入密碼">
+            </div>
+            <div id="error-message" class="text-center error-message">
+                帳號或密碼錯誤
+            </div>
+            <input type="submit" value="登入" class="btn btn-primary">
+        </form>
+
+        <p class="text-center">
+            <a href="/passwordreset">忘記密碼？</a>
+        </p>
+        <p class="text-center">
+            <a href="/hostpassrevise">修改密碼</a>
+        </p>
+        <p class="text-center">
+            <a href="/hostregister">前往註冊</a>
+        </p>
+    </div>
+
+    <script>
+       
+        const params = new URLSearchParams(window.location.search);
+        const errorElement = document.querySelector("#error-message");
+
+        if (params.has("error")) {
+            errorElement.style.display = "block";
+        } else {
+            errorElement.style.display = "none";
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

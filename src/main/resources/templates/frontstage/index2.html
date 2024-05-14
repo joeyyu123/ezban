@@ -47,6 +47,8 @@
 	<script th:src="@{/plugins/slick/slick-animation.min.js}"></script>
 	<!-- Main Js File -->
 	<script th:src="@{/js/frontstage/script.js}"></script>
+	<!-- sweetalter -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body id="body">
@@ -58,7 +60,7 @@
 				<div class="col-md-4 col-xs-12 col-sm-4">
 					<ul class=" top-menu list-inline">
 						<li>
-							<a th:href="@{/login}" class="btn btn-primary custom-btn" role="button">辦活動</a>
+							<a th:href="@{/backstage/event}" class="btn btn-primary custom-btn" role="button">辦活動</a>
 						</li>
 					</ul>
 				</div>
@@ -129,6 +131,11 @@
 								</li>
 								<li style="display: flex; justify-content: center; align-items: center;">
 									<a href="signin.html"><span>加入會員</span></a>
+								</li><li style="display: flex; justify-content: center; align-items: center;">
+									<a href="/productorder/findByMember/{memberNo}"><span>我的商品訂單</span></a>
+								</li>
+								<li style="display: flex; justify-content: center; align-items: center;">
+									<a href="/saveproduct/findByMember/{memberNo}"><span>我的收藏紀錄</span></a>
 								</li>
 							</ul>
 						</li>
@@ -432,7 +439,7 @@
 				</div>
 			</div>
 			<div class="see_more">
-				<a href="shop.html">see more</a>
+				<a th:href="@{/events}">see more</a>
 			</div>
 		</div>
 	</section>

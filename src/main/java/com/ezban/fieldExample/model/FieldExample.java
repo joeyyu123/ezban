@@ -14,7 +14,7 @@ import java.util.List;
 public class FieldExample implements Serializable {
     @Id
     private String id;
-    private String idNumber;
+    private Integer idNumber;
     private String component;
     private String label;
     private String description;

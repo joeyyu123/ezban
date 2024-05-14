@@ -53,8 +53,9 @@ create table admin
     constraint admin_uk_3
         unique (admin_phone)
 );
- 
+
 INSERT INTO admin (admin_account, admin_pwd, admin_mail, admin_phone, admin_status, admin_name)
+
 VALUES  
 ( 'AY6KQZZh', 'NkzkVJ2JUH', 'u8yzliwj@gmail.com', '0989599470', 1,'陳昊天'),
 ( 'mE1rur8H', 'cR7eCn9dEd8rISQ', 'yeocffh6b3wj@gmail.com', '0980469290', 1, '王晨曦'),
@@ -147,7 +148,9 @@ create table host
     host_name    varchar(50) null,
     host_mail    varchar(50) null,
     host_phone   varchar(15) null,
-    host_status  tinyint null,
+    host_status  tinyint     null,
+    host_login   DATETIME null,
+    
     constraint host_uk_1
         unique (host_account),
     constraint host_uk_2
@@ -181,18 +184,19 @@ create table event
     event_desc              longtext null,
     event_city              varchar(15) null,
     event_detailed_address  varchar(250) null,
-    event_add_time          datetime    not null,
-    event_remove_time       datetime    not null,
-    registration_start_time datetime null,
-    registration_end_time   datetime null,
-    event_start_time        datetime    not null,
-    event_end_time          datetime    not null,
-    registered_count        int null default 0,
-    event_status            tinyint     not null,
-    total_rating            int null,
-    event_rating_count      int null,
-    event_checkout_status   tinyint null,
-    event_checkout_time     int null,
+    event_add_time          datetime     null,
+    event_remove_time       datetime     null,
+    registration_start_time datetime     null,
+    registration_end_time   datetime     null,
+    event_start_time        datetime     not null,
+    event_end_time          datetime     not null,
+    registered_count        int          null default 0,
+    event_status            tinyint      not null,
+    total_rating            int          null,
+    event_rating_count      int          null,
+    event_checkout_status   tinyint      null,
+    event_checkout_time     int          null,
+
     constraint event_event_category_event_category_no_fk
         foreign key (event_category_no) references event_category (event_category_no),
     constraint event_host_host_no_fk
@@ -1846,17 +1850,17 @@ create table ticket_order
 
 INSERT INTO ticket_order (member_no, event_coupon_no, ticket_order_amount, event_coupon_discount,
                           ticket_checkout_amount, ticket_order_time,
-                          ticket_order_pay_time, ticket_order_payment_status)
-VALUES (1, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3),
-       (1, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3),
-       (2, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3),
-       (2, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3),
-       (3, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3),
-       (3, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3),
-       (4, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3),
-       (4, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3),
-       (5, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3),
-       (5, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3);
+                          ticket_order_pay_time, ticket_order_payment_status,ticket_order_status)
+VALUES (1, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1),
+       (1, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1),
+       (2, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1),
+       (2, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1),
+       (3, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1),
+       (3, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1),
+       (4, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1),
+       (4, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1),
+       (5, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1),
+       (5, 1, 100, 10, 90, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3,1);
 
 
 create table ticket_type
@@ -2102,11 +2106,11 @@ create table product_report
 (
     product_report_no int auto_increment primary key,
     product_no        int          not null,
-    member_no         int          not null,
-    admin_no          int          not null,
+    member_no         int,
+    admin_no          int,
     report_reason     varchar(100) not null,
     report_date       datetime     not null,
-    report_status     tinyint      not null,
+    report_status     tinyint default 0 not null ,
     constraint product_report_admin_admin_no_fk
         foreign key (admin_no) references admin (admin_no),
     constraint product_report_member_member_no_fk
@@ -2143,10 +2147,10 @@ create table product_order
     product_orderdate               dateTime default now(),
     product_paydate                 dateTime default now(),
     order_closedate                 dateTime default null,
-    product_payment_status          tinyint      not null,
-    product_process_status          tinyint      not null,
+    product_payment_status          tinyint  default 0  not null,
+    product_process_status          tinyint  default 0  not null,
     product_order_allocation_amount int          not null,
-    product_order_allocation_status tinyint      not null,
+    product_order_allocation_status tinyint  default 0  not null,
     foreign key (member_no) references member (member_no),
     foreign key (birthday_coupon_no) references birthday_coupon (birthday_coupon_no)
 ) auto_increment = 1001;
@@ -2174,7 +2178,7 @@ create table product_order_detail
     product_order_no        int     					   not null,
     product_qty             int     					   not null,
     product_price           int     					   not null,
-    comments_status         tinyint 					   not null,
+    comments_status         tinyint default 0	   	       not null,
     foreign key (product_no) references product (product_no),
     foreign key (product_order_no) references product_order (product_order_no)
 );

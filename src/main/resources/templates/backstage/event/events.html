@@ -38,7 +38,7 @@
                             <th scope="row" th:text="${event.eventName}"></th>
                             <td th:text="${#dates.format(event.eventStartTime, 'yyyy-MM-dd HH:mm')}"></td>
                             <td th:text="${#dates.format(event.eventEndTime, 'yyyy-MM-dd HH:mm')}"></td>
-                            <th:block th:switch="${event.eventStatus}">
+                            <th:block th:switch="${event.eventStatus.value}">
                                 <td th:case="0" th:text="未上架"></td>
                                 <td th:case="1" th:text="上架中"></td>
                                 <td th:case="2" th:text="已下架"></td>
