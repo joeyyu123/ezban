@@ -48,5 +48,10 @@ public class ProductImg {
         this.productImg = productImg;
     }
 
+    // 回傳圖片url
+    public String getImageUrl() {
+        return "/backstage/product/getImage/" + this.productImgNo;
+    }
+
 }
 
