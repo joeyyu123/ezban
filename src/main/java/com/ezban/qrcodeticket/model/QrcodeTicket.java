@@ -2,6 +2,7 @@ package com.ezban.qrcodeticket.model;
 
 import com.ezban.member.model.Member;
 import com.ezban.ticketorderdetail.model.TicketOrderDetail;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -33,6 +34,7 @@ public class QrcodeTicket implements java.io.Serializable{
 
     @NotNull
     @Column(name = "ticket_valid_time", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "Asia/Taipei")
     private Timestamp ticketValidTime;
 
     public class TicketUsageStatus {
