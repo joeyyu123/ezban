@@ -174,12 +174,6 @@
 
 <script>
     $(document).ready(function () {
-        // 點即所有訂單
-        $('.nav-link').click(function () {
-            $(this).addClass('active');
-            $('.nav-link').not(this).removeClass('active');
-        });
-
         // 取消訂單
         $('.cancel-order-btn').click(function () {
             if (confirm('取消訂單')) {
@@ -196,14 +190,8 @@
                     }
                 });
             }
-
         });
 
-        // 查看訂單明細
-        $('.order-detail-btn').click(function () {
-            let ticketOrderNo = $(this).closest('.ticketOrder').find('h5 span').text();
-
-        });
     });
 </script>
 
