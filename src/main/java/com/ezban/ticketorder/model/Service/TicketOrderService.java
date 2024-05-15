@@ -8,11 +8,11 @@ import com.ezban.qrcodeticket.model.QrcodeTicketRepository;
 import com.ezban.ticketorder.model.*;
 import com.ezban.ticketorderdetail.model.TicketOrderDetail;
 import com.ezban.ticketorderdetail.model.TicketOrderDetailService;
-import com.ezban.ticketregistration.TicketRegistration;
 import com.ezban.tickettype.model.TicketType;
 import com.ezban.tickettype.model.TicketTypeRepository;
 import com.ezban.tickettype.model.TicketTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +42,15 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
 
     @Autowired
     private QrcodeTicketRepository qrcodeTicketrepository;
+
+    public  List<TicketOrder> findByMember(Member member) {
+        return ticketOrderRepository.findByMember(member, Sort.by("ticketOrderTime").descending());
+    }
+
+    public  List<TicketOrder> findByMemberNoAndStatus(Member member, TicketOrderStatus status) {
+
+        return ticketOrderRepository.findByMemberAndTicketOrderStatus(member, status, Sort.by("ticketOrderTime").descending());
+    }
 
     @Override
     @Transactional

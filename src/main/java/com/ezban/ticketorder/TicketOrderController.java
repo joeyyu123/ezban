@@ -2,12 +2,15 @@ package com.ezban.ticketorder;
 
 import com.ezban.ecpay.service.EcpayService;
 import com.ezban.member.model.Member;
+import com.ezban.member.model.MemberService;
 import com.ezban.qrcodeticket.model.QrcodeTicketService;
 import com.ezban.registrationform.model.RegistrationFormService;
 import com.ezban.ticketorder.model.InsufficientTicketQuantityException;
 import com.ezban.ticketorder.model.Service.TicketOrderEmailService;
 import com.ezban.ticketorder.model.Service.TicketOrderService;
+import com.ezban.ticketorder.model.Service.TicketOrderStatusService;
 import com.ezban.ticketorder.model.TicketOrder;
+import com.ezban.ticketorder.model.TicketOrderStatus;
 import com.ezban.ticketorder.model.dto.Dto;
 import com.ezban.ticketorder.model.dto.TicketOrderRegistrationForm;
 import com.ezban.ticketorderdetail.model.TicketOrderDetail;
@@ -18,17 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.security.Principal;
+import java.util.*;
 
 @Controller
 //@RequestMapping("/events/order")
@@ -36,15 +34,14 @@ public class TicketOrderController {
     @Autowired
     private TicketOrderService ticketOrderService;
 
-
     @Autowired
     private RegistrationFormService registrationFormService;
 
     @Autowired
-    private QrcodeTicketService qrcodeTicketService;
+    private MemberService memberService;
 
     @Autowired
-    private TicketOrderDetailService ticketOrderDetailService;
+    private TicketOrderStatusService ticketOrderStatusService;
 
     @Autowired
     private EcpayService ecpayService;
@@ -52,15 +49,49 @@ public class TicketOrderController {
     @Autowired
     private TicketOrderEmailService ticketOrderEmailService;
 
+    @GetMapping("/events/orders")
+    public String orderPage(Model model, @RequestParam(value = "orderStatus", required = false) Integer orderStatus, Principal principal) {
+//        Member member = memberService.getMemberByMemberMail(principal.getName());
+
+        Member member = memberService.getMemberById(1); // TODO 改成從session取得memberNo
+
+        if (orderStatus == null) {
+            model.addAttribute("ticketOrders", ticketOrderService.findByMember(member));
+        } else {
+            TicketOrderStatus ticketOrderStatus = TicketOrderStatus.values()[orderStatus];
+
+            model.addAttribute("ticketOrders", ticketOrderService.findByMemberNoAndStatus(member, ticketOrderStatus));
+            model.addAttribute("orderStatus", orderStatus);
+        }
+        return "/frontstage/event/ticket_orders";
+    }
+
+    @DeleteMapping("/events/orders/{ticketOrderNo}")
+    @ResponseBody
+    public ResponseEntity<String> cancelOrder(@PathVariable("ticketOrderNo") Integer ticketOrderNo) {
+        Member member = memberService.getMemberById(1);// TODO 改成從CurrentMember取得memberNo
+
+
+        TicketOrder ticketOrder = ticketOrderService.findById(ticketOrderNo);
+
+
+
+        if (Objects.equals(ticketOrder.getMember().getMemberNo(), member.getMemberNo())) { // 檢查是否為訂單擁有者
+            ticketOrderStatusService.cancelTicketOrder(ticketOrder);
+            return ResponseEntity.ok("取消訂單成功");
+        } else {
+            return ResponseEntity.badRequest().body("Access denied, you are not the owner of this order");
+        }
+    }
+
+
     @PostMapping("/events/order")
     @ResponseBody
-    public ResponseEntity<String> buyTicket(Model model,
-                                            @RequestBody List<TicketOrderRegistrationForm> ticketOrders) throws InsufficientTicketQuantityException {
+    public ResponseEntity<String> buyTicket(Model model, @RequestBody List<TicketOrderRegistrationForm> ticketOrders) throws InsufficientTicketQuantityException {
         Gson gson = new Gson();
 
         // 之後改成從session 取得 memberNo
-        Member member = new Member();
-        member.setMemberNo(1);
+        Member member = memberService.getMemberById(1); // TODO 改成從session取得memberNo
 
         List<TicketOrderDetail> ticketOrderDetails;
 
@@ -81,7 +112,7 @@ public class TicketOrderController {
         return ResponseEntity.ok(gson.toJson(dto));
     }
 
-    @PostMapping("/events/ticketOrder/payment")
+    @PostMapping("/events/order/payment")
     @ResponseBody
     public String ecPayPayment(Model model, @RequestBody Map<String, String> params) {
         Integer ticketOrderNo = Integer.parseInt(params.get("ticketOrderNo"));
@@ -104,9 +135,10 @@ public class TicketOrderController {
 
     /**
      * 付款完成後回傳給使用者付款結果
-     * @param rtnCode if return code is 1, payment is successful. Otherwise, payment is failed.
+     *
+     * @param rtnCode         if return code is 1, payment is successful. Otherwise, payment is failed.
      * @param merchantTradeNo 訂單編號
-     * @param paymentDate 付款日期時間
+     * @param paymentDate     付款日期時間
      * @return 付款結果頁面
      */
     @PostMapping("/events/order-result")
@@ -118,7 +150,7 @@ public class TicketOrderController {
 
             // TODO 修改訂單狀態 以下這段在正式上線後應註解掉，由EcpayController中更新訂單狀態
             TicketOrder ticketOrder = ticketOrderService.findById(Integer.valueOf(merchantTradeNo.substring(14)));
-            ticketOrder = ticketOrderService.finishOrder(ticketOrder,paymentDate);
+            ticketOrder = ticketOrderService.finishOrder(ticketOrder, paymentDate);
 
             // 儲存QRCode票券到資料庫
             ticketOrderService.createQrcodeTickets(ticketOrder);
@@ -134,7 +166,7 @@ public class TicketOrderController {
         } else {
             model.addAttribute("message", "付款失敗");
         }
-        return "/frontstage/event/order-result";
+        return "/frontstage/event/order_result";
     }
 
     private List<Map<String, Integer>> getOrderDetailList(List<TicketOrderRegistrationForm> ticketOrders) {
