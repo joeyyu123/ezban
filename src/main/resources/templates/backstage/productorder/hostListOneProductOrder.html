@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>ezban | single_product_order</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link th:include="backstage/index :: head">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 5px auto;
+            padding: 20px;
+            background: white;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+
+        .navbar-brand:hover span {
+            color: black;
+        }
+
+    </style>
+</head>
+<body style="background-color: #f4e9e6">
+<div id="wrapper">
+    <nav th:replace="backstage/index :: navbar"></nav>
+    <div th:insert="backstage/index :: hamburger-btn"></div>
+    <div class="page-content-wrapper">
+        <a class="navbar-brand" th:href="@{/backstage/productorder/findByHost/{hostNo}}"
+           style="display: inline-block; float: right; color: darkgray; font-size: 20px; font-weight: bold; text-decoration: none;">
+            <span style="transition: color 0.3s;">&#x293B; 回查詢首頁</span></a>
+        <div class="content">
+            <div class="container">
+                <div class="card">
+                    <div>
+                        <h3 style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; text-align: center;">
+                            <span th:if="${functionType == 'updateByHost'}"> 訂 單 修 改 成 功 </span></h3>
+                        <table style="text-align: left">
+                            <span>1. 商品訂單編號: </span><span th:text="${'#'+productOrder.productOrderNo}"></span><br/>
+                            <span>2. 會員編號: </span><span th:text="${productOrder.member.memberNo}"></span><br/>
+                            <span>3. 商品金額: </span><span th:text="${'TWD $ ' +productOrder.productPrice}"></span><br/>
+                            <span>4. 生日禮券金額: </span><span th:text="${'TWD $ ' +productOrder.productCouponDiscount}"></span><br/>
+                            <span>5. 商品結帳金額: </span><span th:text="${'TWD $ ' +productOrder.productCheckoutAmount}"></span><br/>
+                            <span>6. 會員點數: </span><span th:text="${productOrder.memberPoints}"></span><br/>
+                            <span>7. 生日禮券編號: </span>
+                            <span th:if="${productOrder.birthdayCoupon != null}"
+                                  th:text="${productOrder.birthdayCoupon.birthdayCouponNo}"></span>
+                            <span th:if="${productOrder.birthdayCoupon == null}">無</span>
+                            <br/>
+                            <span>8. 收件人: </span><span th:text="${productOrder.recipient}"></span><br/>
+                            <span>9. 收件人電話: </span><span th:text="${productOrder.recipientPhone}"></span><br/>
+                            <span>10. 收件人地址: </span><span th:text="${productOrder.recipientAddress}"></span><br/>
+                            <span>11. 商品訂單成立時間: </span><span
+                                th:text="${#dates.format(productOrder.productOrderdate, 'yyyy-MM-dd HH:mm:ss')}"></span><br/>
+                            <span>12. 商品訂單付款時間: </span><span
+                                th:text="${#dates.format(productOrder.productPaydate, 'yyyy-MM-dd HH:mm:ss')}"></span><br/>
+                            <span>13. 商品訂單結案時間: </span>
+                            <span th:if="${productOrder.orderClosedate != null}"
+                                  th:text="${#dates.format(productOrder.orderClosedate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                            <span th:if="${productOrder.orderClosedate == null}">尚未結案</span>
+                            <br/>
+                            <span>14. 商品訂單付款狀態: </span>
+                            <span th:text="${productOrder.productPaymentStatus == 0 ? '已付款' : '已退款'}"></span><br/>
+                            <span>15. 商品訂單處理狀態: </span><span th:switch="${productOrder.productProcessStatus}">
+                            <span th:case="0">備貨中</span>
+                            <span th:case="1">已取消</span>
+                            <span th:case="2">已出貨</span>
+                            <span th:case="3">已退貨</span>
+                            <span th:case="4">已結案</span>
+                            </span><br/>
+                            <span>16. 商品訂單撥款金額: </span><span
+                                th:text="${'$' +productOrder.productOrderAllocationAmount}"></span><br/>
+                            <span>17. 商品訂單撥款狀態: </span><span
+                                th:text="${productOrder.productOrderAllocationStatus == 0 ? '未撥款' : '已撥款'}"></span><br/>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
