@@ -182,12 +182,14 @@
                         </ul>
                     </div>
                     <a href="cart.html" class="btn btn-main mt-20" style="margin-right: 5px;">加入購物車</a>
-                    <a href="saveproduct/insert" id="addToFavorites" class="btn btn-main mt-20" style="margin-right: 5px;"><i
+                    <a id="addToFavorites" class="btn btn-main mt-20"
+                       style="margin-right: 5px;" th:onclick="addToFavorites([[${product.productNo}]])"><i
                             class="tf-ion-ios-heart"></i> 加入收藏</a>
                     <button type="button" id="productReport" class="btn btn-primary btn-lg" data-toggle="modal"
                             data-target="#staticBackdrop"
                             style="margin-top: 20px; height: 45px; border-radius: 0; background-color: #000; font-size: 11px;">
-                        <i class="tf-ion-alert"></i> 我要檢舉</button>
+                        <i class="tf-ion-alert"></i>&nbsp;&nbsp;我要檢舉
+                    </button>
                 </div>
             </div>
         </div>
@@ -435,11 +437,9 @@
 
 <!--收藏Ajax開始-->
 <script>
-    function submitSaveProduct(productNo) {
-        var saveStatus = 1
+    function addToFavorites(productNo) {
         var formData = {
             productNo: productNo,
-            saveStatus: saveStatus
         };
 
         $.ajax({
@@ -455,15 +455,17 @@
     function handleSuccess(response) {
         console.log('Success response received:', response);
 
-    alert('成功加入收藏!');
-        $('#addToFavoritesBtn').css('background-color', 'lightblue'); //加入成功後，變為淡藍色
+        alert(response);
+        $('#addToFavoritesBtn').css('background color', 'orange'); //加入成功後，按鈕變為橘色(***待確認***)
     }
 
-    function handleError(xhr, status, error) {
-        console.log('AJAX error response:', status, error);
+    function handleError(xhr, status, erro) {
+        console.log('AJAX error response:', status, erro);
 
-    alert('加入收藏失敗!');
+        var errorMessage = xhr.responseText;
+        alert(errorMessage);
     }
+
 </script>
 <!--收藏Ajax結束-->
 
@@ -493,7 +495,7 @@
                     title: '提交成功',
                     text: "檢舉資料已成功送出。",
                     icon: 'success',
-                    confirmButtonColor: '#3085d6',
+                    confirmButtonColor: '#3d5dff',
                     confirmButtonText: '確定',
                     allowOutsideClick: false,
                     allowEscapeKey: false
