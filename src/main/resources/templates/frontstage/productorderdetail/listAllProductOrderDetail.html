@@ -4,6 +4,7 @@
 <head th:include="frontstage/index2 :: head">
     <title>ezban | product_order_detail</title>
     <meta charset="UTF-8">
+</head>
 
     <style>
         .item span {
@@ -41,8 +42,6 @@
         }
 
     </style>
-
-</head>
 
 <body id="body">
 <div th:replace="frontstage/index2 :: header"></div>
@@ -83,7 +82,7 @@
                                             <td style="vertical-align: middle"
                                                 th:text="${productOrderDetail.product.productName}"></td>
                                             <td style="vertical-align: middle"
-                                                th:text="${productOrderDetail.product.productPrice}"></td>
+                                                th:text="${'TWD $ '+ productOrderDetail.product.productPrice}"></td>
                                             <td style="vertical-align: middle"
                                                 th:text="${productOrderDetail.productQty}"></td>
                                             <td style="vertical-align: middle"
