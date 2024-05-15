@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="frontstage/index2 :: head">
+    <title>ezban | product_order_detail</title>
+    <meta charset="UTF-8">
+
+    <style>
+        .item span {
+            display: inline-block; /* 讓每個標題和內容都水平排列 */
+            width: 150px; /* 設置標題的寬度 */
+            font-weight: bold;
+        }
+
+        #example {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #example th {
+            padding: 5px; /* 調整單元格內邊距 */
+            text-align: center; /* 將文字置中 */
+            font-size: 16px; /* 調整字體大小 */
+            line-height: 1.4; /* 調整行高 */
+        }
+
+        #example td {
+            padding: 5px; /* 調整單元格內邊距 */
+            text-align: center; /* 將文字置中 */
+            font-size: 14px; /* 調整字體大小 */
+            line-height: 1.4; /* 調整行高 */
+        }
+
+        #example th {
+            background-color: #f2f2f2; /* 設置表頭背景色 */
+            font-weight: bold; /* 加粗表頭文字 */
+        }
+
+        #example tr:nth-child(even) {
+            background-color: #f9f9f9; /* 隔行變色 */
+        }
+
+    </style>
+
+</head>
+
+<body id="body">
+<div th:replace="frontstage/index2 :: header"></div>
+<div class="content">
+    <h1 class="page-name" ,
+        style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; text-align: center;">
+        <i class="fa-solid fa-circle-info"></i> &nbsp;&nbsp;訂 單 明 細 </h1>
+    <section class="user-dashboard">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="container">
+                        <div class="dashboard-wrapper user-dashboard">
+                            <div class="table-responsive">
+                                <table id="example" class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>NO.</th>
+                                        <th>訂單編號</th>
+                                        <th>商品圖片</th>
+                                        <th>商品名稱</th>
+                                        <th>單價</th>
+                                        <th>數量</th>
+                                        <th>小計</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <th:block th:each="productOrderDetail : ${productOrderDetailListData}">
+                                        <tr>
+                                            <td style="vertical-align: middle"
+                                                th:text="${productOrderDetail.productOrderDetailNo}"></td>
+                                            <td style="vertical-align: middle"
+                                                th:text="${productOrderDetail.productOrder.productOrderNo}"></td>
+                                            <td>
+                                                <img th:src="@{/productorderdetail/DBGifReader(productNo=${productOrderDetail.product.productNo})}"
+                                                     width="100px">
+                                            </td>
+                                            <td style="vertical-align: middle"
+                                                th:text="${productOrderDetail.product.productName}"></td>
+                                            <td style="vertical-align: middle"
+                                                th:text="${productOrderDetail.product.productPrice}"></td>
+                                            <td style="vertical-align: middle"
+                                                th:text="${productOrderDetail.productQty}"></td>
+                                            <td style="vertical-align: middle"
+                                                th:text="${'TWD $ ' + productOrderDetail.productPrice}"></td>
+                                        </tr>
+                                    </th:block>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:replace="frontstage/index2 :: footer"></div>
+</div>
+</body>
+</html>
