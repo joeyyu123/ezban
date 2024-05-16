@@ -19,7 +19,7 @@ public class AddProductOrderDTO {
 
     private Integer memberPoints;
 
-    private BirthdayCoupon birthdayCoupon;
+    private Integer birthdayCouponNo;
 
     private Integer productCouponDiscount;
 
@@ -78,12 +78,12 @@ public class AddProductOrderDTO {
         this.memberPoints = memberPoints;
     }
 
-    public BirthdayCoupon getBirthdayCoupon() {
-        return birthdayCoupon;
+    public Integer getBirthdayCouponNo() {
+        return birthdayCouponNo;
     }
 
-    public void setBirthdayCoupon(BirthdayCoupon birthdayCoupon) {
-        this.birthdayCoupon = birthdayCoupon;
+    public void setBirthdayCouponNo(Integer birthdayCouponNo) {
+        this.birthdayCouponNo = birthdayCouponNo;
     }
 
     public Integer getProductCouponDiscount() {

@@ -56,10 +56,6 @@ public class ProductReportService {
         if (optionalProductReport.isPresent()) {
             ProductReport productReport = optionalProductReport.get();
             productReport.setReportStatus(updateProductReportDTO.getSelectedValue());
-//            Admin admin = adminRepository.findById(updateProductReportDTO.getAdminNo()).get();
-//            Admin adminNa = adminRepository.findById(updateProductReportDTO.getAdminName()).get();
-//            productReport.setAdmin(admin);
-//            productReport.setAdmin(adminNa);
             repository.save(productReport);
         }
     }

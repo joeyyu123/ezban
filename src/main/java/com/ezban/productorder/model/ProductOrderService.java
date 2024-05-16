@@ -1,5 +1,9 @@
 package com.ezban.productorder.model;
 
+import com.ezban.birthdaycoupon.model.BirthdayCoupon;
+import com.ezban.birthdaycoupon.model.BirthdayCouponRepository;
+import com.ezban.product.model.Product;
+import com.ezban.productreport.model.ProductReport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,9 @@ public class ProductOrderService {
     @Autowired
     ProductOrderRepository repository;
 
+    @Autowired
+    BirthdayCouponRepository birthdayCouponRepository;
+
     // 新增訂單
     public void addProductOrder(@Valid AddProductOrderDTO addProductOrderDTO) {
         ProductOrder productOrder = new ProductOrder();
@@ -22,7 +29,8 @@ public class ProductOrderService {
         productOrder.setMember(addProductOrderDTO.getMember());
         productOrder.setProductPrice(addProductOrderDTO.getProductPrice());
         productOrder.setMemberPoints(addProductOrderDTO.getMemberPoints());
-        productOrder.setBirthdayCoupon(addProductOrderDTO.getBirthdayCoupon());
+        BirthdayCoupon birthdayCoupon = birthdayCouponRepository.findById(addProductOrderDTO.getBirthdayCouponNo()).get();
+        productOrder.setBirthdayCoupon(birthdayCoupon);
         productOrder.setProductCouponDiscount(addProductOrderDTO.getProductCouponDiscount());
         productOrder.setProductCheckoutAmount(addProductOrderDTO.getProductCheckoutAmount());
         productOrder.setRecipient(addProductOrderDTO.getRecipient());
