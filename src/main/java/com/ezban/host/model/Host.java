@@ -58,6 +58,7 @@ public class Host {
     @OrderBy("eventCouponNo asc")
     private Set<EventCoupon> eventCoupons = new HashSet<EventCoupon>();
 
+
     // Default constructor
     public Host() {}
 
@@ -155,7 +156,9 @@ public class Host {
         this.eventCoupons = eventCoupons;
     }
 
+
     @Override
+
     public String toString() {
         return "Host{" +
                 "hostNo=" + hostNo +
