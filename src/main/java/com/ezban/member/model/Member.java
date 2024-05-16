@@ -1,16 +1,28 @@
 package com.ezban.member.model;
 
+import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.ezban.birthdaycouponholder.model.BirthdayCouponHolder;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "member")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Member {
+public class Member implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,6 +75,10 @@ public class Member {
 
 	@Column(name = "member_points")
 	private Integer memberPoints;
+	
+	//生日優惠券用
+	@OneToMany(mappedBy = "member")
+    private Set<BirthdayCouponHolder> couponHolders;
 
 	public Member() {
 		super();
@@ -193,7 +209,7 @@ public class Member {
 	public void setMemberPoints(Integer memberPoints) {
 		this.memberPoints = memberPoints;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Member [memberNo=" + memberNo + ", memberMail=" + memberMail + ", memberPwd=" + memberPwd
@@ -201,6 +217,15 @@ public class Member {
 				+ memberPhone + ", address=" + address + ", commonRecipient=" + commonRecipient
 				+ ", commonRecipientPhone=" + commonRecipientPhone + ", commonRecipientAddress="
 				+ commonRecipientAddress + ", memberStatus=" + memberStatus + ", memberPoints=" + memberPoints + "]";
+	}
+	
+	//生日優惠券用
+	public Set<BirthdayCouponHolder> getCouponHolders() {
+		return couponHolders;
+	}
+
+	public void setCouponHolders(Set<BirthdayCouponHolder> couponHolders) {
+		this.couponHolders = couponHolders;
 	}
 
 	

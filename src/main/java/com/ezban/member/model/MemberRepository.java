@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +32,7 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 	void updateMemberPoints(Integer memberPoints, String memberMail);
 
 	// 生日優惠券排程用
-	@Query("SELECT m FROM Member m WHERE FUNCTION('MONTH', m.birthday) = :birthdayMonth AND m.memberStatus = :memberStatus")
-	List<Member> findByMemberStatusAndBirthdayMonth(Byte memberStatus, int birthdayMonth);
+	@Query("SELECT m FROM Member m WHERE FUNCTION('MONTH', m.birthday) = :month AND m.memberStatus = :status")
+    List<Member> findMembersByBirthdayMonthAndStatus(int month, byte status);
 
 }

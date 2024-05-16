@@ -7,6 +7,7 @@ import com.ezban.event.model.ServiceDemo;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.security.Principal;
 import java.util.List;
 
 @Service
@@ -48,6 +49,10 @@ public class EventService implements ServiceDemo<Event> {
     // 查詢該類別上架中的活動
     public List<Event> findByEventCategoryNo(Integer categoryNo){
         return repository.findByEventCategoryEventCategoryNoAndEventStatus(categoryNo, EventStatus.PUBLISHED);
+    }
+
+    public boolean isAuthenticated(Principal principal, Event event) {
+        return principal.getName().equals(event.getHost().getHostAccount());
     }
 
 }

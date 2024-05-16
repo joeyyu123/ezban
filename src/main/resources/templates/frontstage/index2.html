@@ -16,7 +16,7 @@
 	<!-- theme meta -->
 	<meta name="theme-name" content="aviato" />
 	<!-- Favicon -->
-	<link rel="shortcut icon" type="image/x-icon" href="images\ez_logo.png" />
+	<link rel="shortcut icon" type="image/x-icon" th:href="@{images/ez_logo.png}" />
 	<!-- Themefisher Icon font -->
 	<link rel="stylesheet" th:href="@{/plugins/themefisher-font/style.css}">
 	<!-- bootstrap.min css th:-->
@@ -49,6 +49,8 @@
 	<script th:src="@{/js/frontstage/script.js}"></script>
 	<!-- sweetalter -->
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	<!-- jquery/3.5.1 -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body id="body">
@@ -131,8 +133,12 @@
 								</li>
 								<li style="display: flex; justify-content: center; align-items: center;">
 									<a href="signin.html"><span>加入會員</span></a>
-								</li><li style="display: flex; justify-content: center; align-items: center;">
+								</li>
+								<li style="display: flex; justify-content: center; align-items: center;">
 									<a href="/productorder/findByMember/{memberNo}"><span>我的商品訂單</span></a>
+								</li>
+								<li style="display: flex; justify-content: center; align-items: center;">
+									<a href="/events/orders"><span>我的票券訂單</span></a>
 								</li>
 								<li style="display: flex; justify-content: center; align-items: center;">
 									<a href="/saveproduct/findByMember/{memberNo}"><span>我的收藏紀錄</span></a>
@@ -173,25 +179,7 @@
 
 						<!-- Elements -->
 						<li class="dropdown dropdown-slide">
-							<a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="350"
-								role="button" aria-haspopup="true" aria-expanded="false">周邊商品
-								<span class="tf-ion-ios-arrow-down"></span></a>
-							<div class="dropdown-menu">
-								<div class="row">
-
-									<!-- Basic -->
-									<div class="col-lg-6 col-md-6 mb-sm-3">
-										<ul>
-											<li class="dropdown-header">所有商品</li>
-											<li role="separator" class="divider"></li>
-											<li th:each="category : ${categories}">
-												<a th:href="@{/}" th:text="${category.name}"></a>
-											</li>
-
-										</ul>
-									</div>
-								</div><!-- / .row -->
-							</div><!-- / .dropdown-menu -->
+							<a th:href="@{/product/shopall}" role="button">周邊商品</a>
 						</li><!-- / Elements -->
 
 

@@ -1,67 +1,171 @@
 package com.ezban.birthdaycoupon.model;
 
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.ezban.birthdaycouponholder.model.BirthdayCouponHolder;
+import com.ezban.birthdaycouponholder.model.BirthdayCouponHolderRepository;
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberRepository;
-import com.ezban.host.model.HostPassRandom;
 
+//@Service
+//public class BirthdayCouponService {
+//
+//	@Autowired
+//	private MemberRepository memberRepository;
+//	@Autowired
+//	private BirthdayCouponRepository birthdayCouponRepository;
+//	@Autowired
+//	private BirthdayCouponHolderRepository birthdayCouponHolderRepository;
+//
+//	// 每月的第一天午夜執行，為當月生日且會員狀態為1的會員發放優惠券
+//	@Scheduled(cron = "0 0 0 1 * ?")
+//	@Transactional
+//	public void issueMonthlyCoupons() {
+//		LocalDate today = LocalDate.now();
+//		List<Member> eligibleMembers = memberRepository.findMembersByBirthdayMonthAndStatus(today.getMonthValue(),
+//				(byte) 1);
+//		eligibleMembers.forEach(member -> {
+//			BirthdayCoupon coupon = new BirthdayCoupon();
+//			coupon.setBirthdayCouponDiscount(50); // 假定折扣
+//			coupon.setBirthdayCouponStatus((byte) 1); // 狀態為1
+//			coupon.setValidDays(today.lengthOfMonth()); // 本月天數作為有效天數
+//			BirthdayCoupon savedCoupon = birthdayCouponRepository.save(coupon);
+//			createCouponHolder(savedCoupon, member);
+//		});
+//	}
+//
+//	// 為每個發放的優惠券創建持有者記錄
+//	private void createCouponHolder(BirthdayCoupon coupon, Member member) {
+//		BirthdayCouponHolder holder = new BirthdayCouponHolder();
+//		holder.setBirthdayCoupon(coupon);
+//		holder.setMember(member);
+//		holder.setCouponUsageStatus((byte) 0); // 未使用狀態
+//		holder.setValidityDate(LocalDate.now().plusMonths(1)); // 將有效期設置為發放日期一個月後
+//		birthdayCouponHolderRepository.save(holder);
+//	}
+//
+//	// 每天0點更新優惠券的有效天數和狀態
+//	@Scheduled(cron = "0 0 0 * * ?")
+//	@Transactional
+//	public void dailyUpdateCoupons() {
+//		LocalDate today = LocalDate.now();
+//		List<BirthdayCoupon> activeCoupons = birthdayCouponRepository.findByBirthdayCouponStatus((byte) 1);
+//		activeCoupons.forEach(coupon -> {
+//			if (coupon.getValidDays() > 1) {
+//				coupon.setValidDays(coupon.getValidDays() - 1);
+//			} else {
+//				coupon.setValidDays(0);
+//				coupon.setBirthdayCouponStatus((byte) 2); // 過期狀態
+//			}
+//			birthdayCouponRepository.save(coupon);
+//		});
+//	}
+//
+//	// 刪除三個月前過期的優惠券持有者記錄
+//	@Scheduled(cron = "0 0 1 * * ?") // 每天凌晨1點執行
+//	@Transactional
+//	public void deleteOldCouponHolders() {
+//		LocalDate threeMonthsAgo = LocalDate.now().minusMonths(3);
+//		birthdayCouponHolderRepository.deleteByValidityDateBefore(threeMonthsAgo);
+//	}
+//
+//	// 更新非當月的優惠券使用狀態
+//	@Scheduled(cron = "0 0 0 * * ?") // 每天凌晨0點執行
+//	@Transactional
+//	public void updateNonCurrentMonthCouponUsage() {
+//		int currentMonth = LocalDate.now().getMonthValue();
+//		List<BirthdayCouponHolder> nonCurrentMonthHolders = birthdayCouponHolderRepository
+//				.findByValidityDateMonthNot(currentMonth);
+//		for (BirthdayCouponHolder holder : nonCurrentMonthHolders) {
+//			holder.setCouponUsageStatus((byte) 0); // 設置為未使用
+//			birthdayCouponHolderRepository.save(holder);
+//		}
+//	}
+//}
 
 @Service
 public class BirthdayCouponService {
 
-    @Autowired
-    private MemberRepository memberRepository;
-    @Autowired
-    private BirthdayCouponRepository birthdayCouponRepository;
+	@Autowired
+	private MemberRepository memberRepository;
+	@Autowired
+	private BirthdayCouponRepository birthdayCouponRepository;
+	@Autowired
+	private BirthdayCouponHolderRepository birthdayCouponHolderRepository;
 
-    // 每月的第一天午夜執行
-    @Scheduled(cron = "0 0 0 1 * ?")
-    public void generateAndAssignCoupons() {
-        LocalDate now = LocalDate.now();
-        handleCouponGeneration(now);
-    }
-    
-    
-    public int getMonthFromDate(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        return cal.get(Calendar.MONTH) + 1; 
-    }
+	// 每月的第一天午夜執行，一系列優惠券相關處理
+	@Scheduled(cron = "0 0 0 1 * ?")
+	@Transactional
+	public void handleMonthlyCouponTasks() {
+		LocalDate today = LocalDate.now();
 
-    // 新會員註冊時調用
-    public void checkAndGenerateCouponForNewMember(Member member) {
-        LocalDate now = LocalDate.now();
-        int memberBirthMonth = getMonthFromDate(member.getBirthday()); // 将 Date 转换为月份
-        if (member.getMemberStatus() == 1 && memberBirthMonth == now.getMonthValue()) {
-            handleCouponGenerationForMember(member, now);
-        }
-    }
+		// 發放優惠券
+		issueMonthlyCoupons(today);
 
-    private void handleCouponGeneration(LocalDate date) {
-        int month = date.getMonthValue();
-        int lastDayOfMonth = date.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
+		// 更新優惠券的有效天數和狀態
+		dailyUpdateCoupons();
 
-        List<Member> eligibleMembers = memberRepository.findByMemberStatusAndBirthdayMonth((byte) 1, month);
-        for (Member member : eligibleMembers) {
-            handleCouponGenerationForMember(member, date);
-        }
-    }
+		// 更新非當前月的優惠券使用狀態
+		updateNonCurrentMonthCouponUsage();
 
-    private void handleCouponGenerationForMember(Member member, LocalDate date) {
-        BirthdayCoupon coupon = new BirthdayCoupon();
-        coupon.setBirthdayCouponNo(HostPassRandom.generatePassword(16));
-        coupon.setBirthdayCouponDiscount(50);
-        coupon.setBirthdayCouponStatus((byte) 1);
-        coupon.setValidDays(date.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth());
-        birthdayCouponRepository.save(coupon);
-    }
+		// 刪除三個月前過期的優惠券持有者記錄
+		deleteOldCouponHolders();
+	}
+
+	private void issueMonthlyCoupons(LocalDate today) {
+		List<Member> eligibleMembers = memberRepository.findMembersByBirthdayMonthAndStatus(today.getMonthValue(),
+				(byte) 1);
+		eligibleMembers.forEach(member -> {
+			BirthdayCoupon coupon = new BirthdayCoupon();
+			coupon.setBirthdayCouponDiscount(50);
+			coupon.setBirthdayCouponStatus((byte) 1);
+			coupon.setValidDays(2);
+			BirthdayCoupon savedCoupon = birthdayCouponRepository.save(coupon);
+			createCouponHolder(savedCoupon, member);
+		});
+	}
+
+	private void createCouponHolder(BirthdayCoupon coupon, Member member) {
+		BirthdayCouponHolder holder = new BirthdayCouponHolder();
+		holder.setBirthdayCoupon(coupon);
+		holder.setMember(member);
+		holder.setCouponUsageStatus((byte) 0);
+		holder.setValidityDate(LocalDate.now().plusMonths(1));
+		birthdayCouponHolderRepository.save(holder);
+	}
+
+	private void dailyUpdateCoupons() {
+		LocalDate today = LocalDate.now();
+		List<BirthdayCoupon> activeCoupons = birthdayCouponRepository.findByBirthdayCouponStatus((byte) 1);
+		activeCoupons.forEach(coupon -> {
+			if (coupon.getValidDays() > 1) {
+				coupon.setValidDays(coupon.getValidDays() - 1);
+			} else {
+				coupon.setValidDays(0);
+				coupon.setBirthdayCouponStatus((byte) 2);
+			}
+			birthdayCouponRepository.save(coupon);
+		});
+	}
+
+	private void updateNonCurrentMonthCouponUsage() {
+		int currentMonth = LocalDate.now().getMonthValue();
+		List<BirthdayCouponHolder> nonCurrentMonthHolders = birthdayCouponHolderRepository
+				.findByValidityDateMonthNot(currentMonth);
+		nonCurrentMonthHolders.forEach(holder -> {
+			holder.setCouponUsageStatus((byte) 0);
+			birthdayCouponHolderRepository.save(holder);
+		});
+	}
+
+	private void deleteOldCouponHolders() {
+		LocalDate threeMonthsAgo = LocalDate.now().minusMonths(3);
+		birthdayCouponHolderRepository.deleteByValidityDateBefore(threeMonthsAgo);
+	}
 }

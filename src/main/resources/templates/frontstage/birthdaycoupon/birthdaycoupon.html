@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>我的優惠券</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .coupon {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px 20px;
+            margin: 10px 0;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+        .coupon h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .coupon p {
+            margin: 5px 0;
+            line-height: 1.5;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>我的優惠券</h1>
+    <div id="coupons-container"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchCoupons();
+        });
+
+        function fetchCoupons() {
+            fetch('http://localhost:8080/api/birthdaycoupon')  // 更改为你的API地址
+                .then(response => response.json())
+                .then(data => displayCoupons(data))
+                .catch(error => console.error('Error fetching data: ', error));
+        }
+
+        function displayCoupons(coupons) {
+            const container = document.getElementById('coupons-container');
+            container.innerHTML = ''; // 清空容器
+
+            coupons.forEach(coupon => {
+                const couponDiv = document.createElement('div');
+                couponDiv.className = 'coupon';
+                couponDiv.innerHTML = `
+                    <h4>優惠券號碼：${coupon.couponNumber}</h4>
+                    <p>折扣：${coupon.discount}%</p>
+                    <p>狀態：${coupon.status}</p>
+                    <p>有效期至：${coupon.validUntil}</p>
+                `;
+                container.appendChild(couponDiv);
+            });
+        }
+    </script>
+</body>
+</html>

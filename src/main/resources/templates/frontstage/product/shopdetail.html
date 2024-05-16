@@ -3,19 +3,23 @@
 <html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="frontstage/index2 :: head">
-    <!-- Modal開始(點擊我要檢舉觸發彈窗) -->
+
+    <!-- 檢舉Modal開始(點擊我要檢舉觸發彈窗) -->
     <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
 
-            <div class="modal-content" >
+            <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel" style="color: red; font-weight: bold; font-size: 30px;"><center>請 輸 入 檢 舉 原 因</center></h5>
+                    <h5 class="modal-title" id="exampleModalLabel"
+                        style="color: red; font-weight: bold; font-size: 30px;">
+                        <center>請 輸 入 檢 舉 原 因</center>
+                    </h5>
                 </div>
                 <div class="modal-body">
                     <!-- 表單 -->
                     <form id="productReportForm" method="post" action="/productreport/insert">
                         <div class="mb-3"><label for="reportReason" class="col-form-label">原因說明:</label>
-                            <textarea class="form-control" id="reportReason" name="reportReason" ></textarea></div>
+                            <textarea class="form-control" id="reportReason" name="reportReason"></textarea></div>
                         <!-- 隱藏的输入字段用於储存訂單編號 -->
                         <input type="hidden" id="productNo" name="productNo" value="">
                     </form>
@@ -32,7 +36,8 @@
             </div>
         </div>
     </div>
-    <!-- Modal結束 -->
+    <!-- 檢舉的Modal結束 -->
+
     <style>
         .cart_btn {
             border: 1px solid black;
@@ -64,23 +69,29 @@
                             <!-- me art lab slider -->
                             <div class='carousel-inner '>
                                 <div class='item active'>
-                                    <img src='images/shop/single-products/product-1.jpg' alt='' data-zoom-image="images/shop/single-products/product-1.jpg" />
+                                    <img src='images/shop/single-products/product-1.jpg' alt=''
+                                         data-zoom-image="images/shop/single-products/product-1.jpg"/>
                                 </div>
                                 <div class='item'>
-                                    <img src='images/shop/single-products/product-2.jpg' alt='' data-zoom-image="images/shop/single-products/product-2.jpg" />
+                                    <img src='images/shop/single-products/product-2.jpg' alt=''
+                                         data-zoom-image="images/shop/single-products/product-2.jpg"/>
                                 </div>
 
                                 <div class='item'>
-                                    <img src='images/shop/single-products/product-3.jpg' alt='' data-zoom-image="images/shop/single-products/product-3.jpg" />
+                                    <img src='images/shop/single-products/product-3.jpg' alt=''
+                                         data-zoom-image="images/shop/single-products/product-3.jpg"/>
                                 </div>
                                 <div class='item'>
-                                    <img src='images/shop/single-products/product-4.jpg' alt='' data-zoom-image="images/shop/single-products/product-4.jpg" />
+                                    <img src='images/shop/single-products/product-4.jpg' alt=''
+                                         data-zoom-image="images/shop/single-products/product-4.jpg"/>
                                 </div>
                                 <div class='item'>
-                                    <img src='images/shop/single-products/product-5.jpg' alt='' data-zoom-image="images/shop/single-products/product-5.jpg" />
+                                    <img src='images/shop/single-products/product-5.jpg' alt=''
+                                         data-zoom-image="images/shop/single-products/product-5.jpg"/>
                                 </div>
                                 <div class='item'>
-                                    <img src='images/shop/single-products/product-6.jpg' alt='' data-zoom-image="images/shop/single-products/product-6.jpg" />
+                                    <img src='images/shop/single-products/product-6.jpg' alt=''
+                                         data-zoom-image="images/shop/single-products/product-6.jpg"/>
                                 </div>
 
                             </div>
@@ -97,25 +108,25 @@
                         <!-- thumb -->
                         <ol class='carousel-indicators mCustomScrollbar meartlab'>
                             <li data-target='#carousel-custom' data-slide-to='0' class='active'>
-                                <img src='images/shop/single-products/product-1.jpg' alt='' />
+                                <img src='images/shop/single-products/product-1.jpg' alt=''/>
                             </li>
                             <li data-target='#carousel-custom' data-slide-to='1'>
-                                <img src='images/shop/single-products/product-2.jpg' alt='' />
+                                <img src='images/shop/single-products/product-2.jpg' alt=''/>
                             </li>
                             <li data-target='#carousel-custom' data-slide-to='2'>
-                                <img src='images/shop/single-products/product-3.jpg' alt='' />
+                                <img src='images/shop/single-products/product-3.jpg' alt=''/>
                             </li>
                             <li data-target='#carousel-custom' data-slide-to='3'>
-                                <img src='images/shop/single-products/product-4.jpg' alt='' />
+                                <img src='images/shop/single-products/product-4.jpg' alt=''/>
                             </li>
                             <li data-target='#carousel-custom' data-slide-to='4'>
-                                <img src='images/shop/single-products/product-5.jpg' alt='' />
+                                <img src='images/shop/single-products/product-5.jpg' alt=''/>
                             </li>
                             <li data-target='#carousel-custom' data-slide-to='5'>
-                                <img src='images/shop/single-products/product-6.jpg' alt='' />
+                                <img src='images/shop/single-products/product-6.jpg' alt=''/>
                             </li>
                             <li data-target='#carousel-custom' data-slide-to='6'>
-                                <img src='images/shop/single-products/product-7.jpg' alt='' />
+                                <img src='images/shop/single-products/product-7.jpg' alt=''/>
                             </li>
                         </ol>
                     </div>
@@ -127,9 +138,13 @@
                     <p class="product-price">$300</p>
 
                     <p class="product-description mt-20">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum ipsum dicta quod, quia doloremque aut deserunt commodi quis. Totam a consequatur beatae nostrum, earum consequuntur? Eveniet consequatur ipsum dicta recusandae.
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum ipsum dicta quod, quia
+                        doloremque aut deserunt commodi quis. Totam a consequatur beatae nostrum, earum consequuntur?
+                        Eveniet consequatur ipsum dicta recusandae.
                     </p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt, velit, sunt temporibus, nulla accusamus similique sapiente tempora, at atque cumque assumenda minus asperiores est esse sequi dolore magnam. Debitis, explicabo.</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt, velit, sunt temporibus, nulla
+                        accusamus similique sapiente tempora, at atque cumque assumenda minus asperiores est esse sequi
+                        dolore magnam. Debitis, explicabo.</p>
                     <div class="color-swatches">
                         <span>color:</span>
                         <ul>
@@ -167,8 +182,12 @@
                         </ul>
                     </div>
                     <a href="cart.html" class="btn btn-main mt-20" style="margin-right: 5px;">加入購物車</a>
-                    <button type="button" id="productReport" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#staticBackdrop" style="margin-top: 20px; height: 45px; border-radius: 0; background-color: #000; font-size: 11px;">
-                        我要檢舉</button>
+                    <a href="saveproduct/insert" id="addToFavorites" class="btn btn-main mt-20" style="margin-right: 5px;"><i
+                            class="tf-ion-ios-heart"></i> 加入收藏</a>
+                    <button type="button" id="productReport" class="btn btn-primary btn-lg" data-toggle="modal"
+                            data-target="#staticBackdrop"
+                            style="margin-top: 20px; height: 45px; border-radius: 0; background-color: #000; font-size: 11px;">
+                        <i class="tf-ion-alert"></i> 我要檢舉</button>
                 </div>
             </div>
         </div>
@@ -182,8 +201,17 @@
                     <div class="tab-content patternbg">
                         <div id="details" class="tab-pane fade active in">
                             <h4>Product Description</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut per spici</p>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis delectus quidem repudiandae veniam distinctio repellendus magni pariatur molestiae asperiores animi, eos quod iusto hic doloremque iste a, nisi iure at unde molestias enim fugit, nulla voluptatibus. Deserunt voluptate tempora aut illum harum, deleniti laborum animi neque, praesentium explicabo, debitis ipsa?</p>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
+                                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+                                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
+                                dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+                                mollit anim id est laborum. Sed ut per spici</p>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis delectus quidem
+                                repudiandae veniam distinctio repellendus magni pariatur molestiae asperiores animi, eos
+                                quod iusto hic doloremque iste a, nisi iure at unde molestias enim fugit, nulla
+                                voluptatibus. Deserunt voluptate tempora aut illum harum, deleniti laborum animi neque,
+                                praesentium explicabo, debitis ipsa?</p>
                         </div>
                         <div id="reviews" class="tab-pane fade">
                             <div class="post-comments">
@@ -192,7 +220,8 @@
                                     <li class="media">
 
                                         <a class="pull-left" href="#!">
-                                            <img class="media-object comment-avatar" src="images/blog/avater-1.jpg" alt="" width="50" height="50" />
+                                            <img class="media-object comment-avatar" src="images/blog/avater-1.jpg"
+                                                 alt="" width="50" height="50"/>
                                         </a>
 
                                         <div class="media-body">
@@ -206,7 +235,10 @@
                                             </div>
 
                                             <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at magna ut ante eleifend eleifend.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod laborum minima, reprehenderit laboriosam officiis praesentium? Impedit minus provident assumenda quae.
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at
+                                                magna ut ante eleifend eleifend.Lorem ipsum dolor sit amet, consectetur
+                                                adipisicing elit. Quod laborum minima, reprehenderit laboriosam officiis
+                                                praesentium? Impedit minus provident assumenda quae.
                                             </p>
                                         </div>
 
@@ -217,7 +249,8 @@
                                     <li class="media">
 
                                         <a class="pull-left" href="#!">
-                                            <img class="media-object comment-avatar" src="images/blog/avater-4.jpg" alt="" width="50" height="50" />
+                                            <img class="media-object comment-avatar" src="images/blog/avater-4.jpg"
+                                                 alt="" width="50" height="50"/>
                                         </a>
 
                                         <div class="media-body">
@@ -231,7 +264,10 @@
                                             </div>
 
                                             <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at magna ut ante eleifend eleifend. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magni natus, nostrum iste non delectus atque ab a accusantium optio, dolor!
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at
+                                                magna ut ante eleifend eleifend. Lorem ipsum dolor sit amet, consectetur
+                                                adipisicing elit. Magni natus, nostrum iste non delectus atque ab a
+                                                accusantium optio, dolor!
                                             </p>
 
                                         </div>
@@ -243,7 +279,8 @@
                                     <li class="media">
 
                                         <a class="pull-left" href="#!">
-                                            <img class="media-object comment-avatar" src="images/blog/avater-1.jpg" alt="" width="50" height="50">
+                                            <img class="media-object comment-avatar" src="images/blog/avater-1.jpg"
+                                                 alt="" width="50" height="50">
                                         </a>
 
                                         <div class="media-body">
@@ -257,7 +294,8 @@
                                             </div>
 
                                             <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at magna ut ante eleifend eleifend.
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at
+                                                magna ut ante eleifend eleifend.
                                             </p>
 
                                         </div>
@@ -284,16 +322,16 @@
                 <div class="product-item">
                     <div class="product-thumb">
                         <span class="bage">Sale</span>
-                        <img class="img-responsive" src="images/shop/products/product-5.jpg" alt="product-img" />
+                        <img class="img-responsive" src="images/shop/products/product-5.jpg" alt="product-img"/>
                         <div class="preview-meta">
                             <ul>
                                 <li>
-									<span  data-toggle="modal" data-target="#product-modal">
+									<span data-toggle="modal" data-target="#product-modal">
 										<i class="tf-ion-ios-search"></i>
 									</span>
                                 </li>
                                 <li>
-                                    <a href="#" ><i class="tf-ion-ios-heart"></i></a>
+                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
                                 </li>
                                 <li>
                                     <a href="#!"><i class="tf-ion-android-cart"></i></a>
@@ -310,16 +348,16 @@
             <div class="col-md-3">
                 <div class="product-item">
                     <div class="product-thumb">
-                        <img class="img-responsive" src="images/shop/products/product-1.jpg" alt="product-img" />
+                        <img class="img-responsive" src="images/shop/products/product-1.jpg" alt="product-img"/>
                         <div class="preview-meta">
                             <ul>
                                 <li>
-									<span  data-toggle="modal" data-target="#product-modal">
+									<span data-toggle="modal" data-target="#product-modal">
 										<i class="tf-ion-ios-search-strong"></i>
 									</span>
                                 </li>
                                 <li>
-                                    <a href="#" ><i class="tf-ion-ios-heart"></i></a>
+                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
                                 </li>
                                 <li>
                                     <a href="#!"><i class="tf-ion-android-cart"></i></a>
@@ -336,16 +374,16 @@
             <div class="col-md-3">
                 <div class="product-item">
                     <div class="product-thumb">
-                        <img class="img-responsive" src="images/shop/products/product-2.jpg" alt="product-img" />
+                        <img class="img-responsive" src="images/shop/products/product-2.jpg" alt="product-img"/>
                         <div class="preview-meta">
                             <ul>
                                 <li>
-									<span  data-toggle="modal" data-target="#product-modal">
+									<span data-toggle="modal" data-target="#product-modal">
 										<i class="tf-ion-ios-search"></i>
 									</span>
                                 </li>
                                 <li>
-                                    <a href="#" ><i class="tf-ion-ios-heart"></i></a>
+                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
                                 </li>
                                 <li>
                                     <a href="#!"><i class="tf-ion-android-cart"></i></a>
@@ -362,16 +400,16 @@
             <div class="col-md-3">
                 <div class="product-item">
                     <div class="product-thumb">
-                        <img class="img-responsive" src="images/shop/products/product-3.jpg" alt="product-img" />
+                        <img class="img-responsive" src="images/shop/products/product-3.jpg" alt="product-img"/>
                         <div class="preview-meta">
                             <ul>
                                 <li>
-									<span  data-toggle="modal" data-target="#product-modal">
+									<span data-toggle="modal" data-target="#product-modal">
 										<i class="tf-ion-ios-search"></i>
 									</span>
                                 </li>
                                 <li>
-                                    <a href="#" ><i class="tf-ion-ios-heart"></i></a>
+                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
                                 </li>
                                 <li>
                                     <a href="#!"><i class="tf-ion-android-cart"></i></a>
@@ -394,9 +432,46 @@
 <div th:replace="frontstage/index2 :: footer"></div>
 
 </body>
+
+<!--收藏Ajax開始-->
+<script>
+    function submitSaveProduct(productNo) {
+        var saveStatus = 1
+        var formData = {
+            productNo: productNo,
+            saveStatus: saveStatus
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/saveproduct/insert',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: handleSuccess,
+            error: handleError
+        });
+    }
+
+    function handleSuccess(response) {
+        console.log('Success response received:', response);
+
+    alert('成功加入收藏!');
+        $('#addToFavoritesBtn').css('background-color', 'lightblue'); //加入成功後，變為淡藍色
+    }
+
+    function handleError(xhr, status, error) {
+        console.log('AJAX error response:', status, error);
+
+    alert('加入收藏失敗!');
+    }
+</script>
+<!--收藏Ajax結束-->
+
+<!--檢舉Ajax開始-->
 <script>
     function submitProductReport(productNo) {
         var reportReason = $("#reportReason").val().trim();
+
         // 檢查 reportReason 是否為空白
         if (reportReason === "") {
             Swal.fire('提交失敗', '檢舉原因不可為空白', 'error');
@@ -435,4 +510,6 @@
         });
     }
 </script>
+<!--檢舉Ajax結束-->
+
 </html>

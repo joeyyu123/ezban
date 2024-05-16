@@ -1,6 +1,9 @@
 package com.ezban.ticketorder.model.Service;
 
+import com.ezban.event.model.Event;
 import com.ezban.event.model.ServiceDemo;
+import com.ezban.host.model.Host;
+import com.ezban.host.model.HostService;
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberService;
 import com.ezban.qrcodeticket.model.QrcodeTicket;
@@ -8,14 +11,15 @@ import com.ezban.qrcodeticket.model.QrcodeTicketRepository;
 import com.ezban.ticketorder.model.*;
 import com.ezban.ticketorderdetail.model.TicketOrderDetail;
 import com.ezban.ticketorderdetail.model.TicketOrderDetailService;
-import com.ezban.ticketregistration.TicketRegistration;
 import com.ezban.tickettype.model.TicketType;
 import com.ezban.tickettype.model.TicketTypeRepository;
 import com.ezban.tickettype.model.TicketTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +28,8 @@ import java.util.Set;
 
 @Service
 public class TicketOrderService implements ServiceDemo<TicketOrder> {
+    @Autowired
+    private HostService hostService;
 
     @Autowired
     private TicketTypeService ticketTypeService;
@@ -42,6 +48,15 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
 
     @Autowired
     private QrcodeTicketRepository qrcodeTicketrepository;
+
+    public  List<TicketOrder> findByMember(Member member) {
+        return ticketOrderRepository.findByMember(member, Sort.by("ticketOrderTime").descending());
+    }
+
+    public  List<TicketOrder> findByMemberNoAndStatus(Member member, TicketOrderStatus status) {
+
+        return ticketOrderRepository.findByMemberAndTicketOrderStatus(member, status, Sort.by("ticketOrderTime").descending());
+    }
 
     @Override
     @Transactional
@@ -93,7 +108,7 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
 
     @Override
     public TicketOrder findById(Integer id) {
-        return ticketOrderRepository.findById(id).orElse(null);
+        return ticketOrderRepository.findById(id).orElseThrow();
     }
 
     @Override
@@ -168,4 +183,28 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
         return qrcodeTickets;
     }
 
+    public List<TicketOrder> findByEvent(Event event) {
+
+        return ticketOrderRepository.findByEventNo(event.getEventNo(),Sort.by("ticketOrderTime").descending());
+    }
+
+    public List<TicketOrder> findByEventAndStatus(Event event, TicketOrderStatus orderStatus) {
+        return ticketOrderRepository.findByEventNoAndStatus(event.getEventNo(), orderStatus, Sort.by("ticketOrderTime").descending());
+    }
+
+    public boolean isAuthorizedForTicketOrder(Principal principal, Integer ticketOrderNo){
+        TicketOrder ticketOrder = ticketOrderRepository.findById(ticketOrderNo).orElse(null);
+        if(ticketOrder == null){
+            return false;
+        }
+        Host host = hostService.findHostByAccount(principal.getName()).orElse(null);
+        if(host == null){
+            return false;
+        }
+        return ticketOrder.getTicketOrderDetails().iterator().next().getTicketType().getEvent().getHost().getHostNo().equals(host.getHostNo());
+    }
+
+    public List<TicketOrder> findByEventNoAndTicketOrderNo(Integer eventNo, Integer ticketOrderNo) {
+        return ticketOrderRepository.findByEventNoAndTicketOrderNo(eventNo,ticketOrderNo,Sort.by("ticketOrderTime").descending());
+    }
 }

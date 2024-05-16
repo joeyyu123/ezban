@@ -1,8 +1,14 @@
 package com.ezban.host.model;
 
 import java.time.LocalDateTime;
+
+import com.ezban.eventcoupon.model.EventCoupon;
+import com.ezban.product.model.Product;
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "host")
@@ -42,6 +48,11 @@ public class Host {
 
     @Column(name = "host_status", nullable = false)
     private Byte hostStatus = 1;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "host")
+    @OrderBy("eventCouponNo asc")
+    private Set<EventCoupon> eventCoupons = new HashSet<EventCoupon>();
+
 
     // Default constructor
     public Host() {}
@@ -123,6 +134,15 @@ public class Host {
         this.hostStatus = hostStatus;
     }
 
+    public Set<EventCoupon> getEventCoupons() {
+        return this.eventCoupons;
+    }
+
+    public void setEventCoupons(Set<EventCoupon> eventCoupons) {
+        this.eventCoupons = eventCoupons;
+    }
+
+
     @Override
     public String toString() {
         return "Host{" +
@@ -136,4 +156,5 @@ public class Host {
                 ", hostStatus=" + hostStatus +
                 '}';
     }
+
 }
