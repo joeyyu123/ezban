@@ -158,7 +158,6 @@ public class Host {
 
 
     @Override
-
     public String toString() {
         return "Host{" +
                 "hostNo=" + hostNo +
