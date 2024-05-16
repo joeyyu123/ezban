@@ -17,6 +17,9 @@
         <div class="content">
             <!-- 這裡可以放置你想呈現的內容 -->
             <h2>活動報名資料</h2>
+            <a th:href="@{'/backstage/events/'+ ${eventNo} +'/ticket-registrations/download'}">
+                <button id="download-xlsx" class="btn btn-primary">下載活動報名資料</button>
+            </a>
             <div th:text="${event.eventName}"></div>
             <table class="table table-striped table-bordered">
                 <thead>
