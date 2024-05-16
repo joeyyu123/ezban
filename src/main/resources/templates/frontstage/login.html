@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EZBAN會員登入</title>
+<style>
+/* 样式代码略 */
+</style>
+</head>
+<body>
+
+	<div class="container">
+		<h2 class="title">EZBAN</h2>
+		<div class="login-form">
+			<h3 class="form-title">會員登入</h3>
+			<form id="loginForm">
+				<div class="form-group">
+					<input type="email" id="memberMail" class="login-input"
+						placeholder="請輸入會員帳號" required>
+				</div>
+				<div class="form-group">
+					<input type="password" id="memberPwd" class="login-input"
+						placeholder="請輸入會員密碼" required>
+				</div>
+				<button type="button" id="loginButton" class="login-btn">登
+					入</button>
+			</form>
+			<div class="warning" id="warningMsg"></div>
+			<a href="forgotPassword.html" id="forgotPassword">忘記密碼？</a>
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script>
+	document.addEventListener("DOMContentLoaded", function () {
+	    const loginButton = document.getElementById("loginButton");
+	    const memberMailInput = document.getElementById("memberMail");
+	    const memberPwdInput = document.getElementById("memberPwd");
+	    const warningMsg = document.getElementById("warningMsg");
+
+	    loginButton.addEventListener("click", function () {
+	        const memberMail = memberMailInput.value.trim();
+	        const memberPwd = memberPwdInput.value.trim();
+
+	        if (!memberMail || !memberPwd) {
+	            warningMsg.textContent = "請輸入帳號和密碼。";
+	            return;
+	        }
+
+	        axios.post("/login", {
+	            memberMail: memberMail,
+	            memberPwd: memberPwd
+	        })
+	        .then((response) => {
+	            console.log(response);
+	            console.log(response.data.code);
+	            localStorage.setItem('memberMail', JSON.stringify(memberMail));
+
+	            if (response.data.code === 200) {
+	                location.href = '/';
+	            } else {
+	                warningMsg.textContent = "登入失敗,請在試一次。";
+	            }
+	        })
+	        .catch((error) => {
+	            console.log(error);
+	        });
+	    });
+	});
+	</script>
+
+</body>
+</html>

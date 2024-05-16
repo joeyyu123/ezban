@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Rating and Comment System</title>
+    <style>
+        #star-rating .star {
+            font-size: 30px;
+            cursor: pointer;
+            color: black;
+        }
+
+        #star-rating .star.rated {
+            color: yellow;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-top: 20px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #comments-display {
+            margin-top: 20px;
+            border-top: 2px solid #ccc;
+            padding-top: 10px;
+        }
+
+        .comment-item {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .comment-content {
+            flex-grow: 1;
+        }
+
+        .report-button {
+            margin-left: 20px;
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="comments-display">
+        <!-- 評論將被動態載入 -->
+    </div>
+
+    <div id="star-rating">
+        <span class="star" onclick="setRating(1)">&#9733;</span>
+        <span class="star" onclick="setRating(2)">&#9733;</span>
+        <span class="star" onclick="setRating(3)">&#9733;</span>
+        <span class="star" onclick="setRating(4)">&#9733;</span>
+        <span class="star" onclick="setRating(5)">&#9733;</span>
+    </div>
+
+    <textarea id="commentContent" placeholder="寫下您的評論..."></textarea>
+    <button onclick="submitComment()">提交評論</button>
+
+    <script>
+        var currentRating = 0;
+
+        function setRating(rating) {
+            currentRating = rating;
+            const stars = document.querySelectorAll('#star-rating .star');
+            for (let i = 0; i < stars.length; i++) {
+                if (i < rating) {
+                    stars[i].classList.add('rated');
+                } else {
+                    stars[i].classList.remove('rated');
+                }
+            }
+        }
+
+        function submitComment() {
+            const commentContent = document.getElementById('commentContent').value;
+            if (!currentRating || !commentContent.trim()) {
+                alert("請填寫評分和評論內容！");
+                return;
+            }
+
+            const data = {
+                productCommentContent: commentContent,
+                productRate: currentRating,
+                productCommentDate: new Date().toISOString().slice(0, 10), // YYYY-MM-DD
+                productCommentStatus: 0
+            };
+
+            fetch('/api/comments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(comment => {
+                console.log("評論已提交：", comment);
+                alert("評論已提交！");
+                loadComments(); // 重新加載評論
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('提交評論失敗');
+            });
+        }
+
+        function loadComments() {
+            fetch('/api/comments')
+            .then(response => response.json())
+            .then(comments => {
+                const commentsDisplay = document.getElementById('comments-display');
+                commentsDisplay.innerHTML = ''; // 清空現有評論
+                comments.forEach(comment => {
+                    const commentItem = `<div class="comment-item">
+                        <span class="member-id">會員編號: ${comment.member.memberNo}</span>
+                        <span class="comment-content">${comment.productCommentContent}</span>
+                        <button class="report-button" onclick="reportComment()">檢舉</button>
+                    </div>`;
+                    commentsDisplay.innerHTML += commentItem;
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', loadComments);
+    </script>
+</body>
+</html>

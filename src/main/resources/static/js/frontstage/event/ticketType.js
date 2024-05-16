@@ -389,7 +389,7 @@ $(document).ready(function () {
             couponCode: $("#coupon-code").val()
         }
         $.ajax({
-            url: "/events/ticketOrder/payment",
+            url: "/events/order/payment",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(data),

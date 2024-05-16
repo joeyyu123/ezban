@@ -4,6 +4,8 @@ import com.ezban.event.model.Event;
 import com.ezban.member.model.Member;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 
@@ -17,15 +19,21 @@ public class SaveEvent implements java.io.Serializable{
     @Column(name = "save_event_no", nullable = false)
     private Integer saveEventNo;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @NotNull(message = "* 會員編號: 請勿空白 !")
+    @ManyToOne
     @JoinColumn(name = "member_no", nullable = false)
     private Member member;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @NotNull(message = "* 活動編號: 請勿空白 !")
+    @ManyToOne
     @JoinColumn(name = "event_no", nullable = false)
     private Event event;
+
+    @NotNull(message = "* 活動收藏狀態: 請勿空白 !")
+    @Column(name = "save_status", nullable = false)
+    @Min(value = 0, message = "* 活動收藏狀態不正確 !")
+    @Max(value = 1, message = "* 活動收藏狀態不正確 !")
+    private Byte saveStatus;
 
     //--------------------------------------------getters and setters--------------------------------------------
     public SaveEvent(){   //必需有一個不傳參數建構子(JavaBean基本知識)
@@ -53,5 +61,13 @@ public class SaveEvent implements java.io.Serializable{
 
     public void setEvent(Event eventNo) {
         this.event = eventNo;
+    }
+
+    public Byte getSaveStatus() {
+        return saveStatus;
+    }
+
+    public void setSaveStatus(Byte saveStatus) {
+        this.saveStatus = saveStatus;
     }
 }
