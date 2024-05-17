@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ezban.member.model.Member;
@@ -29,7 +28,7 @@ import com.ezban.member.model.MemberRepository;
 public class RegisterController {
 
     @Autowired
-    MemberRepository memrepository;
+    MemberRepository memberRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -45,7 +44,7 @@ public class RegisterController {
     @ResponseBody
     public ResponseEntity<String> registerMember(@RequestBody Member member) {
         try {
-            Optional<Member> existingMember = memrepository.findByMemberMail(member.getMemberMail());
+            Optional<Member> existingMember = memberRepository.findByMemberMail(member.getMemberMail());
             if (existingMember.isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("該電子郵件已被使用");
             }
@@ -59,7 +58,7 @@ public class RegisterController {
             member.setVerificationCode(verificationCode);
             member.setVerificationCodeExpiry(LocalDateTime.now().plusHours(1)); // 設置驗證碼到期時間為1小時
 
-            memrepository.save(member);
+            memberRepository.save(member);
 
             // 寄出驗證碼
             emailService.sendRegisterVerificationEmail(member.getMemberMail(), verificationCode);
@@ -96,7 +95,7 @@ public class RegisterController {
         String code = request.get("code");
 
         try {
-            Optional<Member> optionalMember = memrepository.findByMemberMail(memberMail);
+            Optional<Member> optionalMember = memberRepository.findByMemberMail(memberMail);
             if (!optionalMember.isPresent()) {
                 return new ModelAndView("redirect:/errorPage").addObject("message", "未找到該電子郵件的用戶");
             }
@@ -113,7 +112,7 @@ public class RegisterController {
             // 驗證成功，清空驗證碼
             member.setVerificationCode(null);
             member.setVerificationCodeExpiry(null);
-            memrepository.save(member);
+            memberRepository.save(member);
 
             // 驗證成功，重定向到登入頁面，並返回成功消息
             ModelAndView modelAndView = new ModelAndView("redirect:/loginPage");

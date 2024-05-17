@@ -9,16 +9,14 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ezban.host.model.Host;
 import com.ezban.host.model.HostRepository;
 
-@Controller("hostRegisterController")
+@RestController
 public class RegisterController {
 
     @Autowired
@@ -29,7 +27,6 @@ public class RegisterController {
 
     @Transactional
     @PostMapping("/hostregister")
-    @ResponseBody
     public ResponseEntity<String> registerHost(@RequestBody Host host) {
         try {
             Optional<Host> existingHost = hostRepository.findByHostMail(host.getHostMail());
