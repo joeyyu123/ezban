@@ -3,6 +3,7 @@ package com.ezban.eventcoupon.model;
 
 import com.ezban.host.model.Host;
 import com.ezban.ticketorder.model.TicketOrder;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -49,9 +50,11 @@ public class EventCoupon implements java.io.Serializable {
     @Column(name = "event_coupon_discount", nullable = false)
     private Integer eventCouponDiscount;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Taipei")
     @Column(name = "start_time")
     private Timestamp startTime;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Taipei")
     @Column(name = "end_time")
     private Timestamp endTime;
 
