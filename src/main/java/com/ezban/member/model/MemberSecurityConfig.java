@@ -36,8 +36,7 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                              "/loginPage",
                              "/register",
                              "/forgotPassword",
-                             "/events/orders/**",
-                             "/events/order/**")
+                             "/events/**")
                 .and()
 
             .authorizeRequests()
@@ -45,7 +44,7 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                              "loginPage",
                              "/register",
                              "/forgotPassword","/").permitAll()
-                .antMatchers("/events/orders/**","/events/order/**").hasRole("Member")
+                .antMatchers("/events/orders/**","/events/order/**","/events/*/tickets").hasRole("Member")
                 .and()
 
             .formLogin()
@@ -62,7 +61,6 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
             .exceptionHandling()
                 .accessDeniedPage("/loginPage")
                 .and()
-
             .csrf().disable();
     }
 
