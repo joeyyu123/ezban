@@ -1,6 +1,5 @@
 package com.ezban.productcomment.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
@@ -17,12 +16,14 @@ import javax.validation.constraints.NotNull;
 
 import com.ezban.member.model.Member;
 import com.ezban.product.model.Product;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "product_comment")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ProductComment {
 
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_comment_no", nullable = false)
     private Integer productCommentNo;
@@ -51,7 +52,7 @@ public class ProductComment {
     @Column(name = "product_comment_status")
     private Integer productCommentStatus;
 
-    // Getter 和 Setter 方法
+    // Getters and Setters
     public Integer getProductCommentNo() {
         return productCommentNo;
     }
