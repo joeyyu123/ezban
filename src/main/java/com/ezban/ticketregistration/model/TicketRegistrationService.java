@@ -1,17 +1,16 @@
-package com.ezban.ticketregistration;
+package com.ezban.ticketregistration.model;
 
 import com.ezban.registrationform.model.RegistrationFormService;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TicketRegistrationService {
     @Autowired
     TicketRegistrationRepository registrationFormRepository;
-
-    @Autowired
-    RegistrationFormService registrationFormService;
 
 
     public void save(TicketRegistration ticketRegistration) {
@@ -24,6 +23,11 @@ public class TicketRegistrationService {
         ticketRegistration = registrationFormRepository.save(ticketRegistration);
 
         return ticketRegistration;
+    }
+
+    public List<TicketRegistration> findAllByEventNo(String eventNo){
+
+        return registrationFormRepository.findAllByEventNo(eventNo);
     }
 }
 

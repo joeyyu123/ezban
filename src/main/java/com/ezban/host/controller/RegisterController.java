@@ -8,40 +8,37 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ezban.member.model.Member;
-import com.ezban.member.model.MemberRepository;
+import com.ezban.host.model.Host;
+import com.ezban.host.model.HostRepository;
 
 @RestController
 public class RegisterController {
 
-	@Autowired
-	MemberRepository memrepository;
+    @Autowired
+    HostRepository hostRepository;
 
-	@PersistenceContext
-	private EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-	@Transactional
-//	@PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)	
-	@PostMapping("/registerMember")
-	public ResponseEntity<String> registerMember(@RequestBody Member member) {
-		try {
-			Optional<Member> existingMember = memrepository.findByMemberMail(member.getMemberMail());
-			if (existingMember.isPresent()) {
-			    return ResponseEntity.status(HttpStatus.CONFLICT).body("該電子郵件已被使用");
-			}
+    @Transactional
+    @PostMapping("/hostregister")
+    public ResponseEntity<String> registerHost(@RequestBody Host host) {
+        try {
+            Optional<Host> existingHost = hostRepository.findByHostMail(host.getHostMail());
+            if (existingHost.isPresent()) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("該電子郵件已被使用");
+            }
 
-			memrepository.save(member);
+            hostRepository.save(host);
 
-			return ResponseEntity.ok("註冊成功");
-		} catch (Exception e) {
-
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("註冊時發生內部錯誤" + e.getMessage());
-		}
-	}
+            return ResponseEntity.ok("註冊成功");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("註冊時發生內部錯誤" + e.getMessage());
+        }
+    }
 }

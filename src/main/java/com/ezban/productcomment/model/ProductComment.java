@@ -1,125 +1,110 @@
 package com.ezban.productcomment.model;
 
-import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import com.ezban.member.model.Member;
 import com.ezban.product.model.Product;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "product_comment")
 public class ProductComment {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "product_comment_no", nullable = false)
-	private Integer productCommentNo;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_comment_no", nullable = false)
+    private Integer productCommentNo;
 
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "product_no", nullable = false)
-	private Product product;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_no", nullable = false)
+    private Product product;
 
-	@NotNull
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_no", nullable = false)
-	private Member member;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_no", nullable = false)
+    private Member member;
 
-	@Column(name = "product_rate")
-	private Integer productRate;
+    @Min(1)
+    @Column(name = "product_rate")
+    private Integer productRate;
 
-	@Column(name = "product_comment_content")
-	private String productCommentContent;
+    @Column(name = "product_comment_content")
+    private String productCommentContent;
 
-	@NotNull
-	@Column(name = "product_comment_date", nullable = false)
-	private Timestamp productCommentDate;
+    @NotNull
+    @Column(name = "product_comment_date", nullable = false)
+    private LocalDateTime productCommentDate;
 
-	@Column(name = "product_comment_status")
-	private Byte productCommentStatus;
+    @Column(name = "product_comment_status")
+    private Integer productCommentStatus;
 
-	public ProductComment() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    // Getter 和 Setter 方法
+    public Integer getProductCommentNo() {
+        return productCommentNo;
+    }
 
-	public ProductComment(Integer productCommentNo, @NotNull Product product, @NotNull Member member,
-			Integer productRate, String productCommentContent, @NotNull Timestamp productCommentDate,
-			Byte productCommentStatus) {
-		super();
-		this.productCommentNo = productCommentNo;
-		this.product = product;
-		this.member = member;
-		this.productRate = productRate;
-		this.productCommentContent = productCommentContent;
-		this.productCommentDate = productCommentDate;
-		this.productCommentStatus = productCommentStatus;
-	}
+    public void setProductCommentNo(Integer productCommentNo) {
+        this.productCommentNo = productCommentNo;
+    }
 
-	public Integer getProductCommentNo() {
-		return productCommentNo;
-	}
+    public Product getProduct() {
+        return product;
+    }
 
-	public void setProductCommentNo(Integer productCommentNo) {
-		this.productCommentNo = productCommentNo;
-	}
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 
-	public Product getProduct() {
-		return product;
-	}
+    public Member getMember() {
+        return member;
+    }
 
-	public void setProduct(Product product) {
-		this.product = product;
-	}
+    public void setMember(Member member) {
+        this.member = member;
+    }
 
-	public Member getMember() {
-		return member;
-	}
+    public Integer getProductRate() {
+        return productRate;
+    }
 
-	public void setMember(Member member) {
-		this.member = member;
-	}
+    public void setProductRate(Integer productRate) {
+        this.productRate = productRate;
+    }
 
-	public Integer getProductRate() {
-		return productRate;
-	}
+    public String getProductCommentContent() {
+        return productCommentContent;
+    }
 
-	public void setProductRate(Integer productRate) {
-		this.productRate = productRate;
-	}
+    public void setProductCommentContent(String productCommentContent) {
+        this.productCommentContent = productCommentContent;
+    }
 
-	public String getProductCommentContent() {
-		return productCommentContent;
-	}
+    public LocalDateTime getProductCommentDate() {
+        return productCommentDate;
+    }
 
-	public void setProductCommentContent(String productCommentContent) {
-		this.productCommentContent = productCommentContent;
-	}
+    public void setProductCommentDate(LocalDateTime productCommentDate) {
+        this.productCommentDate = productCommentDate;
+    }
 
-	public Timestamp getProductCommentDate() {
-		return productCommentDate;
-	}
+    public Integer getProductCommentStatus() {
+        return productCommentStatus;
+    }
 
-	public void setProductCommentDate(Timestamp productCommentDate) {
-		this.productCommentDate = productCommentDate;
-	}
-
-	public Byte getProductCommentStatus() {
-		return productCommentStatus;
-	}
-
-	public void setProductCommentStatus(Byte productCommentStatus) {
-		this.productCommentStatus = productCommentStatus;
-	}
-
-	@Override
-	public String toString() {
-		return "Product_comment [productCommentNo=" + productCommentNo + ", product=" + product + ", member=" + member
-				+ ", productRate=" + productRate + ", productCommentContent=" + productCommentContent
-				+ ", productCommentDate=" + productCommentDate + ", productCommentStatus=" + productCommentStatus + "]";
-	}
-
+    public void setProductCommentStatus(Integer productCommentStatus) {
+        this.productCommentStatus = productCommentStatus;
+    }
 }
