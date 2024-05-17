@@ -56,7 +56,7 @@ create table admin
 
 INSERT INTO admin (admin_account, admin_pwd, admin_mail, admin_phone, admin_status, admin_name)
 
-VALUES  
+VALUES
 ( 'AY6KQZZh', 'NkzkVJ2JUH', 'u8yzliwj@gmail.com', '0989599470', 1,'陳昊天'),
 ( 'mE1rur8H', 'cR7eCn9dEd8rISQ', 'yeocffh6b3wj@gmail.com', '0980469290', 1, '王晨曦'),
 ( 'mX14vJUo7MYQA', 'DsPLWXZ8jKoEz', 'pygvd8xpeex8vbf@gmail.com', '0926584626', 1, '張宇宸'),
@@ -67,7 +67,7 @@ VALUES
 ( 'cznsnaRVakuaAoV', 'ZT4TMNkhLeLfuF2', 'g6gdfowqi4gpkqy@gmail.com', '0906019527', 1, '林啟航'),
 ( 'oy8EgoOTY2q', 'JR72fjeSNKYnX', 'zes7tkfl9dkmzub@gmail.com', '0942943961', 1, '陳心悅'),
 ( 'lE6XihvE', 'BbCqJsKgu', 'vbrdpx7u4qjv0@gmail.com', '0901244156', 1, '鄭晨星');
- 
+
 
 create table event_category
 (
@@ -149,7 +149,7 @@ create table host
     host_phone   varchar(15) null,
     host_status  tinyint     null,
     host_login   DATETIME null,
-    
+
     constraint host_uk_1
         unique (host_account),
     constraint host_uk_2
@@ -1583,6 +1583,51 @@ VALUES ('Skyline Film 屋頂電影院', 7, 1,
         '2024-5-22 06:00:00', '2024-5-22 12:00:00', 1, 5, 1, 0);
 
 
+create table event_coupon
+(
+    event_coupon_no       int auto_increment
+        primary key,
+    host_no               int         not null,
+    event_coupon_name     varchar(100) null,
+    coupon_code           varchar(10) not null,
+    usage_limit           int         not null,
+    remaining_times       int null,
+    min_spend             int null,
+    event_coupon_discount int         not null,
+    start_time            datetime null,
+    end_time              datetime null,
+    event_coupon_status   tinyint     not null,
+    coupon_desc           varchar(150) null,
+    constraint event_coupon_uk
+        unique (coupon_code),
+    constraint event_coupon_host_host_no_fk
+        foreign key (host_no) references host (host_no)
+);
+
+insert into event_coupon (host_no, event_coupon_name, coupon_code, usage_limit, remaining_times, min_spend,
+                          event_coupon_discount, start_time, end_time, event_coupon_status, coupon_desc)
+values (1, '城市馬拉松優惠', 'RUN2024', 500, 500, 0, 10, '2024-04-17 00:00:00', '2024-04-18 23:59:59', 1,
+        '參加城市馬拉松可享受九折優惠'),
+       (2, '古典音樂夜優惠', 'MUSIC2024', 300, 300, 100, 15, '2024-04-22 00:00:00', '2024-04-23 23:59:59', 1,
+        '購買音樂會門票滿100元享八五折'),
+       (3, '市場營銷高峰會折扣', 'MKT2024', 200, 200, 200, 20, '2024-04-29 00:00:00', '2024-04-30 23:59:59', 1,
+        '研討會報名滿200元可享八折'),
+       (4, '現代藝術展門票', 'ART2024', 250, 250, 150, 10, '2024-05-05 00:00:00', '2024-05-06 23:59:59', 1,
+        '購票滿150元享九折'),
+       (5, '全國游泳錦標賽優惠', 'SWIM2024', 400, 400, 0, 5, '2024-05-11 00:00:00', '2024-05-12 23:59:59', 1,
+        '報名費直接享九五折'),
+       (6, '莎士比亞戲劇節', 'DRAMA2024', 350, 350, 0, 20, '2024-05-17 00:00:00', '2024-05-18 23:59:59', 1,
+        '所有戲票八折優惠'),
+       (7, '國際電影節門票優惠', 'FILM2024', 500, 500, 100, 25, '2024-05-23 00:00:00', '2024-05-24 23:59:59', 1,
+        '電影票滿100元享七五折'),
+       (8, '法式烹飪工作坊折扣', 'COOK2024', 150, 150, 300, 15, '2024-05-29 00:00:00', '2024-05-30 23:59:59', 1,
+        '烹飪課程滿300元享八五折'),
+       (9, '自然攝影工作坊優惠', 'PHOTO2024', 100, 100, 250, 20, '2024-06-04 00:00:00', '2024-06-05 23:59:59', 1,
+        '攝影課程滿250元可享八折'),
+       (10, '水彩畫課程優惠', 'PAINT2024', 200, 200, 150, 10, '2024-06-09 00:00:00', '2024-06-10 23:59:59', 1,
+        '畫課滿150元享九折');
+
+
 create table member
 (
     member_no                int auto_increment
@@ -1599,6 +1644,9 @@ create table member
     common_recipient_phone   varchar(15)  null,
     common_recipient_address varchar(200) null,
     member_status            tinyint default 0,
+    reset_token				 varchar(200) null,
+    verification_code		 varchar(200) null,
+    verification_code_expiry	 datetime null,
     constraint member_uk1
         unique (member_mail),
     constraint member_uk2
@@ -1935,7 +1983,7 @@ create table qrcode_ticket
 ) auto_increment = 3120001;
 
 INSERT INTO qrcode_ticket (ticket_order_detail_no, member_no, ticket_usage_status, ticket_valid_time)
-VALUES  
+VALUES
 	(1, 1, 0, NOW()),
     (2, 2, 1, NOW()),
     (3, 3, 2, NOW()),

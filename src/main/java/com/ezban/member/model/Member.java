@@ -1,6 +1,7 @@
 package com.ezban.member.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -76,6 +77,15 @@ public class Member implements Serializable {
 	@Column(name = "member_points")
 	private Integer memberPoints;
 	
+	@Column(name = "reset_token")
+	private String resetToken;
+	
+	@Column(name = "verification_code")
+	private String verificationCode;
+	
+	@Column(name = "verification_code_expiry")
+    private LocalDateTime verificationCodeExpiry;
+	
 	//生日優惠券用
 	@OneToMany(mappedBy = "member")
     private Set<BirthdayCouponHolder> couponHolders;
@@ -85,15 +95,12 @@ public class Member implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	
-	 public Member(Integer memberNo) {
-	        this.memberNo = memberNo;
-	    }
-
 	public Member(Integer memberNo, @NotNull @Size(max = 50) String memberMail,
 			@NotNull @Size(max = 20) String memberPwd, @Size(max = 50) String memberName, Date birthday, Integer gender,
 			@Size(max = 15) String memberPhone, @Size(max = 200) String address, @Size(max = 50) String commonRecipient,
 			@Size(max = 15) String commonRecipientPhone, @Size(max = 200) String commonRecipientAddress,
-			Byte memberStatus, Integer memberPoints) {
+			Byte memberStatus, Integer memberPoints, String resetToken, String verificationCode,
+			LocalDateTime verificationCodeExpiry) {
 		super();
 		this.memberNo = memberNo;
 		this.memberMail = memberMail;
@@ -108,8 +115,11 @@ public class Member implements Serializable {
 		this.commonRecipientAddress = commonRecipientAddress;
 		this.memberStatus = memberStatus;
 		this.memberPoints = memberPoints;
+		this.resetToken = resetToken;
+		this.verificationCode = verificationCode;
+		this.verificationCodeExpiry = verificationCodeExpiry;
 	}
-
+	
 	public Integer getMemberNo() {
 		return memberNo;
 	}
@@ -213,16 +223,44 @@ public class Member implements Serializable {
 	public void setMemberPoints(Integer memberPoints) {
 		this.memberPoints = memberPoints;
 	}
+
+	public String getResetToken() {
+		return resetToken;
+	}
+
+	public void setResetToken(String resetToken) {
+		this.resetToken = resetToken;
+	}
+
+	public String getVerificationCode() {
+		return verificationCode;
+	}
+
+	public void setVerificationCode(String verificationCode) {
+		this.verificationCode = verificationCode;
+	}
+
+	public LocalDateTime getVerificationCodeExpiry() {
+		return verificationCodeExpiry;
+	}
+
+	public void setVerificationCodeExpiry(LocalDateTime verificationCodeExpiry) {
+		this.verificationCodeExpiry = verificationCodeExpiry;
+	}
 	
+	
+
 	@Override
 	public String toString() {
 		return "Member [memberNo=" + memberNo + ", memberMail=" + memberMail + ", memberPwd=" + memberPwd
 				+ ", memberName=" + memberName + ", birthday=" + birthday + ", gender=" + gender + ", memberPhone="
 				+ memberPhone + ", address=" + address + ", commonRecipient=" + commonRecipient
 				+ ", commonRecipientPhone=" + commonRecipientPhone + ", commonRecipientAddress="
-				+ commonRecipientAddress + ", memberStatus=" + memberStatus + ", memberPoints=" + memberPoints + "]";
+				+ commonRecipientAddress + ", memberStatus=" + memberStatus + ", memberPoints=" + memberPoints
+				+ ", resetToken=" + resetToken + ", verificationCode=" + verificationCode + ", verificationCodeExpiry="
+				+ verificationCodeExpiry + "]";
 	}
-	
+
 	//生日優惠券用
 	public Set<BirthdayCouponHolder> getCouponHolders() {
 		return couponHolders;

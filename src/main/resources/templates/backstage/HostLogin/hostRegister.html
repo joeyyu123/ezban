@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<title>註冊新主機</title>
-<style>
-.error {
-	color: red;
-}
+    <meta charset="UTF-8">
+    <title>註冊新主機</title>
+    <style>
+        .error {
+            color: red;
+        }
 
-.success {
-	color: green;
-}
-</style>
-<script>
+        .success {
+            color: green;
+        }
+    </style>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             let checkedAccount = false;
             let checkedName = false;
@@ -188,83 +188,87 @@
 
 
          // 提交註冊表單
-            document.getElementById('hostregister').addEventListener('submit', function(event) {
-    event.preventDefault();
-    let allChecked = checkedAccount && checkedName && checkedMail && checkedPhone && checkedVerificationCode;
+            document.getElementById('registerForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                let allChecked = checkedAccount && checkedName && checkedMail && checkedPhone && checkedVerificationCode;
 
-    if (!allChecked) {
-        alert('請檢查所有欄位');
-        return;
-    }
+                if (!allChecked) {
+                    alert('請檢查所有欄位');
+                    return;
+                }
 
-    document.querySelectorAll('.error').forEach(span => span.textContent = '');
-    document.getElementById('errorMessage').textContent = '';
+                document.querySelectorAll('.error').forEach(span => span.textContent = '');
+                document.getElementById('errorMessage').textContent = '';
 
-    // 構造表單資料
-    const formData = new FormData(this);
-    const jsonData = {};
-    formData.forEach((value, key) => {
-        if (key !== 'verificationCode') {
-            jsonData[key] = value;
-        }
-    });
+                // 構造表單資料
+                const formData = new FormData(this);
+                const jsonData = {};
+                formData.forEach((value, key) => {
+                    if (key !== 'verificationCode') {
+                        jsonData[key] = value;
+                    }
+                });
 
-    console.log("Sending JSON Data:", jsonData);
+                console.log("Sending JSON Data:", jsonData);
 
- // 發送表單資料
-    fetch('http://localhost:8080/api/host/hostregister', {
-        method: 'POST',
-        body: JSON.stringify(jsonData),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('註冊成功');
-            setTimeout(() => {
-                window.location.href = '/hostlogin'; // 成功後1秒跳轉
-            }, 500);
-        } else {
-            const message = data.message || '註冊失敗，請重試。';
-            document.getElementById('errorMessage').textContent = message;
-        }
-    })
-    .catch(error => {
-        console.error('Fetch Error:', error);
-        document.getElementById('errorMessage').textContent = '註冊失敗，請重試。';
-    });
-});
+                // 發送表單資料
+                fetch('http://localhost:8080/api/host/register', {
+                    method: 'POST',
+                    body: JSON.stringify(jsonData),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        console.error(`HTTP error! status: ${response.status}`);
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert('註冊成功');
+                        console.log(data);
+                    } else {
+                        const message = data.message || '註冊失敗，請重試。';
+                        document.getElementById('errorMessage').textContent = message;
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch Error:', error);
+                    document.getElementById('errorMessage').textContent = '註冊失敗，請重試。';
+                });
+            });
         });
     </script>
 </head>
 <body>
-	<h1>企業會員註冊</h1>
-	<form id="hostregister"
-		action="http://localhost:8080/api/host/hostregister" method="post">
-		<label for="hostAccount">企業帳號:</label> <input type="text"
-			id="hostAccount" name="hostAccount" required> <br> <span
-			id="accountError" class="error"></span><br> <label
-			for="hostName">企業名稱:</label> <input type="text" id="hostName"
-			name="hostName" required> <br> <span id="nameError"
-			class="error"></span><br> <label for="hostMail">電子郵件:</label> <input
-			type="email" id="hostMail" name="hostMail" required>
-		<button type="button" id="checkMailButton">檢查電子郵件</button>
-		<br> <span id="mailError" class="error"></span><br>
+    <h1>企業會員註冊</h1>
+    <form id="registerForm" action="http://localhost:8080/api/host/register" method="post">
+        <label for="hostAccount">企業帳號:</label> 
+        <input type="text" id="hostAccount" name="hostAccount" required>
+        <br> <span id="accountError" class="error"></span><br> 
+        <label for="hostName">企業名稱:</label> 
+        <input type="text" id="hostName" name="hostName" required>
+        <br> <span id="nameError" class="error"></span><br> 
+        <label for="hostMail">電子郵件:</label> 
+        <input type="email" id="hostMail" name="hostMail" required>
+        <button type="button" id="checkMailButton">檢查電子郵件</button>
+        <br> <span id="mailError" class="error"></span><br>
 
-		<div id="verificationSection" style="display: none;">
-			<label for="verificationCode">驗證碼:</label> <input type="text"
-				id="verificationCode" name="verificationCode"> <br> <span
-				id="verificationCodeError" class="error"></span><br>
-		</div>
+        <div id="verificationSection" style="display:none;">
+            <label for="verificationCode">驗證碼:</label> 
+            <input type="text" id="verificationCode" name="verificationCode">
+            <br> <span id="verificationCodeError" class="error"></span><br>
+        </div>
 
-		<label for="hostPhone">手機號碼:</label> <input type="text" id="hostPhone"
-			name="hostPhone" required> <br> <span id="phoneError"
-			class="error"></span><br>
+        <label for="hostPhone">手機號碼:</label> 
+        <input type="text" id="hostPhone" name="hostPhone" required>
+        <br> <span id="phoneError" class="error"></span><br>
 
-		<button type="submit">註冊</button>
-	</form>
-	<p id="errorMessage" class="error"></p>
+        <button type="submit">註冊</button>
+    </form>
+    <p id="errorMessage" class="error"></p>
 </body>
 </html>
