@@ -50,8 +50,7 @@ public class HostSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
             .logout()
-                .logoutSuccessUrl("/hostlogin")  // Updated to match the login URL without the .html suffix
-                .permitAll()
+                .logoutSuccessUrl("/hostlogin")  
                 .and()
             .csrf().disable();
     }
