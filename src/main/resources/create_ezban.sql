@@ -1646,7 +1646,7 @@ create table member
     member_status            tinyint default 0,
     reset_token				 varchar(200) null,
     verification_code		 varchar(200) null,
-    verification_codeExpiry	 datetime null,
+    verification_code_expiry	 datetime null,
     constraint member_uk1
         unique (member_mail),
     constraint member_uk2
