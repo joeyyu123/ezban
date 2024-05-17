@@ -19,6 +19,9 @@ public class MemberService {
 	public Member getMemberById(Integer memberNo) {
 		return memrepository.getById(memberNo);
 	}
+	public Member getMemberByMemberNo(String memberNo) {
+		return memrepository.getReferenceById(Integer.valueOf(memberNo));
+	}
 
 	public Member getMemberByMemberMail(String memberMail) {
 		Optional<Member> optionalMember = memrepository.findByMemberMail(memberMail);
