@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -23,16 +23,14 @@ public class HostSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-// 加密       return new BCryptPasswordEncoder();
-    	
-    	return NoOpPasswordEncoder.getInstance();
+        return new BCryptPasswordEncoder();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-            .userDetailsService(hostUserDetailsService); //增加加密;記得拿掉
-   //這是加密邏輯   .passwordEncoder(passwordEncoder());
+            .userDetailsService(hostUserDetailsService)
+            .passwordEncoder(passwordEncoder());
     }
 
     @Override
@@ -43,14 +41,14 @@ public class HostSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/backstage/**", "/qaback**").authenticated()
                 .and()
             .formLogin()
-                .loginPage("/hostlogin")
+                .loginPage("/hostLogin.html")
                 .loginProcessingUrl("/login")
                 .successHandler(authenticationSuccessHandler())
                 .failureHandler(authenticationFailureHandler())
                 .permitAll()
                 .and()
             .logout()
-                .logoutSuccessUrl("/hostlogin")  // Updated to match the login URL without the .html suffix
+                .logoutSuccessUrl("/hostLogin.html")
                 .permitAll()
                 .and()
             .csrf().disable();
@@ -66,10 +64,8 @@ public class HostSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
         SimpleUrlAuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();
-        failureHandler.setDefaultFailureUrl("/hostlogin");  // Updated to remove the .html suffix
+        failureHandler.setDefaultFailureUrl("/hostLogin.html?error=true");
         failureHandler.setUseForward(false);
         return failureHandler;
     }
-    
-    
 }

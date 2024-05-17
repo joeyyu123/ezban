@@ -14,6 +14,7 @@ import java.util.Set;
 @Service
 public class HostService {
 
+
 	@Autowired
 	private HostRepository hostRepository;
 
@@ -212,5 +213,4 @@ public class HostService {
 	public Set<EventCoupon> getEventCouponsByHostNo(Integer hostNo) {
 		return getOneHost(hostNo).getEventCoupons();
 	}
-
 }

@@ -45,7 +45,7 @@ create table admin
     admin_name    varchar(50) null,
     admin_mail    varchar(50) null,
     admin_phone   varchar(15) null,
-    admin_status  tinyint     null,
+    admin_status  tinyint null,
     constraint admin_uk_1
         unique (admin_account),
     constraint admin_uk_2
@@ -137,6 +137,7 @@ VALUES (1, 1),
 
 
 
+
 create table host
 (
     host_no      int auto_increment
@@ -175,6 +176,7 @@ create table event
 (
     event_no               int auto_increment
         primary key,
+
     event_img              longblob     null,
     event_name             varchar(50)  not null,
     event_category_no      int          null,
@@ -1586,16 +1588,16 @@ create table event_coupon
 (
     event_coupon_no       int auto_increment
         primary key,
-    host_no               int          not null,
+    host_no               int         not null,
     event_coupon_name     varchar(100) null,
-    coupon_code           varchar(10)  not null,
-    usage_limit           int          not null,
-    remaining_times       int          null,
-    min_spend             int          null,
-    event_coupon_discount int          not null,
-    start_time            datetime     null,
-    end_time              datetime     null,
-    event_coupon_status   tinyint      not null,
+    coupon_code           varchar(10) not null,
+    usage_limit           int         not null,
+    remaining_times       int null,
+    min_spend             int null,
+    event_coupon_discount int         not null,
+    start_time            datetime null,
+    end_time              datetime null,
+    event_coupon_status   tinyint     not null,
     coupon_desc           varchar(150) null,
     constraint event_coupon_uk
         unique (coupon_code),
@@ -1631,16 +1633,16 @@ create table member
 (
     member_no                int auto_increment
         primary key,
-    member_mail              varchar(50)  not null,
-    member_pwd               varchar(20)  not null,
-    member_name              varchar(50)  null,
-    birthday                 date         null,
-    gender                   tinyint      null,
+    member_mail              varchar(50) not null,
+    member_pwd               varchar(20) not null,
+    member_name              varchar(50) null,
+    birthday                 date null,
+    gender                   tinyint null,
     member_points            int     default 0,
-    member_phone             varchar(15)  null,
+    member_phone             varchar(15) null,
     address                  varchar(200) null,
-    common_recipient         varchar(50)  null,
-    common_recipient_phone   varchar(15)  null,
+    common_recipient         varchar(50) null,
+    common_recipient_phone   varchar(15) null,
     common_recipient_address varchar(200) null,
     member_status            tinyint default 0,
     reset_token				 varchar(200) null,
@@ -1699,12 +1701,12 @@ create table event_comment
 (
     event_comment_no      int auto_increment
         primary key,
-    event_no              int      not null,
-    member_no             int      not null,
-    event_comment_rate    int      null,
-    event_comment_content text     null,
+    event_no              int not null,
+    member_no             int not null,
+    event_comment_rate    int null,
+    event_comment_content text null,
     event_comment_time    datetime null,
-    event_comment_status  tinyint  null,
+    event_comment_status  tinyint null,
     constraint event_comment_event_event_no_fk
         foreign key (event_no) references event (event_no),
     constraint event_comment_member_member_no_fk
@@ -1731,8 +1733,8 @@ create table event_comment_report
         primary key,
     event_comment_no        int      not null,
     member_no               int      not null,
-    admin_no                int      null,
-    report_reason           text     null,
+    admin_no                int null,
+    report_reason           text null,
     report_time             datetime not null,
     report_status           tinyint  not null,
     constraint event_comment_report_admin_admin_no_fk
@@ -1751,12 +1753,12 @@ create table notification
 (
     notification_no      int auto_increment
         primary key,
-    member_no            int          null,
-    host_no              int          null,
-    admin_no             int          null,
+    member_no            int null,
+    host_no              int null,
+    admin_no             int null,
     notification_content varchar(200) null,
-    read_status          tinyint      null,
-    notification_time    datetime     null,
+    read_status          tinyint null,
+    notification_time    datetime null,
     constraint notification_host_host_no_fk
         foreign key (host_no) references host (host_no),
     constraint notification_member_member_no_fk
@@ -1780,8 +1782,8 @@ create table points_record
 (
     points_record_no int auto_increment
         primary key,
-    member_no        int      not null,
-    points_changed   int      not null,
+    member_no        int not null,
+    points_changed   int not null,
     transaction_time datetime null,
     constraint points_record_member_member_no_fk
         foreign key (member_no) references member (member_no)
@@ -1805,7 +1807,7 @@ create table qa
     qa_no      int auto_increment
         primary key,
     qa_title   varchar(50) null,
-    qa_content longtext    null
+    qa_content longtext null
 );
 
 INSERT INTO qa (qa_title, qa_content)
@@ -1836,7 +1838,7 @@ create table save_event
 
 INSERT INTO save_event (member_no, event_no)
 VALUES (1, 1),
-       (2, 2),
+	   (2, 2),
        (3, 3),
        (4, 4),
        (5, 5),
@@ -1852,16 +1854,16 @@ create table ticket_order
     ticket_order_no                int auto_increment
         primary key,
     member_no                      int      not null,
-    event_coupon_no                int      null,
+    event_coupon_no                int null,
     ticket_order_amount            int      not null,
-    event_coupon_discount          int      null,
+    event_coupon_discount          int null,
     ticket_checkout_amount         int      not null,
     ticket_order_time              datetime not null,
     ticket_order_pay_time          datetime null,
     ticket_order_payment_status    tinyint  not null default 0,
-    ticket_order_status            tinyint  null,
-    ticket_order_allocation_amount int      null,
-    ticket_order_allocation_status tinyint  null,
+    ticket_order_status            tinyint null,
+    ticket_order_allocation_amount int null,
+    ticket_order_allocation_status tinyint null,
     constraint ticket_order_event_coupon_event_coupon_no_fk
         foreign key (event_coupon_no) references event_coupon (event_coupon_no),
     constraint ticket_order_member_member_no_fk
@@ -1885,60 +1887,61 @@ VALUES (1, 1, 2850, 10, 2840, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3, 1),
 
 create table ticket_type
 (
-    ticket_type_no          int auto_increment
+    ticket_type_no       int auto_increment
         primary key,
-    event_no                int           not null,
-    ticket_type_name        varchar(50)   not null,
-    included_tickets        int default 1 not null,
-    purchase_start_time     datetime      not null,
-    purchase_end_time       datetime      not null,
-    ticket_type_info        varchar(200)  null,
-    ticket_type_price       int           not null,
-    ticket_type_qty         int           not null,
-    remaining_ticket_qty    int           null,
-    purchase_quantity_limit int           not null,
+    event_no             int           not null,
+    ticket_type_name     varchar(50)   not null,
+    included_tickets     int default 1 not null,
+    purchase_start_time  datetime      not null,
+    purchase_end_time    datetime      not null,
+    ticket_type_info     varchar(200) null,
+    ticket_type_price    int           not null,
+    ticket_type_qty      int           not null,
+    remaining_ticket_qty int null,
     constraint ticket_type_fk
         foreign key (event_no) references event (event_no)
 );
 
 INSERT INTO ticket_type (event_no, ticket_type_name, included_tickets, purchase_start_time, purchase_end_time,
-                         ticket_type_price, ticket_type_qty, remaining_ticket_qty, Purchase_quantity_limit)
-VALUES (1, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
-       (1, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
-       (1, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
-       (2, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
-       (2, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
-       (2, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
-       (3, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
-       (3, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
-       (3, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
-       (4, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
-       (4, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
-       (4, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
-       (5, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
-       (5, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
-       (5, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
-       (6, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
-       (6, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
-       (6, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
-       (7, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
-       (7, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
-       (7, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
-       (8, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
-       (8, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
-       (8, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
-       (9, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
-       (9, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
-       (9, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
-       (10, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
-       (10, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
-       (10, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
-       (11, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
-       (11, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
-       (11, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
-       (12, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
-       (12, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
-       (12, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5);
+                         ticket_type_price, ticket_type_qty)
+VALUES (1, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
+       (1, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
+       (1, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
+       (2, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
+       (2, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
+       (2, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
+       (3, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
+       (3, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
+       (3, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
+       (4, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
+       (4, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
+       (4, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
+       (5, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
+       (5, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
+       (5, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
+       (6, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
+       (6, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
+       (6, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
+       (7, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
+       (7, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
+       (7, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
+       (8, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
+       (8, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
+       (8, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
+       (9, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
+       (9, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
+       (9, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
+       (10, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
+       (10, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
+       (10, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
+       (11, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
+       (11, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
+       (11, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
+       (12, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
+       (12, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
+       (12, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100);
+
+
 
 
 
@@ -1987,13 +1990,13 @@ create table qrcode_ticket
         primary key,
     ticket_order_detail_no int      not null,
     member_no              int      not null,
-    ticket_usage_status    tinyint  null,
+    ticket_usage_status    tinyint null,
     ticket_valid_time      datetime not null,
     constraint qrcode_ticket_member_member_no_fk
         foreign key (member_no) references member (member_no),
     constraint qrcode_ticket_ticket_order_detail_ticket_order_detail_no_fk
         foreign key (ticket_order_detail_no) references ticket_order_detail (ticket_order_detail_no)
-) auto_increment = 3120001;
+)auto_increment = 3120001;
 
 INSERT INTO qrcode_ticket (ticket_order_detail_no, member_no, ticket_usage_status, ticket_valid_time)
 VALUES (1, 1, 0, NOW()),
@@ -2027,18 +2030,18 @@ VALUES ('服飾'),
 create table product
 (
     product_no           int auto_increment,
-    product_category_no  int         null,
+    product_category_no  int null,
     product_name         varchar(20) null,
-    host_no              int         not null,
-    product_desc         text        null,
-    product_price        int         not null,
-    product_add_qty      int         not null,
-    remaining_qty        int         null,
-    product_add_time     datetime    null,
-    product_remove_time  datetime    null,
-    product_status       tinyint     not null,
-    product_total_rating int         null,
-    product_rating_count int         null,
+    host_no              int     not null,
+    product_desc         text null,
+    product_price        int     not null,
+    product_add_qty      int     not null,
+    remaining_qty        int null,
+    product_add_time    datetime null,
+    product_remove_time  datetime null,
+    product_status       tinyint not null,
+    product_total_rating int null,
+    product_rating_count int null,
     constraint product_pk
         primary key (product_no),
     constraint product_host_host_no_fk
@@ -2106,7 +2109,7 @@ create table product_comment
     product_no              int      not null,
     member_no               int      not null,
     product_rate            int      not null,
-    product_comment_content text     null,
+    product_comment_content text null,
     product_comment_date    datetime not null,
     product_comment_status  tinyint  not null,
     constraint product_comment_member_member_no_fk
@@ -2133,7 +2136,7 @@ create table product_comment_report
         primary key,
     product_comment_no        int          not null,
     member_no                 int          not null,
-    admin_no                  int          null,
+    admin_no                  int null,
     report_reason             varchar(100) not null,
     report_date               datetime     not null,
     report_status             tinyint      not null,
@@ -2186,7 +2189,7 @@ values (1, 1, 2, '商品描述中含有不當字眼', now(), 0),
        (10, 8, 2, '商品照片放太少,不夠我參考', now(), 0),
        (5, 7, 2, '價格太便宜懷疑材質有問題', now(), 0);
 
-
+       
 create table product_order
 (
     product_order_no                int primary key auto_increment not null,
@@ -2253,14 +2256,14 @@ values (1, 1001, 1, 250, 0),
        (2, 1009, 1, 350, 1),
        (3, 1009, 2, 600, 0);
 
-
+       
 create table save_product
 (
     save_product_no int     not null auto_increment primary key,
     member_no       int     not null,
     product_no      int     not null,
     save_status     tinyint not null,
-
+    
     foreign key (member_no) references member (member_no),
     foreign key (product_no) references product (product_no)
 );
