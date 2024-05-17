@@ -25,7 +25,7 @@ public class MemberUserDetailsService  implements UserDetailsService{
             Member mem = query.getSingleResult();
 
             return User.builder()
-                .username(mem.getMemberMail())
+                .username(String.valueOf(mem.getMemberNo()))
                 .password(mem.getMemberPwd())
                 .roles("Member") // 您可以根據需求設置適當的角色
                 .build();
