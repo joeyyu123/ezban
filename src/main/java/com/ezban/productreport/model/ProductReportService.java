@@ -3,7 +3,6 @@ package com.ezban.productreport.model;
 import java.util.List;
 import java.util.Optional;
 
-import com.ezban.admin.model.Admin;
 import com.ezban.admin.model.AdminRepository;
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberRepository;

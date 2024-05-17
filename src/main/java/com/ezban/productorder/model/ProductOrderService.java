@@ -3,7 +3,9 @@ package com.ezban.productorder.model;
 import com.ezban.birthdaycoupon.model.BirthdayCoupon;
 import com.ezban.birthdaycoupon.model.BirthdayCouponRepository;
 import com.ezban.product.model.Product;
-import com.ezban.productreport.model.ProductReport;
+import com.ezban.product.model.ProductRepository;
+import com.ezban.productorderdetail.model.ProductOrderDetail;
+import com.ezban.productorderdetail.model.ProductOrderDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,12 @@ public class ProductOrderService {
 
     @Autowired
     BirthdayCouponRepository birthdayCouponRepository;
+
+    @Autowired
+    ProductRepository productRepository;
+
+    @Autowired
+    ProductOrderDetailRepository productOrderDetailRepository;
 
     // 新增訂單
     public void addProductOrder(@Valid AddProductOrderDTO addProductOrderDTO) {
@@ -43,6 +51,28 @@ public class ProductOrderService {
         repository.save(productOrder);
     }
 
+    /*
+    訂單狀態別:
+
+    ProductPaymentStatus:
+    0:已付款
+    1:已退款
+
+    =======================================
+    ProductProcessStatus:
+    0:備貨中
+    1:已取消
+    2:已出貨
+    3:已退貨
+    4:已結案
+
+    =======================================
+    ProductOrderAllocationStatus:
+    0:未撥款
+    1:已撥款
+
+    =======================================
+    */
 
     // 員工更新訂單內容
     public void updateProductOrder(UpdateProductOrderDTO updateProductOrderDTO) {
@@ -50,7 +80,7 @@ public class ProductOrderService {
         if (optionalProductOrder.isPresent()) {
             ProductOrder productOrder = optionalProductOrder.get();
 
-            // 比較更新前後的訂單資訊，確認是否有修改
+            // 比對更新前後的訂單資訊，確認是否有修改
             boolean hasChanges =
                     (productOrder.getProductPaymentStatus() == null && updateProductOrderDTO.getProductPaymentStatus() != null) ||
                             (productOrder.getProductPaymentStatus() != null && !productOrder.getProductPaymentStatus().equals(updateProductOrderDTO.getProductPaymentStatus())) ||
@@ -60,30 +90,21 @@ public class ProductOrderService {
                             (productOrder.getProductOrderAllocationStatus() != null && !productOrder.getProductOrderAllocationStatus().equals(updateProductOrderDTO.getProductOrderAllocationStatus()));
             // 更新
             if (hasChanges) {
+
+                // 如果ProductProcessStatus 狀態改為 4(已結案)，則設置訂單結案時間為當前系統時間
+                if (productOrder.getProductProcessStatus() == 4) {
+                    productOrder.setOrderClosedate(Timestamp.valueOf(LocalDateTime.now()));
+                }
                 productOrder.setProductPaymentStatus(updateProductOrderDTO.getProductPaymentStatus());
                 productOrder.setProductOrderAllocationStatus(updateProductOrderDTO.getProductOrderAllocationStatus());
+                productOrder.setProductProcessStatus(updateProductOrderDTO.getProductProcessStatus());
 
-                // 如果 ProductProcessStatus 狀態為 0(備貨中), 訂單才能作取消的動作
-                if (productOrder.getProductProcessStatus() == 0) {
-                    productOrder.setProductProcessStatus(updateProductOrderDTO.getProductProcessStatus());
-
-                    // 如果ProductProcessStatus 狀態改為 4(已結案)，則設置訂單結案時間為當前系統時間
-                    if (productOrder.getProductProcessStatus() == 4) {
-                        productOrder.setOrderClosedate(Timestamp.valueOf(LocalDateTime.now()));
-
-                    }
-                }else {
-
-                    throw new RuntimeException("* 訂單已無法取消，因為當前狀態不允許取消 ！");
-                }
-                    repository.save(productOrder);
+                repository.save(productOrder);
 
             } else {
-
-                throw new RuntimeException("* 若無更改內容，請點擊取消修改 ！");
+                throw new RuntimeException("* 若無更改內容，請點擊取消修改按鈕 ！");
             }
         } else {
-
             throw new RuntimeException("* 查無訂單可進行修改 ！");
         }
     }
@@ -125,12 +146,26 @@ public class ProductOrderService {
                 productOrder.setProductOrderNo(cancelProductOrderDTO.getProductOrderNo());
                 productOrder.setProductProcessStatus((byte) 1);
 
+
+                //若會員取消訂單，則回補庫存數量
+                for (ProductOrderDetail productOrderDetail : productOrder.getProductOrderDetails()) {
+                    int canceledQuantity = productOrderDetail.getProductQty();
+                    Product product = productOrderDetail.getProduct();
+                    int currentStock = product.getRemainingQty();
+
+                    //現有庫存+商品取消數量=新的庫存量
+                    int updatedStock = currentStock + canceledQuantity;
+                    product.setRemainingQty(updatedStock);
+                }
+
+                // 保存更新後的訂單可一併回補商品數量
                 repository.save(productOrder);
             } else {
-                throw new RuntimeException("* 訂單已無法取消，請洽客服人員 ！");
+                throw new RuntimeException("* 訂單已完成備貨處理無法取消訂單，如有需要請洽客服人員 ！");
             }
         }
     }
+
 
     // 會員取消訂單的條件判斷
     private boolean isCancelAllowed(ProductOrder productOrder) {
@@ -146,7 +181,7 @@ public class ProductOrderService {
         if (optionalProductOrder.isPresent()) {
             ProductOrder productOrder = optionalProductOrder.get();
 
-            // 比較更新前後的訂單資訊，確認是否有修改
+            // 比對更新前後的訂單資訊，確認是否有修改
             boolean hasChanges =
                     (productOrder.getRecipient() == null && updateProductOrderByHostDTO.getRecipient() != null) ||
                             (productOrder.getRecipient() != null && !productOrder.getRecipient().equals(updateProductOrderByHostDTO.getRecipient())) ||
