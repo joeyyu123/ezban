@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>ezban | edit</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link th:include="backstage/index :: head">
+
+    <style>
+        button {
+            padding: 5px;
+        }
+
+        form {
+            display: table;
+        }
+
+        form div {
+            display: table-row;
+        }
+
+        label, input, span, select {
+            display: table-cell;
+            text-align: left;
+        }
+
+        input[type=text], input[type=password], select, textarea {
+            width: 200px;
+            margin: 5px;
+        }
+
+        form div div {
+            display: table-cell;
+        }
+
+        button {
+            /* 共同的樣式 */
+            padding: 5px 10px;
+            background-color: #ffffff;
+            color: black;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #78797a;
+        }
+    </style>
+
+</head>
+
+<body>
+<div id="wrapper">
+    <nav th:replace="backstage/index :: navbar"></nav>
+    <div th:insert="backstage/index :: hamburger-btn"></div>
+    <div class="page-content-wrapper">
+        <div class="content">
+            <nav class="navbar navbar-expand-md navbar-dark bg-transparent justify-content-center">
+                <div align="center">
+                    <h2 style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; text-align: center;">
+                        <i class="fa-solid fa-file-pen"></i> &nbsp;&nbsp;狀 態 更 新 </h2>
+                </div>
+            </nav>
+            <br>
+            <br>
+            <br>
+            <div align="center">
+                <form th:action="@{update}" method="post" th:object="${updateProductOrderDTO}"
+                      enctype="multipart/form-data">
+                    <div style="background-color: transparent;">
+                        <label>訂單編號:</label>
+                        <label>
+                            <input type="text" th:field="*{productOrderNo}"
+                                   style="border: 0; font-weight: bold; background-color: transparent;" readonly/>
+                        </label><br/>
+                    </div>
+                    <div>
+                        <label>商品訂單付款狀態:</label>
+                        <label>
+                            <select th:field="*{productPaymentStatus}">
+                                <option value=0>已付款</option>
+                                <option value=1>已退款</option>
+                            </select>
+                        </label>
+                        <br/>
+                        <span th:if="${#fields.hasErrors('productPaymentStatus')}" th:errors="*{productPaymentStatus}"
+                              class="error" id="productPaymentStatus.errors"></span>
+                    </div>
+                    <div>
+                        <label>商品訂單處理狀態:</label>
+                        <label>
+                            <select th:field="*{productProcessStatus}">
+                                <option value=0 disabled>備貨中</option>
+                                <option value=1>已取消</option>
+                                <option value=2 disabled>已出貨</option>
+                                <option value=3 disabled>已退貨</option>
+                                <option value=4>已結案</option>
+                            </select>
+                        </label>
+                        <br/>
+                        <span th:if="${#fields.hasErrors('productProcessStatus')}" th:errors="*{productProcessStatus}"
+                              class="error" id="productProcessStatus.errors"></span>
+                    </div>
+                    <div>
+                        <label>商品訂單撥款狀態:</label>
+                        <label>
+                            <select th:field="*{productOrderAllocationStatus}">
+                                <option value=0>未撥款</option>
+                                <option value=1>已撥款</option>
+                            </select>
+                        </label>
+                        <br/>
+                        <span th:if="${#fields.hasErrors('productOrderAllocationStatus')}"
+                              th:errors="*{productOrderAllocationStatus}" class="error"
+                              id="productOrderAllocationStatus.errors"></span>
+                    </div>
+                    <br>
+                    <br>
+                    <div>
+                        <div></div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <button type="button"
+                                    onclick="window.location.href='/backstage/productorder/listAllProductOrder'"> 取 消
+                                更 新
+                            </button>
+                            <button type="submit" id="submit"> 送 出 更 新</button>
+                        </div>
+                        <br>
+                        <div class="errorblock" th:utext="${errorMessage}" style="color: red; font-weight: bold;">
+                            ${errorMessage}
+                        </div>
+                        <div></div>
+                    </div>
+                    <br>
+                </form>
+                <script type="text/javascript">
+
+                    //清除提示訊息
+                    function hideContent(d) {
+                        document.getElementById(d).style.display = "none";
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

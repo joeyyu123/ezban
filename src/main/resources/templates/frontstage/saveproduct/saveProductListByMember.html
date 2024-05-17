@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="frontstage/index2 :: head">
+    <title>ezban | save_product</title>
+</head>
+
+<style>
+    #example th {
+        padding: 5px; /* 調整單元格內邊距 */
+        text-align: center; /* 將文字置中 */
+        font-size: 16px; /* 調整字體大小 */
+        line-height: 1.4; /* 調整行高 */
+    }
+
+    #example td {
+        padding: 5px; /* 調整單元格內邊距 */
+        text-align: center; /* 將文字置中 */
+        font-size: 14px; /* 調整字體大小 */
+        line-height: 1.4; /* 調整行高 */
+    }
+
+    #example th {
+        background-color: #f2f2f2; /* 設置表頭背景色 */
+        font-weight: bold; /* 加粗表頭文字 */
+    }
+
+    #example tr:nth-child(even) {
+        background-color: #f9f9f9; /* 隔行變色 */
+    }
+
+    /* 淺灰色小點樣式 */
+    .dot-lightgray::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 5px; /* 设置小点与文字之间的间距 */
+        border-radius: 50%;
+        background-color: lightgray;
+    }
+
+    /* 蓝色小點樣式 */
+    .dot-blue::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 5px;
+        border-radius: 50%;
+        background-color: blue;
+    }
+</style>
+
+<body id="body">
+<div th:replace="frontstage/index2 :: header"></div>
+<div class="content">
+    <h1 class="page-name" ,
+        style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; text-align: center;">
+        <i class="fa-regular fa-bookmark"></i> &nbsp;&nbsp;我 的 收 藏 夾 </h1>
+    <section class="user-dashboard">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="container">
+                        <div class="dashboard-wrapper user-dashboard">
+                            <div class="table-responsive">
+                                <table id="example" class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>商品圖片</th>
+                                        <th>商品名稱 [編號]</th>
+                                        <th>商品金額</th>
+                                        <th>收藏狀態</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <th:block th:each="saveProduct : ${saveProductListData}">
+                                        <tr>
+                                            <td>
+                                                <img th:src="@{/saveproduct/DBGifReader(productNo=${saveProduct.product.productNo})}"
+                                                     width="100px">
+                                            </td>
+                                            <td style="vertical-align: middle"
+                                                th:text="${saveProduct.product.productName} + '[' + ${saveProduct.product.productNo} + ']'"></td>
+                                            <td style="vertical-align: middle"
+                                                th:text="${'TWD $ '+saveProduct.product.productPrice}"></td>
+                                            <td style="vertical-align: middle"
+                                                th:data-status="${saveProduct.saveStatus}">
+                                                <span th:if="${saveProduct.saveStatus == 0}"><span
+                                                        class="dot-lightgray"></span>已取消</span>
+                                                <span th:if="${saveProduct.saveStatus == 1}"><span
+                                                        class="dot-blue"></span>已收藏</span>
+                                            </td>
+                                        </tr>
+                                    </th:block>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:replace="frontstage/index2 :: footer"></div>
+</div>
+</body>
+
+</html>

@@ -1,6 +1,8 @@
 package com.ezban.product.controller;
 
 
+import com.ezban.member.model.Member;
+import com.ezban.product.model.Product;
 import com.ezban.product.model.Product;
 import com.ezban.product.model.ProductServiceImpl;
 import com.ezban.productcategory.model.ProductCategory;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +42,12 @@ public class ProductFrontstageController {
     }
 
     @GetMapping("/shopdetail")
-    public String shopdetail() {
+    public String shopdetail(ModelMap model) {
+
+        Product product = new Product();
+        product.setProductNo(11);
+        model.addAttribute("product",product);
+
         return "/frontstage/product/shopdetail";
     }
 
