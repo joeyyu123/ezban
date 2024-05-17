@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 
 @Configuration
 @EnableWebSecurity
-@Order(1)
+@Order(2)
 public class HostSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -26,7 +26,7 @@ public class HostSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
 // 加密       return new BCryptPasswordEncoder();
-    	
+
     	return NoOpPasswordEncoder.getInstance();
     }
 
@@ -39,39 +39,44 @@ public class HostSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+        http.requestMatchers()
+                .antMatchers("/backstage/**", "/qaback**", "/hostlogin", "/hostregister", "/passwordreset", "/host/login")
+                .and()
             .authorizeRequests()
                 .antMatchers("/hostlogin", "/hostregister", "/passwordreset").permitAll()
-                .antMatchers("/backstage/**", "/qaback**").authenticated()
+                .antMatchers("/backstage/**", "/qaback**").hasRole("HOST")
                 .and()
             .formLogin()
                 .loginPage("/hostlogin")
-                .loginProcessingUrl("/login")
-                .successHandler(authenticationSuccessHandler())
-                .failureHandler(authenticationFailureHandler())
+                .loginProcessingUrl("/host/login")
+                .successHandler(hostAuthenticationSuccessHandler())
+                .failureHandler(hostAuthenticationFailureHandler())
                 .permitAll()
                 .and()
             .logout()
                 .logoutSuccessUrl("/hostlogin")  // Updated to match the login URL without the .html suffix
                 .permitAll()
                 .and()
+            .exceptionHandling()
+                .accessDeniedPage("/hostlogin")
+                .and()
             .csrf().disable();
     }
 
     @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+    public AuthenticationSuccessHandler hostAuthenticationSuccessHandler() {
         return (request, response, authentication) -> {
             response.sendRedirect("/backstage");
         };
     }
 
     @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
+    public AuthenticationFailureHandler hostAuthenticationFailureHandler() {
         SimpleUrlAuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();
         failureHandler.setDefaultFailureUrl("/hostlogin");  // Updated to remove the .html suffix
         failureHandler.setUseForward(false);
         return failureHandler;
     }
-    
-    
+
+
 }

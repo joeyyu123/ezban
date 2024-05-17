@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.HashMap;
 import java.util.UUID;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class LoginController {
 	@PostMapping("/login")
 	@ResponseBody
 	@Transactional  
-    public ResponseEntity<String> login(@RequestBody Member LoginRequest) {
+    public ResponseEntity<String> login(@RequestBody Member LoginRequest, HttpSession session) {
         Optional<Member> optionalMember = memRepository.findByMemberMail(LoginRequest.getMemberMail());
         if (optionalMember.isPresent()) {
             Member mem = optionalMember.get();
