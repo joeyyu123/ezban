@@ -1,7 +1,7 @@
 CREATE
-    DATABASE IF NOT EXISTS ezban;
+DATABASE IF NOT EXISTS ezban;
 USE
-    ezban;
+ezban;
 
 #報名表相關以及聊天室還沒建立
 drop table if exists authority;
@@ -45,7 +45,7 @@ create table admin
     admin_name    varchar(50) null,
     admin_mail    varchar(50) null,
     admin_phone   varchar(15) null,
-    admin_status  tinyint null,
+    admin_status  tinyint     null,
     constraint admin_uk_1
         unique (admin_account),
     constraint admin_uk_2
@@ -56,16 +56,17 @@ create table admin
 
 INSERT INTO admin (admin_account, admin_pwd, admin_mail, admin_phone, admin_status, admin_name)
 
-VALUES ('AY6KQZZh', 'NkzkVJ2JUH', 'u8yzliwj@gmail.com', '0989599470', 1, '陳昊天'),
-       ('mE1rur8H', 'cR7eCn9dEd8rISQ', 'yeocffh6b3wj@gmail.com', '0980469290', 1, '王晨曦'),
-       ('mX14vJUo7MYQA', 'DsPLWXZ8jKoEz', 'pygvd8xpeex8vbf@gmail.com', '0926584626', 1, '張宇宸'),
-       ('dFOYfKRWrM', 'vOYvKXCsOlan', '6otfkc9jzl@gmail.com', '0954426431', 1, '李雅琳'),
-       ('oAFx5V1I', 'e3ez2mANzGY', 'ns9sxzx15rzuv@gmail.com', '0992857410', 1, '劉悅心'),
-       ('hSUhWbw3', 'BR8ivTB5p', '8avtoze3glac@gmail.com', '0990057569', 1, '黃宇航'),
-       ('6KGLkBq8T', '0Bzc2bJr', 'lf4v6j4bivrokr@gmail.com', '0932655759', 1, '蔡欣怡'),
-       ('cznsnaRVakuaAoV', 'ZT4TMNkhLeLfuF2', 'g6gdfowqi4gpkqy@gmail.com', '0906019527', 1, '林啟航'),
-       ('oy8EgoOTY2q', 'JR72fjeSNKYnX', 'zes7tkfl9dkmzub@gmail.com', '0942943961', 1, '陳心悅'),
-       ('lE6XihvE', 'BbCqJsKgu', 'vbrdpx7u4qjv0@gmail.com', '0901244156', 1, '鄭晨星');
+VALUES
+( 'AY6KQZZh', 'NkzkVJ2JUH', 'u8yzliwj@gmail.com', '0989599470', 1,'陳昊天'),
+( 'mE1rur8H', 'cR7eCn9dEd8rISQ', 'yeocffh6b3wj@gmail.com', '0980469290', 1, '王晨曦'),
+( 'mX14vJUo7MYQA', 'DsPLWXZ8jKoEz', 'pygvd8xpeex8vbf@gmail.com', '0926584626', 1, '張宇宸'),
+( 'dFOYfKRWrM', 'vOYvKXCsOlan', '6otfkc9jzl@gmail.com', '0954426431', 1, '李雅琳'),
+( 'oAFx5V1I', 'e3ez2mANzGY', 'ns9sxzx15rzuv@gmail.com', '0992857410', 1, '劉悅心'),
+( 'hSUhWbw3', 'BR8ivTB5p', '8avtoze3glac@gmail.com', '0990057569', 1, '黃宇航'),
+( '6KGLkBq8T', '0Bzc2bJr', 'lf4v6j4bivrokr@gmail.com', '0932655759', 1, '蔡欣怡'),
+( 'cznsnaRVakuaAoV', 'ZT4TMNkhLeLfuF2', 'g6gdfowqi4gpkqy@gmail.com', '0906019527', 1, '林啟航'),
+( 'oy8EgoOTY2q', 'JR72fjeSNKYnX', 'zes7tkfl9dkmzub@gmail.com', '0942943961', 1, '陳心悅'),
+( 'lE6XihvE', 'BbCqJsKgu', 'vbrdpx7u4qjv0@gmail.com', '0901244156', 1, '鄭晨星');
 
 
 create table event_category
@@ -113,8 +114,8 @@ create table func
 INSERT INTO func (func_name)
 VALUES ('Manager'),
        ('Product activities'),
-       ('Order_management'),
-       ('Birthday_management'),
+	   ('Order_management'),
+	   ('Birthday_management'),
        ('Content_management');
 
 
@@ -137,7 +138,6 @@ VALUES (1, 1),
 
 
 
-
 create table host
 (
     host_no      int auto_increment
@@ -148,7 +148,7 @@ create table host
     host_mail    varchar(50) null,
     host_phone   varchar(15) null,
     host_status  tinyint     null,
-    host_login   DATETIME    null,
+    host_login   DATETIME null,
 
     constraint host_uk_1
         unique (host_account),
@@ -176,7 +176,6 @@ create table event
 (
     event_no               int auto_increment
         primary key,
-
     event_img              longblob     null,
     event_name             varchar(50)  not null,
     event_category_no      int          null,
@@ -1633,16 +1632,16 @@ create table member
 (
     member_no                int auto_increment
         primary key,
-    member_mail              varchar(50) not null,
-    member_pwd               varchar(20) not null,
-    member_name              varchar(50) null,
-    birthday                 date null,
-    gender                   tinyint null,
+    member_mail              varchar(50)  not null,
+    member_pwd               varchar(20)  not null,
+    member_name              varchar(50)  null,
+    birthday                 date         null,
+    gender                   tinyint      null,
     member_points            int     default 0,
-    member_phone             varchar(15) null,
+    member_phone             varchar(15)  null,
     address                  varchar(200) null,
-    common_recipient         varchar(50) null,
-    common_recipient_phone   varchar(15) null,
+    common_recipient         varchar(50)  null,
+    common_recipient_phone   varchar(15)  null,
     common_recipient_address varchar(200) null,
     member_status            tinyint default 0,
     reset_token				 varchar(200) null,
@@ -1701,12 +1700,12 @@ create table event_comment
 (
     event_comment_no      int auto_increment
         primary key,
-    event_no              int not null,
-    member_no             int not null,
-    event_comment_rate    int null,
-    event_comment_content text null,
+    event_no              int      not null,
+    member_no             int      not null,
+    event_comment_rate    int      null,
+    event_comment_content text     null,
     event_comment_time    datetime null,
-    event_comment_status  tinyint null,
+    event_comment_status  tinyint  null,
     constraint event_comment_event_event_no_fk
         foreign key (event_no) references event (event_no),
     constraint event_comment_member_member_no_fk
@@ -1733,8 +1732,8 @@ create table event_comment_report
         primary key,
     event_comment_no        int      not null,
     member_no               int      not null,
-    admin_no                int null,
-    report_reason           text null,
+    admin_no                int      null,
+    report_reason           text     null,
     report_time             datetime not null,
     report_status           tinyint  not null,
     constraint event_comment_report_admin_admin_no_fk
@@ -1753,12 +1752,12 @@ create table notification
 (
     notification_no      int auto_increment
         primary key,
-    member_no            int null,
-    host_no              int null,
-    admin_no             int null,
+    member_no            int          null,
+    host_no              int          null,
+    admin_no             int          null,
     notification_content varchar(200) null,
-    read_status          tinyint null,
-    notification_time    datetime null,
+    read_status          tinyint      null,
+    notification_time    datetime     null,
     constraint notification_host_host_no_fk
         foreign key (host_no) references host (host_no),
     constraint notification_member_member_no_fk
@@ -1767,23 +1766,23 @@ create table notification
 
 INSERT INTO notification (member_no, host_no, admin_no, notification_content, read_status, notification_time)
 VALUES (1, 1, 1, '系統通知：您的帳戶密碼已成功修改，請妥善保管您的新密碼。', 0, NOW()),
-       (2, 2, 1, '系統提醒：您的訂單已成功支付，請耐心等待發貨。', 0, NOW()),
-       (10, 1, 3, '系統提示：您有一封新的私信消息，請及時查看。', 0, NOW()),
-       (4, 3, 1, '系統通知：您的評論已收到點讚，感謝您的支持與參與。', 0, NOW()),
-       (1, 1, 2, '系統消息：您的預訂活動已取消，請查看詳情並聯系客服進行退款。', 0, NOW()),
-       (5, 2, 1, '系統提醒：您的包裹已發出，請留意物流信息並準備簽收。', 0, NOW()),
-       (7, 1, 2, '系統通知：您的評論已被檢舉，請等待管理員審核結果。', 0, NOW()),
-       (7, 1, 3, '系統通知：您報名的活動已被取消，請查看詳情並聯系客服進行退款。', 0, NOW()),
-       (2, 3, 2, '系統通知：您的賬戶已成功注冊，請查看您的電子郵箱以完成驗證。', 0, NOW()),
-       (8, 1, 1, '系統消息：已收到您的檢舉，感謝您的反饋，我們會盡快處理您的請求。', 0, NOW());
+	   (2, 2, 1, '系統提醒：您的訂單已成功支付，請耐心等待發貨。', 0, NOW()),
+	   (10, 1, 3, '系統提示：您有一封新的私信消息，請及時查看。', 0, NOW()),
+	   (4, 3, 1, '系統通知：您的評論已收到點讚，感謝您的支持與參與。', 0, NOW()),
+	   (1, 1, 2, '系統消息：您的預訂活動已取消，請查看詳情並聯系客服進行退款。', 0, NOW()),
+	   (5, 2, 1, '系統提醒：您的包裹已發出，請留意物流信息並準備簽收。', 0, NOW()),
+	   (7, 1, 2, '系統通知：您的評論已被檢舉，請等待管理員審核結果。', 0, NOW()),
+	   (7, 1, 3, '系統通知：您報名的活動已被取消，請查看詳情並聯系客服進行退款。', 0, NOW()),
+	   (2, 3, 2, '系統通知：您的賬戶已成功注冊，請查看您的電子郵箱以完成驗證。', 0, NOW()),
+	   (8, 1, 1, '系統消息：已收到您的檢舉，感謝您的反饋，我們會盡快處理您的請求。', 0, NOW());
 
 
 create table points_record
 (
     points_record_no int auto_increment
         primary key,
-    member_no        int not null,
-    points_changed   int not null,
+    member_no        int      not null,
+    points_changed   int      not null,
     transaction_time datetime null,
     constraint points_record_member_member_no_fk
         foreign key (member_no) references member (member_no)
@@ -1791,15 +1790,15 @@ create table points_record
 
 INSERT INTO points_record (member_no, points_changed, transaction_time)
 VALUES (1, 10, '2024-04-11 13:05:15'),
-       (1, 15, '2024-04-17 16:10:10'),
-       (4, 10, '2024-04-18 10:00:00'),
-       (2, 10, '2024-04-10 18:30:30'),
-       (1, 20, '2024-04-11 13:00:00'),
-       (5, 10, '2024-04-18 09:10:10'),
-       (1, 15, '2024-04-09 18:00:00'),
-       (9, 10, '2024-04-18 13:00:10'),
-       (2, 10, '2024-04-17 13:30:15'),
-       (2, 30, '2024-04-11 12:30:30');
+	   (1, 15, '2024-04-17 16:10:10'),
+	   (4, 10, '2024-04-18 10:00:00'),
+	   (2, 10, '2024-04-10 18:30:30'),
+	   (1, 20, '2024-04-11 13:00:00'),
+	   (5, 10, '2024-04-18 09:10:10'),
+	   (1, 15, '2024-04-09 18:00:00'),
+	   (9, 10, '2024-04-18 13:00:10'),
+	   (2, 10, '2024-04-17 13:30:15'),
+	   (2, 30, '2024-04-11 12:30:30');
 
 
 create table qa
@@ -1807,7 +1806,7 @@ create table qa
     qa_no      int auto_increment
         primary key,
     qa_title   varchar(50) null,
-    qa_content longtext null
+    qa_content longtext    null
 );
 
 INSERT INTO qa (qa_title, qa_content)
@@ -1815,13 +1814,11 @@ VALUES ('忘記加入會員時設定的密碼', '點擊官網右側上端的Logi
 填入會員註冊時填寫的姓名、生日以及帳號信箱，就會發送安全驗證碼到信箱 (需與註冊時提供的帳號信箱、姓名、生日一致)。
 最後，輸入從Email收到的安全驗證碼後就可以重新設定密碼。'),
 
-       ('為什麼我沒有收到註冊驗證信?', '當您完成註冊步驟並將資料填妥送出後，系統約3-5分鐘內會發出認證信至您的電子信箱。若仍未收到認證信，建議您可先至垃圾郵件、社交網路、促銷內容中確認或使用重新發送驗證信功能。
+	   ('為什麼我沒有收到註冊驗證信?', '當您完成註冊步驟並將資料填妥送出後，系統約3-5分鐘內會發出認證信至您的電子信箱。若仍未收到認證信，建議您可先至垃圾郵件、社交網路、促銷內容中確認或使用重新發送驗證信功能。
 提醒您：驗證網址的有效時間為發信後的一個小時內。'),
-       ('請問繳款後的周邊商品何時際送',
-        '活動物資通常最晚將於活動開始前一週開始陸續寄送，若活動開始前尚未收到物資，請與主辦單位聯繫。'),
+       ('請問繳款後的周邊商品何時際送', '活動物資通常最晚將於活動開始前一週開始陸續寄送，若活動開始前尚未收到物資，請與主辦單位聯繫。'),
        ('有哪些付款方式可以選擇', '請參閱各活動簡章之繳費方式，依主辦單位設定而有所不同'),
-       ('我要申請退貨，該如何處理',
-        '為了提供用戶更優質的購物環境與消費者體驗，所有賣家皆須依照消保法提供鑑賞期服務，更詳細的情形請查詢消保法');
+       ('我要申請退貨，該如何處理', '為了提供用戶更優質的購物環境與消費者體驗，所有賣家皆須依照消保法提供鑑賞期服務，更詳細的情形請查詢消保法');
 
 
 
@@ -1838,7 +1835,7 @@ create table save_event
 
 INSERT INTO save_event (member_no, event_no)
 VALUES (1, 1),
-	   (2, 2),
+       (2, 2),
        (3, 3),
        (4, 4),
        (5, 5),
@@ -1854,16 +1851,16 @@ create table ticket_order
     ticket_order_no                int auto_increment
         primary key,
     member_no                      int      not null,
-    event_coupon_no                int null,
+    event_coupon_no                int      null,
     ticket_order_amount            int      not null,
-    event_coupon_discount          int null,
+    event_coupon_discount          int      null,
     ticket_checkout_amount         int      not null,
     ticket_order_time              datetime not null,
     ticket_order_pay_time          datetime null,
     ticket_order_payment_status    tinyint  not null default 0,
-    ticket_order_status            tinyint null,
-    ticket_order_allocation_amount int null,
-    ticket_order_allocation_status tinyint null,
+    ticket_order_status            tinyint  null,
+    ticket_order_allocation_amount int      null,
+    ticket_order_allocation_status tinyint  null,
     constraint ticket_order_event_coupon_event_coupon_no_fk
         foreign key (event_coupon_no) references event_coupon (event_coupon_no),
     constraint ticket_order_member_member_no_fk
@@ -1871,8 +1868,7 @@ create table ticket_order
 );
 
 INSERT INTO ticket_order (member_no, event_coupon_no, ticket_order_amount, event_coupon_discount,
-                          ticket_checkout_amount, ticket_order_time,
-                          ticket_order_pay_time, ticket_order_payment_status, ticket_order_status)
+                          ticket_checkout_amount, ticket_order_time, ticket_order_pay_time, ticket_order_payment_status, ticket_order_status)
 VALUES (1, 1, 2850, 10, 2840, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3, 1),
        (1, 1, 4500, 10, 4490, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3, 1),
        (2, 1, 5350, 10, 5340, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3, 1),
@@ -1887,61 +1883,60 @@ VALUES (1, 1, 2850, 10, 2840, '2024-3-1 20:00:00', '2024-3-1 20:05:00', 3, 1),
 
 create table ticket_type
 (
-    ticket_type_no       int auto_increment
+    ticket_type_no          int auto_increment
         primary key,
-    event_no             int           not null,
-    ticket_type_name     varchar(50)   not null,
-    included_tickets     int default 1 not null,
-    purchase_start_time  datetime      not null,
-    purchase_end_time    datetime      not null,
-    ticket_type_info     varchar(200) null,
-    ticket_type_price    int           not null,
-    ticket_type_qty      int           not null,
-    remaining_ticket_qty int null,
+    event_no                int           not null,
+    ticket_type_name        varchar(50)   not null,
+    included_tickets        int default 1 not null,
+    purchase_start_time     datetime      not null,
+    purchase_end_time       datetime      not null,
+    ticket_type_info        varchar(200)  null,
+    ticket_type_price       int           not null,
+    ticket_type_qty         int           not null,
+    remaining_ticket_qty    int           null,
+    purchase_quantity_limit int           not null,
     constraint ticket_type_fk
         foreign key (event_no) references event (event_no)
 );
 
 INSERT INTO ticket_type (event_no, ticket_type_name, included_tickets, purchase_start_time, purchase_end_time,
-                         ticket_type_price, ticket_type_qty)
-VALUES (1, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
-       (1, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
-       (1, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
-       (2, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
-       (2, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
-       (2, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
-       (3, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
-       (3, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
-       (3, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
-       (4, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
-       (4, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
-       (4, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
-       (5, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
-       (5, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
-       (5, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
-       (6, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
-       (6, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
-       (6, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
-       (7, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
-       (7, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
-       (7, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
-       (8, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
-       (8, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
-       (8, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
-       (9, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
-       (9, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
-       (9, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
-       (10, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
-       (10, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
-       (10, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
-       (11, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
-       (11, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
-       (11, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100),
-       (12, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100,100),
-       (12, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185,100),
-       (12, '四人套票', 4, NOW(), '2024-6-30 00:00:00',350,100);
-
-
+                         ticket_type_price, ticket_type_qty, remaining_ticket_qty, Purchase_quantity_limit)
+VALUES (1, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
+       (1, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
+       (1, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
+       (2, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
+       (2, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
+       (2, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
+       (3, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
+       (3, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
+       (3, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
+       (4, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
+       (4, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
+       (4, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
+       (5, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
+       (5, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
+       (5, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
+       (6, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
+       (6, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
+       (6, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
+       (7, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
+       (7, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
+       (7, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
+       (8, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
+       (8, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
+       (8, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
+       (9, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
+       (9, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
+       (9, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
+       (10, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
+       (10, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
+       (10, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
+       (11, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
+       (11, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
+       (11, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5),
+       (12, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 100, 100, 5),
+       (12, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 100, 100, 5),
+       (12, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 100, 100, 5);
 
 
 
@@ -1990,25 +1985,26 @@ create table qrcode_ticket
         primary key,
     ticket_order_detail_no int      not null,
     member_no              int      not null,
-    ticket_usage_status    tinyint null,
+    ticket_usage_status    tinyint  null,
     ticket_valid_time      datetime not null,
     constraint qrcode_ticket_member_member_no_fk
         foreign key (member_no) references member (member_no),
     constraint qrcode_ticket_ticket_order_detail_ticket_order_detail_no_fk
         foreign key (ticket_order_detail_no) references ticket_order_detail (ticket_order_detail_no)
-)auto_increment = 3120001;
+) auto_increment = 3120001;
 
 INSERT INTO qrcode_ticket (ticket_order_detail_no, member_no, ticket_usage_status, ticket_valid_time)
-VALUES (1, 1, 0, NOW()),
-       (2, 2, 1, NOW()),
-       (3, 3, 2, NOW()),
-       (4, 4, 0, NOW()),
-       (5, 5, 1, NOW()),
-       (6, 6, 2, NOW()),
-       (7, 7, 0, NOW()),
-       (8, 8, 0, NOW()),
-       (9, 9, 2, NOW()),
-       (10, 10, 0, NOW());
+VALUES
+	(1, 1, 0, NOW()),
+    (2, 2, 1, NOW()),
+    (3, 3, 2, NOW()),
+    (4, 4, 0, NOW()),
+    (5, 5, 1, NOW()),
+    (6, 6, 2, NOW()),
+    (7, 7, 0, NOW()),
+    (8, 8, 0, NOW()),
+    (9, 9, 2, NOW()),
+    (10, 10, 0, NOW());
 
 
 CREATE TABLE product_category
@@ -2019,29 +2015,30 @@ CREATE TABLE product_category
 );
 
 INSERT INTO product_category (product_category_name)
-VALUES ('服飾'),
-       ('配件'),
-       ('廚房用品'),
-       ('生活用品'),
-       ('書籍'),
-       ('文化藝術'),
-       ('戶外用品');
+VALUES
+    ('服飾'),
+    ('配件'),
+    ('廚房用品'),
+    ('生活用品'),
+    ('書籍'),
+    ('文化藝術'),
+    ('戶外用品');
 
 create table product
 (
     product_no           int auto_increment,
-    product_category_no  int null,
+    product_category_no  int         null,
     product_name         varchar(20) null,
-    host_no              int     not null,
-    product_desc         text null,
-    product_price        int     not null,
-    product_add_qty      int     not null,
-    remaining_qty        int null,
-    product_add_time    datetime null,
-    product_remove_time  datetime null,
-    product_status       tinyint not null,
-    product_total_rating int null,
-    product_rating_count int null,
+    host_no              int         not null,
+    product_desc         text        null,
+    product_price        int         not null,
+    product_add_qty      int         not null,
+    remaining_qty        int         null,
+    product_add_time     datetime    null,
+    product_remove_time  datetime    null,
+    product_status       tinyint     not null,
+    product_total_rating int         null,
+    product_rating_count int         null,
     constraint product_pk
         primary key (product_no),
     constraint product_host_host_no_fk
@@ -2050,57 +2047,27 @@ create table product
         foreign key (product_category_no) references product_category (product_category_no)
 );
 
-INSERT INTO product (product_category_no, product_name, host_no, product_desc, product_price, product_add_qty,
-                     remaining_qty, product_add_time, product_remove_time, product_status, product_total_rating,
-                     product_rating_count)
-VALUES (1, '台北屋頂電影院限定版T恤', 1,
-        '這款限定版T恤採用優質棉料製成，正面印有獨特的台北屋頂電影院logo和台北市夜景圖案，適合日常穿著或作為紀念品。', 250,
-        150, 150, '2024-04-01 00:00:00', '2024-06-10 00:00:00', 1, 0, 0),
-       (6, '屋頂電影院紀念音樂盒', 1,
-        '手工製作的音樂盒，每當打開時播放經典電影主題曲。外觀小巧精緻，內藏手繪的台北屋頂電影院場景，是電影愛好者的收藏佳品。',
-        350, 100, 100, '2024-04-01 00:00:00', '2024-06-10 00:00:00', 1, 0, 0),
-       (1, '府城超馬限定版運動T恤', 2,
-        '使用透氣材料製成的運動T恤，印有府城超級馬拉松的特別版圖案和2024年的活動標誌，適合馬拉松期間穿著。', 300, 200, 200,
-        '2024-04-02 00:00:00', '2024-09-30 00:00:00', 1, 0, 0),
-       (4, '府城超馬紀念水壺', 2, '高品質不銹鋼製水壺，表面印有府城超級馬拉松的標誌，是跑者和觀眾的理想飲水選擇。', 150,
-        250, 250, '2024-04-02 00:00:00', '2024-09-30 00:00:00', 1, 0, 0),
-       (2, '府城超馬精神手環', 2, '色彩鮮明的硅膠手環，刻有“千馬精神憾動府城”口號，既時尚又具紀念意義。', 50, 500, 500,
-        '2024-04-02 00:00:00', '2024-09-30 00:00:00', 1, 0, 0),
-       (7, '府城超馬夜跑頭燈', 2, '專為夜跑設計的頭燈，亮度適中，確保夜間安全，印有府城超級馬拉松的標誌，適合長時間佩戴。',
-        220, 150, 150, '2024-04-02 00:00:00', '2024-09-30 00:00:00', 1, 0, 0),
-       (1, '清紫野餐派對紀念帽', 3,
-        '專為校慶活動設計的野餐帽，上面繡有清華校慶的標誌和2024年活動特色圖案，適合戶外活動使用。', 200, 300, 300,
-        '2024-04-03 00:00:00', '2024-05-27 00:00:00', 1, 0, 0),
-       (7, '清紫野餐派對折疊野餐墊', 3,
-        '便攜式折疊野餐墊，印有清華大學標誌和校慶圖案，專為野餐和戶外活動設計，易於攜帶且清洗方便。', 120, 250, 250,
-        '2024-04-03 00:00:00', '2024-05-27 00:00:00', 1, 0, 0),
-       (4, '清華校慶限定環保購物袋', 3,
-        '環保購物袋，製作精良，以清華大學校徽和校慶色彩為設計主題，適合日常使用或作為紀念品。', 100, 500, 500,
-        '2024-04-03 00:00:00', '2024-05-27 00:00:00', 1, 0, 0),
-       (6, '台北新藝術博覽會紀念畫冊', 5,
-        '精裝畫冊，收錄2024年博覽會的精選作品和藝術家介紹。畫冊封面藝術化設計，包含藝術總監李善單的導言和展覽精華，是藝術收藏者必備。',
-        450, 300, 300, '2024-04-05 00:00:00', '2024-05-30 00:00:00', 1, 0, 0),
-       (6, '藝術博覽會限量版素描本', 5,
-        '高質感的素描本，封面由參展藝術家設計，內頁含有空白和印有淡淡藝術作品輪廓的頁面，適合用於現場速寫或日常創作。', 350,
-        200, 200, '2024-04-05 00:00:00', '2024-05-30 00:00:00', 1, 0, 0),
-       (6, '藝術博覽會專屬書簽組', 5,
-        '一組四款，每款書簽均由不同藝術家設計，展示其代表作的細節。材質為厚紙質和金屬合成，附有精美繩絲，是閱讀愛好者的理想選擇。',
-        120, 400, 400, '2024-04-05 00:00:00', '2024-05-30 00:00:00', 1, 0, 0),
-       (1, '2024小小英雄運動會紀念衣', 6, '高質感紀念衣，印有活動標誌和日期，適合活動當天穿著，留作紀念。', 250, 500, 500,
-        '2024-04-06 00:00:00', '2024-05-30 00:00:00', 1, 0, 0),
-       (2, '2024小小英雄運動會證件帶', 6, '紀念證件帶，供參與者活動當天佩戴，具有身份識別和紀念價值。', 350, 500, 500,
-        '2024-04-06 00:00:00', '2024-05-30 00:00:00', 1, 0, 0),
-       (4, '2024小小英雄運動會紀念束口袋', 6, '實用的紀念束口袋，上印活動標誌，方便參與者存放個人物品，並作為活動紀念。',
-        400, 500, 500, '2024-04-06 00:00:00', '2024-05-30 00:00:00', 1, 0, 0),
-       (3, '西班牙風味調味料組', 7, '精選西班牙進口香料和調味料，包括番紅花、煙燻紅椒粉等，完美複製西班牙菜餚的經典風味。',
-        450, 100, 100, '2024-04-07 00:00:00', '2024-05-30 00:00:00', 1, 0, 0),
-       (3, '定製烹飪圍裙', 7, '高質量的廚房圍裙，帶有印有西班牙料理課程logo的定製設計，適合烹飪時穿戴。', 200, 150, 150,
-        '2024-04-07 00:00:00', '2024-05-30 00:00:00', 1, 0, 0),
-       (5, '西班牙食譜', 7,
-        '精美印製的食譜書，包括各種傳統西班牙菜餚的詳細做法和故事，適合熱愛西班牙文化和烹飪的美食愛好者。', 300, 200, 200,
-        '2024-04-07 00:00:00', '2024-05-30 00:00:00', 1, 0, 0),
-       (3, '西班牙風情手工陶瓷碟', 7, '這套西班牙風情手工陶瓷碟，精美而獨特的設計，讓您的西班牙料理更顯風味。', 350, 30,
-        30, '2024-04-07 00:00:00', '2024-05-30 00:00:00', 1, 0, 0);
+INSERT INTO product (product_category_no, product_name, host_no, product_desc, product_price, product_add_qty, remaining_qty, product_add_time, product_remove_time, product_status, product_total_rating, product_rating_count)
+VALUES
+    (1, '台北屋頂電影院限定版T恤', 1, '這款限定版T恤採用優質棉料製成，正面印有獨特的台北屋頂電影院logo和台北市夜景圖案，適合日常穿著或作為紀念品。', 250, 150, 150, '2024-04-01 00:00:00', '2024-06-10 00:00:00', 1, 0, 0),
+    (6, '屋頂電影院紀念音樂盒', 1, '手工製作的音樂盒，每當打開時播放經典電影主題曲。外觀小巧精緻，內藏手繪的台北屋頂電影院場景，是電影愛好者的收藏佳品。', 350, 100, 100, '2024-04-01 00:00:00', '2024-06-10 00:00:00', 1, 0, 0),
+    (1, '府城超馬限定版運動T恤', 2, '使用透氣材料製成的運動T恤，印有府城超級馬拉松的特別版圖案和2024年的活動標誌，適合馬拉松期間穿著。', 300, 200, 200, '2024-04-02 00:00:00', '2024-09-30 00:00:00', 1, 0, 0),
+    (4, '府城超馬紀念水壺', 2, '高品質不銹鋼製水壺，表面印有府城超級馬拉松的標誌，是跑者和觀眾的理想飲水選擇。', 150, 250, 250, '2024-04-02 00:00:00', '2024-09-30 00:00:00', 1, 0, 0),
+    (2, '府城超馬精神手環', 2, '色彩鮮明的硅膠手環，刻有“千馬精神憾動府城”口號，既時尚又具紀念意義。', 50, 500, 500, '2024-04-02 00:00:00','2024-09-30 00:00:00', 1, 0, 0),
+    (7, '府城超馬夜跑頭燈', 2, '專為夜跑設計的頭燈，亮度適中，確保夜間安全，印有府城超級馬拉松的標誌，適合長時間佩戴。', 220, 150, 150, '2024-04-02 00:00:00', '2024-09-30 00:00:00', 1, 0, 0),
+    (1, '清紫野餐派對紀念帽', 3, '專為校慶活動設計的野餐帽，上面繡有清華校慶的標誌和2024年活動特色圖案，適合戶外活動使用。', 200, 300, 300, '2024-04-03 00:00:00', '2024-05-27 00:00:00', 1, 0, 0),
+    (7, '清紫野餐派對折疊野餐墊', 3, '便攜式折疊野餐墊，印有清華大學標誌和校慶圖案，專為野餐和戶外活動設計，易於攜帶且清洗方便。', 120, 250, 250, '2024-04-03 00:00:00', '2024-05-27 00:00:00', 1, 0, 0),
+    (4, '清華校慶限定環保購物袋', 3, '環保購物袋，製作精良，以清華大學校徽和校慶色彩為設計主題，適合日常使用或作為紀念品。', 100, 500, 500, '2024-04-03 00:00:00', '2024-05-27 00:00:00', 1, 0, 0),
+    (6, '台北新藝術博覽會紀念畫冊', 5, '精裝畫冊，收錄2024年博覽會的精選作品和藝術家介紹。畫冊封面藝術化設計，包含藝術總監李善單的導言和展覽精華，是藝術收藏者必備。', 450, 300, 300, '2024-04-05 00:00:00', '2024-05-30 00:00:00', 1, 0, 0),
+    (6, '藝術博覽會限量版素描本', 5, '高質感的素描本，封面由參展藝術家設計，內頁含有空白和印有淡淡藝術作品輪廓的頁面，適合用於現場速寫或日常創作。', 350, 200, 200, '2024-04-05 00:00:00', '2024-05-30 00:00:00', 1, 0, 0),
+    (6, '藝術博覽會專屬書簽組', 5, '一組四款，每款書簽均由不同藝術家設計，展示其代表作的細節。材質為厚紙質和金屬合成，附有精美繩絲，是閱讀愛好者的理想選擇。', 120, 400, 400, '2024-04-05 00:00:00', '2024-05-30 00:00:00', 1, 0, 0),
+    (1, '2024小小英雄運動會紀念衣', 6, '高質感紀念衣，印有活動標誌和日期，適合活動當天穿著，留作紀念。', 250, 500, 500, '2024-04-06 00:00:00', '2024-05-30 00:00:00', 1, 0, 0),
+    (2, '2024小小英雄運動會證件帶', 6, '紀念證件帶，供參與者活動當天佩戴，具有身份識別和紀念價值。', 350, 500, 500, '2024-04-06 00:00:00', '2024-05-30 00:00:00', 1, 0, 0),
+    (4, '2024小小英雄運動會紀念束口袋', 6, '實用的紀念束口袋，上印活動標誌，方便參與者存放個人物品，並作為活動紀念。', 400, 500, 500, '2024-04-06 00:00:00', '2024-05-30 00:00:00', 1, 0, 0),
+    (3, '西班牙風味調味料組', 7, '精選西班牙進口香料和調味料，包括番紅花、煙燻紅椒粉等，完美複製西班牙菜餚的經典風味。', 450, 100, 100, '2024-04-07 00:00:00', '2024-05-30 00:00:00', 1, 0, 0),
+    (3, '定製烹飪圍裙', 7, '高質量的廚房圍裙，帶有印有西班牙料理課程logo的定製設計，適合烹飪時穿戴。', 200, 150, 150, '2024-04-07 00:00:00', '2024-05-30 00:00:00', 1, 0, 0),
+    (5, '西班牙食譜', 7, '精美印製的食譜書，包括各種傳統西班牙菜餚的詳細做法和故事，適合熱愛西班牙文化和烹飪的美食愛好者。', 300, 200, 200, '2024-04-07 00:00:00', '2024-05-30 00:00:00', 1, 0, 0),
+    (3, '西班牙風情手工陶瓷碟', 7, '這套西班牙風情手工陶瓷碟，精美而獨特的設計，讓您的西班牙料理更顯風味。', 350, 30, 30, '2024-04-07 00:00:00', '2024-05-30 00:00:00', 1, 0, 0);
 
 create table product_comment
 (
@@ -2109,7 +2076,7 @@ create table product_comment
     product_no              int      not null,
     member_no               int      not null,
     product_rate            int      not null,
-    product_comment_content text null,
+    product_comment_content text     null,
     product_comment_date    datetime not null,
     product_comment_status  tinyint  not null,
     constraint product_comment_member_member_no_fk
@@ -2119,16 +2086,16 @@ create table product_comment
 );
 
 INSERT INTO product_comment (product_no, member_no, product_rate, product_comment_content,
-                             product_comment_date, product_comment_status)
+                           product_comment_date, product_comment_status)
 VALUES (1, 1, 5, '這個產品真的很棒！質量非常好，性價比超高！強烈推薦！', '2024-04-18 13:00:10', 1),
-       (2, 2, 5, '很喜歡這個商品，外觀時尚，功能也很實用，非常滿意！', '2024-04-10 13:00:19', 1),
-       (3, 3, 5, '包裝很精美，商品完好無損，物流也很快，非常滿意購物體驗！', '2024-04-13 14:01:12', 1),
-       (2, 5, 5, '商品收到了，質量不錯，顏色也很喜歡，與描述相符，非常滿意！', '2024-04-17 13:05:16', 1),
-       (5, 6, 5, '售後服務態度很好，對我的問題耐心解答，讓我感到很放心！', '2024-04-18 11:00:15', 1),
-       (1, 4, 4, '產品質量一般與描述稍有差異，但客服解決問題很及時，還算滿意！', '2024-04-18 10:30:12', 1),
-       (4, 7, 4, '商品外觀漂亮，但使用起來有些不太方便，希望能改進一下設計！', '2024-04-15 09:04:12', 1),
-       (4, 9, 5, '物流速度很快，商品質量也不錯，很滿意這次的購物體驗！', '2024-04-15 19:00:30', 1),
-       (1, 8, 5, '這個商品值得購買，非常實用，我很喜歡！希望能有更多的顏色選擇！', '2024-04-16 16:00:00', 1);
+	   (2, 2, 5, '很喜歡這個商品，外觀時尚，功能也很實用，非常滿意！', '2024-04-10 13:00:19', 1),
+	   (3, 3, 5, '包裝很精美，商品完好無損，物流也很快，非常滿意購物體驗！', '2024-04-13 14:01:12', 1),
+	   (2, 5, 5, '商品收到了，質量不錯，顏色也很喜歡，與描述相符，非常滿意！', '2024-04-17 13:05:16', 1),
+	   (5, 6, 5, '售後服務態度很好，對我的問題耐心解答，讓我感到很放心！', '2024-04-18 11:00:15', 1),
+	   (1, 4, 4, '產品質量一般與描述稍有差異，但客服解決問題很及時，還算滿意！', '2024-04-18 10:30:12', 1),
+	   (4, 7, 4, '商品外觀漂亮，但使用起來有些不太方便，希望能改進一下設計！', '2024-04-15 09:04:12', 1),
+	   (4, 9, 5, '物流速度很快，商品質量也不錯，很滿意這次的購物體驗！', '2024-04-15 19:00:30', 1),
+	   (1, 8, 5, '這個商品值得購買，非常實用，我很喜歡！希望能有更多的顏色選擇！', '2024-04-16 16:00:00', 1);
 
 create table product_comment_report
 (
@@ -2136,7 +2103,7 @@ create table product_comment_report
         primary key,
     product_comment_no        int          not null,
     member_no                 int          not null,
-    admin_no                  int null,
+    admin_no                  int          null,
     report_reason             varchar(100) not null,
     report_date               datetime     not null,
     report_status             tinyint      not null,
@@ -2163,12 +2130,12 @@ CREATE TABLE product_img
 create table product_report
 (
     product_report_no int auto_increment primary key,
-    product_no        int               not null,
-    member_no         int,
+    product_no        int          not null,
+    member_no         int          not null,
     admin_no          int,
-    report_reason     varchar(100)      not null,
-    report_date       datetime          not null,
-    report_status     tinyint default 0 not null,
+    report_reason     varchar(100) not null,
+    report_date       datetime     not null,
+    report_status     tinyint default 0 not null ,
     constraint product_report_admin_admin_no_fk
         foreign key (admin_no) references admin (admin_no),
     constraint product_report_member_member_no_fk
@@ -2178,37 +2145,37 @@ create table product_report
 );
 
 insert into product_report (product_no, member_no, admin_no, report_reason, report_date, report_status)
-values (1, 1, 2, '商品描述中含有不當字眼', now(), 0),
-       (10, 6, 2, '價格太貴', now(), 1),
-       (5, 2, 2, '商品名稱用字不當', now(), 2),
-       (7, 3, 2, '不實用', now(), 1),
-       (5, 3, 2, '檢舉是不需要理由的', now(), 0),
-       (18, 2, 2, '商品描述不清楚', now(), 0),
-       (11, 4, 2, '商品照片太模糊', now(), 2),
-       (15, 5, 2, '商品數量太少根本搶不到', now(), 1),
-       (10, 8, 2, '商品照片放太少,不夠我參考', now(), 0),
-       (5, 7, 2, '價格太便宜懷疑材質有問題', now(), 0);
+values (1,  1, 2, '商品描述中含有不當字眼' , 	 now(), 0),
+       (10, 6, 2, '價格太貴' ,          	     now(), 1),
+       (5,  2, 2, '商品名稱用字不當' ,     	 now(), 2),
+       (7,  3, 2, '不實用' ,             	 now(), 1),
+       (5,  3, 2, '檢舉是不需要理由的' , 		 now(), 0),
+       (18, 2, 2, '商品描述不清楚' ,     		 now(), 0),
+       (11, 4, 2, '商品照片太模糊' ,        	 now(), 2),
+       (15, 5, 2, '商品數量太少根本搶不到' ,  	 now(), 1),
+       (10, 8, 2, '商品照片放太少,不夠我參考' ,  now(), 0),
+       (5,  7, 2, '價格太便宜懷疑材質有問題' ,   now(), 0);
 
-       
+
 create table product_order
 (
     product_order_no                int primary key auto_increment not null,
-    member_no                       int                            not null,
-    product_price                   int                            not null,
+    member_no                       int          not null,
+    product_price                   int          not null,
     product_coupon_discount         int      default 0,
-    product_checkout_amount         int                            not null,
+    product_checkout_amount         int          not null,
     member_points                   int      default 0,
     birthday_coupon_no              int      default null,
-    recipient                       varchar(50)                    not null,
-    recipient_phone                 varchar(15)                    not null,
-    recipient_address               varchar(200)                   not null,
+    recipient                       varchar(50)  not null,
+    recipient_phone                 varchar(15)  not null,
+    recipient_address               varchar(200) not null,
     product_orderdate               dateTime default now(),
     product_paydate                 dateTime default now(),
     order_closedate                 dateTime default null,
-    product_payment_status          tinyint  default 0             not null,
-    product_process_status          tinyint  default 0             not null,
-    product_order_allocation_amount int                            not null,
-    product_order_allocation_status tinyint  default 0             not null,
+    product_payment_status          tinyint  default 0  not null,
+    product_process_status          tinyint  default 0  not null,
+    product_order_allocation_amount int          not null,
+    product_order_allocation_status tinyint  default 0  not null,
     foreign key (member_no) references member (member_no),
     foreign key (birthday_coupon_no) references birthday_coupon (birthday_coupon_no)
 ) auto_increment = 1001;
@@ -2217,19 +2184,16 @@ insert into product_order (member_no, product_price, product_coupon_discount, pr
                            birthday_coupon_no, recipient, recipient_phone, recipient_address, product_orderdate,
                            product_paydate, order_closedate, product_payment_status, product_process_status,
                            product_order_allocation_amount, product_order_allocation_status)
-values (1, 1250, 0, 1250, 0, null, '張雨琪', '0912345678', '台北市大安區復興南路一段100號', now(), now(), now(), 1, 1,
-        0, 0),
-       (3, 150, 0, 50, 100, null, '李思婷', '0934567890', '桃園市桃園區中正路300號', now(), now(), null, 0, 4, 150, 1),
-       (9, 250, 0, 100, 100, null, '許心如', '0921098765', '苗栗縣苗栗市中正路二段50號', now(), now(), null, 0, 0, 250,
-        0),
-       (7, 250, 50, 200, 0, 1, '吳雅琴', '0903210987', '宜蘭縣宜蘭市舊城路一段80號', now(), now(), null, 0, 4, 250, 1),
-       (2, 500, 50, 450, 0, 1, '王宇軒', '0928765432', '新北市板橋區文化路二段50號', now(), now(), null, 0, 0, 500, 0),
-       (5, 250, 0, 250, 0, null, '林雅琪', '0956123456', '台南市中西區民權路二段200號', now(), now(), null, 1, 1, 0, 0),
-       (7, 790, 50, 740, 0, 1, '吳雅琴', '0903210987', '宜蘭縣宜蘭市舊城路一段80號', now(), now(), null, 0, 0, 790, 0),
-       (3, 400, 0, 300, 100, null, '李思婷', '0934567890', '桃園市桃園區中正路300號', now(), now(), null, 1, 3, 0, 0),
-       (2, 950, 0, 950, 0, null, '王宇軒', '0928765432', '新北市板橋區文化路二段50號', now(), now(), null, 0, 2, 950,
-        0),
-       (8, 250, 50, 200, 0, 1, '蔡宗翰', '0965432109', '新竹縣竹北市中華路100號', now(), now(), null, 0, 0, 250, 0);
+values (1, 1250, 0,  1250, 0,   null, '張雨琪', '0912345678', '台北市大安區復興南路一段100號',  now(), now(),  now(), 1,  1,  0, 0),
+       (3, 150,  0,  50,   100, null, '李思婷', '0934567890', '桃園市桃園區中正路300號',       now(), now(),  null, 0,  4,  150,  1),
+       (9, 250,  0,  100,  100, null, '許心如', '0921098765', '苗栗縣苗栗市中正路二段50號',    now(), now(),  null,  0,  0,  250,  0),
+       (7, 250,  50, 200,  0,   1, '吳雅琴', '0903210987', '宜蘭縣宜蘭市舊城路一段80號',    now(), now(),  null,  0,  4,  250,  1),
+       (2, 500,  50, 450,  0,   1, '王宇軒', '0928765432', '新北市板橋區文化路二段50號',    now(), now(),  null,  0,  0,  500,  0),
+       (5, 250,  0,  250,  0,   null, '林雅琪', '0956123456', '台南市中西區民權路二段200號',   now(), now(),  null,  1,  1,  0,  0),
+       (7, 790,  50, 740,  0,   1, '吳雅琴', '0903210987', '宜蘭縣宜蘭市舊城路一段80號',    now(), now(),  null,  0,  0,  790,  0),
+       (3, 400,  0,  300,  100, null, '李思婷', '0934567890', '桃園市桃園區中正路300號',       now(), now(),  null,  1, 3,  0,  0),
+       (2, 950,  0,  950,  0,   null, '王宇軒', '0928765432', '新北市板橋區文化路二段50號',    now(), now(),  null,  0,  2,  950,  0),
+       (8, 250,  50, 200,  0,   1, '蔡宗翰', '0965432109', '新竹縣竹北市中華路100號',       now(), now(),  null,  0, 0,  250,  0);
 
 
 create table product_order_detail
@@ -2245,25 +2209,25 @@ create table product_order_detail
 );
 
 insert into product_order_detail (product_no, product_order_no, product_qty, product_price, comments_status)
-values (1, 1001, 1, 250, 0),
-       (9, 1001, 1, 100, 1),
+values (1,  1001, 1, 250, 0),
+       (9,  1001, 1, 100, 1),
        (10, 1001, 2, 900, 1),
-       (4, 1002, 1, 150, 0),
+       (4,  1002, 1, 150, 0),
        (13, 1005, 2, 500, 1),
-       (6, 1007, 2, 440, 0),
-       (2, 1007, 1, 350, 1),
+       (6,  1007, 2, 440, 0),
+       (2,  1007, 1, 350, 1),
        (17, 1008, 2, 400, 0),
-       (2, 1009, 1, 350, 1),
-       (3, 1009, 2, 600, 0);
+       (2,  1009, 1, 350, 1),
+       (3,  1009, 2, 600, 0);
 
-       
+
 create table save_product
 (
-    save_product_no int     not null auto_increment primary key,
-    member_no       int     not null,
-    product_no      int     not null,
+    save_product_no int not null auto_increment primary key,
+    member_no       int not     null,
+    product_no      int not     null,
     save_status     tinyint not null,
-    
+
     foreign key (member_no) references member (member_no),
     foreign key (product_no) references product (product_no)
 );

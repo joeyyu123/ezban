@@ -1,8 +1,7 @@
 package com.ezban.host.controller;
 
-import com.ezban.host.model.Host;
-import com.ezban.host.model.HostMailService;
-import com.ezban.host.model.HostRepository;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -10,7 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Optional;
+import com.ezban.host.model.Host;
+import com.ezban.host.model.HostMailService;
+import com.ezban.host.model.HostRepository;
 
 @Controller
 public class HostPasswordResetController {

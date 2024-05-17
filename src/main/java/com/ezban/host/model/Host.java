@@ -1,14 +1,11 @@
 package com.ezban.host.model;
 
+import java.time.LocalDateTime;
+
 import com.ezban.eventcoupon.model.EventCoupon;
 import com.ezban.product.model.Product;
-
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
+import javax.validation.constraints.*;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
