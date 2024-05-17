@@ -27,13 +27,40 @@ public class TicketOrderStatusService {
     TicketTypeRepository ticketTypeRepository;
 
     /**
+     * 取消訂單
+     * @Return 取消訂單的結果 1代表取消成功且退款成功 0代表取消成功但退款失敗 -1代表無法取消
+     *
+     */
+    @Transactional
+    public int cancelTicketOrder(TicketOrder ticketOrder) {
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        Timestamp startTime = ticketOrder.getTicketOrderDetails().iterator().next().getTicketType().getEvent().getEventStartTime();
+        //活動已開始無法取消，活動開始前三天內取消不退款
+        if (currentTime.after(new Timestamp(startTime.getTime() - 3 * 24 * 60 * 60 * 1000))) { //活動開始前三天內取消訂單不退款
+            ticketOrder.setTicketOrderStatus(TicketOrderStatus.CANCELED);
+            addReamingTicketTypeBack(ticketOrder);
+            ticketOrderRepository.save(ticketOrder);
+            return 0;
+
+        } else if (currentTime.before(new Timestamp(startTime.getTime() - 3 * 24 * 60 * 60 * 1000))){
+            ticketOrder.setTicketOrderStatus(TicketOrderStatus.CANCELED);
+            ticketOrder.setTicketOrderPaymentStatus(TicketOrderPaymentStatus.REFUNDED);
+            addReamingTicketTypeBack(ticketOrder);
+            ticketOrderRepository.save(ticketOrder);
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
+    /**
      * 每分鐘檢查一次是否有訂單超過一小時未付款，並將其訂單狀態改為取消、訂單付款狀態改為逾時，且將所購買的票種數量加回票種剩餘數量中
      */
     @Scheduled(fixedRate = 1, timeUnit = java.util.concurrent.TimeUnit.MINUTES) // 每分鐘檢查一次
     @Transactional
-    public void cancelTicketOrder() {
+    public void cancelTicketOrderWithSchedule() {
         // 將一小時內未付款的訂單狀態改為取消
-        List<TicketOrder> ticketOrders = ticketOrderRepository.findByticketOrderStatusAndTicketOrderTimeBefore(TicketOrderStatus.PROCESSING, new Timestamp(System.currentTimeMillis() - 60 * 60 * 1000)); // 60 * 60 * 1000 = 一小時
+        List<TicketOrder> ticketOrders = ticketOrderRepository.findByTicketOrderStatusAndTicketOrderTimeBefore(TicketOrderStatus.PROCESSING, new Timestamp(System.currentTimeMillis() - 60 * 60 * 1000)); // 60 * 60 * 1000 = 一小時
 
         if (ticketOrders.isEmpty()) {
             return;

@@ -1,12 +1,15 @@
 package com.ezban.host.model;
 
+import com.ezban.eventcoupon.model.EventCoupon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class HostService {
@@ -195,4 +198,19 @@ public class HostService {
 	public void saveHost(Host host) {
 		hostRepository.save(host);
 	}
+
+	public Host getOneHost(Integer hostNo) {
+		Optional<Host> optional = hostRepository.findById(hostNo);
+//		return optional.get();
+		return optional.orElse(null);  // public T orElse(T other) : 如果值存在就回傳其值，否則回傳other的值
+	}
+
+	public List<Host> getAll() {
+		return hostRepository.findAll();
+	}
+
+	public Set<EventCoupon> getEventCouponsByHostNo(Integer hostNo) {
+		return getOneHost(hostNo).getEventCoupons();
+	}
+
 }

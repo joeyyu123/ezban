@@ -2,6 +2,8 @@ package com.ezban.ticketregistration;
 
 import com.ezban.ticketorderdetail.model.TicketOrderDetail;
 import com.ezban.ticketorderdetail.model.TicketOrderDetailService;
+import com.ezban.ticketregistration.model.TicketRegistration;
+import com.ezban.ticketregistration.model.TicketRegistrationService;
 import com.ezban.tickettype.model.Views;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;

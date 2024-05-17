@@ -1,11 +1,9 @@
 package com.ezban.event.model;
 
+import com.ezban.eventcategory.model.EventCategory;
 import com.ezban.eventcomment.model.EventComment;
 import com.ezban.host.model.Host;
-import com.ezban.eventcategory.model.EventCategory;
 import com.ezban.tickettype.model.TicketType;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,7 +15,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "event")
-public class Event implements java.io.Serializable{
+public class Event implements java.io.Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_no", nullable = false)
@@ -31,22 +29,25 @@ public class Event implements java.io.Serializable{
     @Column(name = "event_name", nullable = false, length = 50)
     private String eventName;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_category_no")
     private EventCategory eventCategory;
 
-//    @NotNull
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "host_no", nullable = false)
     private Host host;
 
-    @Column(name = "event_desc", columnDefinition="longtext")
+    @Column(name = "event_desc", columnDefinition = "longtext")
     private String eventDesc;
 
+    @NotNull
     @Size(max = 15)
     @Column(name = "event_city", length = 15)
     private String eventCity;
 
+    @NotNull
     @Size(max = 250)
     @Column(name = "event_detailed_address", length = 250)
     private String eventDetailedAddress;
@@ -58,12 +59,6 @@ public class Event implements java.io.Serializable{
     @NotNull
     @Column(name = "event_remove_time", nullable = false)
     private Timestamp eventRemoveTime;
-
-    @Column(name = "registration_start_time")
-    private Timestamp registrationStartTime;
-
-    @Column(name = "registration_end_time")
-    private Timestamp registrationEndTime;
 
     @NotNull
     @Column(name = "event_start_time", nullable = false)
@@ -98,10 +93,10 @@ public class Event implements java.io.Serializable{
     @Column(name = "event_checkout_time")
     private Timestamp eventCheckoutTime;
 
-    @OneToMany(mappedBy = "event",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private Set<EventComment> eventComments = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "event",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private Set<TicketType> ticketTypes = new LinkedHashSet<>();
 
     public Integer getEventNo() {
@@ -189,22 +184,6 @@ public class Event implements java.io.Serializable{
 
     public void setEventRemoveTime(Timestamp eventRemoveTime) {
         this.eventRemoveTime = eventRemoveTime;
-    }
-
-    public Timestamp getRegistrationStartTime() {
-        return registrationStartTime;
-    }
-
-    public void setRegistrationStartTime(Timestamp registrationStartTime) {
-        this.registrationStartTime = registrationStartTime;
-    }
-
-    public Timestamp getRegistrationEndTime() {
-        return registrationEndTime;
-    }
-
-    public void setRegistrationEndTime(Timestamp registrationEndTime) {
-        this.registrationEndTime = registrationEndTime;
     }
 
     public Timestamp getEventStartTime() {
@@ -299,8 +278,6 @@ public class Event implements java.io.Serializable{
                 ", eventDetailedAddress='" + eventDetailedAddress + '\'' +
                 ", eventAddTime=" + eventAddTime +
                 ", eventRemoveTime=" + eventRemoveTime +
-                ", registrationStartTime=" + registrationStartTime +
-                ", registrationEndTime=" + registrationEndTime +
                 ", eventStartTime=" + eventStartTime +
                 ", eventEndTime=" + eventEndTime +
                 ", registeredCount=" + registeredCount +

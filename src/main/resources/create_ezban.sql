@@ -2103,7 +2103,7 @@ create table product_report
 (
     product_report_no int auto_increment primary key,
     product_no        int          not null,
-    member_no         int,
+    member_no         int          not null,
     admin_no          int,
     report_reason     varchar(100) not null,
     report_date       datetime     not null,
