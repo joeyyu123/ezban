@@ -4,8 +4,21 @@
 <head th:replace="frontstage/index2 :: head">
     <title>ezban | save_product</title>
 </head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <style>
+    .btn-icon {
+        color: lightgray;
+        font-size: 30px;
+        transition: all 0.3s ease; /* 添加過渡效果 */
+    }
+
+    /* 懸停效果 */
+    .btn:hover .btn-icon {
+        color: #1515d9; /* 懸停時變成紅色 */
+        transform: scale(1.6); /* 懸停時放大 */
+    }
+
     #example th {
         padding: 5px; /* 調整單元格內邊距 */
         text-align: center; /* 將文字置中 */
@@ -55,13 +68,13 @@
 <body id="body">
 <div th:replace="frontstage/index2 :: header"></div>
 <div class="content">
-    <h1 class="page-name" ,
-        style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; text-align: center;">
+    <h1 class="page-name"
+        style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; margin-left: 80px;">
         <i class="fa-regular fa-bookmark"></i> &nbsp;&nbsp;我 的 收 藏 夾 </h1>
     <section class="user-dashboard">
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12" style=" margin-bottom: 100px;" >
                     <div class="container">
                         <div class="dashboard-wrapper user-dashboard">
                             <div class="table-responsive">
@@ -70,6 +83,7 @@
                                     <tr>
                                         <th>商品圖片</th>
                                         <th>商品名稱 [編號]</th>
+                                        <th>商品詳情</th>
                                         <th>商品金額</th>
                                         <th>收藏狀態</th>
                                     </tr>
@@ -83,6 +97,15 @@
                                             </td>
                                             <td style="vertical-align: middle"
                                                 th:text="${saveProduct.product.productName} + '[' + ${saveProduct.product.productNo} + ']'"></td>
+                                            <td style="vertical-align: middle">
+                                                <form method="get" th:action="@{/product/shopdetail/(productNo=${saveProduct.product.productNo})}">
+                                                    <button type="submit" class="btn btn-link p-0">
+                                                        <i class="fa-solid fa-eye btn-icon"></i>
+                                                    </button>
+                                                    <input type="hidden" name="product"
+                                                           th:value="${saveProduct.product.productNo}">
+                                                </form>
+                                            </td>
                                             <td style="vertical-align: middle"
                                                 th:text="${'TWD $ '+saveProduct.product.productPrice}"></td>
                                             <td style="vertical-align: middle"
