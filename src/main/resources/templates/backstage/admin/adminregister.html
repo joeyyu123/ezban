@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>註冊新管理員</title>
+<style>
+.error {
+    color: red;
+}
+
+.success {
+    color: green;
+}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let checkedAccount = false;
+    let checkedName = false;
+    let checkedMail = false;
+    let checkedPhone = false;
+    let checkedVerificationCode = false;
+    let verificationCode = null;
+
+    // 檢查帳號
+    document.getElementById('adminAccount').addEventListener('input', function() {
+        const adminAccount = this.value;
+        const accountError = document.getElementById('accountError');
+        if (adminAccount.length < 6 || adminAccount.length > 30 || !/^[a-zA-Z0-9]+$/.test(adminAccount)) {
+            accountError.textContent = '帳號必須為 6 至 30 位的字母或數字';
+            accountError.className = 'error';
+            checkedAccount = false;
+            return;
+        }
+        fetch(`http://localhost:8080/api/admin/checkAccount/${adminAccount}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    accountError.textContent = '此帳號已被使用';
+                    accountError.className = 'error';
+                    checkedAccount = false;
+                } else {
+                    accountError.textContent = '此帳號可用';
+                    accountError.className = 'success';
+                    checkedAccount = true;
+                }
+            })
+            .catch(error => {
+                accountError.textContent = '檢查帳號失敗，請重試。';
+                accountError.className = 'error';
+                checkedAccount = false;
+                console.error('Error:', error);
+            });
+    });
+
+    // 檢查名稱
+    document.getElementById('adminName').addEventListener('input', function() {
+        const adminName = this.value;
+        const nameError = document.getElementById('nameError');
+        if (!adminName) {
+            nameError.textContent = '請輸入名稱';
+            nameError.className = 'error';
+            checkedName = false;
+            return;
+        }
+        fetch(`http://localhost:8080/api/admin/checkName/${adminName}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    nameError.textContent = '此名稱已被使用';
+                    nameError.className = 'error';
+                    checkedName = false;
+                } else {
+                    nameError.textContent = '此名稱可用';
+                    nameError.className = 'success';
+                    checkedName = true;
+                }
+            })
+            .catch(error => {
+                nameError.textContent = '檢查名稱失敗，請重試。';
+                nameError.className = 'error';
+                checkedName = false;
+                console.error('Error:', error);
+            });
+    });
+
+    // 檢查電子郵件
+    document.getElementById('checkMailButton').addEventListener('click', function() {
+        const adminMail = document.getElementById('adminMail').value;
+        const mailError = document.getElementById('mailError');
+
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(adminMail)) {
+            mailError.textContent = '電子郵件格式不正確';
+            mailError.className = 'error';
+            checkedMail = false;
+            return;
+        }
+
+        fetch(`http://localhost:8080/api/admin/checkMail/${adminMail}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    mailError.textContent = '此電子郵件已被使用';
+                    mailError.className = 'error';
+                    checkedMail = false;
+                } else {
+                    mailError.textContent = '驗證碼已發送到您的電子郵件，請輸入驗證碼';
+                    mailError.className = 'success';
+                    checkedMail = true;
+                    verificationCode = data.verificationCode;
+                    document.getElementById('verificationSection').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                mailError.textContent = '檢查電子郵件失敗，請重試。';
+                mailError.className = 'error';
+                checkedMail = false;
+                console.error('Error:', error);
+            });
+    });
+
+    // 檢查驗證碼
+    document.getElementById('verificationCode').addEventListener('input', function() {
+        const userVerificationCode = this.value;
+        const verificationCodeError = document.getElementById('verificationCodeError');
+        if (userVerificationCode === verificationCode) {
+            verificationCodeError.textContent = '驗證碼正確';
+            verificationCodeError.className = 'success';
+            checkedVerificationCode = true;
+            setTimeout(function() {
+                document.getElementById('verificationSection').remove();
+                document.getElementById('mailError').textContent = '驗證成功';
+                if (document.getElementById('verificationCode')) {
+                    document.getElementById('verificationCode').value = '';
+                }
+            }, 2000);
+        } else {
+            verificationCodeError.textContent = '驗證碼錯誤，請重新輸入';
+            verificationCodeError.className = 'error';
+            checkedVerificationCode = false;
+        }
+    });
+
+    // 檢查手機號碼
+    document.getElementById('adminPhone').addEventListener('input', function() {
+        const adminPhone = this.value;
+        const phoneError = document.getElementById('phoneError');
+        if (!/^\d{10}$/.test(adminPhone)) {
+            phoneError.textContent = '請輸入正確的手機號碼';
+            phoneError.className = 'error';
+            checkedPhone = false;
+            return;
+        }
+        fetch(`http://localhost:8080/api/admin/checkPhone/${adminPhone}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    phoneError.textContent = '此手機號碼已被使用';
+                    phoneError.className = 'error';
+                    checkedPhone = false;
+                } else {
+                    phoneError.textContent = '此手機號碼可用';
+                    phoneError.className = 'success';
+                    checkedPhone = true;
+                }
+            })
+            .catch(error => {
+                phoneError.textContent = '檢查手機號碼失敗，請重試。';
+                phoneError.className = 'error';
+                checkedPhone = false;
+                console.error('Error:', error);
+            });
+    });
+
+    // 提交註冊表單
+    document.getElementById('adminregister').addEventListener('submit', function(event) {
+        event.preventDefault();
+        let allChecked = checkedAccount && checkedName && checkedMail && checkedPhone && checkedVerificationCode;
+
+        if (!allChecked) {
+            alert('請檢查所有欄位');
+            return;
+        }
+
+        document.querySelectorAll('.error').forEach(span => span.textContent = '');
+        document.getElementById('errorMessage').textContent = '';
+
+        // 構造表單資料
+        const formData = new FormData(this);
+        const jsonData = {};
+        formData.forEach((value, key) => {
+            if (key !== 'verificationCode') {
+                jsonData[key] = value;
+            }
+        });
+
+        console.log("Sending JSON Data:", jsonData);
+
+        // 發送表單資料
+        fetch('http://localhost:8080/api/admin/register', {
+            method: 'POST',
+            body: JSON.stringify(jsonData),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('註冊成功');
+                setTimeout(() => {
+                    window.location.href = '/adminlogin'; // 成功後跳轉
+                }, 500);
+            } else {
+                const message = data.message || '註冊失敗，請重試。';
+                document.getElementById('errorMessage').textContent = message;
+            }
+        })
+        .catch(error => {
+            console.error('Fetch Error:', error);
+            document.getElementById('errorMessage').textContent = '註冊失敗，請重試。';
+        });
+    });
+});
+</script>
+</head>
+<body>
+    <h1>管理員註冊</h1>
+    <form id="adminregister" action="http://localhost:8080/api/admin/register" method="post">
+        <label for="adminAccount">員工帳號:</label>
+        <input type="text" id="adminAccount" name="adminAccount" required>
+        <br><span id="accountError" class="error"></span><br>
+
+        <label for="adminName">員工名稱:</label>
+        <input type="text" id="adminName" name="adminName" required>
+        <br><span id="nameError" class="error"></span><br>
+
+        <label for="adminMail">電子郵件:</label>
+        <input type="email" id="adminMail" name="adminMail" required>
+        <button type="button" id="checkMailButton">檢查電子郵件</button>
+        <br><span id="mailError" class="error"></span><br>
+
+        <div id="verificationSection" style="display: none;">
+            <label for="verificationCode">驗證碼:</label>
+            <input type="text" id="verificationCode" name="verificationCode">
+            <br><span id="verificationCodeError" class="error"></span><br>
+        </div>
+
+        <label for="adminPhone">手機號碼:</label>
+        <input type="text" id="adminPhone" name="adminPhone" required>
+        <br><span id="phoneError" class="error"></span><br>
+
+        <button type="submit">註冊</button>
+    </form>
+    <p id="errorMessage" class="error"></p>
+</body>
+</html>

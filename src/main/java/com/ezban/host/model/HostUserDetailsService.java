@@ -32,7 +32,7 @@ public class HostUserDetailsService implements UserDetailsService {
             Host host = query.getSingleResult();
 
             return User.builder()
-                .username(host.getHostAccount())
+                .username(String.valueOf(host.getHostNo()))
                 .password(host.getHostPwd())
                 .roles("HOST") 
                 .build();
