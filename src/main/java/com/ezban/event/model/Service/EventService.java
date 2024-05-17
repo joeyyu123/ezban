@@ -52,7 +52,7 @@ public class EventService implements ServiceDemo<Event> {
     }
 
     public boolean isAuthenticated(Principal principal, Event event) {
-        return principal.getName().equals(event.getHost().getHostAccount());
+        return principal.getName().equals(event.getHost().getHostNo().toString());
     }
 
 }
