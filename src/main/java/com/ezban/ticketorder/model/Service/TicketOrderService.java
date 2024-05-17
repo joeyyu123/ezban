@@ -150,6 +150,7 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
      * 根據 ticketOrder  建立對應的qrcodeTickets到資料庫
      */
     public List<QrcodeTicket> createQrcodeTickets(TicketOrder ticketOrder) {
+        Member member = ticketOrder.getMember();
         Set<TicketOrderDetail> ticketOrderDetails = ticketOrder.getTicketOrderDetails();
         List<QrcodeTicket> qrcodeTickets = new ArrayList<>();
 
@@ -163,8 +164,6 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
                 for (int j = 0; j < i; j++) {
                     QrcodeTicket qrcodeTicket = new QrcodeTicket();
                     qrcodeTicket.setTicketOrderDetail(ticketOrderDetail);
-                    // TODO: 先用1號會員， 之後改成從session 取得 memberNo
-                    Member member = memberService.getMemberById(1);
 
                     qrcodeTicket.setMember(member);
                     qrcodeTicket.setTicketUsageStatus((byte) 0);
