@@ -83,7 +83,7 @@ public class BackstageEventController {
                          @RequestParam Map<String, String> allParams,
                          @RequestParam(value = "eventImg", required = false) MultipartFile eventImg) throws IOException {
 
-        Host host = hostService.findHostByAccount(principal.getName()).orElseThrow();
+        Host host = hostService.findHostByHostNo(principal.getName()).orElseThrow();
 
         Event event = new Event();
         EventCategory category = eventCategoryService.findById(Integer.parseInt(allParams.get("eventCategory")));
@@ -107,14 +107,14 @@ public class BackstageEventController {
      */
     @GetMapping("/events")
     public String events(Model model, Principal principal) {
-        Host host = hostService.findHostByAccount(principal.getName()).orElseThrow();
+        Host host = hostService.findHostByHostNo(principal.getName()).orElseThrow();
         model.addAttribute("events", eventService.findByHostNo(host.getHostNo()));
         return "/backstage/event/events";
     }
 
     @GetMapping("/events/{eventNo}/overview")
     public String overview(Principal principal, Model model, @PathVariable Integer eventNo) {
-        Integer hostNo = hostService.findHostByAccount(principal.getName()).orElseThrow().getHostNo();
+        Integer hostNo = hostService.findHostByHostNo(principal.getName()).orElseThrow().getHostNo();
 
         Event event = eventService.findById(eventNo);
         if (!Objects.equals(event.getHost().getHostNo(), hostNo)) {
