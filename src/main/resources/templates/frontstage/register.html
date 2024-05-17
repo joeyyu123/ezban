@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>會員註冊</title>
+<style>
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f7f7f7;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
+
+.container {
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	width: 400px;
+}
+
+h2 {
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+input[type="text"], input[type="email"], input[type="password"], input[type="date"],
+	input[type="tel"] {
+	width: 100%;
+	padding: 10px;
+	margin: 10px 0;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+
+select {
+	width: 100%;
+	padding: 10px;
+	margin: 10px 0;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+
+button {
+	width: 100%;
+	padding: 10px;
+	background-color: #28a745;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: #218838;
+}
+
+.message {
+	text-align: center;
+	margin: 10px 0;
+}
+</style>
+</head>
+<body>
+
+	<div class="container">
+		<h2>會員註冊</h2>
+		<div class="message" id="message"></div>
+		<form id="registerForm">
+			<input type="text" id="name" placeholder="姓名" required
+				autocomplete="name"> <input type="email" id="memberMail"
+				placeholder="電子郵件" required autocomplete="memberMail"> <input
+				type="password" id="memberPwd" placeholder="密碼" required
+				autocomplete="memberPwd"> <input type="date" id="birthday"
+				placeholder="生日" required autocomplete="birthday"> <select
+				id="gender">
+				<option value="">選擇性別</option>
+				<option value="1">男性</option>
+				<option value="2">女性</option>
+			</select> <input type="tel" id="phone" placeholder="電話" required
+				autocomplete="phone"> <input type="text" id="address"
+				placeholder="地址" required autocomplete="address"> <input
+				type="text" id="recipient" placeholder="常用收件人" required
+				autocomplete="recipient"> <input type="tel"
+				id="recipientPhone" placeholder="收件人電話" required
+				autocomplete="recipientPhone"> <input type="text"
+				id="recipientAddress" placeholder="收件人地址" required
+				autocomplete="recipientAddress">
+			<button type="submit">註冊</button>
+		</form>
+
+		<form id="verificationForm" style="display: none;">
+			<h2>驗證帳戶</h2>
+			<input type="email" id="verifyEmail" placeholder="電子郵件" required>
+			<input type="text" id="verificationCode" placeholder="驗證碼" required>
+			<button type="button" onclick="verifyMember()">驗證</button>
+		</form>
+	</div>
+
+	<script>
+	document.getElementById('registerForm').addEventListener('submit', function(event) {
+	    event.preventDefault();
+	    console.log('註冊表單已提交');
+
+	    const name = document.getElementById('name').value;
+	    const memberMail = document.getElementById('memberMail').value;
+	    const memberPwd = document.getElementById('memberPwd').value;
+	    const birthday = document.getElementById('birthday').value;
+	    const gender = document.getElementById('gender').value;
+	    const phone = document.getElementById('phone').value;
+	    const address = document.getElementById('address').value;
+	    const recipient = document.getElementById('recipient').value;
+	    const recipientPhone = document.getElementById('recipientPhone').value;
+	    const recipientAddress = document.getElementById('recipientAddress').value;
+	    const messageDiv = document.getElementById('message');
+
+	    const member = {
+	        memberName: name,
+	        memberMail: memberMail,
+	        memberPwd: memberPwd,
+	        birthday: birthday,
+	        gender: gender ? parseInt(gender) : null,
+	        memberPhone: phone,
+	        address: address,
+	        commonRecipient: recipient,
+	        commonRecipientPhone: recipientPhone,
+	        commonRecipientAddress: recipientAddress,
+	        memberPoints: 0,
+	        memberStatus: 0
+	    };
+
+	    fetch('/register', {
+	        method: 'POST',
+	        headers: {
+	            'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify(member)
+	    })
+	    .then(response => {
+	        if (response.ok) {
+	            messageDiv.style.color = 'green';
+	            messageDiv.textContent = '註冊成功！請檢查您的電子郵件以驗證您的帳戶';
+	            document.getElementById('registerForm').style.display = 'none';
+	            document.getElementById('verificationForm').style.display = 'block';
+	            console.log('注册表单已隐藏，验证表单已显示');
+	            document.getElementById('verifyEmail').value = memberMail;  // 預填電子郵件
+	        } else {
+	            throw new Error('註冊失敗');
+	        }
+	    })
+	    .catch(error => {
+	        messageDiv.style.color = 'red';
+	        messageDiv.textContent = '註冊時發生錯誤：' + error.message;
+	    });
+	});
+
+	function verifyMember() {
+	    const memberMail = document.getElementById('verifyEmail').value;
+	    const code = document.getElementById('verificationCode').value;
+	    const messageDiv = document.getElementById('message');
+
+	    fetch('/verifyMember', {
+	        method: 'POST',
+	        headers: {
+	            'Content-Type': 'application/json'
+	        },
+	        body: JSON.stringify({ memberMail: memberMail, code: code })
+	    })
+	    .then(response => {
+	        if (response.ok) {
+	            messageDiv.style.color = 'green';
+	            messageDiv.textContent = '驗證成功！';
+	            window.location.href = '/loginPage';
+	        } else {
+	            throw new Error('驗證失敗');
+	        }
+	    })
+	    .catch(error => {
+	        messageDiv.style.color = 'red';
+	        messageDiv.textContent = '驗證時發生錯誤：' + error.message;
+	    });
+	}
+
+    </script>
+
+
+</body>
+</html>

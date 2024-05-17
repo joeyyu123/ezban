@@ -26,6 +26,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.ezban.event.model.Event;
+import com.ezban.event.model.EventStatus;
+import com.ezban.event.model.Service.EventService;
+import com.ezban.eventcategory.model.EventCategory;
+import com.ezban.eventcategory.model.EventCategoryService;
+import com.ezban.host.model.Host;
+
 @Controller
 @RequestMapping("/backstage")
 public class BackstageEventController {
@@ -58,7 +83,7 @@ public class BackstageEventController {
                          @RequestParam Map<String, String> allParams,
                          @RequestParam(value = "eventImg", required = false) MultipartFile eventImg) throws IOException {
 
-        Host host = hostService.findHostByAccount(principal.getName()).orElseThrow();
+        Host host = hostService.findHostByHostNo(principal.getName()).orElseThrow();
 
         Event event = new Event();
         EventCategory category = eventCategoryService.findById(Integer.parseInt(allParams.get("eventCategory")));
@@ -82,14 +107,14 @@ public class BackstageEventController {
      */
     @GetMapping("/events")
     public String events(Model model, Principal principal) {
-        Host host = hostService.findHostByAccount(principal.getName()).orElseThrow();
+        Host host = hostService.findHostByHostNo(principal.getName()).orElseThrow();
         model.addAttribute("events", eventService.findByHostNo(host.getHostNo()));
         return "/backstage/event/events";
     }
 
     @GetMapping("/events/{eventNo}/overview")
     public String overview(Principal principal, Model model, @PathVariable Integer eventNo) {
-        Integer hostNo = hostService.findHostByAccount(principal.getName()).orElseThrow().getHostNo();
+        Integer hostNo = hostService.findHostByHostNo(principal.getName()).orElseThrow().getHostNo();
 
         Event event = eventService.findById(eventNo);
         if (!Objects.equals(event.getHost().getHostNo(), hostNo)) {

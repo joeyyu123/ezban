@@ -8,10 +8,7 @@ import com.ezban.ticketorderdetail.model.TicketOrderDetailService;
 import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
@@ -39,6 +36,7 @@ public class EcpayController {
      * @param params 付款完成後ECpay的回傳參數
      * @return 接受到訊息後傳"1|OK"給ECPay
      */
+    @CrossOrigin
     @PostMapping("/ecpay/return")
     @ResponseBody
     public String ecpay(@RequestParam Map<String, String> params) {

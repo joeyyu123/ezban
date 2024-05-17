@@ -63,18 +63,15 @@
         </form>
 
         <p class="text-center">
-            <a href="/passwordreset">忘記密碼？</a>
+            <a href="/forgot_password">忘記密碼？</a>
         </p>
         <p class="text-center">
-            <a href="/hostpassrevise">修改密碼</a>
-        </p>
-        <p class="text-center">
-            <a href="/hostregister">前往註冊</a>
+            <a href="/hostRegister.html">前往註冊</a>
         </p>
     </div>
 
     <script>
-       
+        // Show error message only when the error parameter exists
         const params = new URLSearchParams(window.location.search);
         const errorElement = document.querySelector("#error-message");
 
