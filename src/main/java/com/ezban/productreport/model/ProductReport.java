@@ -30,7 +30,7 @@ public class ProductReport implements java.io.Serializable {
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name = "member_no")
+    @JoinColumn(name = "member_no", nullable = false)
     private Member member;
 
     @ManyToOne
