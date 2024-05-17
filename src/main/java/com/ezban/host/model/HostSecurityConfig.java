@@ -40,7 +40,7 @@ public class HostSecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests()
                 .antMatchers("/hostlogin", "/hostregister", "/passwordreset").permitAll()
-                .antMatchers("/backstage/**", "/backstage").authenticated()
+                .antMatchers("/backstage/**", "/qaback**").authenticated()
                 .and()
             .formLogin()
                 .loginPage("/hostlogin")

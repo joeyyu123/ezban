@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>ezban | select</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link th:include="backstage/index :: head">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 5px;
+        }
+
+        form {
+            display: table;
+        }
+
+        form div {
+            display: table-row;
+        }
+
+        label, input, span, select {
+            display: table-cell;
+            margin: 2px;
+            text-align: left;
+        }
+
+        input[type=text], input[type=password], select, textarea {
+            width: 200px;
+            margin: 2px;
+        }
+
+        form div div {
+            display: table-cell;
+        }
+
+        span {
+            display: inline-block;
+            width: 150px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        /* 點擊時的手指頭效果 */
+        input[type="submit"]:hover {
+            cursor: pointer;
+        }
+
+        input[type="submit"]:active {
+            background-color: lightyellow; /* 點即時變換背景颜色 */
+            outline: none;
+        }
+    </style>
+
+</head>
+
+<body>
+<div id="wrapper">
+    <nav th:replace="backstage/index :: navbar"></nav>
+    <div th:insert="backstage/index :: hamburger-btn"></div>
+    <div class="page-content-wrapper">
+        <div class="content">
+            <nav class="navbar navbar-expand-md navbar-dark bg-transparent justify-content-center">
+                <br>
+                <div align="center">
+                    <h2 style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; text-align: center;">
+                        <i class="fa-solid fa-window-restore"></i> &nbsp;&nbsp;商 品 訂 單 管 理 </h2>
+                </div>
+            </nav>
+            <br> <br>
+            <h4>
+                <span style="width: 200px">請選擇查詢方式:</span>
+            </h4>
+            <div class="errorblock" th:utext="${errorMessage}" style="color: red;">${errorMessage}</div>
+            <br>
+            <ul>
+                <li><h5>
+                    <a href='listAllProductOrder'><i class="fa-solid fa-magnifying-glass"
+                                                     style="font-size: 30px; color: #2f3441"></i></a> 顯示所有訂單資料
+                    <br>
+                    <br>
+                </h5></li>
+                <li>
+                    <form method="post" th:action="@{/backstage/productorder/getOneForDisplay}">
+                        輸入訂單編號: <input type="text" name="productOrderNo" th:value="${param.productOrderNo}">
+                        <input type="submit" value="送出"> (請輸入訂單編號)
+                    </form>
+                    <br>
+                </li>
+                <li>
+                    <form method="post" th:action="@{/backstage/productorder/getOneForDisplay}">
+                        選擇訂單編號: <select name="productOrderNo">
+                        <option th:each="productOrder : ${productOrderListData}"
+                                th:value="${productOrder.productOrderNo}"
+                                th:text="${productOrder.productOrderNo}"/>
+                    </select> <input type="submit" value="送出">
+                    </form>
+                    <br>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

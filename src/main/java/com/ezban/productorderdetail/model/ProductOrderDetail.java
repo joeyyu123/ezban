@@ -4,6 +4,8 @@ import com.ezban.product.model.Product;
 import com.ezban.productorder.model.ProductOrder;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -37,7 +39,8 @@ public class ProductOrderDetail implements java.io.Serializable {
 
     @NotNull(message = "* 評論狀態: 請勿空白 !")
     @Column(name = "comments_status", nullable = false)
-    @Pattern(regexp = "^[0-1]$", message = "* 評論狀態不正確 !")
+    @Min(value = 0, message = "* 評論狀態不正確 !")
+    @Max(value = 1, message = "* 評論狀態不正確 !")
     private Byte commentsStatus;
 
     public ProductOrderDetail() {

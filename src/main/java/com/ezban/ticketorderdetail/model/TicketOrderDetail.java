@@ -4,6 +4,7 @@ import com.ezban.qrcodeticket.model.QrcodeTicket;
 import com.ezban.ticketorder.model.TicketOrder;
 import com.ezban.tickettype.model.TicketType;
 import com.ezban.tickettype.model.Views;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
@@ -44,9 +45,11 @@ public class TicketOrderDetail implements java.io.Serializable {
 
     @NotNull
     @Column(name = "included_ticket_qty", nullable = false)
+    @JsonIgnore
     private Integer includedTicketQty;
 
     @OneToMany(mappedBy = "ticketOrderDetail")
+    @JsonIgnore
     private Set<QrcodeTicket> qrcodeTickets = new LinkedHashSet<>();
 
     public Integer getTicketOrderDetailNo() {

@@ -34,7 +34,7 @@ public class HostUserDetailsService implements UserDetailsService {
             return User.builder()
                 .username(host.getHostAccount())
                 .password(host.getHostPwd())
-                .roles("HOST") // 您可以根據需求設置適當的角色
+                .roles("HOST") 
                 .build();
         } catch (NoResultException e) {
             throw new UsernameNotFoundException("帳號或密碼不正確");

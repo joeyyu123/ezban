@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link th:include="backstage/index :: head">
+    <!-- 可以在這底下加入其他 css 或是 script    -->
+    <script th:src="@{/plugins/ckeditor/ckeditor.js}"></script>
+
+</head>
+
+<body>
+<div id="wrapper" class="">
+    <nav th:replace="backstage/event/event :: navbar"></nav>
+    <div th:insert="backstage/index :: hamburger-btn"></div>
+    <div class="page-content-wrapper">
+        <!-- 頁面內容都放在 content 裡面 -->
+        <div class="content">
+            <!-- 這裡可以放置你想呈現的內容 -->
+            <h2>活動報名資料</h2>
+            <a th:href="@{'/backstage/events/'+ ${eventNo} +'/ticket-registrations/download'}">
+                <button id="download-xlsx" class="btn btn-primary">下載活動報名資料</button>
+            </a>
+            <div th:text="${event.eventName}"></div>
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th th:each="question : ${questions}" th:text="${question.label}"></th>
+                </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                <th:block th:each="registration : ${ticketRegistrations}">
+                    <th:block th:each="person : ${registration.persons}">
+                        <tr>
+                            <!--                            <th scope="row" th:text="${stat.index + 1}"></th>-->
+                            <td th:each="response : ${person.responses}" th:text="${response.parseResponse}"></td>
+                        </tr>
+                    </th:block>
+                </th:block>
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+</div>
+</body>
+
+</html>

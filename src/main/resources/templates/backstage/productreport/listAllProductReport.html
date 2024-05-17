@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>ezban | product_report</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:include="backstage/index :: head">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.jqueryui.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        #example {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        #example th {
+            padding: 5px; /* 調整單元格內邊距 */
+            text-align: center; /* 將文字置中 */
+            font-size: 16px; /* 調整字體大小 */
+            line-height: 1; /* 調整行高 */
+        }
+
+        #example td {
+            padding: 5px; /* 調整單元格內邊距 */
+            text-align: center; /* 將文字置中 */
+            font-size: 14px; /* 調整字體大小 */
+            line-height: 1; /* 調整行高 */
+        }
+
+        #example th {
+            background-color: #f2f2f2; /* 設置表頭背景色 */
+            font-weight: bold; /* 加粗表頭文字 */
+        }
+
+        #example tr:nth-child(even) {
+            background-color: #f9f9f9; /* 隔行變色 */
+        }
+
+        tr > th:nth-child(3)::before,
+        tr > th:nth-child(5)::before,
+        tr > th:nth-child(7)::before,
+        tr > th:nth-child(8)::before {
+            display: none !important;
+        }
+
+        tr > th:nth-child(3)::after,
+        tr > th:nth-child(5)::after,
+        tr > th:nth-child(7)::after,
+        tr > th:nth-child(8)::after {
+            display: none !important;
+        }
+
+        .custom-btn-color {
+            background-color: lightgray; /* 自定義顏色，這裡使用紅色 */
+            color: #ffffff; /* 文字顏色 */
+            font-size: 14px; /* 設置文字大小 */
+            padding: 5px 5px; /* 設置內邊距 */
+            border-style: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .custom-btn-color:hover {
+            background-color: coral; /* 悬停时的背景色 */
+            color: #ffffff; /* 悬停时的文字颜色 */
+        }
+
+        /* 灰色小点样式 */
+        .dot-gray::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 5px; /* 设置小点与文字之间的间距 */
+            border-radius: 50%;
+            background-color: gray;
+        }
+
+        /* 蓝色小点样式 */
+        .dot-blue::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 5px;
+            border-radius: 50%;
+            background-color: blue;
+        }
+
+        /* 红色小点样式 */
+        .dot-red::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 5px;
+            border-radius: 50%;
+            background-color: red;
+        }
+
+    </style>
+
+</head>
+
+<body>
+<div id="wrapper">
+    <nav th:replace="backstage/index :: navbar"></nav>
+    <div th:insert="backstage/index :: hamburger-btn"></div>
+    <div class="page-content-wrapper">
+        <div class="content">
+            <nav class="navbar navbar-expand-md navbar-dark bg-transparent  justify-content-center">
+                <div>
+                    <div><h2
+                            style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; text-align: center;">
+                        <i class="fa-solid fa-screwdriver-wrench"></i> &nbsp;&nbsp;商 品 檢 舉 審 核</h2>
+                    </div>
+                </div>
+            </nav>
+            <table id="example" class="display" style="width: 100%">
+                <thead>
+                <tr style="background-color:#CCCCCC">
+                    <th style="padding: 10px 20px;">項次&nbsp;</th>
+                    <th>商品名稱 [編號]</th>
+                    <th>檢舉者 [編號]</th>
+                    <th>檢舉日期</th>
+                    <th>檢舉原因</th>
+                    <th>檢舉狀態</th>
+                    <th>審核</th>
+                    <th>員工 [編號]</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="productReport : ${productReportListData}">
+                    <tr>
+                        <td th:text="${productReport.productReportNo}"></td>
+                        <td th:text="${productReport.product.productName}+ '[' + ${productReport.product.productNo} + ']'"></td>
+                        <td th:text="${productReport.member?.memberName} + '[' + ${productReport.member?.memberNo} + ']'"></td>
+                        <td th:text="${#dates.format(productReport.reportDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${productReport.reportReason}"></td>
+                        <td th:if="${productReport.reportStatus == 0}"><span class="dot-gray"></span>尚未處理</td>
+                        <td th:if="${productReport.reportStatus == 1}"><span class="dot-blue"></span>正常顯示</td>
+                        <td th:if="${productReport.reportStatus == 2}"><span class="dot-red"></span>下架商品</td>
+                        <td>
+                            <select th:id="reportStatus + ${productReport.productReportNo}">
+                                <option value="" selected>-----請選擇-----</option>
+                                <option value="1">正常顯示</option>
+                                <option value="2">下架商品</option>
+                            </select>
+                            <br>
+                            <button type="button" class="custom-btn-color" style="margin-top: 5px;"
+                                    th:onclick="updateProductReport([[${productReport.productReportNo}]])">
+                                <i class="fas fa-save"></i> 送出
+                            </button>
+                        </td>
+                        <td th:text="${productReport.admin?.adminName} + '[' + ${productReport.admin?.adminNo} + ']'"></td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+
+<script>
+    function updateProductReport(productReportNo) {
+        var selectedValue = $("#reportStatus" + productReportNo).val();
+        var formData = {
+            productReportNo: productReportNo,
+            selectedValue: selectedValue
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/backstage/productreport/update',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                console.log('Success response received:', response);
+                Swal.fire({
+                    title: '修改成功',
+                    text: "檢舉狀態已成功更新。",
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: '確定',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log('AJAX error response:', status, error);
+                Swal.fire('修改失敗', '請檢查輸入資料是否正確。', 'error');
+            }
+        });
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $('#example').DataTable({
+            "lengthMenu": [5, 10, 20, 50],
+            "searching": true,  //搜尋功能, 預設是開啟
+            "paging": true,     //分頁功能, 預設是開啟
+            "ordering": true,   //排序功能, 預設是開啟
+            "language": {
+                "processing": "處理中...",
+                "loadingRecords": "載入中...",
+                "lengthMenu": "顯示 _MENU_ 筆結果",
+                "zeroRecords": "沒有符合的結果",
+                "info": "顯示第 _START_ 至 _END_ 筆結果，共<font color=red> _TOTAL_ </font>筆",
+                "infoEmpty": "顯示第 0 至 0 筆結果，共 0 筆",
+                "infoFiltered": "(從 _MAX_ 筆結果中過濾)",
+                "infoPostFix": "",
+                "search": "搜尋:",
+                "paginate": {
+                    "first": "第一頁",
+                    "previous": "上一頁",
+                    "next": "下一頁",
+                    "last": "最後一頁"
+                },
+                "aria": {
+                    "sortAscending": ": 升冪排列",
+                    "sortDescending": ": 降冪排列"
+                }
+            }
+        });
+    });
+</script>
+
+</html>

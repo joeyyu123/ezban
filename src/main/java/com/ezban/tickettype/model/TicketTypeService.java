@@ -23,6 +23,10 @@ public class TicketTypeService implements ServiceDemo<TicketType> {
         return repository.saveAndFlush(vo);
     }
 
+    public void delete(TicketType vo) {
+        repository.delete(vo);
+    }
+
     @Override
     public TicketType findById(Integer id) {
         return repository.findById(id).orElse(null);

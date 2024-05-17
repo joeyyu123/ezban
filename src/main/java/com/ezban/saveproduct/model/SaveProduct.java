@@ -20,7 +20,7 @@ public class SaveProduct implements java.io.Serializable {
 
     @NotNull(message = "* 會員編號: 請勿空白 !")
     @ManyToOne
-    @JoinColumn(name = "member_no", nullable = false)
+    @JoinColumn(name = "member_no",nullable = false)
     private Member member;
 
     @NotNull(message = "* 商品編號: 請勿空白 !")
@@ -69,8 +69,5 @@ public class SaveProduct implements java.io.Serializable {
         this.saveStatus = saveStatus;
     }
 
-    public static long getSerialversionuid() {
-        return serialVersionUID;
-    }
 
 }
