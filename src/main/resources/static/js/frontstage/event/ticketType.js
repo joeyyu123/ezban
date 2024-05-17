@@ -306,6 +306,7 @@ $(document).ready(function () {
                         </div>
                         <div class="mb-3">
                             <button class="btn btn-outline-secondary" id="apply-coupon-btn">兌換</button>
+                            <div class="mb3 alert alert-warning hidden"></div>
                         </div>
                     </div>`);
 
@@ -348,6 +349,12 @@ $(document).ready(function () {
 
                 orderDetails_div.find('table').append(`
                     <tfoot class="table-group-divider">
+                        <tr class="hidden">
+                              <th scope="row">折扣金額</th>
+                              <td></td>
+                              <td></td>
+                              <td class="discount"></td>
+                        </tr>
                         <tr>
                           <th scope="row">結帳金額</th>
                           <td></td>
@@ -359,7 +366,7 @@ $(document).ready(function () {
 
                 let paymentMethod = $(`
                     <div class="d-grid gap-2">
-                        <button class="btn btn-primary" id="goto-payment-btn">前往付款 (NT$ ${totalPrice})</button>
+                        <button class="btn btn-primary" id="goto-payment-btn">前往付款</button>
                     </div>
                 `)
 
@@ -378,6 +385,36 @@ $(document).ready(function () {
 
     // 優惠券兌換
     $(document).on("click", "#apply-coupon-btn", function () {
+        let data = {
+            ticketOrderNo: $("input[name='ticketOrderNo']").val(),
+            eventCouponCode: $("#coupon-code").val()
+        }
+        let url = location.href + '/event-coupon'
+        let btn = $(this)
+
+        $.ajax({
+            url: url,
+            type: "GET",
+            data: data,
+            dataType: "json",
+            success: function (response){
+                if (response.available === true){
+                    btn.next().addClass("hidden");
+                    $("#coupon-code").val(response.couponCode);
+                    $("tfoot tr").first().find("td.discount").text('-' + response.discount);
+                    $("tfoot tr").first().removeClass("hidden");
+                    $("td.total").text('NT$' + (totalPrice - response.discount));
+
+                } else {
+                    $("tfoot tr").first().addClass("hidden");
+                    btn.next().text(response.message).removeClass("hidden")
+                    $("td.total").text('NT$' + (totalPrice));
+                }
+            },
+            error: function (error) {
+                alert("伺服器忙碌中，請稍後再試。")
+            }
+        })
 
     });
 

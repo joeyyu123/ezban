@@ -1,9 +1,12 @@
 package com.ezban.eventcoupon.model;
 
+import com.ezban.event.model.Event;
+import com.ezban.ticketorder.model.TicketOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service("eventCouponService")
@@ -65,6 +68,37 @@ public class EventCouponService {
     public List<EventCoupon>getEventCouponsByHostNo(Integer hostNo){
         return eventCouponrepository.findByHostHostNo(hostNo);
     }
+
+    /**
+     * 根據優惠券代碼獲取活動優惠券
+     */
+    public Optional<EventCoupon> getEventCouponByCouponCode(String couponCode) {
+        return eventCouponrepository.findByCouponCode(couponCode);
+    }
+
+    /**
+     * 驗證訂單金額以及優惠券是否有效
+     */
+    public Map<String, Object> validateEventCoupon(Event event, EventCoupon eventCoupon, TicketOrder ticketOrder) {
+        if (eventCoupon.getHost().getHostNo() != event.getHost().getHostNo()){
+            return Map.of("available", false, "message", "折價券不適用該活動");
+        }
+
+        switch (eventCoupon.getEventCouponStatus()) {
+            case 0:
+                return Map.of("available", false, "message", "折價券活動尚未開始");
+            case 2:
+                return Map.of("available",false,"message","該優惠已結束");
+        }
+        if (eventCoupon.getRemainingTimes() <= 0) {
+            return Map.of("available", false, "message", "折價券已折抵完畢，下次請早~");
+        }
+        if (ticketOrder.getTicketOrderAmount() < eventCoupon.getMinSpend()) {
+            return Map.of("available", false, "message", "訂單金額需滿足低消" + eventCoupon.getMinSpend() + "元，無法使用折價券");
+        }
+        return Map.of("available", true, "discount", eventCoupon.getEventCouponDiscount(),"couponCode",eventCoupon.getCouponCode());
+    }
+
 
 
 }

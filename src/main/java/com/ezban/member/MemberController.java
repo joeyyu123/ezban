@@ -1,4 +1,4 @@
-package com.ezban.controller;
+package com.ezban.member;
 
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberService;
@@ -22,6 +22,7 @@ public class MemberController {
 	
 	@GetMapping("/{memberNo}")
 	public Member getMemberById(@PathVariable Integer memberNo) {
+		
 	    return memservice.getMemberById(memberNo);
 	}
 
