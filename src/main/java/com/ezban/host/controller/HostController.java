@@ -1,22 +1,20 @@
 package com.ezban.host.controller;
 
+import com.ezban.host.model.Host;
+import com.ezban.host.model.HostMailService;
+import com.ezban.host.model.HostRepository;
+import com.ezban.host.model.HostService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.ezban.host.model.Host;
-import com.ezban.host.model.HostService;
-import com.ezban.host.model.HostRepository;
-import com.ezban.host.model.HostMailService;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import javax.validation.Valid;
 
 
 @RestController

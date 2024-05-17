@@ -1,20 +1,17 @@
 package com.ezban.host.controller;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-import javax.transaction.Transactional;
-
+import com.ezban.host.model.Host;
+import com.ezban.host.model.HostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.ezban.host.model.Host;
-import com.ezban.host.model.HostRepository;
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RestController
 public class HostLoginController {

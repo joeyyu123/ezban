@@ -1,9 +1,8 @@
 package com.ezban.host.controller;
 
-import java.util.Optional;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.ezban.host.model.Host;
+import com.ezban.host.model.HostService;
+import com.ezban.host.model.PasswordChangeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ezban.host.model.Host;
-import com.ezban.host.model.HostService;
-import com.ezban.host.model.PasswordChangeRequest;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/host")

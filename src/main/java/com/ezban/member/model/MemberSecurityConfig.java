@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 
 @Configuration
 @EnableWebSecurity
-@Order(1)
+@Order(2)
 public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
@@ -36,10 +36,10 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login.html", 
                              "/register.html", 
                              "/forgotPassword").permitAll()
-                .antMatchers("/backstage/**").authenticated()
+//                .antMatchers("/backstage/**").authenticated()
                 .and()
             .formLogin()
-                .loginPage("/login.html")
+                .loginPage("/loginPage")
                 .loginProcessingUrl("/login")
                 .successHandler(authenticationSuccessHandler())
                 .failureHandler(authenticationFailureHandler())
