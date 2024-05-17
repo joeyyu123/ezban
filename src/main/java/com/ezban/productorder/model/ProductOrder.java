@@ -247,4 +247,12 @@ public class ProductOrder implements java.io.Serializable {
     public void setProductOrderAllocationStatus(Byte productOrderAllocationStatus) {
         this.productOrderAllocationStatus = productOrderAllocationStatus;
     }
+
+    public List<ProductOrderDetail> getProductOrderDetails() {
+        return productOrderDetails;
+    }
+
+    public void setProductOrderDetails(List<ProductOrderDetail> productOrderDetails) {
+        this.productOrderDetails = productOrderDetails;
+    }
 }
