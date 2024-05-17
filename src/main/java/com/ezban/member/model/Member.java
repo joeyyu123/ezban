@@ -84,6 +84,10 @@ public class Member implements Serializable {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	 public Member(Integer memberNo) {
+	        this.memberNo = memberNo;
+	    }
 
 	public Member(Integer memberNo, @NotNull @Size(max = 50) String memberMail,
 			@NotNull @Size(max = 20) String memberPwd, @Size(max = 50) String memberName, Date birthday, Integer gender,
