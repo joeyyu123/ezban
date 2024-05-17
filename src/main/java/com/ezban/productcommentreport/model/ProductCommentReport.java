@@ -1,26 +1,36 @@
 package com.ezban.productcommentreport.model;
 
+import java.time.Instant;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import com.ezban.admin.model.Admin;
 import com.ezban.member.model.Member;
 import com.ezban.productcomment.model.ProductComment;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.time.Instant;
-
 @Entity
 @Table(name = "product_comment_report", schema = "ezban")
 public class ProductCommentReport {
-    @Id
+    
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_comment_report_no", nullable = false)
     private Integer productCommentReportNo;
 
-    @NotNull
+	@NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_comment_no", nullable = false)
-    private ProductComment productCommentNo;
+    private ProductComment productComment;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -44,6 +54,7 @@ public class ProductCommentReport {
     @Column(name = "report_status", nullable = false)
     private Byte reportStatus;
 
+    // Getters and Setters
     public Integer getProductCommentReportNo() {
         return productCommentReportNo;
     }
@@ -52,12 +63,12 @@ public class ProductCommentReport {
         this.productCommentReportNo = productCommentReportNo;
     }
 
-    public ProductComment getProductCommentNo() {
-        return productCommentNo;
+    public ProductComment getProductComment() {
+        return productComment;
     }
 
-    public void setProductCommentNo(ProductComment productCommentNo) {
-        this.productCommentNo = productCommentNo;
+    public void setProductComment(ProductComment productComment) {
+        this.productComment = productComment;
     }
 
     public Member getMember() {
@@ -99,5 +110,6 @@ public class ProductCommentReport {
     public void setReportStatus(Byte reportStatus) {
         this.reportStatus = reportStatus;
     }
-
+    
+    
 }

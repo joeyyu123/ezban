@@ -1,6 +1,8 @@
 package com.ezban.ticketorder;
 
 import com.ezban.ecpay.service.EcpayService;
+import com.ezban.eventcoupon.model.EventCoupon;
+import com.ezban.eventcoupon.model.EventCouponService;
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberService;
 import com.ezban.qrcodeticket.model.QrcodeTicketService;
@@ -49,6 +51,9 @@ public class TicketOrderController {
     @Autowired
     private TicketOrderEmailService ticketOrderEmailService;
 
+    @Autowired
+    private EventCouponService eventCouponService;
+
     @GetMapping("/events/orders")
     public String orderPage(Model model, @RequestParam(value = "orderStatus", required = false) Integer orderStatus, Principal principal) {
 //        Member member = memberService.getMemberByMemberMail(principal.getName());
@@ -73,7 +78,6 @@ public class TicketOrderController {
 
 
         TicketOrder ticketOrder = ticketOrderService.findById(ticketOrderNo);
-
 
 
         if (Objects.equals(ticketOrder.getMember().getMemberNo(), member.getMemberNo())) { // 檢查是否為訂單擁有者
@@ -112,6 +116,9 @@ public class TicketOrderController {
         return ResponseEntity.ok(gson.toJson(dto));
     }
 
+    /**
+     * 取得訂單資料並產生付款頁面給使用者
+     */
     @PostMapping("/events/order/payment")
     @ResponseBody
     public String ecPayPayment(Model model, @RequestBody Map<String, String> params) {
@@ -119,18 +126,20 @@ public class TicketOrderController {
         String couponCode = params.get("couponCode");
 
         TicketOrder ticketOrder = ticketOrderService.findById(ticketOrderNo);
-        if (couponCode != null && !couponCode.isEmpty()) {
-            // TODO 儲存優惠券資料以及修改訂單結帳金額
+        EventCoupon eventCoupon = eventCouponService.getEventCouponByCouponCode(couponCode).orElse(null);
 
-//            ticketOrder.setEventCoupon(couponCode);
+        if (eventCoupon != null && eventCoupon.getEventCouponStatus() == 1) {
+            ticketOrder.setEventCoupon(eventCoupon);
+            ticketOrder.setEventCouponDiscount(eventCoupon.getEventCouponDiscount());
+
+            ticketOrder.setTicketCheckoutAmount(ticketOrder.getTicketOrderAmount() - eventCoupon.getEventCouponDiscount());
         } else {
             ticketOrder.setTicketCheckoutAmount(ticketOrder.getTicketOrderAmount());
         }
         ticketOrderService.update(ticketOrder);
-        String aioCheckOutALLForm = ecpayService.genAioCheckOutALL(ticketOrderNo);
         // 取得回傳的Form，然後導向綠界付款頁面
 //        model.addAttribute("form", aioCheckOutALLForm);
-        return aioCheckOutALLForm;
+        return ecpayService.genAioCheckOutALL(ticketOrderNo);
     }
 
     /**
@@ -141,6 +150,7 @@ public class TicketOrderController {
      * @param paymentDate     付款日期時間
      * @return 付款結果頁面
      */
+    @CrossOrigin(origins = "*")
     @PostMapping("/events/order-result")
     public String orderResult(Model model, @RequestParam(value = "RtnCode") Integer rtnCode, @RequestParam("MerchantTradeNo") String merchantTradeNo, @RequestParam("PaymentDate") String paymentDate) {
 
