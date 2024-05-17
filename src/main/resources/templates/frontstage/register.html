@@ -173,6 +173,7 @@ button:hover {
 	        if (response.ok) {
 	            messageDiv.style.color = 'green';
 	            messageDiv.textContent = '驗證成功！';
+	            window.location.href = '/loginPage';
 	        } else {
 	            throw new Error('驗證失敗');
 	        }

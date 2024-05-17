@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberMailService;
@@ -69,31 +71,43 @@ public class RegisterController {
         }
     }
     
-    @GetMapping("registerPage")
+    @GetMapping("/userLoginPage")
+	public String getLogin() {
+		return "frontstage/login";
+	}
+    
+    @GetMapping("/registerPage")
 	public String getRegister() {
 		return "frontstage/register";
 	}
+    
+    @GetMapping("/errorPage")
+    public String getErrorPage() {
+        return "frontstage/errorPage";
+    }
+
+
 
     @Transactional
     @PostMapping("/verifyMember")
     @ResponseBody
-    public ResponseEntity<String> verifyMember(@RequestBody Map<String, String> request) {
+    public ModelAndView verifyMember(@RequestBody Map<String, String> request) {
         String memberMail = request.get("memberMail");
         String code = request.get("code");
 
         try {
             Optional<Member> optionalMember = memrepository.findByMemberMail(memberMail);
             if (!optionalMember.isPresent()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("未找到該電子郵件的用戶");
+                return new ModelAndView("redirect:/errorPage").addObject("message", "未找到該電子郵件的用戶");
             }
 
             Member member = optionalMember.get();
             if (member.getVerificationCode() == null || !member.getVerificationCode().equals(code)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("驗證碼不正確");
+                return new ModelAndView("redirect:/errorPage").addObject("message", "驗證碼不正確");
             }
 
             if (member.getVerificationCodeExpiry().isBefore(LocalDateTime.now())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("驗證碼已過期");
+                return new ModelAndView("redirect:/errorPage").addObject("message", "驗證碼已過期");
             }
 
             // 驗證成功，清空驗證碼
@@ -101,10 +115,17 @@ public class RegisterController {
             member.setVerificationCodeExpiry(null);
             memrepository.save(member);
 
-            return ResponseEntity.ok("驗證成功");
+            // 驗證成功，重定向到登入頁面，並返回成功消息
+            ModelAndView modelAndView = new ModelAndView("redirect:/loginPage");
+            modelAndView.addObject("message", "驗證成功");
+            return modelAndView;
         } catch (Exception e) {
             e.printStackTrace(); // 打印異常堆棧以便調試
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("驗證時發生內部錯誤：" + e.getMessage());
+            ModelAndView modelAndView = new ModelAndView("redirect:/errorPage");
+            modelAndView.addObject("message", "驗證時發生內部錯誤：" + e.getMessage());
+            return modelAndView;
         }
     }
+
+
 }
