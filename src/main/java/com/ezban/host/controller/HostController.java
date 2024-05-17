@@ -111,7 +111,7 @@ public class HostController {
                 } else {
                     response.put("error", "無法發送驗證碼。請確認信箱是否正常。");
                     return ResponseEntity.badRequest().body(response);
-                }
+                }	
             }
             return ResponseEntity.ok(response);
         } catch (Exception e) {

@@ -1,4 +1,4 @@
-package com.ezban.ticketregistration;
+package com.ezban.ticketregistration.model;
 
 import com.ezban.ticketregistration.dto.Person;
 import lombok.Data;

@@ -25,5 +25,20 @@ public class HostPageController {
     public String showhostpassrevise() {
     	return "backstage/HostLogin/hostpassrevise";
     }
+    
+    @GetMapping("/qaback")
+    public String showqaback() {
+    	return "backstage/qaback/qaback";
+    }
+    
+    @GetMapping("/qa")
+    public String showqa() {
+    	return "frontstage/qa/qa";
+    }
+    
+    @GetMapping("/productcomment")
+    public String showproductcomment() {
+    	return "frontstage/product/productcomment";
+    }
 }
 	
