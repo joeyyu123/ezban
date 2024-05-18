@@ -4,7 +4,6 @@
 <head>
     <title>ezban | product_order_detail</title>
 </head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link th:include="backstage/index :: head">
@@ -82,12 +81,10 @@
                    style="display: inline-block; float: right; color: darkgray; font-size: 20px; font-weight: bold; text-decoration: none;">
                     <span style="transition: color 0.3s;"><i
                             class="fa-solid fa-square-caret-left"></i> 回前頁</span></a>
-                <nav class="navbar navbar-expand-md navbar-dark bg-transparent  justify-content-center">
-                    <div><h2
-                            style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; margin-right: 725px; margin-bottom: 50px;">
-                        <i class="fa-solid fa-sheet-plastic"></i> &nbsp;&nbsp;訂 單 明 細 </h2>
-                    </div>
-                </nav>
+                <div><h2
+                        style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; text-align: left; margin-bottom: 50px;">
+                    <i class="fa-solid fa-sheet-plastic"></i> &nbsp;&nbsp;訂 單 明 細 </h2>
+                </div>
                 <table id="example" class="display" style="width: 100%">
                     <thead>
                     <tr>
@@ -120,6 +117,7 @@
     </div>
 </div>
 </body>
+
 <script>
     $(document).ready(function () {
         $('#example').DataTable({
@@ -146,4 +144,5 @@
         });
     });
 </script>
+
 </html>

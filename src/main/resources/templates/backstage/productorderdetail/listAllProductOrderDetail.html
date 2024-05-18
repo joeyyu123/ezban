@@ -3,71 +3,72 @@
 
 <head>
     <title>ezban | product_order_detail</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link th:include="backstage/index :: head">
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.jqueryui.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link th:include="backstage/index :: head">
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.jqueryui.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <style>
-        .item span {
-            display: inline-block; /* 讓每個標題和內容都水平排列 */
-            width: 150px; /* 設置標題的寬度 */
-            font-weight: bold;
-        }
+<style>
+    .item span {
+        display: inline-block; /* 讓每個標題和內容都水平排列 */
+        width: 150px; /* 設置標題的寬度 */
+        font-weight: bold;
+    }
 
-        #example {
-            width: 100%;
-            border-collapse: collapse;
-        }
+    #example {
+        width: 100%;
+        border-collapse: collapse;
+    }
 
-        tr > th:nth-child(2)::before,
-        tr > th:nth-child(3)::before,
-        tr > th:nth-child(4)::before,
-        tr > th:nth-child(5)::before,
-        tr > th:nth-child(6)::before,
-        tr > th:nth-child(7)::before {
-            display: none !important;
-        }
+    tr > th:nth-child(2)::before,
+    tr > th:nth-child(3)::before,
+    tr > th:nth-child(4)::before,
+    tr > th:nth-child(5)::before,
+    tr > th:nth-child(6)::before,
+    tr > th:nth-child(7)::before {
+        display: none !important;
+    }
 
-        tr > th:nth-child(2)::after,
-        tr > th:nth-child(3)::after,
-        tr > th:nth-child(4)::after,
-        tr > th:nth-child(5)::after,
-        tr > th:nth-child(6)::after,
-        tr > th:nth-child(7)::after {
-            display: none !important;
-        }
+    tr > th:nth-child(2)::after,
+    tr > th:nth-child(3)::after,
+    tr > th:nth-child(4)::after,
+    tr > th:nth-child(5)::after,
+    tr > th:nth-child(6)::after,
+    tr > th:nth-child(7)::after {
+        display: none !important;
+    }
 
-        #example th {
-            padding: 5px; /* 調整單元格內邊距 */
-            text-align: center; /* 將文字置中 */
-            font-size: 16px; /* 調整字體大小 */
-            line-height: 1.4; /* 調整行高 */
-        }
+    #example th {
+        padding: 5px; /* 調整單元格內邊距 */
+        text-align: center; /* 將文字置中 */
+        font-size: 16px; /* 調整字體大小 */
+        line-height: 1.4; /* 調整行高 */
+    }
 
-        #example td {
-            padding: 5px; /* 調整單元格內邊距 */
-            text-align: center; /* 將文字置中 */
-            font-size: 14px; /* 調整字體大小 */
-            line-height: 1.4; /* 調整行高 */
-        }
+    #example td {
+        padding: 5px; /* 調整單元格內邊距 */
+        text-align: center; /* 將文字置中 */
+        font-size: 14px; /* 調整字體大小 */
+        line-height: 1.4; /* 調整行高 */
+    }
 
-        #example th {
-            background-color: #f2f2f2; /* 設置表頭背景色 */
-            font-weight: bold; /* 加粗表頭文字 */
-        }
+    #example th {
+        background-color: #f2f2f2; /* 設置表頭背景色 */
+        font-weight: bold; /* 加粗表頭文字 */
+    }
 
-        #example tr:nth-child(even) {
-            background-color: #f9f9f9; /* 隔行變色 */
-        }
+    #example tr:nth-child(even) {
+        background-color: #f9f9f9; /* 隔行變色 */
+    }
 
-        .navbar-brand:hover span {
-            color: black;
-        }
-    </style>
+    .navbar-brand:hover span {
+        color: black;
+    }
+</style>
 
 <body>
 <div id="wrapper">
@@ -78,13 +79,12 @@
             <div align="center">
                 <a class="navbar-brand" th:href="@{/backstage/productorder/listAllProductOrder}"
                    style="display: inline-block; float: right; color: darkgray; font-size: 20px; font-weight: bold; text-decoration: none;">
-                    <span style="transition: color 0.3s;"><i class="fa-solid fa-square-caret-left"></i> 回前頁</span></a>
-                <nav class="navbar navbar-expand-md navbar-dark bg-transparent  justify-content-center">
-                    <div align="center"><h2
-                            style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; text-align: center;">
-                        <i class="fa-solid fa-sheet-plastic"></i> &nbsp;&nbsp;訂 單 明 細 </h2>
-                    </div>
-                </nav>
+                    <span style="transition: color 0.3s;"><i
+                            class="fa-solid fa-square-caret-left"></i> 回前頁</span></a>
+                <div align="center"><h2
+                        style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; text-align: left; margin-bottom: 50px">
+                    <i class="fa-solid fa-sheet-plastic"></i> &nbsp;&nbsp;訂 單 明 細 </h2>
+                </div>
                 <table id="example" class="display" style="width: 100%">
                     <thead>
                     <tr style="background-color:#CCCCCC">
@@ -117,6 +117,7 @@
     </div>
 </div>
 </body>
+
 <script>
     $(document).ready(function () {
         $('#example').DataTable({
@@ -143,4 +144,5 @@
         });
     });
 </script>
+
 </html>

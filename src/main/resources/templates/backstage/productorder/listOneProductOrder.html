@@ -2,46 +2,47 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>ezban | single_product_order</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link th:include="backstage/index :: head">
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 500px;
-            margin: 5px auto;
-            padding: 20px;
-            background: white;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-        }
-
-        .card {
-            background: #fff;
-            border: 1px solid #ccc;
-            padding: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            color: #0066cc;
-            margin-bottom: 10px;
-        }
-
-        .navbar-brand:hover span {
-            color: black;
-        }
-
-    </style>
 </head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link th:include="backstage/index :: head">
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .container {
+        max-width: 500px;
+        margin: 5px auto;
+        padding: 20px;
+        background: white;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .card {
+        background: #fff;
+        border: 1px solid #ccc;
+        padding: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        color: #0066cc;
+        margin-bottom: 10px;
+    }
+
+    .navbar-brand:hover span {
+        color: black;
+    }
+</style>
+
 <body style="background-color: #f4e9e6">
 <div id="wrapper">
     <nav th:replace="backstage/index :: navbar"></nav>
@@ -61,11 +62,15 @@
                         <h3 style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; text-align: center;">
                             <span th:if="${functionType == 'query'}"> 單 筆 訂 單 資 料 </span></h3>
                         <table style="text-align: left">
-                            <span>1. 商品訂單編號: </span><span th:text="${'#'+productOrder.productOrderNo}"></span><br/>
+                            <span>1. 商品訂單編號: </span><span
+                                th:text="${'#'+productOrder.productOrderNo}"></span><br/>
                             <span>2. 會員編號: </span><span th:text="${productOrder.member.memberNo}"></span><br/>
-                            <span>3. 商品金額: </span><span th:text="${'TWD $ ' +productOrder.productPrice}"></span><br/>
-                            <span>4. 生日禮券金額: </span><span th:text="${'TWD $ ' +productOrder.productCouponDiscount}"></span><br/>
-                            <span>5. 商品結帳金額: </span><span th:text="${'TWD $ ' +productOrder.productCheckoutAmount}"></span><br/>
+                            <span>3. 商品金額: </span><span
+                                th:text="${'TWD $ ' +productOrder.productPrice}"></span><br/>
+                            <span>4. 生日禮券金額: </span><span
+                                th:text="${'TWD $ ' +productOrder.productCouponDiscount}"></span><br/>
+                            <span>5. 商品結帳金額: </span><span
+                                th:text="${'TWD $ ' +productOrder.productCheckoutAmount}"></span><br/>
                             <span>6. 會員點數: </span><span th:text="${productOrder.memberPoints}"></span><br/>
                             <span>7. 生日禮券編號: </span>
                             <span th:if="${productOrder.birthdayCoupon != null}"
@@ -105,4 +110,5 @@
     </div>
 </div>
 </body>
+
 </html>

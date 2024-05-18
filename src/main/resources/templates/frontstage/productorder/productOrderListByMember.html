@@ -3,24 +3,25 @@
 <head th:replace="frontstage/index2 :: head">
     <title>ezban | product_order</title>
 </head>
-    <link rel="stylesheet" href="plugins/themefisher-font/style.css">
-    <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="plugins/animate/animate.css">
-    <link rel="stylesheet" href="plugins/slick/slick.css">
-    <link rel="stylesheet" href="plugins/slick/slick-theme.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="plugins/jquery/dist/jquery.min.js"></script>
-    <script src="plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js"></script>
-    <script src="plugins/instafeed/instafeed.min.js"></script>
-    <script src="plugins/ekko-lightbox/dist/ekko-lightbox.min.js"></script>
-    <script src="plugins/syo-timer/build/jquery.syotimer.min.js"></script>
-    <script src="plugins/slick/slick.min.js"></script>
-    <script src="plugins/slick/slick-animation.min.js"></script>
-    <script src="js/script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="plugins/themefisher-font/style.css">
+<link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="plugins/animate/animate.css">
+<link rel="stylesheet" href="plugins/slick/slick.css">
+<link rel="stylesheet" href="plugins/slick/slick-theme.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="plugins/jquery/dist/jquery.min.js"></script>
+<script src="plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="plugins/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js"></script>
+<script src="plugins/instafeed/instafeed.min.js"></script>
+<script src="plugins/ekko-lightbox/dist/ekko-lightbox.min.js"></script>
+<script src="plugins/syo-timer/build/jquery.syotimer.min.js"></script>
+<script src="plugins/slick/slick.min.js"></script>
+<script src="plugins/slick/slick-animation.min.js"></script>
+<script src="js/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <style>
     .btn-icon {
         color: lightgray;
@@ -203,7 +204,8 @@
                                         <td>
                                             <form method="post"
                                                   th:action="@{'/productorderdetail/findByProductOrderDetail/' + ${productOrder.productOrderNo}}">
-                                                <button type="submit" class="btn btn-link p-0"><i class="fas fa-magnifying-glass-chart btn-icon"></i>
+                                                <button type="submit" class="btn btn-link p-0"><i
+                                                        class="fas fa-magnifying-glass-chart btn-icon"></i>
                                                 </button>
                                                 <input type="hidden" name="productOrderDetail"
                                                        th:value="${productOrder.productOrderNo}">
@@ -228,8 +230,8 @@
     </div>
 </section>
 <div th:replace="frontstage/index2 :: footer"></div>
-</div>
 </body>
+
 <script>
     $(document).ready(function () {
         // 初始設定，只顯示"全部訂單"

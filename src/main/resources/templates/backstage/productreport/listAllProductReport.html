@@ -3,109 +3,107 @@
 
 <head>
     <title>ezban | product_report</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link th:include="backstage/index :: head">
-    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.jqueryui.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-    <style>
-        #example {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        #example th {
-            padding: 5px; /* 調整單元格內邊距 */
-            text-align: center; /* 將文字置中 */
-            font-size: 16px; /* 調整字體大小 */
-            line-height: 1; /* 調整行高 */
-        }
-
-        #example td {
-            padding: 5px; /* 調整單元格內邊距 */
-            text-align: center; /* 將文字置中 */
-            font-size: 14px; /* 調整字體大小 */
-            line-height: 1; /* 調整行高 */
-        }
-
-        #example th {
-            background-color: #f2f2f2; /* 設置表頭背景色 */
-            font-weight: bold; /* 加粗表頭文字 */
-        }
-
-        #example tr:nth-child(even) {
-            background-color: #f9f9f9; /* 隔行變色 */
-        }
-
-        tr > th:nth-child(3)::before,
-        tr > th:nth-child(5)::before,
-        tr > th:nth-child(7)::before,
-        tr > th:nth-child(8)::before {
-            display: none !important;
-        }
-
-        tr > th:nth-child(3)::after,
-        tr > th:nth-child(5)::after,
-        tr > th:nth-child(7)::after,
-        tr > th:nth-child(8)::after {
-            display: none !important;
-        }
-
-        .custom-btn-color {
-            background-color: lightgray; /* 自定義顏色，這裡使用紅色 */
-            color: #ffffff; /* 文字顏色 */
-            font-size: 14px; /* 設置文字大小 */
-            padding: 5px 5px; /* 設置內邊距 */
-            border-style: none;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-
-        .custom-btn-color:hover {
-            background-color: coral; /* 悬停时的背景色 */
-            color: #ffffff; /* 悬停时的文字颜色 */
-        }
-
-        /* 灰色小点样式 */
-        .dot-gray::before {
-            content: '';
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            margin-right: 5px; /* 设置小点与文字之间的间距 */
-            border-radius: 50%;
-            background-color: gray;
-        }
-
-        /* 蓝色小点样式 */
-        .dot-blue::before {
-            content: '';
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            margin-right: 5px;
-            border-radius: 50%;
-            background-color: blue;
-        }
-
-        /* 红色小点样式 */
-        .dot-red::before {
-            content: '';
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            margin-right: 5px;
-            border-radius: 50%;
-            background-color: red;
-        }
-
-    </style>
-
 </head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link th:include="backstage/index :: head">
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.jqueryui.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+    #example {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    #example th {
+        padding: 5px; /* 調整單元格內邊距 */
+        text-align: center; /* 將文字置中 */
+        font-size: 16px; /* 調整字體大小 */
+        line-height: 1; /* 調整行高 */
+    }
+
+    #example td {
+        padding: 5px; /* 調整單元格內邊距 */
+        text-align: center; /* 將文字置中 */
+        font-size: 14px; /* 調整字體大小 */
+        line-height: 1; /* 調整行高 */
+    }
+
+    #example th {
+        background-color: #f2f2f2; /* 設置表頭背景色 */
+        font-weight: bold; /* 加粗表頭文字 */
+    }
+
+    #example tr:nth-child(even) {
+        background-color: #f9f9f9; /* 隔行變色 */
+    }
+
+    tr > th:nth-child(3)::before,
+    tr > th:nth-child(5)::before,
+    tr > th:nth-child(7)::before,
+    tr > th:nth-child(8)::before {
+        display: none !important;
+    }
+
+    tr > th:nth-child(3)::after,
+    tr > th:nth-child(5)::after,
+    tr > th:nth-child(7)::after,
+    tr > th:nth-child(8)::after {
+        display: none !important;
+    }
+
+    .custom-btn-color {
+        background-color: lightgray; /* 自定義顏色，這裡使用紅色 */
+        color: #ffffff; /* 文字顏色 */
+        font-size: 14px; /* 設置文字大小 */
+        padding: 5px 5px; /* 設置內邊距 */
+        border-style: none;
+        border-radius: 20px;
+        cursor: pointer;
+    }
+
+    .custom-btn-color:hover {
+        background-color: coral; /* 悬停时的背景色 */
+        color: #ffffff; /* 悬停时的文字颜色 */
+    }
+
+    /* 灰色小点样式 */
+    .dot-gray::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 5px; /* 设置小点与文字之间的间距 */
+        border-radius: 50%;
+        background-color: gray;
+    }
+
+    /* 蓝色小点样式 */
+    .dot-blue::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 5px;
+        border-radius: 50%;
+        background-color: blue;
+    }
+
+    /* 红色小点样式 */
+    .dot-red::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 5px;
+        border-radius: 50%;
+        background-color: red;
+    }
+</style>
 
 <body>
 <div id="wrapper">
@@ -113,14 +111,12 @@
     <div th:insert="backstage/index :: hamburger-btn"></div>
     <div class="page-content-wrapper">
         <div class="content">
-            <nav class="navbar navbar-expand-md navbar-dark bg-transparent  justify-content-center">
-                <div>
-                    <div><h2
-                            style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; text-align: center;">
-                        <i class="fa-solid fa-screwdriver-wrench"></i> &nbsp;&nbsp;商 品 檢 舉 審 核</h2>
-                    </div>
+            <div>
+                <div><h2
+                        style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; text-align: left; margin-bottom: 50px;">
+                    <i class="fa-solid fa-screwdriver-wrench"></i> &nbsp;&nbsp;商 品 檢 舉 審 核</h2>
                 </div>
-            </nav>
+            </div>
             <table id="example" class="display" style="width: 100%">
                 <thead>
                 <tr style="background-color:#CCCCCC">
