@@ -2,51 +2,52 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>ezban | edit</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link th:include="backstage/index :: head">
-    <style>
-        button {
-            padding: 5px;
-        }
-
-        form {
-            display: table;
-        }
-
-        form div {
-            display: table-row;
-        }
-
-        label, input, span, select {
-            display: table-cell;
-            text-align: left;
-        }
-
-        input[type=text], input[type=password], select, textarea {
-            width: 200px;
-            margin: 5px;
-        }
-
-        form div div {
-            display: table-cell;
-        }
-
-        button {
-            /* 共同的樣式 */
-            padding: 5px 10px;
-            background-color: #ffffff;
-            color: black;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #78797a;
-        }
-    </style>
 </head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link th:include="backstage/index :: head">
+<style>
+    button {
+        padding: 5px;
+    }
+
+    form {
+        display: table;
+    }
+
+    form div {
+        display: table-row;
+    }
+
+    label, input, span, select {
+        display: table-cell;
+        text-align: left;
+    }
+
+    input[type=text], input[type=password], select, textarea {
+        width: 200px;
+        margin: 5px;
+    }
+
+    form div div {
+        display: table-cell;
+    }
+
+    button {
+        /* 共同的樣式 */
+        padding: 5px 10px;
+        background-color: #ffffff;
+        color: black;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #78797a;
+    }
+</style>
+
 <body>
 <div id="wrapper">
     <nav th:replace="backstage/index :: navbar"></nav>

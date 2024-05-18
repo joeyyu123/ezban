@@ -5,6 +5,7 @@
     <title>ezban | product_order_detail</title>
     <meta charset="UTF-8">
 </head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <style>
         .item span {
@@ -50,15 +51,15 @@
 <div th:replace="frontstage/index2 :: header"></div>
 <div class="content">
     <a class="navbar-brand" th:href="@{/productorder/findByMember/{memberNo}}"
-       style="display: inline-block; float: right; color: darkgray; font-size: 20px; font-weight: bold; text-decoration: none; margin-right: 150px;">
+       style="display: inline-block; float: right; color: darkgray; font-size: 20px; font-weight: bold; text-decoration: none; margin-right: 40px;">
         <span style="transition: color 0.3s;"><i class="fa-solid fa-square-caret-left"></i> 回我的訂單</span></a>
     <h1 class="page-name" ,
-        style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; margin-left: 500px;">
+        style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; margin-left: 80px; margin-top: 50px;">
         <i class="fa-solid fa-circle-info"></i> &nbsp;&nbsp;訂 單 明 細 </h1>
     <section class="user-dashboard">
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12" style=" margin-bottom: 100px;">
                     <div class="container">
                         <div class="dashboard-wrapper user-dashboard">
                             <div class="table-responsive">

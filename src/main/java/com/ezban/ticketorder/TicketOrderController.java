@@ -56,9 +56,8 @@ public class TicketOrderController {
 
     @GetMapping("/events/orders")
     public String orderPage(Model model, @RequestParam(value = "orderStatus", required = false) Integer orderStatus, Principal principal) {
-//        Member member = memberService.getMemberByMemberMail(principal.getName());
 
-        Member member = memberService.getMemberById(1); // TODO 改成從session取得memberNo
+        Member member = memberService.getMemberByMemberNo(principal.getName());
 
         if (orderStatus == null) {
             model.addAttribute("ticketOrders", ticketOrderService.findByMember(member));
@@ -73,8 +72,8 @@ public class TicketOrderController {
 
     @DeleteMapping("/events/orders/{ticketOrderNo}")
     @ResponseBody
-    public ResponseEntity<String> cancelOrder(@PathVariable("ticketOrderNo") Integer ticketOrderNo) {
-        Member member = memberService.getMemberById(1);// TODO 改成從CurrentMember取得memberNo
+    public ResponseEntity<String> cancelOrder(@PathVariable("ticketOrderNo") Integer ticketOrderNo,Principal principal) {
+        Member member = memberService.getMemberByMemberNo(principal.getName());
 
 
         TicketOrder ticketOrder = ticketOrderService.findById(ticketOrderNo);
@@ -91,11 +90,12 @@ public class TicketOrderController {
 
     @PostMapping("/events/order")
     @ResponseBody
-    public ResponseEntity<String> buyTicket(Model model, @RequestBody List<TicketOrderRegistrationForm> ticketOrders) throws InsufficientTicketQuantityException {
+    public ResponseEntity<String> buyTicket(Model model, @RequestBody List<TicketOrderRegistrationForm> ticketOrders,Principal principal) throws InsufficientTicketQuantityException {
         Gson gson = new Gson();
 
         // 之後改成從session 取得 memberNo
-        Member member = memberService.getMemberById(1); // TODO 改成從session取得memberNo
+        Member member = memberService.getMemberByMemberNo(principal.getName());
+
 
         List<TicketOrderDetail> ticketOrderDetails;
 
