@@ -44,15 +44,15 @@
     <script th:src="@{/plugins/ekko-lightbox/dist/ekko-lightbox.min.js}"></script>
     <!-- Count Down Js -->
     <script th:src="@{/plugins/syo-timer/build/jquery.syotimer.min.js}"></script>
-    <!-- slick Carousel -->
-    <script th:src="@{/plugins/slick/slick.min.js}"></script>
-    <script th:src="@{/plugins/slick/slick-animation.min.js}"></script>
     <!-- Main Js File -->
     <script th:src="@{/js/frontstage/script.js}"></script>
     <!-- sweetalter -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- jquery/3.5.1 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- slick Carousel -->
+    <script th:src="@{/plugins/slick/slick.min.js}"></script>
+    <script th:src="@{/plugins/slick/slick-animation.min.js}"></script>
     <!-- font-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
@@ -151,6 +151,11 @@
                             <li style="display: flex; justify-content: center; align-items: center;">
                                 <a href="/saveproduct/findByMember/{memberNo}"><span><i
                                         class="fa-solid fa-bookmark"></i> 我的收藏紀錄</span></a>
+                            </li>
+                            <li style="display: flex; justify-content: center; align-items: center;">
+                                <a th:href="@{/saveevent/findByMember/{memberNo}(memberNo=${memberNo})}">
+                                    <span><i class="fa-solid fa-bookmark"></i> 我的活動收藏紀錄</span>
+                                </a>
                             </li>
                         </ul>
                     </li>
