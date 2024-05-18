@@ -65,7 +65,7 @@
 
     #example td {
         padding: 5px; /* 調整單元格內邊距 */
-        text-align: center; /* 將文字置中 */
+        /*text-align: center; !* 將文字置中 *!*/
         font-size: 14px; /* 調整字體大小 */
         line-height: 1.4; /* 調整行高 */
     }
@@ -177,7 +177,7 @@
                 <tr style="background-color:#CCCCCC">
                     <th>訂單編號&nbsp;&nbsp;&nbsp;&nbsp;</th>
                     <th>會員姓名 [編號]&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                    <th>結帳總金額&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                    <th>結帳金額&nbsp;&nbsp;&nbsp;&nbsp;</th>
                     <th>訂單成立時間</th>
                     <th>付款狀態&nbsp;&nbsp;&nbsp;&nbsp;</th>
                     <th>處理狀態&nbsp;&nbsp;&nbsp;&nbsp;</th>
@@ -190,23 +190,19 @@
                 <tbody>
                 <th:block th:each="productOrder : ${productOrderListData}">
                     <tr>
-                        <td th:text="${'#'+ productOrder.productOrderNo}"></td>
-                        <td th:text="${productOrder.member.memberName} + '[' + ${productOrder.member.memberNo} + ']'"></td>
-                        <td th:text="${'TWD $ ' + productOrder.productCheckoutAmount}"></td>
+                        <td style="text-align: center" th:text="${'#'+ productOrder.productOrderNo}"></td>
+                        <td style="text-align: center; padding-right: 20px" th:text="${productOrder.member.memberName} + '[' + ${productOrder.member.memberNo} + ']'"></td>
+                        <td style="padding: 5px 5px 5px 0" th:text="${'TWD $ ' + productOrder.productCheckoutAmount}"></td>
                         <td th:text="${#dates.format(productOrder.productOrderdate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                        <td th:if="${productOrder.productPaymentStatus == 0}"><span class="dot-blue"></span>已付款</td>
-                        <td th:if="${productOrder.productPaymentStatus == 1}"><span class="dot-red"></span>已退款</td>
-                        <td th:if="${productOrder.productProcessStatus == 0}"><span class="dot-lightgray"></span>備貨中
-                        </td>
-                        <td th:if="${productOrder.productProcessStatus == 1}"><span class="dot-orange"></span>已取消
-                        </td>
-                        <td th:if="${productOrder.productProcessStatus == 2}"><span class="dot-blue"></span>已出貨</td>
-                        <td th:if="${productOrder.productProcessStatus == 3}"><span class="dot-red"></span>已退貨</td>
-                        <td th:if="${productOrder.productProcessStatus == 4}"><span class="dot-black"></span>已結案</td>
-                        <td th:if="${productOrder.productOrderAllocationStatus == 0}"><span
-                                class="dot-lightgray"></span>未撥款
-                        </td>
-                        <td th:if="${productOrder.productOrderAllocationStatus == 1}"><span class="dot-blue"></span>已撥款
+                        <td style="padding: 5px 5px 5px 15px" th:if="${productOrder.productPaymentStatus == 0}"><span class="dot-blue"></span>已付款</td>
+                        <td style="padding: 5px 5px 5px 15px" th:if="${productOrder.productPaymentStatus == 1}"><span class="dot-red"></span>已退款</td>
+                        <td style="padding: 5px 5px 5px 15px" th:if="${productOrder.productProcessStatus == 0}"><span class="dot-lightgray"></span>備貨中</td>
+                        <td style="padding: 5px 5px 5px 15px" th:if="${productOrder.productProcessStatus == 1}"><span class="dot-orange"></span>已取消</td>
+                        <td style="padding: 5px 5px 5px 15px" th:if="${productOrder.productProcessStatus == 2}"><span class="dot-blue"></span>已出貨</td>
+                        <td style="padding: 5px 5px 5px 15px" th:if="${productOrder.productProcessStatus == 3}"><span class="dot-red"></span>已退貨</td>
+                        <td style="padding: 5px 5px 5px 15px" th:if="${productOrder.productProcessStatus == 4}"><span class="dot-black"></span>已結案</td>
+                        <td style="padding: 5px 5px 5px 15px" th:if="${productOrder.productOrderAllocationStatus == 0}"><span class="dot-lightgray"></span>未撥款</td>
+                        <td style="padding: 5px 5px 5px 15px" th:if="${productOrder.productOrderAllocationStatus == 1}"><span class="dot-blue"></span>已撥款
                         </td>
                         <td>
                             <div style="text-align:center">
@@ -221,7 +217,7 @@
                                 </button>
                             </div>
                         </td>
-                        <td>
+                        <td style="padding: 5px 5px 5px 15px">
                             <form method="post"
                                   th:action="@{'/backstage/productorderdetail/adminOrderDetail/' + ${productOrder.productOrderNo}}"
                                   style="margin-bottom: 0px;">
@@ -232,7 +228,7 @@
                                        th:value="${productOrder.productOrderNo}">
                             </form>
                         </td>
-                        <td>
+                        <td style="text-align: center">
                             <form method="post" th:action="@{/backstage/productorder/getOneForUpdate}"
                                   style="margin-bottom: 0;">
 
