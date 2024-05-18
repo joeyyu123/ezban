@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="frontstage/index2 :: head"></head>
+<link rel="stylesheet" th:href="@{/css/frontstage/product/checkout.css}">
+
+<body id="body">
+<div th:replace="frontstage/index2 :: header"></div>
+<section class="page-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h1 class="page-name">訂單結帳</h1>
+                    <ol class="breadcrumb">
+                        <li><a th:href="@{/}">首頁</a></li>
+                        <li><a th:href="@{/cart/items}">購物車</a></li>
+                        <li class="active">訂單結帳</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="page-wrapper">
+    <div class="checkout shopping">
+        <div class="container">
+            <form class="checkout-form">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="block billing-details" style="padding-top: 0;">
+                            <h4 class="widget-title">訂購人資料</h4>
+                            <div class="form-group">
+                                <input type="hidden" name="member_no" id="member_no">
+                                <label for="full_name">姓名</label>
+                                <input type="text" class="form-control" id="full_name" placeholder="" name="full_name">
+                            </div>
+                            <div class="form-group">
+                                <label for="user_email">信箱</label>
+                                <input type="text" class="form-control" id="user_email" placeholder=""
+                                       name="user_email">
+                            </div>
+                            <div class="form-group">
+                                <label for="user_phone">電話</label>
+                                <input type="text" class="form-control" id="user_phone" placeholder=""
+                                       name="user_phone">
+                            </div>
+                        </div>
+                        <div class="block billing-details">
+                            <h4 class="widget-title">收件人資料</h4>
+                            <label class="custom-checkbox-label" for="common_receiver">
+                                <input type="checkbox" class="common_receiver" id="common_receiver"
+                                       name="common_receiver" onchange="autoFillInfo()">
+                                <span class="checkmark"></span>常用收件人
+                            </label>
+                            <div class="form-group">
+                                <label for="receive_full_name">姓名</label>
+                                <input type="text" class="form-control" id="receive_full_name" placeholder=""
+                                       name="receive_full_name">
+                            </div>
+                            <div class="form-group">
+                                <label for="receive_phone">電話</label>
+                                <input type="text" class="form-control" id="receive_phone" placeholder=""
+                                       name="receive_phone">
+                            </div>
+                            <div class="checkout-country-code clearfix">
+                                <div class="form-group">
+                                    <label for="receive_post_code">郵遞區號</label>
+                                    <input class="js-demeter-tw-zipcode-selector form-control" id="receive_post_code"
+                                           data-city="#city" data-dist="#dist" placeholder="" style="width: 180px;"/>
+                                </div>
+                                <div class="form-group">
+                                    <label for="city">城市</label>
+                                    <select id="city" class="form-control" name="city" placeholder=""
+                                            style="height: 50px; width: 180px; padding-left: 80px;"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dist">地區</label>
+                                    <select id="dist" class="form-control" name="dist" placeholder=""
+                                            style="height: 50px; width: 213px; padding-left: 80px;"></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="receive_address">地址</label>
+                                <input type="text" class="form-control" id="receive_address" placeholder="">
+                            </div>
+                        </div>
+                        <div class="block">
+                            <h4 class="widget-title">付款方式</h4>
+                            <p>信用卡繳費</p>
+                            <div class="checkout-product-details">
+                                <div class="payment">
+                                    <div class="card-details">
+                                        <div class="form-group">
+                                            <label for="card-number">Card Number <span class="required">*</span></label>
+                                            <input id="card-number" class="form-control" type="tel"
+                                                   placeholder="•••• •••• •••• ••••" name="card_number">
+                                        </div>
+                                        <div class="form-group half-width padding-right">
+                                            <label for="card-expiry">Expiry (MM/YY) <span
+                                                    class="required">*</span></label>
+                                            <input id="card-expiry" class="form-control" type="tel"
+                                                   placeholder="MM / YY" name="card_expiry">
+                                        </div>
+                                        <div class="form-group half-width padding-left">
+                                            <label for="card-cvc">Card Code <span class="required">*</span></label>
+                                            <input id="card-cvc" class="form-control" type="tel" maxlength="4"
+                                                   placeholder="CVC" name="card_cvc">
+                                        </div>
+                                        <!-- 將送出按鈕改為submit類型 -->
+                                        <button type="submit" class="btn btn-main mt-20">送出訂單</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="product-checkout-details">
+                            <div class="block" style="padding-top: 8px;">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                        <h4 class="panel-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse"
+                                               data-parent="#accordion" href="#collapseTwo" aria-expanded="false"
+                                               aria-controls="collapseTwo">
+                                                購物車明細 <i class="bi bi-caret-down-fill" style="color: #bbb5b5"></i>
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel"
+                                         aria-labelledby="headingTwo">
+                                        <div class="panel-body">
+                                            <ul class="order_detail">
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <label for="birthday_coupon" style="font-weight: 400;">使用優惠券:</label>
+                                <select class="form-control" id="birthday_coupon">
+                                    <option value="">請選擇優惠券</option>
+                                </select>
+                                <div style="margin-top: 15px;">
+                                    <label for="member_points" style="font-weight: 400;">會員點數折抵:</label>
+                                    <input type="number" id="member_points" class="form-control" name="memberPoints"/>
+                                    <span class="pull-right" id="current_points"
+                                          style="color: gray; font-size: 11px; margin-top: 5px;"></span>
+                                </div>
+
+
+                                <ul class="summary-prices"
+                                    style="margin-top: 40px; border-top: 1px solid #ccc; padding-top: 15px;">
+                                    <li>
+                                        <span>購物車小計:</span>
+                                        <span id="cart_total"></span>
+                                    </li>
+                                    <li>
+                                        <span>優惠券折價:</span>
+                                        <span class="coupon_amount"></span>
+                                    </li>
+                                    <li>
+                                        <span>點數折抵:</span>
+                                        <span id="points_to_use"></span>
+                                    </li>
+                                    <li>
+                                        <span>運費:</span>
+                                        <span>0</span>
+                                    </li>
+                                </ul>
+                                <div class="summary-total">
+                                    <span>應付總額:</span>
+                                    <span id="order_amount"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:replace="frontstage/index2 :: footer"></div>
+
+<script src="https://demeter.5fpro.com/tw/zipcode-selector.js"></script>
+<script>
+
+    let initialTotal = 0;
+    let discountAmount = 0;
+    let pointsUsedAmount = 0;
+
+    document.addEventListener('DOMContentLoaded', function () {
+        getCheckoutItemsFromLocal();
+        getMemberInfo();
+        getValidCoupon()
+        document.querySelector('.coupon_amount').innerText = `-$${discountAmount}`;
+        document.getElementById('points_to_use').innerText = `-$${pointsUsedAmount}`;
+    });
+
+    /* 從localStorage取要結帳的商品 */
+    function getCheckoutItemsFromLocal() {
+        let checkoutProducts = JSON.parse(localStorage.getItem('checkoutProducts'));
+        let allItems = [];
+        for (let product of checkoutProducts) {
+            let url = `/product/getProductDetail?productNo=${product.productNo}`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    let item = {
+                        product_no: data.productNo,
+                        product_name: data.productName,
+                        product_url: `/product/shopdetail?productNo=${data.productNo}`,
+                        product_img: `/product/getFirstImage/${data.productNo}`,
+                        price: data.productPrice,
+                        quantity: product.quantity,
+                        subtotal: data.productPrice * product.quantity
+                    };
+                    allItems.push(item);
+                    if (allItems.length === checkoutProducts.length) {
+                        showCartItems(allItems);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    }
+
+    /* 顯示購物車明細 */
+    function showCartItems(items) {
+        let container = document.querySelector('.order_detail');
+        container.innerHTML = '';
+        let total = 0;
+
+        items.forEach(item => {
+            let subtotal = item.price * item.quantity;
+            total += subtotal;
+            let card = `
+            <li>
+                <div class="media product-card">
+                    <a class="pull-left" href="${item.product_url}" style="padding-right: 10px;">
+                        <img class="media-object" src="${item.product_img}" alt="Image" style="width: 60px;"/>
+                    </a>
+                    <div class="media-body">
+                        <input type="hidden" name="product_no" id="product_no" value="${item.product_no}">
+                        <h4 class="media-heading"><a href="${item.product_url}">${item.product_name}</a></h4>
+                        <p class="price" style="margin: 0;">單價: NT$${item.price}</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p class="quantity">數量: ${item.quantity}</p>
+                            <p class="subtotal pull-right">小計: NT$${subtotal}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        `;
+            container.innerHTML += card;
+        });
+
+        // 更新總計
+        document.getElementById('cart_total').innerText = `NT$${total}`;
+        document.getElementById('order_amount').innerText = `NT$${total}`;
+        initialTotal = total;
+    }
+
+    /* 取得會員資訊 */
+    function getMemberInfo() {
+        let url = '/cart/getMemberInfo';
+        fetch(url)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('member_no').value = data.memberNo;
+                document.getElementById('full_name').value = data.memberName;
+                document.getElementById('user_email').value = data.memberMail;
+                document.getElementById('user_phone').value = data.memberPhone;
+                document.getElementById('current_points').innerText = `可使用 ${data.memberPoints} 點`;
+                document.getElementById('member_points').setAttribute('max', data.memberPoints);
+                document.getElementById('member_points').setAttribute('min', 0);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    /* 自動帶入常用收件人資訊 */
+    function autoFillInfo() {
+        let url = '/cart/getMemberInfo';
+        let checkbox = document.getElementById('common_receiver');
+        let receive_full_name = document.getElementById('receive_full_name');
+        let receive_phone = document.getElementById('receive_phone');
+        let receive_address = document.getElementById('receive_address');
+        if (checkbox.checked) {
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    receive_full_name.value = data.commonRecipient;
+                    receive_phone.value = data.commonRecipientPhone;
+                    receive_address.value = data.commonRecipientAddress;
+                    document.getElementById('receive_post_code').setAttribute('disabled', true);
+                    document.getElementById('city').setAttribute('disabled', true);
+                    document.getElementById('dist').setAttribute('disabled', true);
+                })
+                .catch(error => console.error('Error:', error));
+        } else {
+            receive_full_name.value = '';
+            receive_phone.value = '';
+            receive_address.value = '';
+            document.getElementById('receive_post_code').removeAttribute('disabled');
+            document.getElementById('city').removeAttribute('disabled');
+            document.getElementById('dist').removeAttribute('disabled');
+        }
+    }
+
+    /* 取得此會員有效優惠券 */
+    function getValidCoupon() {
+        let select_el = document.getElementById('birthday_coupon');
+        fetch('/cart/getValidCoupon')
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.birthdayCouponNo) {
+                    let option = document.createElement('option');
+                    option.value = data.birthdayCouponNo;
+                    option.text = "生日優惠券";
+                    option.setAttribute('data-discount', data.birthdayCouponDiscount);
+                    option.setAttribute('data-couponno', data.birthdayCouponNo);
+                    select_el.appendChild(option);
+                } else {
+                    let option = document.createElement('option');
+                    option.value = '';
+                    option.text = '無適用優惠券';
+                    option.setAttribute('data-discount', 0);
+                    select_el.appendChild(option);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching coupons:', error);
+            });
+    }
+
+    /* 會員選取優惠券 */
+    document.getElementById('birthday_coupon').addEventListener('change', function () {
+        let selected_option = this.options[this.selectedIndex];
+        let discount = selected_option.getAttribute('data-discount') || 0;
+        document.querySelector('.coupon_amount').innerText = `-$${discount}`;
+        updateOrderTotal();
+    });
+
+    /* 會員使用點數 */
+    document.getElementById('member_points').addEventListener('input', function () {
+        let points = parseInt(this.value) || 0;
+        if (points > this.getAttribute('max')) {
+            alert('超過現有點數');
+            points = parseInt(this.getAttribute('max'));
+            this.value = points;
+        } else if (points < this.getAttribute('min')) {
+            alert('點數不能小於0');
+            points = parseInt(this.getAttribute('min'));
+            this.value = points;
+        }
+        document.getElementById('points_to_use').innerText = `-$${points}`;
+        updateOrderTotal();
+    });
+
+    /* 更新訂單總金額 */
+    function updateOrderTotal() {
+        let discount = parseInt(document.querySelector('.coupon_amount').innerText.replace('-$', ''));
+        let points = parseInt(document.getElementById('points_to_use').innerText.replace('-$', ''));
+        let newTotal = initialTotal - discount - points;
+        document.getElementById('order_amount').innerText = `NT$${newTotal}`;
+    }
+
+    /* 送出訂單 */
+    function placeOrder(e) {
+        e.preventDefault();
+        let selectElement = document.getElementById('birthday_coupon');
+        let selectedOption = selectElement.options[selectElement.selectedIndex];
+        let birthdayCouponNo = selectedOption.dataset.couponno;
+
+        // 訂單資料
+        let checkoutData = {
+            memberNo: document.getElementById('member_no').value,
+            productPrice: document.getElementById('cart_total').innerText.replace('NT$', ''),
+            productCouponDiscount: document.querySelector('.coupon_amount').innerText.replace('-$', ''),
+            productCheckoutAmount: document.getElementById('order_amount').innerText.replace('NT$', ''),
+            memberPoints: document.getElementById('points_to_use').innerText.replace('-$', ''),
+            birthdayCouponNo: birthdayCouponNo,
+            recipient: document.getElementById('receive_full_name').value,
+            recipientPhone: document.getElementById('receive_phone').value,
+            recipientAddress: document.getElementById('receive_address').value,
+            productOrderDetail: collectItems()
+        };
+
+        console.log('訂單資料:', checkoutData);
+
+        // 傳送訂單資料到後端
+        fetch('/productOrder/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(checkoutData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('訂單成立', data);
+            })
+            .catch(error => {
+                console.error('訂單不成立', error);
+            });
+    }
+
+    /* 取訂單明細，用於訂單資料 */
+    function collectItems() {
+        var items = [];
+        document.querySelectorAll('.order_detail li').forEach(item => {
+            items.push({
+                productNo: item.querySelector('input#product_no').value,
+                productQty: parseInt(item.querySelector('.quantity').innerText.replace('數量: ', ''), 10),
+                productPrice: parseInt(item.querySelector('.price').innerText.replace('單價: NT$', ''))
+            });
+        });
+        return items;
+    }
+    document.querySelector('.checkout-form').addEventListener('submit', placeOrder);
+
+
+    /* 購物車明細收合展開 */
+    $(document).ready(function () {
+        $('#collapseTwo').on('show.bs.collapse', function () {
+            $('a[href="#collapseTwo"] i').removeClass('bi-caret-down-fill').addClass('bi-caret-up-fill');
+        }).on('hide.bs.collapse', function () {
+            $('a[href="#collapseTwo"] i').removeClass('bi-caret-up-fill').addClass('bi-caret-down-fill');
+        });
+    });
+</script>
+</body>
+</html>

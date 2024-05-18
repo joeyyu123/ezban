@@ -13,12 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,17 +39,14 @@ public class ProductFrontstageController {
     private ProductCategoryService productCategoryService;
 
     @GetMapping("/shopall")
-    public String shopall() {
+    public String shopall(HttpSession session) {
+//        session.setAttribute("memberNo", 2);
         return "/frontstage/product/shopall";
     }
 
     @GetMapping("/shopdetail")
-    public String shopdetail(ModelMap model) {
-
-        Product product = new Product();
-        product.setProductNo(11);
-        model.addAttribute("product",product);
-
+    public String shopdetail(@RequestParam(name = "productNo", required = true) String productNo, Model model) {
+        model.addAttribute("productNo", productNo);
         return "/frontstage/product/shopdetail";
     }
 
@@ -84,6 +83,14 @@ public class ProductFrontstageController {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(imgUrls);
+    }
+
+    @GetMapping("/getImage/{productImgNo}")
+    public ResponseEntity<byte[]> getImage(@PathVariable("productImgNo") Integer productImgNo) {
+        ProductImg img = productImgService.getImgByImgNo(productImgNo);
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(img.getProductImg());
     }
 
     @GetMapping("/getAllProductCategories")

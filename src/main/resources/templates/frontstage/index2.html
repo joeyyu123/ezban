@@ -28,6 +28,8 @@
     <link rel="stylesheet" th:href="@{/plugins/slick/slick-theme.css}">
     <!-- Main Stylesheet -->
     <link rel="stylesheet" th:href="@{/css/frontstage/style.css}">
+    <!-- bootstrap icon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
@@ -82,7 +84,13 @@
                 <ul class="top-menu text-right list-inline">
                     <li class="dropdown cart-nav dropdown-slide">
                         <a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
-                            <i class="tf-ion-android-cart"></i><span class="top-menu-text">購物車</span></a>
+                            <div class="cart-icon" style="margin-right: 3px;">
+                                <i class="bi bi-cart3">
+                                    <span class="badge">0</span>
+                                </i>
+                            </div>
+                            <span class="top-menu-text">購物車</span>
+                        </a>
                         <div class="dropdown-menu cart-dropdown">
                             <!-- Cart Item -->
                             <div class="media" th:each="item : ${cart}">
@@ -105,7 +113,7 @@
                                 <span class="total-price" th:text="${totalPrice}">$1799.00</span>
                             </div>
                             <ul class="text-center cart-buttons">
-                                <li><a th:href="@{/cart}" class="btn btn-small">View Cart</a></li>
+                                <li><a th:href="@{/cart/items}" class="btn btn-small">View Cart</a></li>
                                 <li><a th:href="@{/checkout}" class="btn btn-small btn-solid-border">Checkout</a></li>
                             </ul>
                         </div>

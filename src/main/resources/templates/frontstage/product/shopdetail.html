@@ -30,33 +30,26 @@
                             onclick="window.location.href='/product/shopdetail'">放棄檢舉
                     </button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                            th:onclick="submitProductReport([[${product.productNo}]])">送出檢舉
+                            th:onclick="submitProductReport([[${productNo}]])">送出檢舉
                     </button>
                 </div>
             </div>
         </div>
     </div>
     <!-- 檢舉的Modal結束 -->
-
-    <style>
-        .cart_btn {
-            border: 1px solid black;
-            margin-right: 20px;
-        }
-    </style>
 </head>
 
 <body id="body">
 <div th:replace="frontstage/index2 :: header"></div>
 
 <section class="single-product">
-    <div class="container">
+    <div class="container" style="width: 75%; padding: 0;">
         <div class="row">
             <div class="col-md-6">
-                <ol class="breadcrumb">
-                    <li><a href="index.html">首頁</a></li>
+                <ol class="breadcrumb" style="padding: 0;">
+                    <li><a th:href="@{/}">首頁</a></li>
                     <li><a th:href="@{/product/shopall}">周邊商品</a></li>
-                    <li class="active">single product</li>
+                    <li class=" product_name active"></li>
                 </ol>
             </div>
 
@@ -66,37 +59,10 @@
                 <div class="single-product-slider">
                     <div id='carousel-custom' class='carousel slide' data-ride='carousel'>
                         <div class='carousel-outer'>
-                            <!-- me art lab slider -->
                             <div class='carousel-inner '>
-                                <div class='item active'>
-                                    <img src='images/shop/single-products/product-1.jpg' alt=''
-                                         data-zoom-image="images/shop/single-products/product-1.jpg"/>
-                                </div>
-                                <div class='item'>
-                                    <img src='images/shop/single-products/product-2.jpg' alt=''
-                                         data-zoom-image="images/shop/single-products/product-2.jpg"/>
-                                </div>
-
-                                <div class='item'>
-                                    <img src='images/shop/single-products/product-3.jpg' alt=''
-                                         data-zoom-image="images/shop/single-products/product-3.jpg"/>
-                                </div>
-                                <div class='item'>
-                                    <img src='images/shop/single-products/product-4.jpg' alt=''
-                                         data-zoom-image="images/shop/single-products/product-4.jpg"/>
-                                </div>
-                                <div class='item'>
-                                    <img src='images/shop/single-products/product-5.jpg' alt=''
-                                         data-zoom-image="images/shop/single-products/product-5.jpg"/>
-                                </div>
-                                <div class='item'>
-                                    <img src='images/shop/single-products/product-6.jpg' alt=''
-                                         data-zoom-image="images/shop/single-products/product-6.jpg"/>
-                                </div>
-
+                                <!--動態顯示圖片-->
                             </div>
 
-                            <!-- sag sol -->
                             <a class='left carousel-control' href='#carousel-custom' data-slide='prev'>
                                 <i class="tf-ion-ios-arrow-left"></i>
                             </a>
@@ -107,83 +73,32 @@
 
                         <!-- thumb -->
                         <ol class='carousel-indicators mCustomScrollbar meartlab'>
-                            <li data-target='#carousel-custom' data-slide-to='0' class='active'>
-                                <img src='images/shop/single-products/product-1.jpg' alt=''/>
-                            </li>
-                            <li data-target='#carousel-custom' data-slide-to='1'>
-                                <img src='images/shop/single-products/product-2.jpg' alt=''/>
-                            </li>
-                            <li data-target='#carousel-custom' data-slide-to='2'>
-                                <img src='images/shop/single-products/product-3.jpg' alt=''/>
-                            </li>
-                            <li data-target='#carousel-custom' data-slide-to='3'>
-                                <img src='images/shop/single-products/product-4.jpg' alt=''/>
-                            </li>
-                            <li data-target='#carousel-custom' data-slide-to='4'>
-                                <img src='images/shop/single-products/product-5.jpg' alt=''/>
-                            </li>
-                            <li data-target='#carousel-custom' data-slide-to='5'>
-                                <img src='images/shop/single-products/product-6.jpg' alt=''/>
-                            </li>
-                            <li data-target='#carousel-custom' data-slide-to='6'>
-                                <img src='images/shop/single-products/product-7.jpg' alt=''/>
-                            </li>
+                            <!--縮圖-->
                         </ol>
                     </div>
                 </div>
             </div>
             <div class="col-md-7">
                 <div class="single-product-details">
-                    <h2>Eclipse Crossbody</h2>
-                    <p class="product-price">$300</p>
+                    <h2 class="product_name"></h2>
+                    <div class="product_rating"></div>
+                    <p class="product_price"></p>
 
-                    <p class="product-description mt-20">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laborum ipsum dicta quod, quia
-                        doloremque aut deserunt commodi quis. Totam a consequatur beatae nostrum, earum consequuntur?
-                        Eveniet consequatur ipsum dicta recusandae.
-                    </p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt, velit, sunt temporibus, nulla
-                        accusamus similique sapiente tempora, at atque cumque assumenda minus asperiores est esse sequi
-                        dolore magnam. Debitis, explicabo.</p>
-                    <div class="color-swatches">
-                        <span>color:</span>
-                        <ul>
-                            <li>
-                                <a href="#!" class="swatch-violet"></a>
-                            </li>
-                            <li>
-                                <a href="#!" class="swatch-black"></a>
-                            </li>
-                            <li>
-                                <a href="#!" class="swatch-cream"></a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="product-size">
-                        <span>Size:</span>
-                        <select class="form-control">
-                            <option>S</option>
-                            <option>M</option>
-                            <option>L</option>
-                            <option>XL</option>
-                        </select>
-                    </div>
                     <div class="product-quantity">
-                        <span>Quantity:</span>
+                        <span>數量:</span>
                         <div class="product-quantity-slider">
-                            <input id="product-quantity" type="text" value="0" name="product-quantity">
+                            <input id="product-quantity" type="text" value="1" name="product-quantity">
                         </div>
                     </div>
                     <div class="product-category">
-                        <span>Categories:</span>
+                        <span>商品類別:</span>
                         <ul>
-                            <li><a href="product-single.html">Products</a></li>
-                            <li><a href="product-single.html">Soap</a></li>
+                            <li class="product_category"><a th:href="@{/product/shopall}"></a></li>
                         </ul>
                     </div>
-                    <a href="cart.html" class="btn btn-main mt-20" style="margin-right: 5px;">加入購物車</a>
+                    <a href="#" id="add_to_cart" class="btn btn-main mt-20" style="margin-right: 5px; padding: 11px 12px; font-size: 14px">加入購物車</a>
                     <a id="addToFavorites" class="btn btn-main mt-20"
-                       style="margin-right: 5px;" th:onclick="addToFavorites([[${product.productNo}]])"><i
+                       style="margin-right: 5px;" th:onclick="addToFavorites([[${productNo}]])"><i
                             class="tf-ion-ios-heart"></i> 加入收藏</a>
                     <button type="button" id="productReport" class="btn btn-primary btn-lg" data-toggle="modal"
                             data-target="#staticBackdrop"
@@ -197,23 +112,13 @@
             <div class="col-xs-12">
                 <div class="tabCommon mt-20">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#details" aria-expanded="true">Details</a></li>
-                        <li class=""><a data-toggle="tab" href="#reviews" aria-expanded="false">Reviews (3)</a></li>
+                        <li class="active"><a data-toggle="tab" href="#details" aria-expanded="true">商品描述</a></li>
+                        <li class=""><a data-toggle="tab" href="#reviews" aria-expanded="false">商品評論 (3)</a></li>
                     </ul>
                     <div class="tab-content patternbg">
                         <div id="details" class="tab-pane fade active in">
-                            <h4>Product Description</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-                                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-                                dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-                                mollit anim id est laborum. Sed ut per spici</p>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis delectus quidem
-                                repudiandae veniam distinctio repellendus magni pariatur molestiae asperiores animi, eos
-                                quod iusto hic doloremque iste a, nisi iure at unde molestias enim fugit, nulla
-                                voluptatibus. Deserunt voluptate tempora aut illum harum, deleniti laborum animi neque,
-                                praesentium explicabo, debitis ipsa?</p>
+                            <h4>商品描述</h4>
+                            <p class="product_desc"></p>
                         </div>
                         <div id="reviews" class="tab-pane fade">
                             <div class="post-comments">
@@ -222,8 +127,8 @@
                                     <li class="media">
 
                                         <a class="pull-left" href="#!">
-                                            <img class="media-object comment-avatar" src="images/blog/avater-1.jpg"
-                                                 alt="" width="50" height="50"/>
+<!--                                            <img class="media-object comment-avatar" src="images/blog/avater-1.jpg"-->
+<!--                                                 alt="" width="50" height="50"/>-->
                                         </a>
 
                                         <div class="media-body">
@@ -251,8 +156,8 @@
                                     <li class="media">
 
                                         <a class="pull-left" href="#!">
-                                            <img class="media-object comment-avatar" src="images/blog/avater-4.jpg"
-                                                 alt="" width="50" height="50"/>
+<!--                                            <img class="media-object comment-avatar" src="images/blog/avater-4.jpg"-->
+<!--                                                 alt="" width="50" height="50"/>-->
                                         </a>
 
                                         <div class="media-body">
@@ -281,8 +186,8 @@
                                     <li class="media">
 
                                         <a class="pull-left" href="#!">
-                                            <img class="media-object comment-avatar" src="images/blog/avater-1.jpg"
-                                                 alt="" width="50" height="50">
+<!--                                            <img class="media-object comment-avatar" src="images/blog/avater-1.jpg"-->
+<!--                                                 alt="" width="50" height="50">-->
                                         </a>
 
                                         <div class="media-body">
@@ -320,111 +225,111 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <span class="bage">Sale</span>
-                        <img class="img-responsive" src="images/shop/products/product-5.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-									<span data-toggle="modal" data-target="#product-modal">
-										<i class="tf-ion-ios-search"></i>
-									</span>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">Reef Boardsport</a></h4>
-                        <p class="price">$200</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images/shop/products/product-1.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-									<span data-toggle="modal" data-target="#product-modal">
-										<i class="tf-ion-ios-search-strong"></i>
-									</span>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">Rainbow Shoes</a></h4>
-                        <p class="price">$200</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images/shop/products/product-2.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-									<span data-toggle="modal" data-target="#product-modal">
-										<i class="tf-ion-ios-search"></i>
-									</span>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">Strayhorn SP</a></h4>
-                        <p class="price">$230</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images/shop/products/product-3.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-									<span data-toggle="modal" data-target="#product-modal">
-										<i class="tf-ion-ios-search"></i>
-									</span>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">Bradley Mid</a></h4>
-                        <p class="price">$200</p>
-                    </div>
-                </div>
-            </div>
+<!--            <div class="col-md-3">-->
+<!--                <div class="product-item">-->
+<!--                    <div class="product-thumb">-->
+<!--                        <span class="bage">Sale</span>-->
+<!--                        <img class="img-responsive" src="images/shop/products/product-5.jpg" alt="product-img"/>-->
+<!--                        <div class="preview-meta">-->
+<!--                            <ul>-->
+<!--                                <li>-->
+<!--									<span data-toggle="modal" data-target="#product-modal">-->
+<!--										<i class="tf-ion-ios-search"></i>-->
+<!--									</span>-->
+<!--                                </li>-->
+<!--                                <li>-->
+<!--                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>-->
+<!--                                </li>-->
+<!--                                <li>-->
+<!--                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="product-content">-->
+<!--                        <h4><a href="product-single.html">Reef Boardsport</a></h4>-->
+<!--                        <p class="price">$200</p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-md-3">-->
+<!--                <div class="product-item">-->
+<!--                    <div class="product-thumb">-->
+<!--                        <img class="img-responsive" src="images/shop/products/product-1.jpg" alt="product-img"/>-->
+<!--                        <div class="preview-meta">-->
+<!--                            <ul>-->
+<!--                                <li>-->
+<!--									<span data-toggle="modal" data-target="#product-modal">-->
+<!--										<i class="tf-ion-ios-search-strong"></i>-->
+<!--									</span>-->
+<!--                                </li>-->
+<!--                                <li>-->
+<!--                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>-->
+<!--                                </li>-->
+<!--                                <li>-->
+<!--                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="product-content">-->
+<!--                        <h4><a href="product-single.html">Rainbow Shoes</a></h4>-->
+<!--                        <p class="price">$200</p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-md-3">-->
+<!--                <div class="product-item">-->
+<!--                    <div class="product-thumb">-->
+<!--                        <img class="img-responsive" src="images/shop/products/product-2.jpg" alt="product-img"/>-->
+<!--                        <div class="preview-meta">-->
+<!--                            <ul>-->
+<!--                                <li>-->
+<!--									<span data-toggle="modal" data-target="#product-modal">-->
+<!--										<i class="tf-ion-ios-search"></i>-->
+<!--									</span>-->
+<!--                                </li>-->
+<!--                                <li>-->
+<!--                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>-->
+<!--                                </li>-->
+<!--                                <li>-->
+<!--                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="product-content">-->
+<!--                        <h4><a href="product-single.html">Strayhorn SP</a></h4>-->
+<!--                        <p class="price">$230</p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="col-md-3">-->
+<!--                <div class="product-item">-->
+<!--                    <div class="product-thumb">-->
+<!--                        <img class="img-responsive" src="images/shop/products/product-3.jpg" alt="product-img"/>-->
+<!--                        <div class="preview-meta">-->
+<!--                            <ul>-->
+<!--                                <li>-->
+<!--									<span data-toggle="modal" data-target="#product-modal">-->
+<!--										<i class="tf-ion-ios-search"></i>-->
+<!--									</span>-->
+<!--                                </li>-->
+<!--                                <li>-->
+<!--                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>-->
+<!--                                </li>-->
+<!--                                <li>-->
+<!--                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="product-content">-->
+<!--                        <h4><a href="product-single.html">Bradley Mid</a></h4>-->
+<!--                        <p class="price">$200</p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
 
         </div>
     </div>
@@ -434,7 +339,47 @@
 <div th:replace="frontstage/index2 :: footer"></div>
 
 </body>
+<script th:src="@{/js/frontstage/product/guest.js}"></script>
+<script th:src="@{/js/frontstage/product/shopdetail.js}"></script>
 
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var productNo = /*[[${productNo}]]*/ 'default';
+    /*]]>*/
+
+    console.log(productNo, "erin");
+    test(productNo);
+    getProductImages(productNo).then(function (imageUrls) {
+        console.log(imageUrls);
+        let carouselIndicators = document.querySelector('.carousel-indicators');
+        let carouselInner = document.querySelector('.carousel-inner');
+
+        imageUrls.forEach((url, index) => {
+            // carousel-indicator
+            let indicator = document.createElement('li');
+            indicator.setAttribute('data-target', '#carousel-custom');
+            indicator.setAttribute('data-slide-to', index);
+            if (index === 0) indicator.classList.add('active');
+            let thumb_img = document.createElement('img');
+            thumb_img.src = url;
+            indicator.appendChild(thumb_img);
+            carouselIndicators.appendChild(indicator);
+
+            // carousel-inner
+            let item = document.createElement('div');
+            item.className = 'item' + (index === 0 ? ' active' : '');
+            let img = document.createElement('img');
+            img.src = url;
+            img.setAttribute('data-zoom-image', url);
+            item.appendChild(img);
+            carouselInner.appendChild(item);
+        });
+    });
+    getProductDetail(productNo)
+
+
+</script>
 <!--收藏Ajax開始-->
 <script>
     function addToFavorites(productNo) {

@@ -1,0 +1,92 @@
+.table {
+    margin-bottom: 60px;
+}
+.product-info {
+    display: flex; /* 水平排列 */
+    align-items: center; /* 垂直居中對齊 */
+    gap: 10px; /* 元素之間的間距 */
+}
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+thead th {
+    vertical-align: middle;
+    text-align: center;
+    padding: 10px;
+    background-color: white;
+}
+
+td {
+    text-align: center;
+}
+
+.custom-checkbox-label {
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    padding-left: 25px; /* 留空間給自訂的checkbox */
+    vertical-align: middle;
+}
+.custom-checkbox-label input[type="checkbox"] {
+    display: none; /* 隱藏預設的checkbox，但功能保留 */
+}
+.custom-checkbox-label .checkmark {
+    position: absolute;
+    top: 50%; /* 垂直中心對齊 */
+    transform: translateY(-50%);
+    left: 0;
+    height: 16px;
+    width: 16px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+}
+.custom-checkbox-label .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 50%; /* 水平置中 */
+    top: 50%; /* 垂直置中 */
+    width: 5px;
+    height: 8px;
+    transform: translate(-20%, -40%) rotate(45deg); /* 調整勾勾的位置 */
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    margin: -2px; /* 調整勾勾與框框邊緣的距離 */
+}
+.custom-checkbox-label input[type="checkbox"]:checked + .checkmark {
+    background-color: #ee8772; /* 勾選時的背景顏色 */
+    border: 1px solid #ee8772; /* 勾選時的框框顏色 */
+}
+.custom-checkbox-label input[type="checkbox"]:checked + .checkmark:after {
+    display: block; /* 顯示勾勾 */
+}
+
+
+td.product-price {
+    width: 180px;
+}
+
+td.product-quantity {
+    width: 180px;
+}
+
+td.product-thumbnail {
+    width: 300px;
+}
+i.remove {
+    cursor: pointer;
+    color: #afacac;
+    font-size: 14px;
+}
+
+.total, .total .amount {
+    font-size: 16px;
+    color: black;
+}
+
+.checkout {
+    font-size: 14px;
+}

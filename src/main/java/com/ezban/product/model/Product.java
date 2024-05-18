@@ -16,6 +16,7 @@ import com.ezban.host.model.Host;
 import com.ezban.productcategory.model.ProductCategory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @Entity
@@ -30,7 +31,7 @@ public class Product implements java.io.Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_category_no", referencedColumnName = "product_category_no")
-    @JsonIgnore
+    @JsonManagedReference
     private ProductCategory productCategory;
 
     @Column(name = "product_name")
@@ -38,6 +39,7 @@ public class Product implements java.io.Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "host_no", referencedColumnName = "host_no")
+//    @JsonManagedReference
     @JsonIgnore
     private Host host;
 

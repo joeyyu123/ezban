@@ -1,0 +1,130 @@
+.page-header .container {
+    width: 75%;
+}
+
+.page-header .container .col-md-12 {
+    padding: 0;
+}
+
+.page-wrapper {
+    padding-top: 30px;
+}
+
+.page-wrapper .checkout .container {
+    width: 75%;
+}
+
+.page-wrapper .checkout .container .col-md-8, .page-wrapper .checkout .container .col-md-8 .block {
+    padding-left: 0;
+}
+
+.page-wrapper .checkout .container .col-md-4 {
+    padding-right: 0;
+}
+
+.checkout-country-code {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.form-group {
+    flex-grow: 1;
+    margin: 0 5px; /* Adjust spacing between fields */
+}
+
+.order_detail li {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+}
+
+.order_detail li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.media-body h4 {
+    margin-bottom: 5px;
+}
+.media-body h4 a {
+    font-size: 12px;
+}
+.media-body p {
+    font-size: 11px;
+    color: #777;
+}
+p.price, p.quantity {
+    font-size: 10px;
+    color: #aba9a9;
+}
+
+.billing-details input {
+    font-size: 14px;
+    color: black;
+}
+.widget-title {
+    border: 1px solid #e1e0e0;
+    background-color: #f5f5f5;
+    height: 40px;
+    padding: 10px 15px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1)
+}
+input.common_receiver {
+    margin-left: 5px;
+}
+label.common_receiver {
+    font-size: 12px;
+    font-weight: 400;
+    color: #777;
+}
+.custom-checkbox-label {
+    margin-left: 5px;
+    margin-bottom: 10px;
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    padding-left: 25px; /* 留空間給自訂的checkbox */
+    vertical-align: middle; /* 垂直置中 */
+    font-size: 12px;
+    font-weight: 400;
+    color: #333;
+}
+
+.custom-checkbox-label input[type="checkbox"] {
+    display: none; /* 隱藏預設的checkbox，但功能保留 */
+}
+
+.custom-checkbox-label .checkmark {
+    position: absolute;
+    top: 50%; /* 垂直中心對齊 */
+    transform: translateY(-50%); /* 垂直中心對齊 */
+    left: 0;
+    height: 16px;
+    width: 16px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+}
+
+.custom-checkbox-label .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 50%; /* 水平置中 */
+    top: 50%; /* 垂直置中 */
+    width: 5px;
+    height: 8px;
+    transform: translate(-20%, -40%) rotate(45deg); /* 調整勾勾的位置 */
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    margin: -2px; /* 調整勾勾與框框邊緣的距離 */
+}
+
+.custom-checkbox-label input[type="checkbox"]:checked + .checkmark {
+    background-color: #ee8772; /* 勾選時的背景顏色 */
+    border: 1px solid #ee8772; /* 勾選時的框框顏色 */
+}
+
+.custom-checkbox-label input[type="checkbox"]:checked + .checkmark:after {
+    display: block; /* 顯示勾勾 */
+}

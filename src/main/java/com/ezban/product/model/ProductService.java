@@ -22,4 +22,6 @@ public interface ProductService {
 
     List<Product> getAll();
 
+    boolean checkAndUpdateStock(Integer productNo, Integer quantity);
+
 }

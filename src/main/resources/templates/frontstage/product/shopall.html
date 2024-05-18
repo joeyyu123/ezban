@@ -6,6 +6,7 @@
 <link rel="stylesheet" th:href="@{/css/frontstage/product/shopall.css}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script th:src="@{/js/frontstage/product/guest.js}"></script>
 
 <body id="body">
 <div th:replace="frontstage/index2 :: header"></div>
@@ -197,7 +198,7 @@
                                 allProducts = data.map(product => ({
                                     product_name: product.productName,
                                     product_url: `/product/shopdetail?productNo=${product.productNo}`,
-                                    product_img: `/backstage/product/getFirstImage/${product.productNo}`,
+                                    product_img: `/product/getFirstImage/${product.productNo}`,
                                     price: product.productPrice
                                 }));
                                 changePage(1);
@@ -215,64 +216,5 @@
     function resetAllProducts() {
         getAllProducts();
     }
-
-    /* 點擊商品購物車 icon 加入購物車 */
-    function addToCart(element) {
-        let productNo = element.getAttribute('data-product-no');
-        let quantity = 1;
-        let data = {productNo: parseInt(productNo, 10), quantity: quantity};
-        let url = `/cart/addToCart?productNo=${productNo}`;
-        fetch(url,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                        position: 'top',
-                        icon: 'success',
-                        title: data.message,
-                        showConfirmButton: false,
-                        timer: 1000,
-                        showClass: {
-                            popup: `
-                                animate__animated
-                                animate__fadeInDown
-                                animate__faster
-                                `
-                        },
-                        hideClass: {
-                            popup: `
-                              animate__animated
-                              animate__fadeOutUp
-                              animate__faster
-                            `
-                        },
-                        customClass: {
-                            popup: 'swal2-custom',
-                            title: 'swal2-title-custom'
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        text: data.message
-                    });
-                }
-            })
-            .catch(error => {
-                console.error("加入購物車失敗: ", error);
-                Swal.fire({
-                    icon: 'error',
-                    text: '無法加入購物車'
-                });
-            });
-    }
-
 </script>
 </html>

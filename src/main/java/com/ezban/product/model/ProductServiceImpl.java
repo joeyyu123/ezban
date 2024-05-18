@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
@@ -21,7 +22,6 @@ public class ProductServiceImpl implements ProductService {
     private ProductImgService productImgService;
 
 
-
     @Transactional
     @Override
     public Product addProduct(ProductDto productDto) {
@@ -29,7 +29,16 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.save(product);
     }
 
+    /**
+     * 新增商品及商品圖片
+     *
+     * @param productDto 商品資料
+     * @param files      商品圖片
+     * @return 新增的商品
+     * @throws IOException 處理圖片例外
+     */
     @Transactional
+    @Override
     public Product addProductandImages(ProductDto productDto, MultipartFile[] files) throws IOException {
         Product product = ProductMapper.toEntity(productDto);
         product = productRepository.save(product);
@@ -47,22 +56,24 @@ public class ProductServiceImpl implements ProductService {
         return product;
     }
 
+    @Override
     public Product updateProduct(Integer productNo, ProductDto productDto) {
         Product product = ProductMapper.toEntity(productDto);
         return productRepository.save(product);
     }
 
-    public void deleteProduct(Integer productNo) {
-        if (productRepository.existsById(productNo)) {
-            productRepository.deleteById(productNo);
-        }
-    }
+//    public void deleteProduct(Integer productNo) {
+//        if (productRepository.existsById(productNo)) {
+//            productRepository.deleteById(productNo);
+//        }
+//    }
 
     @Override
     public List<Product> getProductsByHost(Host host) {
         return productRepository.findByHost(host);
     }
 
+    @Override
     public Product getProductByProductNo(Integer productNo) {
         Optional<Product> optional = productRepository.findById(productNo);
         return optional.orElse(null);
@@ -74,6 +85,30 @@ public class ProductServiceImpl implements ProductService {
 
     public List<Product> getAll() {
         return productRepository.findAll();
+    }
+
+    /**
+     * 檢查商品的庫存是否足夠，若足夠要更新庫存數量。
+     *
+     * @param productNo 商品編號
+     * @param quantity  訂單的商品數量
+     * @return 如果庫存足夠並更新庫存成功，回傳 true。
+     */
+    @Transactional
+    @Override
+    public boolean checkAndUpdateStock(Integer productNo, Integer quantity) {
+        Product product = productRepository.findById(productNo).orElseThrow(() ->
+                new EntityNotFoundException("查無此商品")
+        );
+
+        Integer currentStock = product.getRemainingQty();
+        if (currentStock >= quantity) {
+            product.setRemainingQty(currentStock - quantity);
+            productRepository.save(product);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

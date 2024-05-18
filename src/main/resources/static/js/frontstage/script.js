@@ -98,16 +98,33 @@
 
 
 // carousel
-$(function(){
+// $(function(){
+//
+//     $(".autoplay").slick({
+//         arrows: true,
+//         dots: true,
+//         slidesToShow: 1,
+//         slidesToScroll: 1,
+//         autoplay: true,
+//         autoplaySpeed: 5000,
+//     });
+// });
 
-    $(".autoplay").slick({
-        arrows: true,
-        dots: true,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        autoplay: true,
-        autoplaySpeed: 5000,
-    });
-});
-
+// cart badge number
+function getCartQuantity() {
+  let url = `/cart/getCartQuantity`;
+  fetch(url, {
+    method: 'GET'
+  })
+      .then(response => response.json())
+      .then(data => {
+        if (data.cartQuantity != null) {
+          document.querySelector('.cart-icon .badge').innerText = data.cartQuantity > 99 ? '99+' : data.cartQuantity;
+        } else {
+          console.error("無法取得購物車數量");
+        }
+      })
+      .catch(error => console.error('Error:', error));
+}
+document.addEventListener('DOMContentLoaded',  getCartQuantity);
 
