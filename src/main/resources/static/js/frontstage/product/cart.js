@@ -21,8 +21,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 /* 取購物車內容 */
-function getItemsFromServer(memberNo) {
-    let url = `/cart/getCartItems?memberNo=${memberNo}`;
+function getItemsFromServer() {
+    let url = `/cart/getCartItems`;
     fetch(url)
         .then(response => response.json())
         .then(data => {

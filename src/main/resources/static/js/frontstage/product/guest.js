@@ -28,27 +28,27 @@ function checkUser() {
 }
 
 /* 在頁面載入後判斷登入狀態 */
-document.addEventListener('DOMContentLoaded', function () {
-    checkUser().then(userStatus => {
-        console.log('使用者登入狀態:', userStatus.isLogged);
-        if (userStatus.isLogged) {
-            console.log('會員編號:', userStatus.memberNo);
-        }
-    });
-});
+// document.addEventListener('DOMContentLoaded', function () {
+//     checkUser().then(userStatus => {
+//         console.log('使用者登入狀態:', userStatus.isLogged);
+//         if (userStatus.isLogged) {
+//             console.log('會員編號:', userStatus.memberNo);
+//         }
+//     });
+// });
 
 /* ========================== 加入購物車  ========================== */
 
 /* 檢查使用者是否已登入 */
-function addToCart(productNo, quantity) {
-    if (userStatus.isLogged) {
-        // user 已登入，將資料存到 server
-        addToCartServer(userStatus.memberNo, productNo, quantity);
-    } else {
-        // user 未登入，將資料存到 localStorage
-        addToCartLocal(productNo, quantity);
-    }
-}
+// function addToCart(productNo, quantity) {
+//     if (userStatus.isLogged) {
+//         // user 已登入，將資料存到 server
+//         addToCartServer(userStatus.memberNo, productNo, quantity);
+//     } else {
+//         // user 未登入，將資料存到 localStorage
+//         addToCartLocal(productNo, quantity);
+//     }
+// }
 
 /* 資料存到 server */
 function addToCartServer(memberNo, productNo, quantity) {
@@ -156,34 +156,35 @@ function addToCartServer(memberNo, productNo, quantity) {
 }
 
 /* 資料存到 localStorage */
-function addToCartLocal(productNo, quantity) {
-    productNo = parseInt(productNo, 10);
-    quantity = parseInt(quantity, 10);
-
-    let cart = JSON.parse(localStorage.getItem('cart')) || {};
-    if (cart[productNo]) {
-        cart[productNo] += quantity;
-    } else {
-        cart[productNo] = quantity;
-    }
-    localStorage.setItem('cart', JSON.stringify(cart));
-    console.log('商品已存入localStorage:', cart);
-
-    // 顯示 SweetAlert 通知
-    Swal.fire({
-        position: 'top-end',  // 修改為 top-end 以避免遮擋其他元素
-        icon: 'success',
-        title: message,
-        showConfirmButton: false,
-        timer: 1500,  // 設定自動關閉時間為 1500 毫秒
-        showClass: {
-            popup: 'animate__animated animate__fadeInDown animate__faster'
-        },
-        hideClass: {
-            popup: 'animate__animated animate__fadeOutUp animate__faster'
-        }
-    });
-}
+// function addToCartLocal(productNo, quantity) {
+//     console.log('商品編號:', productNo, '數量:', quantity)
+//     productNo = parseInt(productNo, 10);
+//     quantity = parseInt(quantity, 10);
+//
+//     let cart = JSON.parse(localStorage.getItem('cart')) || {};
+//     if (cart[productNo]) {
+//         cart[productNo] += quantity;
+//     } else {
+//         cart[productNo] = quantity;
+//     }
+//     localStorage.setItem('cart', JSON.stringify(cart));
+//     console.log('商品已存入localStorage:', cart);
+//
+//     // 顯示 SweetAlert 通知
+//     Swal.fire({
+//         position: 'top-end',  // 修改為 top-end 以避免遮擋其他元素
+//         icon: 'success',
+//         // title: message,
+//         showConfirmButton: false,
+//         timer: 1500,  // 設定自動關閉時間為 1500 毫秒
+//         showClass: {
+//             popup: 'animate__animated animate__fadeInDown animate__faster'
+//         },
+//         hideClass: {
+//             popup: 'animate__animated animate__fadeOutUp animate__faster'
+//         }
+//     });
+// }
 
 // localStorage.removeItem('cart');
 

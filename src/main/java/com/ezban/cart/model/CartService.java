@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -81,5 +82,15 @@ public class CartService {
         String cartKey = KEY_PREFIX + memberNo;
         Map<String, Object> cartItems = hashOperations.entries(cartKey);
         return cartItems.size();
+    }
+
+    public  Map<String, Object> getCartItems(Integer memberNo) {
+        String cartKey = KEY_PREFIX + memberNo;
+        Map<String, Object> cartItems = hashOperations.entries(cartKey);
+        Map<String, Object> processedCartItems = new HashMap<>();
+        cartItems.forEach((key, value) -> {
+                processedCartItems.put(key.substring(PRODUCTKEY_PREFIX.length()), value);
+        });
+        return processedCartItems;
     }
 }

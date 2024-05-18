@@ -1,16 +1,16 @@
 /* 從url取商品編號 */
-function test(productNo)
-{
-    document.addEventListener('DOMContentLoaded', function () {
-
-            let input_el = document.getElementById('product-quantity');
-            input_el.setAttribute('data-product-no', productNo);
-
-            // getProductDetail(productNo);
-            // getProductImages(productNo);
-
-    });
-}
+// function test(productNo)
+// {
+//     document.addEventListener('DOMContentLoaded', function () {
+//
+//             let input_el = document.getElementById('product-quantity');
+//             input_el.setAttribute('data-product-no', productNo);
+//
+//             // getProductDetail(productNo);
+//             // getProductImages(productNo);
+//
+//     });
+// }
 /* 取商品資訊 */
 function getProductDetail(productNo) {
     let url = `/product/getProductDetail?productNo=${productNo}`;
@@ -79,8 +79,8 @@ async function getProductImages(productNo) {
 // });
 
 /* 加入購物車 */
-document.getElementById('add_to_cart').addEventListener('click', function (e) {
-    e.preventDefault();
-    let quantity = document.getElementById('product-quantity').value;
-    addToCart(productNo, quantity);
-});
+// document.getElementById('add_to_cart').addEventListener('click', function (e) {
+//     e.preventDefault();
+//     let quantity = document.getElementById('product-quantity').value;
+//     addToCart(productNo, quantity);
+// });

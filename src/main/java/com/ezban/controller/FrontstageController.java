@@ -11,7 +11,7 @@ public class FrontstageController {
 
     @GetMapping("")
     public String index(HttpSession session) {
-        session.setAttribute("memberNo", 2);
+//        session.setAttribute("memberNo", 2);
         return "/frontstage/index2";
     }
 

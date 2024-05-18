@@ -36,15 +36,22 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                              "/loginPage",
                              "/register",
                              "/forgotPassword",
-                             "/events/**")
+                             "/events/**",
+                             "/cart/**"
+                        )
                 .and()
 
             .authorizeRequests()
                 .antMatchers("/login",
                              "loginPage",
                              "/register",
-                             "/forgotPassword","/").permitAll()
-                .antMatchers("/events/orders/**","/events/order/**","/events/*/tickets").hasRole("Member")
+                             "/forgotPassword",
+                             "/cart/items",
+                             "/").permitAll()
+                .antMatchers("/events/orders/**",
+                             "/events/order/**",
+                             "/events/*/tickets",
+                             "/cart/**").hasRole("Member")
                 .and()
 
             .formLogin()

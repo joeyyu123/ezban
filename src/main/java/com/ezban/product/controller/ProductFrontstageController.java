@@ -39,8 +39,7 @@ public class ProductFrontstageController {
     private ProductCategoryService productCategoryService;
 
     @GetMapping("/shopall")
-    public String shopall(HttpSession session) {
-//        session.setAttribute("memberNo", 2);
+    public String shopall() {
         return "/frontstage/product/shopall";
     }
 

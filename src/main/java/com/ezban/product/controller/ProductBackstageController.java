@@ -7,6 +7,7 @@ import com.ezban.product.model.ProductServiceImpl;
 import com.ezban.productimg.model.ProductImg;
 import com.ezban.productimg.model.ProductImgService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,13 +33,6 @@ public class ProductBackstageController {
     @Autowired
     private ProductImgService productImgService;
 
-
-    @GetMapping("test2")
-    public String test2() {
-        return "backstage/product/allProducts";
-    }
-
-
 //    @GetMapping("showProducts")
 //    public String showProducts(Model model) {
 //        Product product1 = productServiceImpl.getProductByProductNo(1);
@@ -56,10 +50,8 @@ public class ProductBackstageController {
 
     @GetMapping("showProducts")
     public String showProducts(@RequestParam("productNo") Integer productNo, Model model
-            , RedirectAttributes redirectAttributes
-            , Principal principal) {
+            , RedirectAttributes redirectAttributes) {
 
-//        Integer.parseInt(principal.getName()).hostService;
         Product product = productServiceImpl.getProductByProductNo(productNo);
         if (product == null) {
             redirectAttributes.addFlashAttribute("errorMessage", "找不到指定的商品");
@@ -71,13 +63,16 @@ public class ProductBackstageController {
 
     /* ========================== 新增商品 ========================== */
     @GetMapping("addProduct")
-    public String getAddProductForm(Model model) {
-        model.addAttribute("productDto", new ProductDto());
+    public String getAddProductForm(Principal principal, Model model) {
+        Integer hostNo = Integer.parseInt(principal.getName());
+        ProductDto productDto = new ProductDto();
+        productDto.setHostNo(hostNo);
+        model.addAttribute("productDto", productDto);
         return "backstage/product/addProduct";
     }
 
     @PostMapping("insert")
-    public String insert(ProductDto productDto, BindingResult result, Model model,
+    public String insert(Principal principal, ProductDto productDto, BindingResult result, Model model,
                          RedirectAttributes redirectAttributes,
                          @RequestParam("images") MultipartFile[] files) throws IOException {
         if (result.hasErrors()) {
@@ -86,6 +81,11 @@ public class ProductBackstageController {
             model.addAttribute("productDto", productDto);
             return "backstage/product/addProduct";
         }
+
+        if (!productServiceImpl.isAuthenticated(principal, productDto)) {
+            return "redirect:/backstage/product/addProduct";
+        }
+
         try {
             Product product = productServiceImpl.addProductandImages(productDto, files);
             redirectAttributes.addAttribute("productNo", product.getProductNo());
@@ -181,7 +181,6 @@ public class ProductBackstageController {
         model.addAttribute("productsList", productsList);
         model.addAttribute("productImages", productImages);
     }
-
 
 
 }

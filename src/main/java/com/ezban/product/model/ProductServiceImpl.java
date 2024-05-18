@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -111,6 +112,11 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    public boolean isAuthenticated(Principal principal, ProductDto productDto) {
+        return principal.getName().equals(productDto.getHostNo().toString());
+    }
 }
+
+
 
 

@@ -344,12 +344,14 @@
 
 
 <script th:inline="javascript">
+    // david
     /*<![CDATA[*/
     var productNo = /*[[${productNo}]]*/ 'default';
     /*]]>*/
-
-    console.log(productNo, "erin");
-    test(productNo);
+    document.addEventListener('DOMContentLoaded', function () {
+        let input_el = document.getElementById('product-quantity');
+        input_el.setAttribute('data-product-no', productNo);
+    });
     getProductImages(productNo).then(function (imageUrls) {
         console.log(imageUrls);
         let carouselIndicators = document.querySelector('.carousel-indicators');
@@ -376,7 +378,14 @@
             carouselInner.appendChild(item);
         });
     });
-    getProductDetail(productNo)
+    getProductDetail(productNo);
+
+
+    document.getElementById('add_to_cart').addEventListener('click', function (e) {
+        e.preventDefault();
+        let quantity = document.getElementById('product-quantity').value;
+        AutoIncreaseCartQuantityAndSetUI(productNo, quantity);
+    });
 
 
 </script>

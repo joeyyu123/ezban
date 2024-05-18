@@ -4,9 +4,8 @@
 
 <head th:include="frontstage/index2 :: head"></head>
 <link rel="stylesheet" th:href="@{/css/frontstage/product/shopall.css}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script th:src="@{/js/frontstage/product/guest.js}"></script>
 
 <body id="body">
 <div th:replace="frontstage/index2 :: header"></div>
@@ -39,7 +38,8 @@
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="allProducts">
                                 <h4 class="panel-title allProducts">
-                                    <a role="button" href="#!" onclick="resetAllProducts()" aria-expanded="true" aria-controls="collapseOne">
+                                    <a role="button" href="#!" onclick="resetAllProducts()" aria-expanded="true"
+                                       aria-controls="collapseOne">
                                         所有商品
                                     </a>
                                 </h4>
@@ -47,12 +47,15 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading" role="tab" id="headingTwo">
                                     <h4 class="panel-title">
-                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <a class="collapsed" role="button" data-toggle="collapse"
+                                           data-parent="#accordion" href="#collapseTwo" aria-expanded="false"
+                                           aria-controls="collapseTwo">
                                             商品類別
                                         </a>
                                     </h4>
                                 </div>
-                                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel"
+                                     aria-labelledby="headingTwo">
                                     <div class="panel-body">
                                         <ul class="categories">
                                         </ul>
@@ -215,6 +218,14 @@
     /* 點擊 sidebar "所有商品" 顯示所有商品*/
     function resetAllProducts() {
         getAllProducts();
+    }
+</script>
+
+<script>
+    async function addToCart(e) {
+        let productNo = e.getAttribute('data-product-no');
+        // call cartqty.js 自動增加購物車數量到localStorage/server
+        AutoIncreaseCartQuantityAndSetUI(productNo, 1)
     }
 </script>
 </html>

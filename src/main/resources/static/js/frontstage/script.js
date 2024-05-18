@@ -126,5 +126,5 @@ function getCartQuantity() {
       })
       .catch(error => console.error('Error:', error));
 }
-document.addEventListener('DOMContentLoaded',  getCartQuantity);
+// document.addEventListener('DOMContentLoaded',  getCartQuantity);
 
