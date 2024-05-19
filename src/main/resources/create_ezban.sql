@@ -56,16 +56,18 @@ create table admin
 
 INSERT INTO admin (admin_account, admin_pwd, admin_mail, admin_phone, admin_status, admin_name)
 
-VALUES ('AY6KQZZh', 'NkzkVJ2JUH', 'u8yzliwj@gmail.com', '0989599470', 1, '陳昊天'),
-       ('mE1rur8H', 'cR7eCn9dEd8rISQ', 'yeocffh6b3wj@gmail.com', '0980469290', 1, '王晨曦'),
-       ('mX14vJUo7MYQA', 'DsPLWXZ8jKoEz', 'pygvd8xpeex8vbf@gmail.com', '0926584626', 1, '張宇宸'),
-       ('dFOYfKRWrM', 'vOYvKXCsOlan', '6otfkc9jzl@gmail.com', '0954426431', 1, '李雅琳'),
-       ('oAFx5V1I', 'e3ez2mANzGY', 'ns9sxzx15rzuv@gmail.com', '0992857410', 1, '劉悅心'),
-       ('hSUhWbw3', 'BR8ivTB5p', '8avtoze3glac@gmail.com', '0990057569', 1, '黃宇航'),
-       ('6KGLkBq8T', '0Bzc2bJr', 'lf4v6j4bivrokr@gmail.com', '0932655759', 1, '蔡欣怡'),
-       ('cznsnaRVakuaAoV', 'ZT4TMNkhLeLfuF2', 'g6gdfowqi4gpkqy@gmail.com', '0906019527', 1, '林啟航'),
-       ('oy8EgoOTY2q', 'JR72fjeSNKYnX', 'zes7tkfl9dkmzub@gmail.com', '0942943961', 1, '陳心悅'),
-       ('lE6XihvE', 'BbCqJsKgu', 'vbrdpx7u4qjv0@gmail.com', '0901244156', 1, '鄭晨星');
+VALUES
+    ( 'AY6KQZZh', 'NkzkVJ2JUH', 'u8yzliwj@gmail.com', '0989599470', 1,'陳昊天'),
+    ( 'mE1rur8H', 'cR7eCn9dEd8rISQ', 'yeocffh6b3wj@gmail.com', '0980469290', 1, '王晨曦'),
+    ( 'mX14vJUo7MYQA', 'DsPLWXZ8jKoEz', 'pygvd8xpeex8vbf@gmail.com', '0926584626', 1, '張宇宸'),
+    ( 'dFOYfKRWrM', 'vOYvKXCsOlan', '6otfkc9jzl@gmail.com', '0954426431', 1, '李雅琳'),
+    ( 'oAFx5V1I', 'e3ez2mANzGY', 'ns9sxzx15rzuv@gmail.com', '0992857410', 1, '劉悅心'),
+    ( 'hSUhWbw3', 'BR8ivTB5p', '8avtoze3glac@gmail.com', '0990057569', 1, '黃宇航'),
+    ( '6KGLkBq8T', '0Bzc2bJr', 'lf4v6j4bivrokr@gmail.com', '0932655759', 1, '蔡欣怡'),
+    ( 'cznsnaRVakuaAoV', 'ZT4TMNkhLeLfuF2', 'g6gdfowqi4gpkqy@gmail.com', '0906019527', 1, '林啟航'),
+    ( 'oy8EgoOTY2q', 'JR72fjeSNKYnX', 'zes7tkfl9dkmzub@gmail.com', '0942943961', 1, '陳心悅'),
+    ( 'lE6XihvE', 'BbCqJsKgu', 'vbrdpx7u4qjv0@gmail.com', '0901244156', 1, '鄭晨星');
+
 
 
 create table event_category
@@ -1820,23 +1822,22 @@ create table save_event
     save_event_no int not null auto_increment primary key,
     member_no     int not null,
     event_no      int not null,
-    constraint save_event_event_event_no_fk
-        foreign key (event_no) references event (event_no),
-    constraint save_event_member_member_no_fk
-        foreign key (member_no) references member (member_no)
+    save_status     tinyint not null,
+    foreign key (event_no) references event (event_no),
+    foreign key (member_no) references member (member_no)
 );
 
-INSERT INTO save_event (member_no, event_no)
-VALUES (1, 1),
-	   (2, 2),
-       (3, 3),
-       (4, 4),
-       (5, 5),
-       (6, 6),
-       (7, 7),
-       (8, 8),
-       (9, 9),
-       (10, 10);
+INSERT INTO save_event (member_no, event_no, save_status)
+VALUES (1, 1, 1),
+       (2, 2, 0),
+       (3, 3, 1),
+       (4, 4, 0),
+       (5, 5, 1),
+       (6, 6, 0),
+       (7, 7, 1),
+       (8, 8, 0),
+       (9, 9, 1),
+       (10, 10, 0);
 
 
 create table ticket_order
@@ -1989,16 +1990,17 @@ create table qrcode_ticket
 )auto_increment = 3120001;
 
 INSERT INTO qrcode_ticket (ticket_order_detail_no, member_no, ticket_usage_status, ticket_valid_time)
-VALUES (1, 1, 0, NOW()),
-       (2, 2, 1, NOW()),
-       (3, 3, 2, NOW()),
-       (4, 4, 0, NOW()),
-       (5, 5, 1, NOW()),
-       (6, 6, 2, NOW()),
-       (7, 7, 0, NOW()),
-       (8, 8, 0, NOW()),
-       (9, 9, 2, NOW()),
-       (10, 10, 0, NOW());
+VALUES
+    (1, 1, 0, NOW()),
+    (2, 2, 1, NOW()),
+    (3, 3, 2, NOW()),
+    (4, 4, 0, NOW()),
+    (5, 5, 1, NOW()),
+    (6, 6, 2, NOW()),
+    (7, 7, 0, NOW()),
+    (8, 8, 0, NOW()),
+    (9, 9, 2, NOW()),
+    (10, 10, 0, NOW());
 
 
 CREATE TABLE product_category
