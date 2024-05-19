@@ -188,6 +188,7 @@ create table event
     event_start_time       datetime     not null,
     event_end_time         datetime     not null,
     registered_count       int          null default 0,
+    visit_count            int       null default 0,
     event_status           tinyint      not null,
     total_rating           int          null,
     event_rating_count     int          null,

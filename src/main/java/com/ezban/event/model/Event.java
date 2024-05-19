@@ -4,6 +4,7 @@ import com.ezban.eventcategory.model.EventCategory;
 import com.ezban.eventcomment.model.EventComment;
 import com.ezban.host.model.Host;
 import com.ezban.tickettype.model.TicketType;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -68,6 +69,9 @@ public class Event implements java.io.Serializable {
     @Column(name = "event_end_time", nullable = false)
     private Timestamp eventEndTime;
 
+    @Column(name = "visit_count")
+    private Integer visitCount;
+
     @Column(name = "registered_count")
     private Integer registeredCount;
 
@@ -93,9 +97,11 @@ public class Event implements java.io.Serializable {
     @Column(name = "event_checkout_time")
     private Timestamp eventCheckoutTime;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private Set<EventComment> eventComments = new LinkedHashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private Set<TicketType> ticketTypes = new LinkedHashSet<>();
 
@@ -116,6 +122,13 @@ public class Event implements java.io.Serializable {
             return null;
         }
         return Base64.getEncoder().encodeToString(eventImg);
+    }
+
+    public void setEventImgBase64(String eventImgBase64) {
+        if (eventImgBase64 == null || eventImgBase64.isEmpty()) {
+            return;
+        }
+        this.eventImg = Base64.getDecoder().decode(eventImgBase64);
     }
 
     public void setEventImg(byte[] eventImg) {
@@ -232,6 +245,14 @@ public class Event implements java.io.Serializable {
 
     public void setEventRatingCount(Integer eventRatingCount) {
         this.eventRatingCount = eventRatingCount;
+    }
+
+    public Integer getVisitCount() {
+        return visitCount;
+    }
+
+    public void setVisitCount(Integer visitCount) {
+        this.visitCount = visitCount;
     }
 
     public EventCheckoutStatus getEventCheckoutStatus() {
