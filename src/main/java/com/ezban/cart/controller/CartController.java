@@ -5,11 +5,13 @@ import com.ezban.birthdaycoupon.model.BirthdayCouponService;
 import com.ezban.cart.model.*;
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberService;
+import oracle.jdbc.proxy.annotation.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -54,23 +56,32 @@ public class CartController {
         }
     }
 
-    @PostMapping("/checkout")
-    public ResponseEntity<?> processCheckout(Principal principal, @RequestBody CheckoutRequest checkoutRequest) {
-        Integer memberNo = Integer.parseInt(principal.getName());
-        if (memberNo == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"message\": \"請登入以完成結帳流程。\"}");
-        }
+//    @PostMapping("/checkout")
+//    public ResponseEntity<?> processCheckout(
+//            Principal principal,
+//            @RequestBody CheckoutRequest checkoutRequest,
+//            Model model
+//    ) {
+//        Map<Integer, Integer> products = checkoutRequest.getProducts();
+//
+////        if (products == null || products.isEmpty()) {
+////            return ResponseEntity.badRequest().body("沒有選擇商品");
+////        }
+//
+//        model.addAttribute("products", products);
+//
+//        return ResponseEntity.ok(Collections.singletonMap("redirectUrl", "/cart/checkoutPage"));
+//    }
 
-        List<CheckoutRequest.ProductInfo> products = checkoutRequest.getProducts();
-        if (products == null || products.isEmpty()) {
-            return ResponseEntity.badRequest().body("沒有選擇商品");
-        }
+    @PostMapping("/checkoutPage")
+    public String checkOutPage(
+            Principal principal,
+            Model model,
+            @RequestBody CheckoutRequest checkoutRequest
+    ) {
+//        Integer memberNo = Integer.parseInt(principal.getName());
 
-        return ResponseEntity.ok(Collections.singletonMap("redirectUrl", "/cart/checkoutPage"));
-    }
-
-    @GetMapping("/checkoutPage")
-    public String checkOutPage() {
+        model.addAttribute("products", checkoutRequest.getProducts());
         return "frontstage/product/checkout";
     }
 
@@ -96,7 +107,7 @@ public class CartController {
         BirthdayCouponResponse coupon = birthdayCouponService.getValidCoupon(memberNo);
         return ResponseEntity.ok().body(Objects.requireNonNullElse(coupon, "{\"message\": \"無適用優惠券\"}"));
     }
-
+    // 以直接更新總數量的方式增加商品數量
     @PutMapping("/updateQty")
     public ResponseEntity<String> updateQty(Principal principal,
                                             @RequestBody UpdateQtyRequest updateQtyRequest) {
@@ -117,6 +128,7 @@ public class CartController {
         return ResponseEntity.ok().body("{\"success\": true, \"message\": \"商品已從購物車移除\", \"cartQuantity\": " + cartQuantity + "}");
     }
 
+    // 以遞增delta的方式增加商品數量
     @PostMapping("/addToCart")
     public ResponseEntity<?> addToCart(Principal principal,
                                        @RequestBody AddToCartRequest addToCartRequest) {

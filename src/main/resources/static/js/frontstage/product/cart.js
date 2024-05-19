@@ -1,10 +1,10 @@
 
 // localStorage.removeItem('checkoutProducts');
-document.addEventListener('DOMContentLoaded', function() {
-    checkUser().then(() => {
-        getCartItem();  // 確保user狀態後再取購物車內容
-    });
-});
+// document.addEventListener('DOMContentLoaded', function() {
+//     checkUser().then(() => {
+//         getCartItem();  // 確保user狀態後再取購物車內容
+//     });
+// });
 /* 從url取會員編號 */
 // document.addEventListener('DOMContentLoaded', function () {
 //     console.log("Document fully loaded");
@@ -133,12 +133,12 @@ function showCartItems(items) {
     container.innerHTML += totalRow;
 
     // 初始化 Touchspin
-    initializeTouchSpin(userStatus.isLogged);
+    initializeTouchSpin();
 
 }
 
 /* 初始化TouchSpin */
-function initializeTouchSpin(isLogged) {
+function initializeTouchSpin() {
     $("input[name='cart-quantity']").TouchSpin({
         min: 1,
         max: 100,
@@ -151,12 +151,7 @@ function initializeTouchSpin(isLogged) {
         let productNo = this.getAttribute('data-product-no');
         let quantity = parseInt($(this).val(), 10);
 
-        // 依據 user 狀態更新資料
-        if (isLogged) {
-            updateQtyServer(productNo, quantity);
-        } else {
-            updateQtyLocal(productNo, quantity);
-        }
+        autoUpdateCartQuantityAndSetUI(productNo, quantity);
     });
 }
 
@@ -168,11 +163,7 @@ function inputQtyChange(input) {
     updateSubtotal(input);
     updateTotal();
 
-    if (userStatus.isLogged) {
-        updateQtyServer(productNo, quantity);
-    } else {
-        updateQtyLocal(productNo, quantity);
-    }
+    autoUpdateCartQuantityAndSetUI(productNo, quantity);
 }
 
 /* 數量改變時更新小計 */
@@ -217,42 +208,42 @@ document.addEventListener('DOMContentLoaded', function () {
 // 結帳按鈕
 function checkLoginAndCheckout() {
     // 取得user勾選要結帳的商品
-    let products = [];
+    let products = {};
     document.querySelectorAll('input[name="select-to-checkout"]:checked').forEach(checkbox => {
         let productNo = parseInt(checkbox.getAttribute('data-product-no'), 10);
         let quantityInput = checkbox.closest('tr').querySelector(`input[name="cart-quantity"]`);
         let quantity = parseInt(quantityInput.value, 10);
-        products.push({productNo, quantity});
+        products[productNo] = quantity;
     });
     if (products.length === 0) {
         alert('請選擇商品');
         return;
     }
+    console.log('勾選商品:', products)
     // 將勾選的商品存到localStorage
-    localStorage.setItem('checkoutProducts', JSON.stringify(products));
+    // localStorage.setItem('checkoutProducts', JSON.stringify(products));
 
-    // 檢查user登入狀態
-    if (!userStatus.isLogged) {
-        window.location.href = '/cart/login';
-        return;
-    }
+
 
     // 若有勾選商品且登入會員，進入結帳流程
-    fetch('/cart/checkout', {
+    fetch('/cart/checkoutPage', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({products: products})
     })
-        .then(response => response.json())
-        .then(data => {
-            if (data.redirectUrl) {
-                // 根據後端回傳的重導URL重導頁面
-                window.location.href = data.redirectUrl;
-            } else {
-                throw new Error('沒有提供重導URL');
+        .then(response => {
+            if (response.redirected){
+                window.location.href = response.url
+                return
             }
+            console.log(response, "response")
+            return response.text()
+        })
+        .then(htmlContent => {
+            // 使用 document.write() 會覆蓋當前頁面
+            document.write(htmlContent);
         })
         .catch(error => {
             console.error('錯誤訊息:', error);

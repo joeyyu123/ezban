@@ -60,7 +60,10 @@
 
 
   // e-commerce touchspin
-  $('input[name=\'product-quantity\']').TouchSpin();
+  // $('input[name=\'product-quantity\']').TouchSpin();
+  $(document).ready(function() {
+    $('input[name="product-quantity"]').TouchSpin();
+  });
 
 
   // Video Lightbox
@@ -98,17 +101,17 @@
 
 
 // carousel
-// $(function(){
-//
-//     $(".autoplay").slick({
-//         arrows: true,
-//         dots: true,
-//         slidesToShow: 1,
-//         slidesToScroll: 1,
-//         autoplay: true,
-//         autoplaySpeed: 5000,
-//     });
-// });
+$(function(){
+
+    $(".autoplay").slick({
+        arrows: true,
+        dots: true,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true,
+        autoplaySpeed: 5000,
+    });
+});
 
 // cart badge number
 function getCartQuantity() {

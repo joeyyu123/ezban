@@ -344,7 +344,7 @@
 
 
 <script th:inline="javascript">
-    // david
+
     /*<![CDATA[*/
     var productNo = /*[[${productNo}]]*/ 'default';
     /*]]>*/
@@ -384,11 +384,11 @@
     document.getElementById('add_to_cart').addEventListener('click', function (e) {
         e.preventDefault();
         let quantity = document.getElementById('product-quantity').value;
-        AutoIncreaseCartQuantityAndSetUI(productNo, quantity);
+        autoIncreaseCartQuantityAndSetUI(productNo, quantity);
     });
-
-
 </script>
+
+
 <!--收藏Ajax開始-->
 <script>
     function addToFavorites(productNo) {

@@ -182,26 +182,33 @@
 <div th:replace="frontstage/index2 :: footer"></div>
 
 <script src="https://demeter.5fpro.com/tw/zipcode-selector.js"></script>
-<script>
+<script th:inline="javascript">
 
     let initialTotal = 0;
     let discountAmount = 0;
     let pointsUsedAmount = 0;
 
-    document.addEventListener('DOMContentLoaded', function () {
-        getCheckoutItemsFromLocal();
-        getMemberInfo();
-        getValidCoupon()
-        document.querySelector('.coupon_amount').innerText = `-$${discountAmount}`;
-        document.getElementById('points_to_use').innerText = `-$${pointsUsedAmount}`;
-    });
+    /*<![CDATA[*/
+    var checkoutProductsString = /*[[${products}]]*/ 'default';
+    /*]]>*/
+    let checkoutProducts = JSON.parse(checkoutProductsString);
+    console.log(checkoutProducts, "checkoutProducts")
+
+
+    getCheckoutItemsFromLocal(checkoutProducts);
+    getMemberInfo();
+    getValidCoupon()
+    document.querySelector('.coupon_amount').innerText = `-$${discountAmount}`;
+    document.getElementById('points_to_use').innerText = `-$${pointsUsedAmount}`;
+
 
     /* 從localStorage取要結帳的商品 */
-    function getCheckoutItemsFromLocal() {
-        let checkoutProducts = JSON.parse(localStorage.getItem('checkoutProducts'));
+    // input is {Key: productNo, Value: quantity, ...}
+    function getCheckoutItemsFromLocal(checkoutProducts) {
+        console.log(checkoutProducts, "getCheckoutItemsFromLocal")
         let allItems = [];
-        for (let product of checkoutProducts) {
-            let url = `/product/getProductDetail?productNo=${product.productNo}`;
+        for (const [productNo, quantity] of Object.entries(checkoutProducts)) {
+            let url = `/product/getProductDetail?productNo=${productNo}`;
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
@@ -211,11 +218,11 @@
                         product_url: `/product/shopdetail?productNo=${data.productNo}`,
                         product_img: `/product/getFirstImage/${data.productNo}`,
                         price: data.productPrice,
-                        quantity: product.quantity,
-                        subtotal: data.productPrice * product.quantity
+                        quantity: quantity,
+                        subtotal: data.productPrice * quantity
                     };
                     allItems.push(item);
-                    if (allItems.length === checkoutProducts.length) {
+                    if (allItems.length === Object.keys(checkoutProducts).length) {
                         showCartItems(allItems);
                     }
                 })
@@ -375,13 +382,20 @@
         let selectedOption = selectElement.options[selectElement.selectedIndex];
         let birthdayCouponNo = selectedOption.dataset.couponno;
 
+        // 取得會員使用點數
+        memberUsedPoints = parseInt(document.getElementById('points_to_use').innerText.replace('-$', ''));
+        // 取得會員可使用點數
+        memberCurrentPoints = document.getElementById('current_points').innerText.replace('可使用 ', '').replace(' 點', '')
+        // 計算會員剩餘點數
+        memberRemainingPoints = memberCurrentPoints - memberUsedPoints
         // 訂單資料
         let checkoutData = {
             memberNo: document.getElementById('member_no').value,
             productPrice: document.getElementById('cart_total').innerText.replace('NT$', ''),
             productCouponDiscount: document.querySelector('.coupon_amount').innerText.replace('-$', ''),
             productCheckoutAmount: document.getElementById('order_amount').innerText.replace('NT$', ''),
-            memberPoints: document.getElementById('points_to_use').innerText.replace('-$', ''),
+            memberPoints: String(memberUsedPoints),
+            memberRemainingPoints: String(memberRemainingPoints),
             birthdayCouponNo: birthdayCouponNo,
             recipient: document.getElementById('receive_full_name').value,
             recipientPhone: document.getElementById('receive_phone').value,
@@ -420,6 +434,7 @@
         });
         return items;
     }
+
     document.querySelector('.checkout-form').addEventListener('submit', placeOrder);
 
 
