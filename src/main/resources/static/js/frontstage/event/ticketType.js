@@ -26,6 +26,7 @@ $(document).ready(function () {
         let ticketType = $(this).closest(".ticket-type");
         $(ticketType).find(".quantity-info").removeClass("hidden");
         let limitQty = parseInt($(ticketType).find("#ticketTypeLimitQty").val());
+        // let remainQty = parseInt($(ticketType).find("input[name='remainingTicketQty']").val());
         let qty = parseInt($(ticketType).find("input[name='ticketTypeQty']").val())
         if (qty >= limitQty) {
             return;
@@ -55,6 +56,27 @@ $(document).ready(function () {
 
         updateTotalPriceAndQty();
     });
+
+    // 候補按鈕
+    $("#notifyBtn").click(function (event) {
+        event.preventDefault();
+        let ticketType = $(this).closest(".ticket-type");
+
+        $.ajax({
+            url: location.href + "/reserve",
+            type: "POST",
+
+            contentType: "application/json",
+            data: JSON.stringify({ticketTypeNo: $(ticketType).find("input[name='ticketTypeNo']").val()}),
+            success: function (response) {
+                alert("訂閱通知成功");
+            },
+            error: function (error) {
+                alert("訂閱通知失敗");
+            }
+        });
+    })
+
 
     // 當使用者按下立即購票時，將會送出Ajax請求，取得購買資訊建立訂單並產生報名表單
     $("#buyTicketBtn").click(function (event) {
@@ -205,7 +227,7 @@ $(document).ready(function () {
             },
             error: function (error) {
                 // 處理錯誤的回應
-                alert("伺服器忙碌中，請稍後再試。")
+                alert(error.responseText)
             }
         });
     });

@@ -81,7 +81,7 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
             TicketType ticketType = ticketTypeService.findById(orderDetail.get("ticketTypeNo"));
 
             if (ticketType.getRemainingTicketQty() < orderDetail.get("ticketTypeQty")){
-                throw new InsufficientTicketQuantityException("票券已售完，請重新選擇。");
+                throw new InsufficientTicketQuantityException(ticketType.getTicketTypeName() + "剩餘票數不足");
             }
             ticketType.setRemainingTicketQty(ticketType.getRemainingTicketQty() - orderDetail.get("ticketTypeQty"));
 

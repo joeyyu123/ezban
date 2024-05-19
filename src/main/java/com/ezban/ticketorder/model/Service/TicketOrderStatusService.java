@@ -8,10 +8,12 @@ import com.ezban.ticketorderdetail.model.TicketOrderDetail;
 import com.ezban.tickettype.model.TicketType;
 import com.ezban.tickettype.model.TicketTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +28,17 @@ public class TicketOrderStatusService {
     @Autowired
     TicketTypeRepository ticketTypeRepository;
 
+    @Autowired
+    TicketOrderEmailService ticketOrderEmailService;
+
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
+
+
     /**
      * 取消訂單
-     * @Return 取消訂單的結果 1代表取消成功且退款成功 0代表取消成功但退款失敗 -1代表無法取消
      *
+     * @Return 取消訂單的結果 1代表取消成功且退款成功 0代表取消成功但退款失敗 -1代表無法取消
      */
     @Transactional
     public int cancelTicketOrder(TicketOrder ticketOrder) {
@@ -39,13 +48,27 @@ public class TicketOrderStatusService {
         if (currentTime.after(new Timestamp(startTime.getTime() - 3 * 24 * 60 * 60 * 1000))) { //活動開始前三天內取消訂單不退款
             ticketOrder.setTicketOrderStatus(TicketOrderStatus.CANCELED);
             addReamingTicketTypeBack(ticketOrder);
+
+            try {
+                ticketOrderEmailService.sendEmailToSubscribers(ticketOrder);
+            } catch (MessagingException e) {
+                System.out.println(e.getMessage());
+            }
+
             ticketOrderRepository.save(ticketOrder);
             return 0;
 
-        } else if (currentTime.before(new Timestamp(startTime.getTime() - 3 * 24 * 60 * 60 * 1000))){
+        } else if (currentTime.before(new Timestamp(startTime.getTime() - 3 * 24 * 60 * 60 * 1000))) {
             ticketOrder.setTicketOrderStatus(TicketOrderStatus.CANCELED);
             ticketOrder.setTicketOrderPaymentStatus(TicketOrderPaymentStatus.REFUNDED);
             addReamingTicketTypeBack(ticketOrder);
+
+            try {
+                ticketOrderEmailService.sendEmailToSubscribers(ticketOrder);
+            } catch (MessagingException e) {
+                System.out.println(e.getMessage());
+            }
+
             ticketOrderRepository.save(ticketOrder);
             return 1;
         } else {

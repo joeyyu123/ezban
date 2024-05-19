@@ -79,15 +79,14 @@ public class EventService implements ServiceDemo<Event> {
         List<Event> events = this.findByEventStatus(EventStatus.PUBLISHED);
         List<Event> eventsToSync = new ArrayList<>();
         for (Event event : events) {
-            String key = "event:" + event.getEventNo() + "visit.count:";
+            String key = "event:" + event.getEventNo() + ":visit.count:";
             Integer visitCount = (Integer) redisTemplate.opsForValue().get(key);
             if (visitCount != null) {
-                event.setVisitCount(visitCount);
+                event.setVisitCount(event.getVisitCount() + visitCount);
                 eventsToSync.add(event);
             }
         }
         eventRepository.saveAll(eventsToSync);
-        System.out.println(eventsToSync.size() + " events are updated.");
     }
 
     public List<Event> findByEventStatus(EventStatus status, Pageable pageable) {
