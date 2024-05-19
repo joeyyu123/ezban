@@ -74,7 +74,7 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationFailureHandler memberAuthenticationFailureHandler() {
         SimpleUrlAuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();
-        failureHandler.setDefaultFailureUrl("/loginPage");
+        failureHandler.setDefaultFailureUrl("/loginPage?error=true");
         failureHandler.setUseForward(false);
         return failureHandler;
     }
