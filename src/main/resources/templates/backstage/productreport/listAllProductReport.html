@@ -7,23 +7,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link th:include="backstage/index :: head">
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.jqueryui.min.css"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <style>
-    #example {
-        width: 100%;
-        border-collapse: collapse;
-    }
 
     #example th {
         padding: 5px; /* 調整單元格內邊距 */
         text-align: center; /* 將文字置中 */
         font-size: 16px; /* 調整字體大小 */
         line-height: 1; /* 調整行高 */
+        border: 1px solid #c8c8d3;
     }
 
     #example td {
@@ -31,6 +25,7 @@
         text-align: center; /* 將文字置中 */
         font-size: 14px; /* 調整字體大小 */
         line-height: 1; /* 調整行高 */
+        border: 1px solid #c8c8d3;
     }
 
     #example th {
@@ -40,20 +35,6 @@
 
     #example tr:nth-child(even) {
         background-color: #f9f9f9; /* 隔行變色 */
-    }
-
-    tr > th:nth-child(3)::before,
-    tr > th:nth-child(5)::before,
-    tr > th:nth-child(7)::before,
-    tr > th:nth-child(8)::before {
-        display: none !important;
-    }
-
-    tr > th:nth-child(3)::after,
-    tr > th:nth-child(5)::after,
-    tr > th:nth-child(7)::after,
-    tr > th:nth-child(8)::after {
-        display: none !important;
     }
 
     .custom-btn-color {
@@ -117,9 +98,9 @@
                     <i class="fa-solid fa-screwdriver-wrench"></i> &nbsp;&nbsp;商 品 檢 舉 審 核</h2>
                 </div>
             </div>
-            <table id="example" class="display" style="width: 100%">
+            <table id="example" class="display" style="width: 100%;">
                 <thead>
-                <tr style="background-color:#CCCCCC">
+                <tr style="background-color:#CCCCCC;">
                     <th style="padding: 10px 20px;">項次&nbsp;</th>
                     <th>商品名稱 [編號]</th>
                     <th>檢舉者 [編號]</th>
@@ -134,8 +115,8 @@
                 <th:block th:each="productReport : ${productReportListData}">
                     <tr>
                         <td th:text="${productReport.productReportNo}"></td>
-                        <td th:text="${productReport.product.productName}+ '[' + ${productReport.product.productNo} + ']'"></td>
-                        <td th:text="${productReport.member?.memberName} + '[' + ${productReport.member?.memberNo} + ']'"></td>
+                        <td th:text="${productReport.product.productName}+ ' [' + ${productReport.product.productNo} + ']'"></td>
+                        <td th:text="${productReport.member?.memberName} + ' [' + ${productReport.member?.memberNo} + ']'"></td>
                         <td th:text="${#dates.format(productReport.reportDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td th:text="${productReport.reportReason}"></td>
                         <td th:if="${productReport.reportStatus == 0}"><span class="dot-gray"></span>尚未處理</td>
@@ -198,37 +179,6 @@
             }
         });
     }
-</script>
-<script>
-    $(document).ready(function () {
-        $('#example').DataTable({
-            "lengthMenu": [5, 10, 20, 50],
-            "searching": true,  //搜尋功能, 預設是開啟
-            "paging": true,     //分頁功能, 預設是開啟
-            "ordering": true,   //排序功能, 預設是開啟
-            "language": {
-                "processing": "處理中...",
-                "loadingRecords": "載入中...",
-                "lengthMenu": "顯示 _MENU_ 筆結果",
-                "zeroRecords": "沒有符合的結果",
-                "info": "顯示第 _START_ 至 _END_ 筆結果，共<font color=red> _TOTAL_ </font>筆",
-                "infoEmpty": "顯示第 0 至 0 筆結果，共 0 筆",
-                "infoFiltered": "(從 _MAX_ 筆結果中過濾)",
-                "infoPostFix": "",
-                "search": "搜尋:",
-                "paginate": {
-                    "first": "第一頁",
-                    "previous": "上一頁",
-                    "next": "下一頁",
-                    "last": "最後一頁"
-                },
-                "aria": {
-                    "sortAscending": ": 升冪排列",
-                    "sortDescending": ": 降冪排列"
-                }
-            }
-        });
-    });
 </script>
 
 </html>
