@@ -1,6 +1,5 @@
 package com.ezban.ticketorder.model;
 
-import com.ezban.host.model.Host;
 import com.ezban.member.model.Member;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;

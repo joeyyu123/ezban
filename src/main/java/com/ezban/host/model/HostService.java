@@ -216,4 +216,7 @@ public class HostService {
 		return getOneHost(hostNo).getEventCoupons();
 	}
 
+	public Host findByHostName(String hostName) {
+		return hostRepository.findByHostName(hostName).orElse(null);
+	}
 }
