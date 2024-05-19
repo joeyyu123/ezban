@@ -32,4 +32,8 @@ public class EventCategoryService implements ServiceDemo<EventCategory> {
     public List<EventCategory> findAll() {
         return repository.findAll();
     }
+
+    public EventCategory findByEventCategoryName(String eventCategoryName) {
+        return repository.findByEventCategoryName(eventCategoryName);
+    }
 }

@@ -18,15 +18,16 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 @Order(1)
 public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private UserDetailsService memberUserDetailsService;
-    
-    @Override
+	@Autowired
+	private UserDetailsService memberUserDetailsService;
+	
+	@Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(memberUserDetailsService);
+        auth
+            .userDetailsService(memberUserDetailsService);
     }
 
-    @Override
+	@Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             .requestMatchers()
@@ -35,18 +36,17 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                              "/loginPage",
                              "/register",
                              "/forgotPassword",
-                             "/changePassword",
                              "/events/**")
                 .and()
+
             .authorizeRequests()
                 .antMatchers("/login",
-                             "/loginPage",
+                             "loginPage",
                              "/register",
-                             "/forgotPassword",
-                             "/changePassword",
-                             "/").permitAll()
-                .antMatchers("/events/orders/**", "/events/order/**", "/events/*/tickets").hasRole("Member")
+                             "/forgotPassword","/").permitAll()
+                .antMatchers("/events/orders/**","/events/order/**","/events/*/tickets").hasRole("Member")
                 .and()
+
             .formLogin()
                 .loginPage("/loginPage")
                 .loginProcessingUrl("/login")
@@ -64,7 +64,7 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
             .csrf().disable();
     }
 
-    @Bean
+	@Bean
     public AuthenticationSuccessHandler memberAuthenticationSuccessHandler() {
         return (request, response, authentication) -> {
             response.sendRedirect("/");
@@ -75,7 +75,8 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationFailureHandler memberAuthenticationFailureHandler() {
         SimpleUrlAuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();
         failureHandler.setDefaultFailureUrl("/loginPage?error=true");
-        failureHandler.setUseForward(true); // 保留错误消息
+        failureHandler.setUseForward(false);
         return failureHandler;
     }
+
 }
