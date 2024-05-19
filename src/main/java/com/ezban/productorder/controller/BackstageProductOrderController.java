@@ -2,9 +2,11 @@ package com.ezban.productorder.controller;
 
 import java.io.IOException;
 import java.util.List;
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import com.ezban.productorder.model.*;
+import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +22,9 @@ public class BackstageProductOrderController {
 
     @Autowired
     ProductOrderService productOrderSvc;
+
+    @Autowired
+    ProductOrderEmailService productOrderEmailService;
 
     @ModelAttribute("productOrderListData")
     public List<ProductOrder> referenceListData(Model model) throws Exception {
@@ -108,7 +113,7 @@ public class BackstageProductOrderController {
     }
 
     @PostMapping("/update")
-    public String update(@Valid UpdateProductOrderDTO updateProductOrderDTO, BindingResult result, ModelMap model) throws IOException {
+    public String update(@Valid UpdateProductOrderDTO updateProductOrderDTO, BindingResult result, ModelMap model, @RequestParam(required = false) Byte productPaymentStatus) throws IOException, MessagingException {
         if (result.hasErrors()) {
             model.addAttribute("updateProductOrderDTO", updateProductOrderDTO);
             return "backstage/productorder/updateProductOrderInput";
@@ -123,6 +128,12 @@ public class BackstageProductOrderController {
         ProductOrder updatedProductOrderDTO = productOrderSvc.getOneProductOrder(updateProductOrderDTO.getProductOrderNo());
         model.addAttribute("productOrder", updatedProductOrderDTO);
         model.addAttribute("functionType", "update");
+
+        // 若付款狀態更改為已退款(1)，以寄信方式通知會員
+        if (productPaymentStatus == 1) {
+            ProductOrder productOrder = productOrderSvc.findById(updateProductOrderDTO.getProductOrderNo());
+            productOrderEmailService.sendOrderEmail(productOrder);
+        }
         return "backstage/productorder/listOneProductOrder";
     }
 
