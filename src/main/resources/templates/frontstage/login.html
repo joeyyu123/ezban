@@ -107,7 +107,7 @@ a:hover {
 		<h2 class="title">EZBAN</h2>
 		<div class="login-form">
 			<h3 class="form-title">會員登入</h3>
-			<form id="loginForm" action="/login" method="post">
+			<form id="loginForm" method="post" action="/login">
 				<div class="form-group">
 					<input type="email" id="memberMail" name="username" class="login-input"
 						placeholder="請輸入會員帳號" required>
@@ -125,55 +125,45 @@ a:hover {
 		</div>
 	</div>
 
-	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script>
-	document.addEventListener("DOMContentLoaded", function () {
-	    const loginForm = document.getElementById("loginForm");
-	    const memberMailInput = document.getElementById("memberMail");
-	    const memberPwdInput = document.getElementById("memberPwd");
-	    const warningMsg = document.getElementById("warningMsg");
+	document.addEventListener('DOMContentLoaded', () => {
+	    const form = document.getElementById('loginForm');
+	    const errorMessage = document.getElementById('warningMsg');
 
-	    loginForm.addEventListener("submit", function (event) {
-	        event.preventDefault(); // 阻止表单的默认提交行为
+	    form.addEventListener('submit', async (event) => {
+	        event.preventDefault();
 
-	        const memberMail = memberMailInput.value.trim();
-	        const memberPwd = memberPwdInput.value.trim();
-
-	        if (!memberMail || !memberPwd) {
-	            warningMsg.textContent = "請輸入帳號和密碼。";
-	            return;
-	        }
-
-	        axios.post("/login", {
-	            memberMail: memberMail,
-	            memberPwd: memberPwd
-	        })
-	        .then((response) => {
-	            if (response.status === 200) {
-
-	                localStorage.setItem('memberMail', JSON.stringify(memberMail));
-	                location.href = '/';
-	            } else {
-	                warningMsg.textContent = "登入失敗，請再試一次。";
-	            }
-	        })
-	        .catch((error) => {
-	            if (error.response) {
-	                if (error.response.status === 401) {
-	                    warningMsg.textContent = "登入失敗：帳號或密碼錯誤。";
-	                } else {
-	                    warningMsg.textContent = `登入失敗，請再試一次。錯誤碼：${error.response.status}`;
-	                }
-	            } else if (error.request) {
-	                warningMsg.textContent = "網絡錯誤，請稍後再試。";
-	            } else {
-	                warningMsg.textContent = "發生錯誤：" + error.message;
-	            }
+	        const formData = new FormData(form);
+	        const data = {};
+	        formData.forEach((value, key) => {
+	            data[key] = value;
 	        });
+
+	        try {
+	            const response = await fetch(form.action, {
+	                method: form.method,
+	                headers: {
+	                    'Content-Type': 'application/json'
+	                },
+	                body: JSON.stringify(data)
+	            });
+
+	            if (!response.ok) {
+	                throw new Error('Network response was not ok');
+	            }
+
+	            const result = await response.json();
+
+	            if (result.includes('成功')) {
+	                window.location.href = '/dashboard';
+	            } else {
+	                errorMessage.textContent = result || '登入失敗';
+	            }
+	        } catch (error) {
+	            errorMessage.textContent = error.message || 'An unexpected error occurred';
+	        }
 	    });
 	});
-
-
 	</script>
 
 </body>
