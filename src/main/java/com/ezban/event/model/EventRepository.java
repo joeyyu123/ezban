@@ -31,4 +31,6 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      * @return List<Event>
      */
     List<Event> findByEventStatusAndEventEndTimeBefore(EventStatus eventStatus, Timestamp eventEndTime);
+
+    List<Event> findByHostHostNoAndEventStatus(Integer host_hostNo, EventStatus eventStatus);
 }

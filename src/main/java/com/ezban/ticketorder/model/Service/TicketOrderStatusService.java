@@ -1,5 +1,6 @@
 package com.ezban.ticketorder.model.Service;
 
+import com.ezban.event.model.Event;
 import com.ezban.ticketorder.model.TicketOrder;
 import com.ezban.ticketorder.model.TicketOrderPaymentStatus;
 import com.ezban.ticketorder.model.TicketOrderRepository;
@@ -26,6 +27,9 @@ public class TicketOrderStatusService {
     TicketOrderRepository ticketOrderRepository;
 
     @Autowired
+    TicketOrderService ticketOrderService;
+
+    @Autowired
     TicketTypeRepository ticketTypeRepository;
 
     @Autowired
@@ -38,7 +42,7 @@ public class TicketOrderStatusService {
     /**
      * 取消訂單
      *
-     * @Return 取消訂單的結果 1代表取消成功且退款成功 0代表取消成功但退款失敗 -1代表無法取消
+     * @Return 取消訂單的結果 1代表取消成功且退款成功 0代表取消成功但無法退款 -1代表無法取消
      */
     @Transactional
     public int cancelTicketOrder(TicketOrder ticketOrder) {
@@ -73,6 +77,24 @@ public class TicketOrderStatusService {
             return 1;
         } else {
             return -1;
+        }
+    }
+
+    /**
+     * 取消該活動下的所有訂單
+     */
+    @Transactional
+    public void cancelAllTicketOrder(Event event) {
+        List<TicketOrder> ticketOrders = ticketOrderService.findByEvent(event);
+        for (TicketOrder ticketOrder : ticketOrders) {
+            ticketOrder.setTicketOrderStatus(TicketOrderStatus.CANCELED);
+            ticketOrder.setTicketOrderPaymentStatus(TicketOrderPaymentStatus.REFUNDED);
+            addReamingTicketTypeBack(ticketOrder);
+            try {
+                ticketOrderEmailService.sendCancelEmail(ticketOrder, event);
+            } catch (MessagingException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

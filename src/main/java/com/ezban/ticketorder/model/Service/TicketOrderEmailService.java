@@ -80,6 +80,24 @@ public class TicketOrderEmailService {
         }
     }
 
+    /**
+     * 寄送活動取消通知
+     * @param ticketOrder
+     * @param event
+     * @return
+     */
+    public void sendCancelEmail(TicketOrder ticketOrder, Event event) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED);
+
+        // 設定郵件內容
+        helper.setTo(ticketOrder.getMember().getMemberMail());
+        helper.setSubject(event.getEventName() + " - 報名取消通知");
+        helper.setText("很抱歉通知您，因主辦廠商取消本次活動，故將取消您的報名並進行退款。");
+
+        mailSender.send(message);
+    }
+
     private String generateEmailContent(TicketOrder ticketOrder, Event event) {
         StringBuilder sb = new StringBuilder();
         sb.append("<html><body>");

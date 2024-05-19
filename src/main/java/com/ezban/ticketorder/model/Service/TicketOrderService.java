@@ -194,6 +194,10 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
         return ticketOrderRepository.findByEventNoAndStatus(event.getEventNo(), orderStatus, Sort.by("ticketOrderTime").descending());
     }
 
+    public List<TicketOrder> findByEventNoAndTicketOrderNo(Integer eventNo, Integer ticketOrderNo) {
+        return ticketOrderRepository.findByEventNoAndTicketOrderNo(eventNo,ticketOrderNo,Sort.by("ticketOrderTime").descending());
+    }
+
     public boolean isAuthorizedForTicketOrder(Principal principal, Integer ticketOrderNo){
         TicketOrder ticketOrder = ticketOrderRepository.findById(ticketOrderNo).orElse(null);
         if(ticketOrder == null){
@@ -206,7 +210,5 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
         return ticketOrder.getTicketOrderDetails().iterator().next().getTicketType().getEvent().getHost().getHostNo().equals(host.getHostNo());
     }
 
-    public List<TicketOrder> findByEventNoAndTicketOrderNo(Integer eventNo, Integer ticketOrderNo) {
-        return ticketOrderRepository.findByEventNoAndTicketOrderNo(eventNo,ticketOrderNo,Sort.by("ticketOrderTime").descending());
-    }
+
 }
