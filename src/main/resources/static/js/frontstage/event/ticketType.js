@@ -301,7 +301,7 @@ $(document).ready(function () {
             success: function (response) {
                 // 將付款選擇頁面渲染給前端
                 let orderDetails = response;
-                let ticketOrderNo = orderDetails[0].ticketOrder.ticketOrderNo;
+                let ticketOrderNo = orderDetails[0].ticketOrderNo;
                 let totalPrice = 0;
 
                 if (Array.isArray(orderDetails)) {
@@ -353,7 +353,7 @@ $(document).ready(function () {
                     orderDetails.forEach(function (orderDetail) {
                         orderDetails_div.find('table tbody').append(`
                         <tr>
-                            <th scope="row" >${orderDetail.ticketType.ticketTypeName}</th>
+                            <th scope="row" >${orderDetail.ticketTypeName}</th>
                             <td >${orderDetail.ticketTypeQty}</td>
                             <td >NT$ ${orderDetail.ticketTypePrice}</td>
                             <td >NT$ ${orderDetail.ticketTypePrice * orderDetail.ticketTypeQty}</td>

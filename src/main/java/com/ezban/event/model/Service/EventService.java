@@ -83,6 +83,7 @@ public class EventService implements ServiceDemo<Event> {
             Integer visitCount = (Integer) redisTemplate.opsForValue().get(key);
             if (visitCount != null) {
                 event.setVisitCount(event.getVisitCount() + visitCount);
+                redisTemplate.delete(key);
                 eventsToSync.add(event);
             }
         }

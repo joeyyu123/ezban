@@ -67,12 +67,15 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
     @Transactional
     public List<TicketOrderDetail> createOrder(Member member, List<Map<String, Integer>> orderDetailList) throws InsufficientTicketQuantityException {
         TicketOrder ticketOrder = new TicketOrder();
+
+        Integer totalOrderAmount = this.calculateTotalAmount(orderDetailList);
+
         ticketOrder.setMember(member);
         ticketOrder.setTicketOrderTime(new Timestamp(System.currentTimeMillis()));
-        ticketOrder.setTicketOrderAmount(this.calculateTotalAmount(orderDetailList));
+        ticketOrder.setTicketOrderAmount(totalOrderAmount);
         ticketOrder.setTicketOrderStatus(TicketOrderStatus.PROCESSING);
         ticketOrder.setTicketOrderPaymentStatus(TicketOrderPaymentStatus.UNPAID);
-        ticketOrder.setTicketCheckoutAmount(0);
+        ticketOrder.setTicketCheckoutAmount(totalOrderAmount);
 
         ticketOrder = this.add(ticketOrder);
 
