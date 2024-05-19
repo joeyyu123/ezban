@@ -128,12 +128,14 @@ a:hover {
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 	<script>
 	document.addEventListener("DOMContentLoaded", function () {
-	    const loginButton = document.getElementById("loginButton");
+	    const loginForm = document.getElementById("loginForm");
 	    const memberMailInput = document.getElementById("memberMail");
 	    const memberPwdInput = document.getElementById("memberPwd");
 	    const warningMsg = document.getElementById("warningMsg");
 
-	    loginButton.addEventListener("click", function () {
+	    loginForm.addEventListener("submit", function (event) {
+	        event.preventDefault(); // 阻止表单的默认提交行为
+
 	        const memberMail = memberMailInput.value.trim();
 	        const memberPwd = memberPwdInput.value.trim();
 
@@ -142,32 +144,36 @@ a:hover {
 	            return;
 	        }
 
-	        // axios.post("/login", {
-	        //     memberMail: memberMail,
-	        //     memberPwd: memberPwd
-	        // })
-	        // .then((response) => {
-	        //     localStorage.setItem('memberMail', JSON.stringify(memberMail));
-			//
-	        //     if (response.status === 200) {
-	        //         location.href = '/';
-	        //     } else {
-	        //         warningMsg.textContent = "登入失敗，請再試一次。";
-	        //     }
-	        // })
-	        // .catch((error) => {
-	        //     if (error.response) {
-	        //         if (error.response.status === 401) {
-	        //             warningMsg.textContent = "登入失敗：帳號或密碼錯誤。";
-	        //         } else {
-	        //             warningMsg.textContent = "登入失敗，請再試一次。";
-	        //         }
-	        //     } else {
-	        //         warningMsg.textContent = "網絡錯誤，請稍後再試。";
-	        //     }
-	        // });
+	        axios.post("/login", {
+	            memberMail: memberMail,
+	            memberPwd: memberPwd
+	        })
+	        .then((response) => {
+	            if (response.status === 200) {
+
+	                localStorage.setItem('memberMail', JSON.stringify(memberMail));
+	                location.href = '/';
+	            } else {
+	                warningMsg.textContent = "登入失敗，請再試一次。";
+	            }
+	        })
+	        .catch((error) => {
+	            if (error.response) {
+	                if (error.response.status === 401) {
+	                    warningMsg.textContent = "登入失敗：帳號或密碼錯誤。";
+	                } else {
+	                    warningMsg.textContent = `登入失敗，請再試一次。錯誤碼：${error.response.status}`;
+	                }
+	            } else if (error.request) {
+	                warningMsg.textContent = "網絡錯誤，請稍後再試。";
+	            } else {
+	                warningMsg.textContent = "發生錯誤：" + error.message;
+	            }
+	        });
 	    });
 	});
+
+
 	</script>
 
 </body>

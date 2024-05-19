@@ -42,18 +42,19 @@ public class LoginController {
 
 	@PostMapping("/login")
 	@ResponseBody
-	@Transactional  
-    public ResponseEntity<String> login(@RequestBody Member LoginRequest, HttpSession session) {
-        Optional<Member> optionalMember = memRepository.findByMemberMail(LoginRequest.getMemberMail());
-        if (optionalMember.isPresent()) {
-            Member mem = optionalMember.get();
-            if (passwordEncoder.matches(LoginRequest.getMemberPwd(), mem.getMemberPwd())) {
-                memRepository.save(mem);  
-                return ResponseEntity.ok("登入成功！");
-            }
-        }
-        return ResponseEntity.status(401).body("登入失敗：帳號或密碼錯誤。");
-    }
+	@Transactional
+	public ResponseEntity<String> login(@RequestBody Member loginRequest, HttpSession session) {
+	    Optional<Member> optionalMember = memRepository.findByMemberMail(loginRequest.getMemberMail());
+	    if (optionalMember.isPresent()) {
+	        Member mem = optionalMember.get();
+	        if (passwordEncoder.matches(loginRequest.getMemberPwd(), mem.getMemberPwd())) {
+	            memRepository.save(mem);
+	            return ResponseEntity.ok("登入成功！");
+	        }
+	    }
+	    return ResponseEntity.status(401).body("登入失敗：帳號或密碼錯誤。");
+	}
+
 
 	@GetMapping("/loginPage")
 	public String getLogin() {
@@ -84,7 +85,7 @@ public class LoginController {
 	        mem.setResetToken(resetToken);
 	        memRepository.save(mem);
 
-	        String resetUrl = "http://localhost:8080/resetPassword?token=" + resetToken;
+	        String resetUrl = "http://localhost:8080/changePassword?token=" + resetToken;
 
 	        String emailBody = "您好，請點擊以下網址來修改您的密碼：" + resetUrl;
 	        emailService.sendEmail(memberMail, "重设密码", emailBody);
@@ -136,12 +137,19 @@ public class LoginController {
 	
 	@PostMapping("/changePassword")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> changePassword(@RequestParam("email") String email, @RequestParam("currentPassword") String currentPassword, @RequestParam("newPassword") String newPassword) {
+	public ResponseEntity<Map<String, Object>> changePassword(
+	    @RequestParam("memberMail") String memberMail,
+	    @RequestParam("currentPassword") String currentPassword,
+	    @RequestParam("newPassword") String newPassword) {
+
+	    System.out.println("Received request to change password for: " + memberMail);
+
 	    // 根据用户的电子邮件查找用户
-	    Optional<Member> optionalMember = memRepository.findByMemberMail(email);
+	    Optional<Member> optionalMember = memRepository.findByMemberMail(memberMail);
 	    
 	    if (!optionalMember.isPresent()) {
 	        // 如果找不到对应的用户，返回相应的错误信息
+	        System.out.println("User not found for email: " + memberMail);
 	        Map<String, Object> responseObject = new HashMap<>();
 	        responseObject.put("code", 404);
 	        responseObject.put("message", "找不到该用户");
@@ -152,6 +160,7 @@ public class LoginController {
 	    Member mem = optionalMember.get();
 	    if (!passwordEncoder.matches(currentPassword, mem.getMemberPwd())) {
 	        // 如果当前密码不正确，返回相应的错误信息
+	        System.out.println("Incorrect current password for email: " + memberMail);
 	        Map<String, Object> responseObject = new HashMap<>();
 	        responseObject.put("code", 401);
 	        responseObject.put("message", "当前密码不正确");
@@ -161,15 +170,20 @@ public class LoginController {
 	    // 更新用户的密码为新密码
 	    mem.setMemberPwd(passwordEncoder.encode(newPassword)); // 假设使用了密码加密器passwordEncoder
 	    memRepository.save(mem);
-	    
+	    System.out.println("Password changed successfully for email: " + memberMail);
+
 	    // 返回成功信息
 	    Map<String, Object> responseObject = new HashMap<>();
-	    responseObject.put("code", 200);
-	    responseObject.put("message", "密码修改成功");
+//	    responseObject.put("code", 200);
+	    responseObject.put("message", "密碼修改成功,請以新密碼重新登入");
 	    return ResponseEntity.ok(responseObject);
 	}
 
 
+	@GetMapping("/changePassword")
+	public String getChangePassword() {
+		return "frontstage/changePassword";
+	}
 
 
 	static class LoginRequest {
