@@ -14,6 +14,7 @@ import javax.persistence.Table;
 
 import com.ezban.birthdaycoupon.model.BirthdayCoupon;
 import com.ezban.member.model.Member;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "birthday_coupon_holder")
@@ -25,6 +26,7 @@ public class BirthdayCouponHolder {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
+    @JsonManagedReference
     private Member member;
     
     @ManyToOne(fetch = FetchType.LAZY)
