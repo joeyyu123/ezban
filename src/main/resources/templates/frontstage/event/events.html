@@ -9,11 +9,13 @@
         .product-content {
             height: 60px;
         }
+
         .product-content h4, .product-content p {
             text-align: center;
             margin: 10px 0;
         }
-        .product-content h4 a{
+
+        .product-content h4 a {
             text-align: center;
             display: inline-block;
             white-space: nowrap;
@@ -26,19 +28,24 @@
             transition: transform 0.3s ease;
             transform-origin: center;
         }
+
         .product-item:hover {
             transform: scale(1.05);
         }
+
         .panel-title.allProducts {
             border: 1.2px solid #ddd;
         }
+
         ul.categories {
             padding: 0;
         }
+
         .categories li {
             margin-bottom: 10px;
             padding: 5px;
         }
+
         .categories li a {
             display: block;
             width: 100%;
@@ -47,14 +54,17 @@
             font-size: 14px;
             font-weight: 400;
         }
+
         .categories li:hover {
             background: #f8f6f6;
             color: black;
         }
+
         .small-info {
             display: flex;
             justify-content: space-between;
         }
+
         .product-content .visit-count {
             display: flex;
             align-items: center;
@@ -63,6 +73,7 @@
         .product-content .event-location {
             margin-right: 10px; /* 調整間距 */
         }
+
         #load-more {
             background-color: #f0e7e4;
             color: #22273c;
@@ -73,9 +84,11 @@
             border-radius: 5px;
             transition: background-color 0.3s ease;
         }
+
         #load-more:hover {
             background-color: #f1dcd5;
         }
+
         .text-center {
             text-align: center;
         }
@@ -85,10 +98,12 @@
             width: 20%; /* 調整篩選活動區塊的寬度 */
             float: left;
         }
+
         .events-column {
             width: 80%; /* 調整活動卡片容器的寬度 */
             float: right;
         }
+
         .event-item {
             width: 30%;
             margin: 1.5%;
@@ -128,15 +143,38 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading" role="tab" id="headingTwo">
                                     <h4 class="panel-title">
-                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <a class="collapsed" role="button" data-toggle="collapse"
+                                           data-parent="#accordion" href="#collapseTwo" aria-expanded="false"
+                                           aria-controls="collapseTwo">
                                             活動類別
                                         </a>
                                     </h4>
                                 </div>
-                                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                                    <div class="panel-body">
-                                        <ul class="categories">
-                                        </ul>
+                                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel"
+                                     aria-labelledby="headingTwo">
+                                    <div class="panel-body" th:each="category : ${eventCategories}">
+                                        <a th:href="@{/events(categoryNo=${category.eventCategoryNo})}">
+                                            <ul class="categories" th:text="${category.eventCategoryName}">
+                                            </ul>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="panel-heading" role="tab" id="headingThree">
+                                    <h4 class="panel-title">
+                                        <a class="collapsed" role="button" data-toggle="collapse"
+                                           data-parent="#accordion" href="#collapseThree" aria-expanded="false"
+                                           aria-controls="collapseThree">
+                                            活動地點
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel"
+                                     aria-labelledby="headingThree">
+                                    <div class="panel-body" th:each="city : ${eventCities}">
+                                        <a th:href="@{/events(city=${city})}">
+                                            <ul class="categories" th:text="${city}">
+                                            </ul>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -148,11 +186,13 @@
                 <div class="event-item" th:each="event : ${events}">
                     <div class="product-item">
                         <div class="product-thumb">
-                            <img class="img-responsive" th:src="'data:image/jpeg;base64, '+${event.eventImg}" alt="event-img"/>
+                            <img class="img-responsive" th:src="'data:image/jpeg;base64, '+${event.eventImg}"
+                                 alt="event-img"/>
                             <div class="preview-meta">
                                 <ul>
                                     <li>
-                                        <a th:href="@{'/events/' + ${event.eventNo}}"><i class="tf-ion-ios-search-strong"></i></a>
+                                        <a th:href="@{'/events/' + ${event.eventNo}}"><i
+                                                class="tf-ion-ios-search-strong"></i></a>
                                     </li>
                                     <li>
                                         <a href="#!"><i class="tf-ion-ios-heart"></i></a>
@@ -162,10 +202,12 @@
                         </div>
                         <div class="product-content event-content">
                             <h4><a th:href="@{'/events/' + ${event.eventNo}}" th:text="${event.eventName}"></a></h4>
-                            <p class="date" th:text="${#dates.format(event.eventStartTime, 'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#dates.format(event.eventEndTime, 'yyyy-MM-dd HH:mm')}"></p>
+                            <p class="date"
+                               th:text="${#dates.format(event.eventStartTime, 'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#dates.format(event.eventEndTime, 'yyyy-MM-dd HH:mm')}"></p>
                             <div class="small-info">
                                 <div class="event-location">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#989797" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#989797"
+                                         class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
                                         <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
                                     </svg>
                                     <span class="location" th:text="${event.eventCity}"></span>
