@@ -1,19 +1,9 @@
 package com.ezban.notification.model;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-
+@Service
 public interface NotificationRepository extends JpaRepository<Notification, Integer> {
 	
-	List<Notification> findByMemberMemberNo(Integer memberNo);
-	
-	List<Notification> findByHostHostNo(Integer hostNo);
-	
-	List<Notification> findByAdminAdminNo(Integer adminNo);
-	
-	List<Notification> findAllByOrderByNotificationTimeDesc();
-	
-	List<Notification> findAllByOrderByNotificationTimeAsc();
-
 }
