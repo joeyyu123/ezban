@@ -134,10 +134,29 @@
 <!-- 頁面內容 -->
 <section class="events section">
     <div class="container">
+
         <div class="row">
             <div class="filter-column">
+
                 <div class="widget product-category">
                     <h4 class="widget-title" style="font-size: 16px;">篩選活動</h4>
+                    <form class="" method="get" action="/events">
+                        <div class="form-group">
+                            <input type="text" name="eventName" class="form-control" placeholder="搜尋活動名稱">
+                        </div>
+                        <div class="form-group">
+                            <select name="cities" class="form-control" multiple>
+                                <option th:each="city : ${eventCities}" th:value="${city}" th:text="${city}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <select name="categoryNos" class="form-control" multiple>
+                                <option th:each="category : ${eventCategories}" th:value="${category.eventCategoryNo}" th:text="${category.eventCategoryName}"></option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">搜尋</button>
+                    </form>
+
                     <div class="panel-group commonAccordion" id="accordion" role="tablist" aria-multiselectable="true">
                         <div class="panel panel-default">
                             <div class="panel panel-default">
@@ -237,10 +256,21 @@
 
     function loadMoreEvents() {
         page++;
-        fetch(`/events/page/${page}`)
+        // 取得原本的url以及參數
+        let url = window.location.href;
+        let params = new URLSearchParams(url.split('?')[1]);
+
+        // 組合新的url
+        let newUrl = url.split('?')[0] + '?' + params.toString();
+        fetch(window.location.pathname + "/page/" + page + "?" + params.toString())
             .then(response => response.json())
             .then(data => {
                 const container = document.getElementById('event-container');
+                if (data.length === 0) {
+                    alert('沒有更多活動了~');
+                    $('#load-more').hide();
+                    return;
+                }
                 data.forEach(event => {
                     const eventHtml = `
                         <div class="event-item">

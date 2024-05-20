@@ -68,9 +68,8 @@ public class EventController {
             events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(0, PAGE_SIZE));
         }
 
-
         for (Event event : events) {
-            dtoList.add(convertToDto(event));
+            dtoList.add(eventService.convertToDto(event));
         }
 
         model.addAttribute("events", dtoList);
@@ -104,11 +103,9 @@ public class EventController {
             events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(page - 1, PAGE_SIZE));
         }
 
-
-
         List<EventDto> dtoList = new ArrayList<>();
         for (Event event : events) {
-            dtoList.add(convertToDto(event));
+            dtoList.add(eventService.convertToDto(event));
         }
         return ResponseEntity.ok(dtoList);
     }
@@ -128,7 +125,7 @@ public class EventController {
 
         if (event != null) {
             // 將查找到的活動詳情快取到 Redis
-            dto = convertToDto(event);
+            dto = eventService.convertToDto(event);
             eventService.incrementEventVisitCount(eventNo);
             redisTemplate.opsForValue().set("event:" + eventNo, dto, 1, TimeUnit.HOURS); // 快取一小時
             //            Integer eventCategoryNo = event.getEventCategory().getEventCategoryNo();
@@ -157,57 +154,18 @@ public class EventController {
      *
      * @return
      */
-    // TODO: 未完成
     @GetMapping("/trending")
     @ResponseBody
     public ResponseEntity<List<EventDto>> getTrendingEvents() {
         List<EventDto> dtoList = null;
-//        List<Event> events = eventService;
+        List<Event> events = eventService.findTrendingEvents();
+
+        for (Event event : events) {
+            dtoList.add(eventService.convertToDto(event));
+        }
 
         return ResponseEntity.ok(dtoList);
     }
 
-    private EventDto convertToDto(Event event) {
-        EventDto dto = new EventDto();
-        dto.setEventNo(event.getEventNo());
-        dto.setEventImg(event.getEventImgBase64());
-        dto.setEventName(event.getEventName());
-        dto.setEventCategoryName(event.getEventCategory().getEventCategoryName());
-        dto.setHostName(event.getHost().getHostName());
-        dto.setEventCity(event.getEventCity());
-        dto.setEventDesc(event.getEventDesc());
-        dto.setEventDetailedAddress(event.getEventDetailedAddress());
-        dto.setEventAddTime(event.getEventAddTime());
-        dto.setEventRemoveTime(event.getEventRemoveTime());
-        dto.setEventStartTime(event.getEventStartTime());
-        dto.setEventEndTime(event.getEventEndTime());
-        dto.setRegisteredCount(event.getRegisteredCount());
-        dto.setEventStatus(event.getEventStatus());
-        dto.setTotalRating(event.getTotalRating());
-        dto.setEventRatingCount(event.getEventRatingCount());
-        dto.setVisitCount(event.getVisitCount());
-        return dto;
-    }
 
-    private Event convertFromDto(EventDto dto) {
-        Event event = new Event();
-        event.setEventNo(dto.getEventNo());
-        event.setEventImgBase64(dto.getEventImg());
-        event.setEventName(dto.getEventName());
-        event.setEventCategory(eventCategoryService.findByEventCategoryName(dto.getEventCategoryName()));
-        event.setHost(hostService.findByHostName(dto.getHostName()));
-        event.setEventCity(dto.getEventCity());
-        event.setEventDesc(dto.getEventDesc());
-        event.setEventDetailedAddress(dto.getEventDetailedAddress());
-        event.setEventAddTime(dto.getEventAddTime());
-        event.setEventRemoveTime(dto.getEventRemoveTime());
-        event.setEventStartTime(dto.getEventStartTime());
-        event.setEventEndTime(dto.getEventEndTime());
-        event.setRegisteredCount(dto.getRegisteredCount());
-        event.setEventStatus(dto.getEventStatus());
-        event.setTotalRating(dto.getTotalRating());
-        event.setEventRatingCount(dto.getEventRatingCount());
-        event.setVisitCount(dto.getVisitCount());
-        return event;
-    }
 }

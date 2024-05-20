@@ -1,9 +1,8 @@
 package com.ezban.event.model.Service;
 
-import com.ezban.event.model.Event;
-import com.ezban.event.model.EventRepository;
-import com.ezban.event.model.EventStatus;
-import com.ezban.event.model.ServiceDemo;
+import com.ezban.event.model.*;
+import com.ezban.eventcategory.model.EventCategoryService;
+import com.ezban.host.model.HostService;
 import com.ezban.qrcodeticket.model.QrcodeTicket;
 import com.ezban.qrcodeticket.model.QrcodeTicketService;
 import com.ezban.tickettype.model.TicketType;
@@ -21,6 +20,11 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class EventService implements ServiceDemo<Event> {
+    @Autowired
+    HostService hostService;
+
+    @Autowired
+    EventCategoryService eventCategoryService;
 
     @Autowired
     EventRepository eventRepository;
@@ -70,8 +74,8 @@ public class EventService implements ServiceDemo<Event> {
         return eventRepository.findByEventCategoryEventCategoryNoAndEventStatus(categoryNo, EventStatus.PUBLISHED, pageable);
     }
 
-    public List<Event> findByEventCityAndEventCategory(List<String> cities, List<Integer> categoryNos, Pageable pageable) {
-        return eventRepository.findByEventCityAndEventCategory(EventStatus.PUBLISHED, cities, categoryNos, pageable);
+    public List<Event> findByEventCityAndEventCategoryAndEventName(List<String> cities, List<Integer> categoryNos, String eventName, Pageable pageable) {
+        return eventRepository.findByEventCityAndEventCategoryAndEventName(EventStatus.PUBLISHED, cities, categoryNos, eventName, pageable);
     }
 
     public boolean isAuthenticated(Principal principal, Event event) {
@@ -151,5 +155,54 @@ public class EventService implements ServiceDemo<Event> {
 
     public List<Event> findByEventCityAndEventCategory(String city, Integer categoryNo, Pageable pageable) {
         return eventRepository.findByEventCityAndEventCategoryEventCategoryNoAndEventStatus(city, categoryNo, EventStatus.PUBLISHED, pageable);
+    }
+
+    public List<Event> findTrendingEvents() {
+
+        return eventRepository.findTop6ByOrderByVisitCountDesc();
+    }
+
+    public EventDto convertToDto(Event event) {
+        EventDto dto = new EventDto();
+        dto.setEventNo(event.getEventNo());
+        dto.setEventImg(event.getEventImgBase64());
+        dto.setEventName(event.getEventName());
+        dto.setEventCategoryName(event.getEventCategory().getEventCategoryName());
+        dto.setHostName(event.getHost().getHostName());
+        dto.setEventCity(event.getEventCity());
+        dto.setEventDesc(event.getEventDesc());
+        dto.setEventDetailedAddress(event.getEventDetailedAddress());
+        dto.setEventAddTime(event.getEventAddTime());
+        dto.setEventRemoveTime(event.getEventRemoveTime());
+        dto.setEventStartTime(event.getEventStartTime());
+        dto.setEventEndTime(event.getEventEndTime());
+        dto.setRegisteredCount(event.getRegisteredCount());
+        dto.setEventStatus(event.getEventStatus());
+        dto.setTotalRating(event.getTotalRating());
+        dto.setEventRatingCount(event.getEventRatingCount());
+        dto.setVisitCount(event.getVisitCount());
+        return dto;
+    }
+
+    public Event convertFromDto(EventDto dto) {
+        Event event = new Event();
+        event.setEventNo(dto.getEventNo());
+        event.setEventImgBase64(dto.getEventImg());
+        event.setEventName(dto.getEventName());
+        event.setEventCategory(eventCategoryService.findByEventCategoryName(dto.getEventCategoryName()));
+        event.setHost(hostService.findByHostName(dto.getHostName()));
+        event.setEventCity(dto.getEventCity());
+        event.setEventDesc(dto.getEventDesc());
+        event.setEventDetailedAddress(dto.getEventDetailedAddress());
+        event.setEventAddTime(dto.getEventAddTime());
+        event.setEventRemoveTime(dto.getEventRemoveTime());
+        event.setEventStartTime(dto.getEventStartTime());
+        event.setEventEndTime(dto.getEventEndTime());
+        event.setRegisteredCount(dto.getRegisteredCount());
+        event.setEventStatus(dto.getEventStatus());
+        event.setTotalRating(dto.getTotalRating());
+        event.setEventRatingCount(dto.getEventRatingCount());
+        event.setVisitCount(dto.getVisitCount());
+        return event;
     }
 }

@@ -44,10 +44,14 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
     List<Event> findByEventCityAndEventCategoryEventCategoryNoAndEventStatus(String city, Integer categoryNo, EventStatus eventStatus, Pageable pageable);
 
     @Query("SELECT e FROM Event e WHERE e.eventStatus = :status AND " +
-            "(e.eventCity IN :cities OR :cities IS NULL) AND " +
-            "(e.eventCategory.eventCategoryNo IN :categoryNos OR :categoryNos IS NULL)")
-    List<Event> findByEventCityAndEventCategory(@Param("status") EventStatus status,
-                                                @Param("cities") List<String> cities,
-                                                @Param("categoryNos") List<Integer> categoryNos,
-                                                Pageable pageable);
+            "(:cities IS NULL OR e.eventCity IN :cities) AND " +
+            "(:categoryNos IS NULL OR e.eventCategory.eventCategoryNo IN :categoryNos) AND " +
+            "(:eventName IS NULL OR e.eventName LIKE %:eventName%)")
+    List<Event> findByEventCityAndEventCategoryAndEventName(@Param("status") EventStatus status,
+                                                            @Param("cities") List<String> cities,
+                                                            @Param("categoryNos") List<Integer> categoryNos,
+                                                            @Param("eventName") String eventName,
+                                                            Pageable pageable);
+
+    List<Event> findTop6ByOrderByVisitCountDesc();
 }
