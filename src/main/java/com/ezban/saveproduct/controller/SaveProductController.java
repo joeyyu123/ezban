@@ -48,9 +48,13 @@ public class SaveProductController {
     // 新增收藏商品
     @PreAuthorize("hasRole('member')")
     @PostMapping("/saveproduct/insert")
-    public ResponseEntity<?> submitSaveProduct(@RequestBody AddSaveProductDTO addSaveProductDTO) {
+    public ResponseEntity<?> submitSaveProduct(@RequestBody AddSaveProductDTO addSaveProductDTO, Principal principal) {
 
         try {
+            // 從 Principal 對象中獲取當前登錄用戶的會員編號
+            Integer memberNo = Integer.parseInt(principal.getName());
+            addSaveProductDTO.setMemberNo(memberNo);
+
             // 執行更新操作
             SaveProduct saveProduct = saveProductSvc.toggleSaveStatus(addSaveProductDTO);
 

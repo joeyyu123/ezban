@@ -2,29 +2,32 @@ package com.ezban.productorder.model;
 
 import com.ezban.birthdaycoupon.model.BirthdayCoupon;
 import com.ezban.member.model.Member;
+import com.ezban.product.model.Product;
+import com.ezban.productorderdetail.model.ProductOrderDetail;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.List;
 
 public class AddProductOrderDTO {
     private Integer productOrderNo;
 
     @NotNull(message = "* 會員編號: 請勿空白 !")
-    private Member member;
+    private String memberNo;
 
     @NotNull(message = "* 商品金額: 請勿空白 !")
     @Min(value = 1, message = "* 商品金額: 不能小於{value} !")
-    private Integer productPrice;
+    private String productPrice;
 
-    private Integer memberPoints;
+    private String memberPoints;
 
-    private Integer birthdayCouponNo;
+    private String birthdayCouponNo;
 
-    private Integer productCouponDiscount;
+    private String productCouponDiscount;
 
     @NotNull(message = "* 結帳金額: 請勿空白 !")
-    private Integer productCheckoutAmount;
+    private String productCheckoutAmount;
 
     @NotNull(message = "* 收件人: 請勿空白 !")
     @Pattern(regexp = "^[(\u4e00-\u9fa5)(a-zA-Z0-9)]{2,10}$", message = "* 姓名: 只能是中、英文字母 , 且長度必需在2到10之間 !")
@@ -46,6 +49,16 @@ public class AddProductOrderDTO {
 
     private Byte productOrderAllocationStatus;
 
+    private String memberRemainingPoints;
+
+    private List<Product> productList;
+
+    private List<ProductOrderDetail> productOrderDetail;
+
+    public AddProductOrderDTO() {
+
+    }
+
     public Integer getProductOrderNo() {
         return productOrderNo;
     }
@@ -54,51 +67,51 @@ public class AddProductOrderDTO {
         this.productOrderNo = productOrderNo;
     }
 
-    public Member getMember() {
-        return member;
+    public String getMemberNo() {
+        return memberNo;
     }
 
-    public void setMember(Member member) {
-        this.member = member;
+    public void setMemberNo(String memberNo) {
+        this.memberNo = memberNo;
     }
 
-    public Integer getProductPrice() {
+    public String getProductPrice() {
         return productPrice;
     }
 
-    public void setProductPrice(Integer productPrice) {
+    public void setProductPrice(String productPrice) {
         this.productPrice = productPrice;
     }
 
-    public Integer getMemberPoints() {
+    public String getMemberPoints() {
         return memberPoints;
     }
 
-    public void setMemberPoints(Integer memberPoints) {
+    public void setMemberPoints(String memberPoints) {
         this.memberPoints = memberPoints;
     }
 
-    public Integer getBirthdayCouponNo() {
+    public String getBirthdayCouponNo() {
         return birthdayCouponNo;
     }
 
-    public void setBirthdayCouponNo(Integer birthdayCouponNo) {
+    public void setBirthdayCouponNo(String birthdayCouponNo) {
         this.birthdayCouponNo = birthdayCouponNo;
     }
 
-    public Integer getProductCouponDiscount() {
+    public String getProductCouponDiscount() {
         return productCouponDiscount;
     }
 
-    public void setProductCouponDiscount(Integer productCouponDiscount) {
+    public void setProductCouponDiscount(String productCouponDiscount) {
         this.productCouponDiscount = productCouponDiscount;
     }
 
-    public Integer getProductCheckoutAmount() {
+    public String getProductCheckoutAmount() {
         return productCheckoutAmount;
     }
 
-    public void setProductCheckoutAmount(Integer productCheckoutAmount) {
+    public void setProductCheckoutAmount(String productCheckoutAmount) {
         this.productCheckoutAmount = productCheckoutAmount;
     }
 
@@ -158,4 +171,27 @@ public class AddProductOrderDTO {
         this.productOrderAllocationStatus = productOrderAllocationStatus;
     }
 
+    public String getMemberRemainingPoints() {
+        return memberRemainingPoints;
+    }
+
+    public void setMemberRemainingPoints(String memberRemainingPoints) {
+        this.memberRemainingPoints = memberRemainingPoints;
+    }
+
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
+    }
+
+    public List<ProductOrderDetail> getProductOrderDetail() {
+        return productOrderDetail;
+    }
+
+    public void setProductOrderDetail(List<ProductOrderDetail> productOrderDetail) {
+        this.productOrderDetail = productOrderDetail;
+    }
 }

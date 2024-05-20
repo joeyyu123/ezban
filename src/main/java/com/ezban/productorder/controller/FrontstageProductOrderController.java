@@ -2,6 +2,7 @@ package com.ezban.productorder.controller;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.NoSuchElementException;
 import javax.validation.Valid;
 
 import com.ezban.member.model.Member;
@@ -28,7 +29,7 @@ public class FrontstageProductOrderController {
     @Autowired
     MemberService memberService;
 
-    // 新增訂單(後端測試正常,待確認是否與前端可以正常處理)
+    // 新增訂單
     @GetMapping("/productorder/addProductOrder")
     public String addProductOrder(ModelMap model) {
         ProductOrder productOrder = new ProductOrder();
@@ -37,7 +38,7 @@ public class FrontstageProductOrderController {
     }
 
     @PostMapping("/productorder/insert")
-    public String insert(@Valid AddProductOrderDTO addProductOrderDTO, BindingResult result, ModelMap model) throws Exception {
+    public String insert(@Valid @RequestBody AddProductOrderDTO addProductOrderDTO, BindingResult result, ModelMap model) throws Exception {
         productOrderSvc.addProductOrder(addProductOrderDTO);
         List<ProductOrder> list = productOrderSvc.getAll();
         model.addAttribute("productOrderListData", list);
@@ -46,9 +47,10 @@ public class FrontstageProductOrderController {
 
 
     /**
-     * 根據會員查找訂單
-     * @param model 模型
-     * @param principal 當前登入的用戶信息
+     * 根據登入的會員編號查找自己的訂單
+     *
+     * @param model     模型
+     * @param principal 當前登入的會員信息
      * @return 訂單列表頁面
      */
     @GetMapping("/productorder/findByMember")
@@ -64,7 +66,7 @@ public class FrontstageProductOrderController {
     }
 
 
-    // 會員取消訂單
+    // 會員取消訂單(經由查詢後的跳轉頁,故不進行第二次身分驗證)
     @PreAuthorize("hasRole('member')")
     @PostMapping("/productorder/cancelProductOrder")
     public ResponseEntity<?> cancelProductOrder(@RequestBody CancelProductOrderDTO cancelProductOrderDTO) {

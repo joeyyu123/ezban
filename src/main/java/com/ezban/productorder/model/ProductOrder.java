@@ -107,7 +107,7 @@ public class ProductOrder implements java.io.Serializable {
     private Byte productOrderAllocationStatus;
 
     @OneToMany(mappedBy = "productOrder")
-    private List<ProductOrderDetail> productOrderDetails;
+    private List<ProductOrderDetail> productOrderDetail;
 
     public ProductOrder() {
     }
@@ -248,11 +248,15 @@ public class ProductOrder implements java.io.Serializable {
         this.productOrderAllocationStatus = productOrderAllocationStatus;
     }
 
-    public List<ProductOrderDetail> getProductOrderDetails() {
-        return productOrderDetails;
+    public List<ProductOrderDetail> getProductOrderDetail() {
+        return productOrderDetail;
     }
 
-    public void setProductOrderDetails(List<ProductOrderDetail> productOrderDetails) {
-        this.productOrderDetails = productOrderDetails;
+    public void setProductOrderDetail(List<ProductOrderDetail> productOrderDetail) {
+        this.productOrderDetail = productOrderDetail;
     }
+
+    public void setProductList(List<Product> products) {
+    }
+
 }
