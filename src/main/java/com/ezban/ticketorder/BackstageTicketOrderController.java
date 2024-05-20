@@ -7,6 +7,10 @@ import com.ezban.ticketorder.model.Service.TicketOrderService;
 import com.ezban.ticketorder.model.TicketOrder;
 import com.ezban.ticketorder.model.TicketOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +39,8 @@ public class BackstageTicketOrderController {
     public String showOrders(Model model, Principal principal,
                              @RequestParam(value = "orderStatus", required = false) Integer orderStatus,
                              @RequestParam(value = "ticketOrderNo", required = false) Integer ticketOrderNo,
+                             @RequestParam(value = "page", defaultValue = "0") int page,
+                             @RequestParam(value = "size", defaultValue = "10") int size,
                              @PathVariable Integer eventNo) {
         // 檢查是否有權限
         Event event = eventService.findById(eventNo);
@@ -43,31 +49,28 @@ public class BackstageTicketOrderController {
             return "/backstage/event/warning";
         }
 
-        List<TicketOrder> ticketOrders = new ArrayList<>();
+        Pageable pageable = PageRequest.of(page, size, Sort.by("ticketOrderTime").descending());
+        Page<TicketOrder> ticketOrdersPage;
 
-        // 搜尋特定狀態的訂單
-        if (orderStatus!= null) {
+        if (ticketOrderNo != null) {
+            ticketOrdersPage = ticketOrderService.findByEventNoAndTicketOrderNo(eventNo, ticketOrderNo, pageable);
+            if (ticketOrdersPage.isEmpty()) {
+                model.addAttribute("message", "找不到該筆訂單");
+                ticketOrdersPage = ticketOrderService.findByEvent(event, pageable);
+            }
+        } else if (orderStatus != null) {
             try {
                 TicketOrderStatus status = TicketOrderStatus.values()[orderStatus];
-                ticketOrders = ticketOrderService.findByEventAndStatus(event, status);
+                ticketOrdersPage = ticketOrderService.findByEventAndStatus(event, status, pageable);
             } catch (ArrayIndexOutOfBoundsException e) {
                 model.addAttribute("message", "Invalid order status.");
                 return "/backstage/event/warning";
             }
-        } else{
-            ticketOrders = ticketOrderService.findByEvent(event);
+        } else {
+            ticketOrdersPage = ticketOrderService.findByEvent(event, pageable);
         }
 
-        if(ticketOrderNo != null){
-            ticketOrders = ticketOrderService.findByEventNoAndTicketOrderNo(eventNo, ticketOrderNo);
-            if(ticketOrders.isEmpty()){
-                model.addAttribute("message", "找不到該筆訂單");
-                ticketOrders = ticketOrderService.findByEvent(event);
-            }
-        }
-
-
-        model.addAttribute("ticketOrders", ticketOrders);
+        model.addAttribute("ticketOrdersPage", ticketOrdersPage);
         model.addAttribute("orderStatus", orderStatus);
         model.addAttribute("event", event);
         return "/backstage/event/ticket-orders";

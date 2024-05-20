@@ -32,7 +32,7 @@ public class RegistrationFormController {
      */
     @GetMapping("/{eventNo}/form")
     public String registration(Model model, Principal principal, @PathVariable String eventNo) {
-//        model.addAttribute("event", eventService.findById(eventNo));
+        model.addAttribute("event", eventService.findById(Integer.valueOf(eventNo)));
         Event event = eventService.findById(Integer.valueOf(eventNo));
         if (!eventService.isAuthenticated(principal, event)){
             model.addAttribute("message", "You are not authorized to access this page.");

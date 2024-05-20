@@ -7,7 +7,6 @@ import com.ezban.qrcodeticket.model.QrcodeTicket;
 import com.ezban.qrcodeticket.model.QrcodeTicketService;
 import com.ezban.tickettype.model.TicketType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -60,7 +59,7 @@ public class EventService implements ServiceDemo<Event> {
     }
 
     public List<Event> findByHostNo(Integer hostNo) {
-        return eventRepository.findByHostHostNo(hostNo);
+        return eventRepository.findByHostHostNoOrderByEventNoDesc(hostNo, Sort.by(Sort.Direction.DESC, "eventNo"));
     }
 
     public List<Event> findByEventStatus(EventStatus status) {
@@ -78,11 +77,6 @@ public class EventService implements ServiceDemo<Event> {
 
     /**
      * 複合查詢
-     * @param cities
-     * @param categoryNos
-     * @param eventName
-     * @param pageable
-     * @return
      */
     public List<Event> findByEventCityAndEventCategoryAndEventName(List<String> cities, List<Integer> categoryNos, String eventName, Pageable pageable) {
         Specification<Event> spec = (root, query, criteriaBuilder) -> {
@@ -150,7 +144,7 @@ public class EventService implements ServiceDemo<Event> {
     public List<Event> findByHostNoAndStatus(Integer hostNo, Integer eventStatus) {
         EventStatus status = EventStatus.values()[eventStatus];
 
-        return eventRepository.findByHostHostNoAndEventStatus(hostNo, status);
+        return eventRepository.findByHostHostNoAndEventStatusOrderByEventNoDesc(hostNo, status);
     }
 
     public Map<String, Integer> getTicketInfo(Event event) {

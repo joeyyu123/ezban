@@ -1,18 +1,16 @@
 package com.ezban.event.model;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.sql.Timestamp;
 import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Integer>, JpaSpecificationExecutor<Event> {
-    List<Event> findByHostHostNo(Integer HostNo);
+    List<Event> findByHostHostNoOrderByEventNoDesc(Integer HostNo, Sort sort);
 
     List<Event> findByEventCityAndEventStatus(String eventCity,EventStatus eventStatus, Pageable pageable);
 
@@ -37,7 +35,7 @@ public interface EventRepository extends JpaRepository<Event, Integer>, JpaSpeci
      */
     List<Event> findByEventStatusAndEventEndTimeBefore(EventStatus eventStatus, Timestamp eventEndTime);
 
-    List<Event> findByHostHostNoAndEventStatus(Integer host_hostNo, EventStatus eventStatus);
+    List<Event> findByHostHostNoAndEventStatusOrderByEventNoDesc(Integer host_hostNo, EventStatus eventStatus);
 
     @Query("SELECT DISTINCT e.eventCity FROM Event e")
     List<String> findDistinctEventCity();

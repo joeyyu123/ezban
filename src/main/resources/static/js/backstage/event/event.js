@@ -86,3 +86,95 @@ document.getElementById('eventDetailedAddress').addEventListener('keydown', func
     }
 });
 
+// 驗證活動時間
+function validateEventTimes() {
+    const eventName = document.getElementById('eventName').value;
+    const eventCategory = document.getElementById('eventCategory').value;
+    const eventCity = document.getElementById('eventCity').value;
+    const eventDetailedAddress = document.getElementById('eventDetailedAddress').value;
+    const eventAddTime = new Date(document.getElementById('eventAddTime').value);
+    const eventRemoveTime = new Date(document.getElementById('eventRemoveTime').value);
+    const eventStartTime = new Date(document.getElementById('eventStartTime').value);
+    const eventEndTime = new Date(document.getElementById('eventEndTime').value);
+
+    let isValid = true;
+
+
+    if (!eventName) {
+        setInvalid('eventName', '請輸入活動名稱。');
+        isValid = false;
+    } else {
+        setValid('eventName');
+    }
+
+    if (!eventCategory) {
+        setInvalid('eventCategory', '請選擇活動類別。');
+        isValid = false;
+    } else {
+        setValid('eventCategory');
+    }
+
+    if (!eventCity) {
+        setInvalid('eventCity', '請輸入活動所在城市。');
+        isValid = false;
+    } else {
+        setValid('eventCity');
+    }
+
+    if (!eventDetailedAddress) {
+        setInvalid('eventDetailedAddress', '請輸入活動詳細地址。');
+        isValid = false;
+    } else {
+        setValid('eventDetailedAddress');
+    }
+
+    if (!eventAddTime){
+        setInvalid('eventAddTime', '請選擇活動上架時間。');
+        isValid = false;
+    } else {
+        setValid('eventAddTime');
+    }
+
+    if (eventRemoveTime < eventAddTime) {
+        setInvalid('eventRemoveTime', '活動下架時間不能比上架時間早。');
+        isValid = false;
+    } else {
+        setValid('eventRemoveTime');
+    }
+
+    if (eventEndTime < eventStartTime) {
+        setInvalid('eventEndTime', '活動結束時間不能比開始時間早。');
+        isValid = false;
+    } else {
+        setValid('eventEndTime');
+    }
+
+    if (eventStartTime < eventAddTime) {
+        setInvalid('eventStartTime', '活動開始時間不能比上架時間早。');
+        isValid = false;
+    } else {
+        setValid('eventStartTime');
+    }
+
+    return isValid;
+}
+
+function setInvalid(id, message) {
+    const element = document.getElementById(id);
+    element.classList.add('is-invalid');
+    element.nextElementSibling.textContent = message;
+}
+
+function setValid(id) {
+    const element = document.getElementById(id);
+    element.classList.remove('is-invalid');
+    element.classList.add('is-valid');
+    element.nextElementSibling.textContent = '';
+}
+
+document.querySelector('form').addEventListener('submit', function (event) {
+    if (!validateEventTimes()) {
+        event.preventDefault();
+    }
+});
+

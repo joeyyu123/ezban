@@ -69,25 +69,25 @@
 
                 <div class="form-section">
                     <div class="row ticket-header">
-                        <label class="col">票種名稱</label>
-                        <label class="col">票種價格(NT$)</label>
-                        <label class="col">票種數量</label>
-                        <label class="col">票種為幾人套票</label>
-                        <label class="col">每人可購買張數</label>
+                        <label class="col"><span style='color:red'>*</span>票種名稱</label>
+                        <label class="col"><span style='color:red'>*</span>票種價格(NT$)</label>
+                        <label class="col"><span style='color:red'>*</span>票種數量</label>
+                        <label class="col"><span style='color:red'>*</span>票種為幾人套票</label>
+                        <label class="col"><span style='color:red'>*</span>每人可購買張數</label>
 
                         <label class="col">操作</label>
                     </div>
                     <div class="row ticket-type" th:each="ticketType:${ticketTypes}">
                         <input type="hidden" name="ticketTypeNo" th:value="${ticketType.ticketTypeNo}">
-                        <input required type="text" class="col" name="ticketTypeName" th:value="${ticketType.ticketTypeName}"
+                        <input required type="text" class="col form-control" name="ticketTypeName" th:value="${ticketType.ticketTypeName}"
                                placeholder="請輸入票種名稱">
-                        <input required type="number" class="col" name="ticketTypePrice" th:value="${ticketType.ticketTypePrice}"
+                        <input required type="number" class="col form-control" name="ticketTypePrice" th:value="${ticketType.ticketTypePrice}"
                                placeholder="請輸入票種價格">
-                        <input required type="number" class="col" name="ticketTypeQty" th:value="${ticketType.ticketTypeQty}"
+                        <input required type="number" class="col form-control" name="ticketTypeQty" th:value="${ticketType.ticketTypeQty}"
                                placeholder="請輸入票種數量">
-                        <input required type="number" class="col" name="includedTickets" th:value="${ticketType.includedTickets}"
+                        <input required type="number" class="col form-control" name="includedTickets" th:value="${ticketType.includedTickets}"
                                placeholder="票種為幾人套票">
-                        <input required type="number" class="col" name="purchaseQuantityLimit"
+                        <input required type="number" class="col form-control" name="purchaseQuantityLimit"
                                th:value="${ticketType.purchaseQuantityLimit}" placeholder="每人可購買張數">
                         <div class="col d-flex justify-content-center">
                             <button class="btn btn-sm setting-button" th:data-id="${ticketType.ticketTypeNo}">
@@ -109,14 +109,14 @@
                                     <label>販售時間</label>
                                 </div>
                                 <label class="form-label" for="purchaseStartTime"
-                                       style="margin-left: 10px; font-size:14px;">開始販售</label>
+                                       style="margin-left: 10px; font-size:14px;"><span style='color:red'>*</span>開始販售</label>
 
                                 <input required type="datetime-local" class="form-control" id="purchaseStartTime"
                                        name="purchaseStartTime"
                                        th:value="${#dates.format(ticketType.purchaseStartTime, 'yyyy-MM-dd HH:mm')}"
                                        placeholder="請選擇票種開始販售時間">
                                 <label class="form-label" for="purchaseEndTime"
-                                       style="margin-left: 10px; font-size:14px;">結束販售</label>
+                                       style="margin-left: 10px; font-size:14px;"><span style='color:red'>*</span>結束販售</label>
                                 <input required type="datetime-local" class="form-control" id="purchaseEndTime"
                                        name="purchaseEndTime"
                                        th:value="${#dates.format(ticketType.purchaseEndTime, 'yyyy-MM-dd HH:mm')}"
@@ -156,21 +156,21 @@
             $("div.row").last().after(
                 `
                 <div class="row ticket-type-new" >
-                        <input type="text" class="col" name="ticketTypeName"
+                        <input type="text" class="col form-control" name="ticketTypeName" required
 
                                placeholder="票種名稱">
-                        <input type="number" class="col"
-                               name="ticketTypePrice"
+                        <input type="number" class="col form-control"
+                               name="ticketTypePrice" required
                                placeholder="票種價格">
-                        <input type="number" class="col" name="ticketTypeQty"
-
+                        <input type="number" class="col form-control" name="ticketTypeQty"
+                               required
                                placeholder="票種數量">
-                        <input type="number" class="col"
-                               name="includedTickets"
+                        <input type="number" class="col form-control"
+                               name="includedTickets" required
                                placeholder="幾人套票"
                                value="1">
-                        <input type="number" class="col"
-                               name="purchaseQuantityLimit"
+                        <input type="number" class="col form-control"
+                               name="purchaseQuantityLimit" required
                                placeholder="每人可購買張數"
                                value="1">
                         <div class="col d-flex justify-content-center">
@@ -191,15 +191,18 @@
                                 <div>
                                     <label >販售時間</label>
                                 </div>
-                                <label class="form-label" for="purchaseStartTime" style="margin-left: 10px; font-size:14px;">開始販售</label>
+                                <label class="form-label" for="purchaseStartTime" style="margin-left: 10px; font-size:14px;"><span style='color:red'>*</span>開始販售</label>
 
-                                <input type="datetime-local" class="form-control" id="purchaseStartTime" name="purchaseStartTime"
+                                <input required type="datetime-local" class="form-control" id="purchaseStartTime" name="purchaseStartTime"
 
                                        placeholder="請選擇票種開始販售時間">
-                                <label class="form-label" for="purchaseEndTime" style="margin-left: 10px; font-size:14px;">結束販售</label>
-                                <input type="datetime-local" class="form-control" id="purchaseEndTime"
+                                <div class="invalid-feedback"></div>
+
+                                <label class="form-label" for="purchaseEndTime" style="margin-left: 10px; font-size:14px;"><span style='color:red'>*</span>結束販售</label>
+                                <input required type="datetime-local" class="form-control" id="purchaseEndTime"
                                        name="purchaseEndTime"
                                        placeholder="請選擇票種結束販售時間">
+                                <div class="invalid-feedback"></div>
                             </div>
                         </div>
 
@@ -241,9 +244,38 @@
             }
         });
 
+        function validateRequiredFields() {
+            let isValid = true;
+            $('input[required], textarea[required]').each(function () {
+                if ($(this).val() === '') {
+                    $(this).addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+            // 開始時間不能大於結束時間
+            $('#purchaseStartTime').each(function () {
+                let startTime = new Date($(this).val());
+                let endTime = new Date($('#purchaseEndTime').val());
+                if (startTime > endTime) {
+                    $(this).addClass('is-invalid');
+                    $(this).next().text("開始時間不能比結束時間晚");
+                    isValid = false;
+                } else {
+                    $(this).removeClass('is-invalid');
+                    $(this).next().text("");
+                }
+            });
+            return isValid;
+        }
 
         // 儲存到資料庫
-        $('#save-btn').click(function () {
+        $('#save-btn').click(function (e) {
+            e.preventDefault();
+            if (!validateRequiredFields()) {
+                return;
+            }
             let ticketTypes = [];
             $('.ticket-type').each(function () {
                 let ticketType = {
@@ -273,10 +305,13 @@
                 };
                 ticketTypes.push(ticketType);
             });
-
+            if (ticketTypes.length === 0) {
+                alert("請至少新增一個票種");
+                return;
+            }
             $.ajax({
                 url: window.location.href,
-                type: "post",
+                type: "PUT",
                 contentType: "application/json",
                 data: JSON.stringify({
                     ticketTypes: ticketTypes,

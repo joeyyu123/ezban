@@ -49,6 +49,9 @@ public class BackstageTicketTypeController {
         if (!eventService.isAuthenticated(principal, event)){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to access this page.");
         }
+        if (ticketTypes == null || ticketTypes.isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No ticket types provided.");
+        }
         for (TicketType ticketType : ticketTypes) {
             ticketType.setRemainingTicketQty(ticketType.getTicketTypeQty());
             ticketType.setEvent(event);
