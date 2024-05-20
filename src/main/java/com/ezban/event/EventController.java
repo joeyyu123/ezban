@@ -4,6 +4,7 @@ import com.ezban.event.model.Event;
 import com.ezban.event.model.EventDto;
 import com.ezban.event.model.Service.EventService;
 import com.ezban.event.model.EventStatus;
+import com.ezban.eventcategory.model.EventCategory;
 import com.ezban.eventcategory.model.EventCategoryService;
 import com.ezban.host.model.HostService;
 import com.ezban.tickettype.model.TicketTypeService;
@@ -12,14 +13,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,15 +48,69 @@ public class EventController {
 
 
     @GetMapping("")
-    public String getEvents(Model model) {
-        List<Event> events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(0, PAGE_SIZE));
+    public String getEvents(Model model,
+                            @RequestParam(required = false) String city,
+                            @RequestParam(required = false) Integer categoryNo) {
+        List<Event> events;
+        List<EventCategory> eventCategories = eventCategoryService.findAll();
+        List<String> eventCities = eventService.findDistinctEventCity();
         List<EventDto> dtoList = new ArrayList<>();
+
+        if (city != null && categoryNo != null) {
+            events = eventService.findByEventCityAndEventCategory(city, categoryNo, PageRequest.of(0, PAGE_SIZE));
+        }
+        else if (city != null) {
+            events = eventService.findByEventCity(city, PageRequest.of(0, PAGE_SIZE));
+        }
+        else if (categoryNo != null) {
+            events = eventService.findByEventCategoryNo(categoryNo, PageRequest.of(0, PAGE_SIZE));
+        } else {
+            events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(0, PAGE_SIZE));
+        }
+
+
         for (Event event : events) {
             dtoList.add(convertToDto(event));
         }
 
         model.addAttribute("events", dtoList);
+        model.addAttribute("eventCategories", eventCategories);
+        model.addAttribute("eventCities", eventCities);
         return "/frontstage/event/events";
+    }
+
+    /**
+     * 所有活動的分頁功能
+     *
+     * @param page
+     * @return
+     */
+    @GetMapping("/page/{page}")
+    @ResponseBody
+    public ResponseEntity<List<EventDto>> getEventsByPage(@PathVariable("page") int page,
+                                                          @RequestParam(required = false) String city,
+                                                          @RequestParam(required = false) Integer categoryNo) {
+        List<Event> events;
+
+        if (city != null && categoryNo != null) {
+            events = eventService.findByEventCityAndEventCategory(city, categoryNo, PageRequest.of(page - 1, PAGE_SIZE));
+        }
+        else if (city != null) {
+            events = eventService.findByEventCity(city, PageRequest.of(page - 1, PAGE_SIZE));
+        }
+        else if (categoryNo != null) {
+            events = eventService.findByEventCategoryNo(categoryNo, PageRequest.of(page - 1, PAGE_SIZE));
+        } else {
+            events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(page - 1, PAGE_SIZE));
+        }
+
+
+
+        List<EventDto> dtoList = new ArrayList<>();
+        for (Event event : events) {
+            dtoList.add(convertToDto(event));
+        }
+        return ResponseEntity.ok(dtoList);
     }
 
     @GetMapping("{eventNo}")
@@ -75,10 +128,9 @@ public class EventController {
 
         if (event != null) {
             // 將查找到的活動詳情快取到 Redis
-            var mapper = new ObjectMapper();
             dto = convertToDto(event);
             eventService.incrementEventVisitCount(eventNo);
-            redisTemplate.opsForValue().set("event:" + eventNo, dto); // 快取一小時
+            redisTemplate.opsForValue().set("event:" + eventNo, dto, 1, TimeUnit.HOURS); // 快取一小時
             //            Integer eventCategoryNo = event.getEventCategory().getEventCategoryNo();
             model.addAttribute("event", dto);
 //            model.addAttribute("events", eventService.findByEventCategoryNo(eventCategoryNo));
@@ -99,19 +151,10 @@ public class EventController {
 
     }
 
-    @GetMapping("/page/{page}")
-    @ResponseBody
-    public ResponseEntity<List<EventDto>> getEventsByPage(@PathVariable("page") int page) {
-        List<Event> events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(page - 1, PAGE_SIZE));
-        List<EventDto> dtoList = new ArrayList<>();
-        for (Event event : events) {
-            dtoList.add(convertToDto(event));
-        }
-        return ResponseEntity.ok(dtoList);
-    }
 
     /**
-     * 取得熱門瀏覽次數活動
+     * 取得熱門活動
+     *
      * @return
      */
     // TODO: 未完成
@@ -145,6 +188,7 @@ public class EventController {
         dto.setVisitCount(event.getVisitCount());
         return dto;
     }
+
     private Event convertFromDto(EventDto dto) {
         Event event = new Event();
         event.setEventNo(dto.getEventNo());

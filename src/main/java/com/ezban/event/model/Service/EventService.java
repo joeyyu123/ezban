@@ -8,7 +8,9 @@ import com.ezban.qrcodeticket.model.QrcodeTicket;
 import com.ezban.qrcodeticket.model.QrcodeTicketService;
 import com.ezban.tickettype.model.TicketType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -59,9 +61,17 @@ public class EventService implements ServiceDemo<Event> {
         return eventRepository.findByEventStatus(status);
     }
 
+    public List<Event> findByEventCity(String eventCity,Pageable pageable) {
+        return eventRepository.findByEventCityAndEventStatus(eventCity, EventStatus.PUBLISHED,pageable);
+    }
+
     // 查詢該類別上架中的活動
-    public List<Event> findByEventCategoryNo(Integer categoryNo) {
-        return eventRepository.findByEventCategoryEventCategoryNoAndEventStatus(categoryNo, EventStatus.PUBLISHED);
+    public List<Event> findByEventCategoryNo(Integer categoryNo, Pageable pageable) {
+        return eventRepository.findByEventCategoryEventCategoryNoAndEventStatus(categoryNo, EventStatus.PUBLISHED, pageable);
+    }
+
+    public List<Event> findByEventCityAndEventCategory(List<String> cities, List<Integer> categoryNos, Pageable pageable) {
+        return eventRepository.findByEventCityAndEventCategory(EventStatus.PUBLISHED, cities, categoryNos, pageable);
     }
 
     public boolean isAuthenticated(Principal principal, Event event) {
@@ -132,5 +142,14 @@ public class EventService implements ServiceDemo<Event> {
         registrationInfo.put("unCheckedCount", unCheckedCount);
 
         return registrationInfo;
+    }
+
+    public List<String> findDistinctEventCity() {
+
+        return eventRepository.findDistinctEventCity();
+    }
+
+    public List<Event> findByEventCityAndEventCategory(String city, Integer categoryNo, Pageable pageable) {
+        return eventRepository.findByEventCityAndEventCategoryEventCategoryNoAndEventStatus(city, categoryNo, EventStatus.PUBLISHED, pageable);
     }
 }
