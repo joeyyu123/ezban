@@ -4,6 +4,12 @@ import com.ezban.eventcategory.model.EventCategory;
 import com.ezban.eventcomment.model.EventComment;
 import com.ezban.host.model.Host;
 import com.ezban.tickettype.model.TicketType;
+import com.fasterxml.jackson.annotation.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,6 +20,10 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "event")
 public class Event implements java.io.Serializable {
     @Id
@@ -68,6 +78,9 @@ public class Event implements java.io.Serializable {
     @Column(name = "event_end_time", nullable = false)
     private Timestamp eventEndTime;
 
+    @Column(name = "visit_count")
+    private Integer visitCount;
+
     @Column(name = "registered_count")
     private Integer registeredCount;
 
@@ -93,23 +106,15 @@ public class Event implements java.io.Serializable {
     @Column(name = "event_checkout_time")
     private Timestamp eventCheckoutTime;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private Set<EventComment> eventComments = new LinkedHashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
     private Set<TicketType> ticketTypes = new LinkedHashSet<>();
 
-    public Integer getEventNo() {
-        return eventNo;
-    }
 
-    public void setEventNo(Integer eventNo) {
-        this.eventNo = eventNo;
-    }
-
-    public byte[] getEventImg() {
-        return eventImg;
-    }
 
     public String getEventImgBase64() {
         if (eventImg == null || eventImg.length == 0) {
@@ -118,154 +123,12 @@ public class Event implements java.io.Serializable {
         return Base64.getEncoder().encodeToString(eventImg);
     }
 
-    public void setEventImg(byte[] eventImg) {
-        this.eventImg = eventImg;
+    public void setEventImgBase64(String eventImgBase64) {
+        if (eventImgBase64 == null || eventImgBase64.isEmpty()) {
+            return;
+        }
+        this.eventImg = Base64.getDecoder().decode(eventImgBase64);
     }
-
-    public String getEventName() {
-        return eventName;
-    }
-
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-    }
-
-    public EventCategory getEventCategory() {
-        return eventCategory;
-    }
-
-    public void setEventCategory(EventCategory eventCategory) {
-        this.eventCategory = eventCategory;
-    }
-
-    public Host getHost() {
-        return host;
-    }
-
-    public void setHost(Host host) {
-        this.host = host;
-    }
-
-    public String getEventDesc() {
-        return eventDesc;
-    }
-
-    public void setEventDesc(String eventDesc) {
-        this.eventDesc = eventDesc;
-    }
-
-    public String getEventCity() {
-        return eventCity;
-    }
-
-    public void setEventCity(String eventCity) {
-        this.eventCity = eventCity;
-    }
-
-    public String getEventDetailedAddress() {
-        return eventDetailedAddress;
-    }
-
-    public void setEventDetailedAddress(String eventDetailedAddress) {
-        this.eventDetailedAddress = eventDetailedAddress;
-    }
-
-    public Timestamp getEventAddTime() {
-        return eventAddTime;
-    }
-
-    public void setEventAddTime(Timestamp eventAddTime) {
-        this.eventAddTime = eventAddTime;
-    }
-
-    public Timestamp getEventRemoveTime() {
-        return eventRemoveTime;
-    }
-
-    public void setEventRemoveTime(Timestamp eventRemoveTime) {
-        this.eventRemoveTime = eventRemoveTime;
-    }
-
-    public Timestamp getEventStartTime() {
-        return eventStartTime;
-    }
-
-    public void setEventStartTime(Timestamp eventStartTime) {
-        this.eventStartTime = eventStartTime;
-    }
-
-    public Timestamp getEventEndTime() {
-        return eventEndTime;
-    }
-
-    public void setEventEndTime(Timestamp eventEndTime) {
-        this.eventEndTime = eventEndTime;
-    }
-
-    public Integer getRegisteredCount() {
-        return registeredCount;
-    }
-
-    public void setRegisteredCount(Integer registeredCount) {
-        this.registeredCount = registeredCount;
-    }
-
-    public EventStatus getEventStatus() {
-        return eventStatus;
-    }
-
-    public void setEventStatus(EventStatus eventStatus) {
-        this.eventStatus = eventStatus;
-    }
-
-    public Integer getTotalRating() {
-        return totalRating;
-    }
-
-    public void setTotalRating(Integer totalRating) {
-        this.totalRating = totalRating;
-    }
-
-    public Integer getEventRatingCount() {
-        return eventRatingCount;
-    }
-
-    public void setEventRatingCount(Integer eventRatingCount) {
-        this.eventRatingCount = eventRatingCount;
-    }
-
-    public EventCheckoutStatus getEventCheckoutStatus() {
-        return eventCheckoutStatus;
-    }
-
-    public void setEventCheckoutStatus(EventCheckoutStatus eventCheckoutStatus) {
-        this.eventCheckoutStatus = eventCheckoutStatus;
-    }
-
-    public Timestamp getEventCheckoutTime() {
-        return eventCheckoutTime;
-    }
-
-    public void setEventCheckoutTime(Timestamp eventCheckoutTime) {
-        this.eventCheckoutTime = eventCheckoutTime;
-    }
-
-    public Set<EventComment> getEventComments() {
-        return eventComments;
-    }
-
-    public void setEventComments(Set<EventComment> eventComments) {
-        this.eventComments = eventComments;
-    }
-
-    public Set<TicketType> getTicketTypes() {
-        return ticketTypes;
-    }
-
-    public void setTicketTypes(Set<TicketType> ticketTypes) {
-        this.ticketTypes = ticketTypes;
-    }
-
     @Override
     public String toString() {
         return "Event{" +

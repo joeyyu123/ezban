@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.ezban.birthdaycouponholder.model.BirthdayCouponHolder;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -88,6 +89,7 @@ public class Member implements Serializable {
 	
 	//生日優惠券用
 	@OneToMany(mappedBy = "member")
+	@JsonBackReference
     private Set<BirthdayCouponHolder> couponHolders;
 
 	public Member() {
