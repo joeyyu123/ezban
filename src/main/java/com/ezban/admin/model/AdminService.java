@@ -1,7 +1,5 @@
 package com.ezban.admin.model;
 
-
-
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
