@@ -1,9 +1,6 @@
 package com.ezban.productorder.model;
 
-import com.ezban.birthdaycoupon.model.BirthdayCoupon;
-import com.ezban.member.model.Member;
-import com.ezban.product.model.Product;
-import com.ezban.productorderdetail.model.ProductOrderDetail;
+import com.ezban.productorderdetail.model.AddProductOrderDetailDTO;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -51,13 +48,7 @@ public class AddProductOrderDTO {
 
     private String memberRemainingPoints;
 
-    private List<Product> productList;
-
-    private List<ProductOrderDetail> productOrderDetail;
-
-    public AddProductOrderDTO() {
-
-    }
+    private List<AddProductOrderDetailDTO> productOrderDetail;
 
     public Integer getProductOrderNo() {
         return productOrderNo;
@@ -179,19 +170,11 @@ public class AddProductOrderDTO {
         this.memberRemainingPoints = memberRemainingPoints;
     }
 
-    public List<Product> getProductList() {
-        return productList;
-    }
-
-    public void setProductList(List<Product> productList) {
-        this.productList = productList;
-    }
-
-    public List<ProductOrderDetail> getProductOrderDetail() {
+    public List<AddProductOrderDetailDTO> getProductOrderDetail() {
         return productOrderDetail;
     }
 
-    public void setProductOrderDetail(List<ProductOrderDetail> productOrderDetail) {
+    public void setProductOrderDetail(List<AddProductOrderDetailDTO> productOrderDetail) {
         this.productOrderDetail = productOrderDetail;
     }
 }
