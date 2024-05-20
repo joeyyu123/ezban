@@ -4,15 +4,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -106,7 +98,7 @@ public class ProductOrder implements java.io.Serializable {
     @Max(value = 1, message = "* 商品訂單撥款狀態不正確 !")
     private Byte productOrderAllocationStatus;
 
-    @OneToMany(mappedBy = "productOrder")
+    @OneToMany(mappedBy = "productOrder", cascade = CascadeType.ALL)
     private List<ProductOrderDetail> productOrderDetail;
 
     public ProductOrder() {
