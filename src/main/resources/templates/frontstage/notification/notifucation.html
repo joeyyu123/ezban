@@ -38,26 +38,36 @@
         <div id="notifications"></div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const notificationContainer = document.getElementById('notifications');
+    document.addEventListener('DOMContentLoaded', () => {
+        const notificationContainer = document.getElementById('notifications');
 
-            // 建立一個 WebSocket 連接
-            const socket = new WebSocket('ws://localhost:8080/notifications');
+        // 建立一個 WebSocket 連接
+        const socket = new WebSocket('ws://localhost:8080/notifications');
 
-            // 接收到訊息時觸發
-            socket.onmessage = (event) => {
-                const notification = JSON.parse(event.data);
-                displayNotification(notification);
-            };
+        // 接收到訊息時觸發
+        socket.onmessage = (event) => {
+            const notification = JSON.parse(event.data);
+            displayNotification(notification);
+        };
 
-            // 顯示通知
-            function displayNotification(notification) {
-                const notificationElement = document.createElement('div');
-                notificationElement.className = 'notification';
-                notificationElement.innerText = notification.message;
-                notificationContainer.appendChild(notificationElement);
-            }
-        });
+        // 顯示通知
+        function displayNotification(notification) {
+            const notificationElement = document.createElement('div');
+            notificationElement.className = 'notification';
+            notificationElement.innerText = notification.message;
+            notificationContainer.appendChild(notificationElement);
+        }
+
+        // 獲取以前的通知
+        fetch('/notifications')
+            .then(response => response.json())
+            .then(notifications => {
+                notifications.forEach(notification => {
+                    displayNotification(notification);
+                });
+            });
+    });
+
     </script>
 </body>
 </html>
