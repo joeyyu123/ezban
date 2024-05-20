@@ -8,6 +8,9 @@
         .container {
             width: 85%;
         }
+        .event-container {
+            min-height: 68vh;
+        }
 
         .header-background {
             background: url('https://placehold.co/600x200') no-repeat center center;
@@ -83,7 +86,7 @@
 <section class=" section">
     <div class="container">
         <div class="container-fluid">
-            <div class="container">
+            <div class="event-container container">
                 <img id="imagePreview" th:if="${event.eventImg != null}" class="" th:src="'data:image/jpeg;base64, '+${event.getEventImgBase64()}" alt="Event Banner">
                 <img id="imagePreview" th:if="${event.eventImg == null}" class="" th:src="@{/images/未上傳圖片.jpg}"
 

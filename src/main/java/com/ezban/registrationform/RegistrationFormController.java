@@ -40,7 +40,7 @@ public class RegistrationFormController {
         }
         model.addAttribute("registrationForm", registrationFormService.findByEventNo(eventNo));
         model.addAttribute("fieldExamples", fieldExampleService.findAllSortByIdNumber());
-        return "/backstage/event/registrationForm";
+        return "/backstage/event/registration-form";
     }
 
     @PostMapping("{eventNo}/form")

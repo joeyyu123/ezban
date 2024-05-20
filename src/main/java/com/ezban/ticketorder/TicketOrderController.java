@@ -5,7 +5,6 @@ import com.ezban.eventcoupon.model.EventCoupon;
 import com.ezban.eventcoupon.model.EventCouponService;
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberService;
-import com.ezban.qrcodeticket.model.QrcodeTicketService;
 import com.ezban.registrationform.model.RegistrationFormService;
 import com.ezban.ticketorder.model.InsufficientTicketQuantityException;
 import com.ezban.ticketorder.model.Service.TicketOrderEmailService;
@@ -16,7 +15,6 @@ import com.ezban.ticketorder.model.TicketOrderStatus;
 import com.ezban.ticketorder.model.dto.Dto;
 import com.ezban.ticketorder.model.dto.TicketOrderRegistrationForm;
 import com.ezban.ticketorderdetail.model.TicketOrderDetail;
-import com.ezban.ticketorderdetail.model.TicketOrderDetailService;
 import com.google.gson.Gson;
 import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +65,7 @@ public class TicketOrderController {
             model.addAttribute("ticketOrders", ticketOrderService.findByMemberNoAndStatus(member, ticketOrderStatus));
             model.addAttribute("orderStatus", orderStatus);
         }
-        return "/frontstage/event/ticket_orders";
+        return "/frontstage/event/ticket-orders";
     }
 
     @DeleteMapping("/events/orders/{ticketOrderNo}")
@@ -180,7 +178,7 @@ public class TicketOrderController {
         } else {
             model.addAttribute("message", "付款失敗");
         }
-        return "/frontstage/event/order_result";
+        return "/frontstage/event/order-result";
     }
 
     private List<Map<String, Integer>> getOrderDetailList(List<TicketOrderRegistrationForm> ticketOrders) {

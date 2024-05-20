@@ -6,6 +6,9 @@
     <link th:include="frontstage/index2 :: head">
 
     <style>
+        .event-container {
+            min-height: 68vh;
+        }
 
     </style>
 </head>
@@ -16,8 +19,8 @@
 
 <!-- 頁面內容 -->
 <section class=" section">
-    <div class="container">
-        <div style="text-align: center;">
+    <div class="container event-container">
+        <div style="text-align: center; margin-top: 30vh">
             <h1 th:text="${message}"></h1>
 
             <button type="button" class="btn btn-primary" onclick="location.href='/'">返回首頁</button>

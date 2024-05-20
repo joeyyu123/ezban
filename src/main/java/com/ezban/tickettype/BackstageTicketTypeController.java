@@ -38,7 +38,7 @@ public class BackstageTicketTypeController {
         model.addAttribute("eventNo", eventNo);
         model.addAttribute("event", eventService.findById(eventNo));
 
-        return "/backstage/event/ticketType";
+        return "/backstage/event/ticket-type";
     }
 
     @PostMapping("")

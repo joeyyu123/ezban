@@ -70,6 +70,6 @@ public class BackstageTicketOrderController {
         model.addAttribute("ticketOrders", ticketOrders);
         model.addAttribute("orderStatus", orderStatus);
         model.addAttribute("event", event);
-        return "backstage/event/ticket_orders";
+        return "/backstage/event/ticket-orders";
     }
 }

@@ -6,6 +6,9 @@
     <link th:include="frontstage/index2 :: head">
 
     <style>
+        .event-container {
+            min-height: 50vh;
+        }
         .product-content {
             height: 60px;
         }
@@ -133,7 +136,7 @@
 
 <!-- 頁面內容 -->
 <section class="events section">
-    <div class="container">
+    <div class="container event-container">
 
         <div class="row">
             <div class="filter-column">
@@ -274,6 +277,23 @@
                     return;
                 }
                 data.forEach(event => {
+                    // 格式化時間
+                    const eventStartTime = new Date(event.eventStartTime).toLocaleString('zh-Hant', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                    }).replace(/\//g, '-').replace(',', '');
+                    const eventEndTime = new Date(event.eventEndTime).toLocaleString('zh-Hant', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                    }).replace(/\//g, '-').replace(',', '');
                     const eventHtml = `
                         <div class="event-item">
                             <div class="product-item">
@@ -292,7 +312,7 @@
                                 </div>
                                 <div class="product-content event-content">
                                     <h4><a href="/events/${event.eventNo}">${event.eventName}</a></h4>
-                                    <p class="date">${event.eventStartTime} ~ ${event.eventEndTime}</p>
+                                    <p class="date">${eventStartTime} ~ ${eventEndTime}</p>
                                     <div class="small-info">
                                         <div class="event-location">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#989797" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">

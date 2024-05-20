@@ -3,7 +3,6 @@ package com.ezban.ticketregistration;
 import com.ezban.event.model.Event;
 import com.ezban.event.model.Service.EventService;
 import com.ezban.fieldExample.model.FieldExample;
-import com.ezban.registrationform.model.RegistrationForm;
 import com.ezban.registrationform.model.RegistrationFormService;
 import com.ezban.ticketregistration.dto.Person;
 import com.ezban.ticketregistration.dto.Response;
@@ -56,7 +55,7 @@ public class BackstageTicketRegistrationController {
         model.addAttribute("ticketRegistrations", ticketRegistrations);
         model.addAttribute("event", event);
 
-        return "/backstage/event/ticket_registrations";
+        return "/backstage/event/ticket-registrations";
     }
 
     /**
