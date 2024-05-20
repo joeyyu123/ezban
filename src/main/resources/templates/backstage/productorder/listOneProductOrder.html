@@ -66,6 +66,49 @@
         border-top: 2px dashed lightgray;
         margin: 0 0;
     }
+        /* 灰色小點樣式 */
+        .dot-lightgray::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 5px; /* 设置小点与文字之间的间距 */
+            border-radius: 50%;
+            background-color: lightgray;
+        }
+
+        /* 蓝色小點樣式 */
+        .dot-blue::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 5px;
+            border-radius: 50%;
+            background-color: blue;
+        }
+
+        /* 紅色小點樣式 */
+        .dot-red::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 5px;
+            border-radius: 50%;
+            background-color: red;
+        }
+
+        /* 橘色小點樣式 */
+        .dot-orange::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 5px;
+            border-radius: 50%;
+            background-color: orange;
+        }
 </style>
 
 <body style="background-color: #f4e9e6">
@@ -119,15 +162,20 @@
                             <div class="full-line"></div>
                             <span style="font-weight: bold; font-size: 20px; color: lightgray"> 狀態資訊: </span><br/>
                             <span> 付款狀態: </span>
-                            <span th:text="${productOrder.productPaymentStatus == 0 ? '已付款' : '已退款'}"></span>
-                            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span> 處理狀態: </span><span th:switch="${productOrder.productProcessStatus}">
-                            <span th:case="0">備貨中</span>
-                            <span th:case="1" style="color: red">已取消</span>
-                            <span th:case="2">已出貨</span>
-                            <span th:case="3">已退貨</span>
-                            <span th:case="4">已結案</span>
-                            <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span> 撥款狀態: </span><span
-                                th:text="${productOrder.productOrderAllocationStatus == 0 ? '未撥款' : '已撥款'}"></span><br/>
+                            <span th:if="${productOrder.productPaymentStatus == 0}"><span class="dot-blue"></span>已付款</span>
+                            <span th:if="${productOrder.productPaymentStatus == 1}"><span class="dot-red"></span>已退款</span>
+                            <span>&nbsp;&nbsp;</span><span> 處理狀態: </span><span
+                                th:switch="${productOrder.productProcessStatus}">
+                            <span th:case="0"><span class="dot-lightgray"></span>備貨中</span>
+                            <span th:case="1" style="color: red"><span class="dot-orange"></span>已取消</span>
+                            <span th:case="2"><span class="dot-blue"></span>已出貨</span>
+                            <span th:case="3"><span class="dot-red"></span>已退貨</span>
+                            <span th:case="4"><span class="dot-black"></span>已結案</span>
+                            <span>&nbsp;&nbsp;</span><span> 撥款狀態: </span>
+                            <span th:if="${productOrder.productOrderAllocationStatus == 0}"><span
+                                    class="dot-lightgray"></span>未撥款</span><br/>
+                            <span th:if="${productOrder.productOrderAllocationStatus == 1}"><span
+                                    class="dot-blue"></span>已撥款</span><br/>
                             </span>
                         </table>
                     </div>
