@@ -8,6 +8,7 @@ import com.ezban.member.model.MemberRepository;
 import com.ezban.member.model.MemberService;
 import com.ezban.product.model.Product;
 import com.ezban.product.model.ProductRepository;
+import com.ezban.productorderdetail.model.AddProductOrderDetailDTO;
 import com.ezban.productorderdetail.model.ProductOrderDetail;
 import com.ezban.productorderdetail.model.ProductOrderDetailRepository;
 import com.ezban.ticketorder.model.TicketOrder;
@@ -39,22 +40,31 @@ public class ProductOrderService {
 
     // 新增訂單
     public void addProductOrder(@Valid AddProductOrderDTO addProductOrderDTO) {
-        // 獲取購買的商品列表
-        List<Product> productList = addProductOrderDTO.getProductList();
 
-        // 創建一個Map，用於將商品按照廠商分類
-        Map<Host, List<Product>> productMap = new HashMap<>();
+        // 獲取購買的商品明細列表
+        List<AddProductOrderDetailDTO> productOrderDetailList = addProductOrderDTO.getProductOrderDetail();
 
-        // 走訪商品列表，將商品按照廠商分類
-        for (Product product : productList) {
-            Host host = product.getHost();
-            productMap.computeIfAbsent(host, k -> new ArrayList<>()).add(product);
+        // 創建一個Map，用於將商品明細按照廠商分類
+        Map<Host, List<AddProductOrderDetailDTO>> productDetailMap = new HashMap<>();
+
+        // 查詢所有涉及的產品並按照廠商分類
+        for (AddProductOrderDetailDTO orderDetailDTO : productOrderDetailList) {
+            Optional<Product> productOptional = productRepository.findByProductNo(Integer.valueOf(orderDetailDTO.getProductNo()));
+
+            if (productOptional.isPresent()) {
+                Product product = productOptional.get();
+                Host host = product.getHost();
+                productDetailMap.computeIfAbsent(host, k -> new ArrayList<>()).add(orderDetailDTO);
+            } else {
+                throw new NoSuchElementException("未找到產品，產品編號: " + orderDetailDTO.getProductNo());
+            }
         }
 
-        // 商品按照廠商分類完後，分別創建各自的訂單
-        for (Map.Entry<Host, List<Product>> entry : productMap.entrySet()) {
+        // 商品明細按照廠商分類完後，分別創建各自的訂單
+        for (Map.Entry<Host, List<AddProductOrderDetailDTO>> entry : productDetailMap.entrySet()) {
+            List<AddProductOrderDetailDTO> hostProductOrderDetails = entry.getValue();
+
             ProductOrder productOrder = new ProductOrder();
-            productOrder.setProductList(entry.getValue()); // 商品列表
 
             // 轉換 DTO 中的會員編號
             String memberNoString = addProductOrderDTO.getMemberNo();
@@ -79,34 +89,40 @@ public class ProductOrderService {
                 productOrder.setProductPrice(productPrice);
 
                 // 轉換並設置 memberPoints
-                Integer memberPoints = Integer.valueOf(addProductOrderDTO.getMemberPoints());
-                productOrder.setMemberPoints(memberPoints);
+                if (addProductOrderDTO.getMemberPoints() != null) {
+                    Integer memberPoints = Integer.valueOf(addProductOrderDTO.getMemberPoints());
+                    productOrder.setMemberPoints(memberPoints);
+                }
 
                 // 查詢並設置生日優惠券
-                String birthdayCouponNoString = addProductOrderDTO.getBirthdayCouponNo();
-                Integer birthdayCouponNo;
-                try {
-                    birthdayCouponNo = Integer.valueOf(birthdayCouponNoString);
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("無效的生日優惠券編號: " + birthdayCouponNoString, e);
-                }
-                Optional<BirthdayCoupon> birthdayCouponOptional = birthdayCouponRepository.findById(birthdayCouponNo);
-                if (birthdayCouponOptional.isPresent()) {
-                    BirthdayCoupon birthdayCoupon = birthdayCouponOptional.get();
-                    productOrder.setBirthdayCoupon(birthdayCoupon);
-                } else {
-                    throw new NoSuchElementException("未找到生日優惠券，編號: " + birthdayCouponNo);
+                if (addProductOrderDTO.getBirthdayCouponNo() != null) {
+                    String birthdayCouponNoString = addProductOrderDTO.getBirthdayCouponNo();
+                    Integer birthdayCouponNo;
+                    try {
+                        birthdayCouponNo = Integer.valueOf(birthdayCouponNoString);
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("無效的生日優惠券編號: " + birthdayCouponNoString, e);
+                    }
+                    Optional<BirthdayCoupon> birthdayCouponOptional = birthdayCouponRepository.findById(birthdayCouponNo);
+                    if (birthdayCouponOptional.isPresent()) {
+                        BirthdayCoupon birthdayCoupon = birthdayCouponOptional.get();
+                        productOrder.setBirthdayCoupon(birthdayCoupon);
+                    } else {
+                        throw new NoSuchElementException("未找到生日優惠券，編號: " + birthdayCouponNo);
+                    }
                 }
 
                 // 轉換並設置 productCouponDiscount
-                Integer productCouponDiscount = Integer.valueOf(addProductOrderDTO.getProductCouponDiscount());
-                productOrder.setProductCouponDiscount(productCouponDiscount);
+                if (addProductOrderDTO.getProductCouponDiscount() != null) {
+                    Integer productCouponDiscount = Integer.valueOf(addProductOrderDTO.getProductCouponDiscount());
+                    productOrder.setProductCouponDiscount(productCouponDiscount);
+                }
 
                 // 轉換並設置 productCheckoutAmount
                 Integer productCheckoutAmount = Integer.valueOf(addProductOrderDTO.getProductCheckoutAmount());
                 productOrder.setProductCheckoutAmount(productCheckoutAmount);
 
-                // 其他產品訂單相關訊息
+                // 其他
                 productOrder.setRecipient(addProductOrderDTO.getRecipient());
                 productOrder.setRecipientPhone(addProductOrderDTO.getRecipientPhone());
                 productOrder.setRecipientAddress(addProductOrderDTO.getRecipientAddress());
@@ -117,32 +133,31 @@ public class ProductOrderService {
 
                 // 處理訂單明細
                 List<ProductOrderDetail> orderDetails = new ArrayList<>();
-                for (ProductOrderDetail productOrderDetail : addProductOrderDTO.getProductOrderDetail()) {
+                for (AddProductOrderDetailDTO orderDetailDTO : hostProductOrderDetails) {
                     ProductOrderDetail orderDetail = new ProductOrderDetail();
 
                     // 將訂單設置為廠商各自明細的訂單
                     orderDetail.setProductOrder(productOrder);
 
-                    // 使用 productOrderDetail.getProduct().getProductNo() 獲取產品編號的字串
-//                    String productNoString = productOrderDetail.getProduct().getProductNo();
+                    // 查詢產品
+                    Product product = productRepository.findByProductNo(Integer.valueOf(orderDetailDTO.getProductNo())).orElseThrow(
+                            () -> new NoSuchElementException("未找到產品，產品編號: " + orderDetailDTO.getProductNo())
+                    );
 
-                    // 將字串轉換為整數
-//                    Integer productNo = Integer.valueOf(productNoString);
-
-                    // 創建 Product 對象並設置 productNo
-//                    Product product = new Product();
-//                    product.setProductNo(productNo);
-
-                    // 將 product 設置到 ProductOrderDetail 中
-//                    orderDetail.setProduct(product);
+                    // 設置產品
+                    orderDetail.setProduct(product);
 
                     // 設置數量和價格及評論狀態預設為0(未評論)
-                    orderDetail.setProductQty(productOrderDetail.getProductQty());
-                    orderDetail.setProductPrice(productOrderDetail.getProductPrice());
-                    orderDetail.setCommentsStatus((byte)0);
+                    orderDetail.setProductQty(orderDetailDTO.getProductQty());
+                    orderDetail.setProductPrice(orderDetailDTO.getProductPrice());
+                    orderDetail.setCommentsStatus((byte) 0);
 
+                    // 將訂單明細添加到列表中
+                    orderDetails.add(orderDetail);
                 }
-                productOrder.setProductOrderDetail(orderDetails); // 將商品訂單明細設置到商品訂單中
+
+                // 將商品訂單明細設置到商品訂單中
+                productOrder.setProductOrderDetail(orderDetails);
 
                 // 保存訂單
                 repository.save(productOrder);
@@ -152,6 +167,7 @@ public class ProductOrderService {
             }
         }
     }
+
 
 
     /*
