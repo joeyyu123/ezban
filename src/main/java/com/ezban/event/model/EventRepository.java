@@ -4,13 +4,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.sql.Timestamp;
 import java.util.List;
 
-public interface EventRepository extends JpaRepository<Event, Integer> {
+public interface EventRepository extends JpaRepository<Event, Integer>, JpaSpecificationExecutor<Event> {
     List<Event> findByHostHostNo(Integer HostNo);
 
     List<Event> findByEventCityAndEventStatus(String eventCity,EventStatus eventStatus, Pageable pageable);
@@ -43,15 +44,6 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
     List<Event> findByEventCityAndEventCategoryEventCategoryNoAndEventStatus(String city, Integer categoryNo, EventStatus eventStatus, Pageable pageable);
 
-    @Query("SELECT e FROM Event e WHERE e.eventStatus = :status AND " +
-            "(:cities IS NULL OR e.eventCity IN :cities) AND " +
-            "(:categoryNos IS NULL OR e.eventCategory.eventCategoryNo IN :categoryNos) AND " +
-            "(:eventName IS NULL OR e.eventName LIKE %:eventName%)")
-    List<Event> findByEventCityAndEventCategoryAndEventName(@Param("status") EventStatus status,
-                                                            @Param("cities") List<String> cities,
-                                                            @Param("categoryNos") List<Integer> categoryNos,
-                                                            @Param("eventName") String eventName,
-                                                            Pageable pageable);
 
     List<Event> findTop6ByOrderByVisitCountDesc();
 }

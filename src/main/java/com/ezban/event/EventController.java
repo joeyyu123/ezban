@@ -49,21 +49,16 @@ public class EventController {
 
     @GetMapping("")
     public String getEvents(Model model,
-                            @RequestParam(required = false) String city,
-                            @RequestParam(required = false) Integer categoryNo) {
+                            @RequestParam(required = false) List<String> cities,
+                            @RequestParam(required = false) List<Integer> categoryNos,
+                            @RequestParam(required = false) String eventName) {
         List<Event> events;
         List<EventCategory> eventCategories = eventCategoryService.findAll();
         List<String> eventCities = eventService.findDistinctEventCity();
         List<EventDto> dtoList = new ArrayList<>();
 
-        if (city != null && categoryNo != null) {
-            events = eventService.findByEventCityAndEventCategory(city, categoryNo, PageRequest.of(0, PAGE_SIZE));
-        }
-        else if (city != null) {
-            events = eventService.findByEventCity(city, PageRequest.of(0, PAGE_SIZE));
-        }
-        else if (categoryNo != null) {
-            events = eventService.findByEventCategoryNo(categoryNo, PageRequest.of(0, PAGE_SIZE));
+        if ((cities != null && !cities.isEmpty()) || (categoryNos != null && !categoryNos.isEmpty()) || (eventName != null && !eventName.isEmpty())) {
+            events = eventService.findByEventCityAndEventCategoryAndEventName(cities, categoryNos, eventName, PageRequest.of(0, PAGE_SIZE));
         } else {
             events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(0, PAGE_SIZE));
         }
@@ -78,27 +73,16 @@ public class EventController {
         return "/frontstage/event/events";
     }
 
-    /**
-     * 所有活動的分頁功能
-     *
-     * @param page
-     * @return
-     */
     @GetMapping("/page/{page}")
     @ResponseBody
     public ResponseEntity<List<EventDto>> getEventsByPage(@PathVariable("page") int page,
-                                                          @RequestParam(required = false) String city,
-                                                          @RequestParam(required = false) Integer categoryNo) {
+                                                          @RequestParam(required = false) List<String> cities,
+                                                          @RequestParam(required = false) List<Integer> categoryNos,
+                                                          @RequestParam(required = false) String eventName) {
         List<Event> events;
 
-        if (city != null && categoryNo != null) {
-            events = eventService.findByEventCityAndEventCategory(city, categoryNo, PageRequest.of(page - 1, PAGE_SIZE));
-        }
-        else if (city != null) {
-            events = eventService.findByEventCity(city, PageRequest.of(page - 1, PAGE_SIZE));
-        }
-        else if (categoryNo != null) {
-            events = eventService.findByEventCategoryNo(categoryNo, PageRequest.of(page - 1, PAGE_SIZE));
+        if ((cities != null && !cities.isEmpty()) || (categoryNos != null && !categoryNos.isEmpty()) || (eventName != null && !eventName.isEmpty())) {
+            events = eventService.findByEventCityAndEventCategoryAndEventName(cities, categoryNos, eventName, PageRequest.of(page - 1, PAGE_SIZE));
         } else {
             events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(page - 1, PAGE_SIZE));
         }

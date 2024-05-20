@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
 import java.security.Principal;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -74,8 +76,40 @@ public class EventService implements ServiceDemo<Event> {
         return eventRepository.findByEventCategoryEventCategoryNoAndEventStatus(categoryNo, EventStatus.PUBLISHED, pageable);
     }
 
+    /**
+     * 複合查詢
+     * @param cities
+     * @param categoryNos
+     * @param eventName
+     * @param pageable
+     * @return
+     */
     public List<Event> findByEventCityAndEventCategoryAndEventName(List<String> cities, List<Integer> categoryNos, String eventName, Pageable pageable) {
-        return eventRepository.findByEventCityAndEventCategoryAndEventName(EventStatus.PUBLISHED, cities, categoryNos, eventName, pageable);
+        Specification<Event> spec = (root, query, criteriaBuilder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            // 查詢狀態為 PUBLISHED 的活動
+            predicates.add(criteriaBuilder.equal(root.get("eventStatus"), EventStatus.PUBLISHED));
+
+            // 查詢多個城市
+            if (cities != null && !cities.isEmpty()) {
+                predicates.add(root.get("eventCity").in(cities));
+            }
+
+            // 查詢多個類別
+            if (categoryNos != null && !categoryNos.isEmpty()) {
+                predicates.add(root.get("eventCategory").get("eventCategoryNo").in(categoryNos));
+            }
+
+            // 查詢活動名稱
+            if (eventName != null && !eventName.isEmpty()) {
+                predicates.add(criteriaBuilder.like(root.get("eventName"), "%" + eventName + "%"));
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+        };
+
+        return eventRepository.findAll(spec, pageable).getContent();
     }
 
     public boolean isAuthenticated(Principal principal, Event event) {
