@@ -80,4 +80,12 @@ public class PageController {
 	public String showadminmanage() {
 		return "backstage/adminmanage/adminmanage";
 	}
+	@GetMapping("/eventreportback")
+	public String showeventreportback() {
+		return "backstage/adminmanage/eventreportback";
+	}
+	@GetMapping("/eventreport")
+	public String showeventreport() {
+		return "frontstage/commentreport/eventreport";
+	}
 }
