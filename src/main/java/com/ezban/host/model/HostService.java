@@ -194,6 +194,9 @@ public class HostService {
 	public Optional<Host> findHostByAccount(String account) {
 		return hostRepository.findByHostAccount(account);
 	}
+	public Optional<Host> findHostByHostNo(String hostNo) {
+		return hostRepository.findHostByHostNo(Integer.valueOf(hostNo));
+	}
 
 	public void saveHost(Host host) {
 		hostRepository.save(host);
@@ -213,4 +216,8 @@ public class HostService {
 		return getOneHost(hostNo).getEventCoupons();
 	}
 
+	public Host findByHostName(String hostName) {
+		return hostRepository.findByHostName(hostName).orElse(null);
+	}
 }
+

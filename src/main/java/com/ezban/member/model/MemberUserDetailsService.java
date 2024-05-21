@@ -9,7 +9,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
+@Service
 public class MemberUserDetailsService  implements UserDetailsService{
 	
 	@Autowired
@@ -25,7 +27,7 @@ public class MemberUserDetailsService  implements UserDetailsService{
             Member mem = query.getSingleResult();
 
             return User.builder()
-                .username(mem.getMemberMail())
+                .username(String.valueOf(mem.getMemberNo()))
                 .password(mem.getMemberPwd())
                 .roles("Member") // 您可以根據需求設置適當的角色
                 .build();

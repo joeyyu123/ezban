@@ -35,7 +35,7 @@ public class AdminLoginController {
             if (password.equals(admin.getAdminPwd())) { // 直接比較未加密的密碼
                 admin.setAdminLogin(LocalDateTime.now());
                 adminRepository.save(admin);
-                return new RedirectView("/backstage"); // 更新重定向到 backstage/index.html
+                return new RedirectView("/adminmanage"); // 更新重定向到 backstage/index.html
             }
         }
         return new RedirectView("/adminlogin.html?error=true"); // 登入失敗時重定向到登入頁面並顯示錯誤訊息

@@ -67,12 +67,15 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
     @Transactional
     public List<TicketOrderDetail> createOrder(Member member, List<Map<String, Integer>> orderDetailList) throws InsufficientTicketQuantityException {
         TicketOrder ticketOrder = new TicketOrder();
+
+        Integer totalOrderAmount = this.calculateTotalAmount(orderDetailList);
+
         ticketOrder.setMember(member);
         ticketOrder.setTicketOrderTime(new Timestamp(System.currentTimeMillis()));
-        ticketOrder.setTicketOrderAmount(this.calculateTotalAmount(orderDetailList));
+        ticketOrder.setTicketOrderAmount(totalOrderAmount);
         ticketOrder.setTicketOrderStatus(TicketOrderStatus.PROCESSING);
         ticketOrder.setTicketOrderPaymentStatus(TicketOrderPaymentStatus.UNPAID);
-        ticketOrder.setTicketCheckoutAmount(0);
+        ticketOrder.setTicketCheckoutAmount(totalOrderAmount);
 
         ticketOrder = this.add(ticketOrder);
 
@@ -81,7 +84,7 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
             TicketType ticketType = ticketTypeService.findById(orderDetail.get("ticketTypeNo"));
 
             if (ticketType.getRemainingTicketQty() < orderDetail.get("ticketTypeQty")){
-                throw new InsufficientTicketQuantityException("票券已售完，請重新選擇。");
+                throw new InsufficientTicketQuantityException(ticketType.getTicketTypeName() + "剩餘票數不足");
             }
             ticketType.setRemainingTicketQty(ticketType.getRemainingTicketQty() - orderDetail.get("ticketTypeQty"));
 
@@ -150,6 +153,7 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
      * 根據 ticketOrder  建立對應的qrcodeTickets到資料庫
      */
     public List<QrcodeTicket> createQrcodeTickets(TicketOrder ticketOrder) {
+        Member member = ticketOrder.getMember();
         Set<TicketOrderDetail> ticketOrderDetails = ticketOrder.getTicketOrderDetails();
         List<QrcodeTicket> qrcodeTickets = new ArrayList<>();
 
@@ -163,8 +167,6 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
                 for (int j = 0; j < i; j++) {
                     QrcodeTicket qrcodeTicket = new QrcodeTicket();
                     qrcodeTicket.setTicketOrderDetail(ticketOrderDetail);
-                    // TODO: 先用1號會員， 之後改成從session 取得 memberNo
-                    Member member = memberService.getMemberById(1);
 
                     qrcodeTicket.setMember(member);
                     qrcodeTicket.setTicketUsageStatus((byte) 0);
@@ -192,6 +194,10 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
         return ticketOrderRepository.findByEventNoAndStatus(event.getEventNo(), orderStatus, Sort.by("ticketOrderTime").descending());
     }
 
+    public List<TicketOrder> findByEventNoAndTicketOrderNo(Integer eventNo, Integer ticketOrderNo) {
+        return ticketOrderRepository.findByEventNoAndTicketOrderNo(eventNo,ticketOrderNo,Sort.by("ticketOrderTime").descending());
+    }
+
     public boolean isAuthorizedForTicketOrder(Principal principal, Integer ticketOrderNo){
         TicketOrder ticketOrder = ticketOrderRepository.findById(ticketOrderNo).orElse(null);
         if(ticketOrder == null){
@@ -204,7 +210,5 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
         return ticketOrder.getTicketOrderDetails().iterator().next().getTicketType().getEvent().getHost().getHostNo().equals(host.getHostNo());
     }
 
-    public List<TicketOrder> findByEventNoAndTicketOrderNo(Integer eventNo, Integer ticketOrderNo) {
-        return ticketOrderRepository.findByEventNoAndTicketOrderNo(eventNo,ticketOrderNo,Sort.by("ticketOrderTime").descending());
-    }
+
 }

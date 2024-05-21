@@ -5,12 +5,14 @@ import java.util.Optional;
 import java.util.HashMap;
 import java.util.UUID;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,7 +44,7 @@ public class LoginController {
 	@PostMapping("/login")
 	@ResponseBody
 	@Transactional  
-    public ResponseEntity<String> login(@RequestBody Member LoginRequest) {
+    public ResponseEntity<String> login(@RequestBody Member LoginRequest, HttpSession session) {
         Optional<Member> optionalMember = memRepository.findByMemberMail(LoginRequest.getMemberMail());
         if (optionalMember.isPresent()) {
             Member mem = optionalMember.get();
@@ -55,7 +57,10 @@ public class LoginController {
     }
 
 	@GetMapping("/loginPage")
-	public String getLogin() {
+	public String getLogin(Model model, @RequestParam(value = "error", required = false) String error) {
+		if (error != null) {
+			model.addAttribute("error", "帳號或密碼錯誤");
+		}
 		return "frontstage/login";
 	}
 	

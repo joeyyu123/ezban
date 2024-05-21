@@ -28,7 +28,6 @@
         .ticket-name {
             font-size: 24px;
             color: black;
-
         }
 
         .ticket-price {
@@ -41,13 +40,13 @@
         }
 
         .ticket-type {
-            /*border: 1px solid black;*/
             background-color: #f3eceb;
             border-radius: 5px;
             display: flex;
             flex-direction: row;
             justify-content: space-between;
             margin: 15px;
+            padding: 10px;
         }
 
         .btn-circle {
@@ -60,16 +59,12 @@
             line-height: 1.42857;
         }
 
-        /*.btn-container {*/
-        /*    display: flex;*/
-        /*    flex-direction: column;*/
-        /*}*/
-
         .btn-container {
             display: flex;
             flex-direction: column;
             justify-content: center; /* 水平置中 */
             align-items: center; /* 垂直置中 */
+            margin-right: 20px;
         }
 
         .btn-plus {
@@ -97,7 +92,6 @@
             font-size: 16px;
             color: #007bff;
             padding: 10px;
-
         }
 
         .ticketType-total-price {
@@ -108,10 +102,7 @@
         }
 
         .fixed-bottom {
-            /*position: fixed;*/
-            /*bottom: 0;*/
             width: 100%;
-            /*background-color: #007bff;*/
             color: white;
             text-align: center;
             padding: 10px 0;
@@ -138,6 +129,7 @@
         .question {
             margin: 10px;
         }
+
         .header {
             font-size: 18px;
             font-weight: bold;
@@ -145,6 +137,7 @@
             border-bottom: 1px solid #dee2e6;
             margin-bottom: 20px;
         }
+
         .total {
             font-size: 16px;
             font-weight: bold;
@@ -158,22 +151,16 @@
             text-align: center;
         }
 
-        /*.card {*/
-        /*    border: none;*/
-        /*}*/
-        /*.card-header {*/
-        /*    background-color: #fff;*/
-        /*    border-bottom: 1px solid #dee2e6;*/
-        /*}*/
-        /*.btn-outline-secondary {*/
-        /*    border-color: #dee2e6;*/
-        /*}*/
-        /*.form-control {*/
-        /*    border: 1px solid #dee2e6;*/
-        /*}*/
-
         .hidden {
             display: none;
+        }
+
+        /* 新增樣式 */
+        .ticket-type-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* 垂直置中 */
+            flex: 1; /* 讓所有 .ticket-type-info 元素佔據相同的寬度 */
         }
     </style>
     <script th:src="@{/js/frontstage/event/ticketType.js}"></script>
@@ -226,9 +213,10 @@
 
                         <div class="sold-out" th:if="${ticketType.purchaseEndTime <= now}" th:text="售票時間已結束"></div>
 
-                        <div th:if="${ticketType.remainingTicketQty == 0}" class="sold-out">已售完</div>
+
                         <div th:if="${ticketType.remainingTicketQty == 0}" class="col-4 btn-container">
-                            <button class="btn btn-primary">候補</button>
+                            <div class="sold-out">已售完</div>
+                            <button class="btn btn-primary" id="notifyBtn">接收通知</button>
                             <span>如果有人取消訂票，將以email通知您</span>
                         </div>
                     </div>

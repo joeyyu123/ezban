@@ -9,17 +9,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
 @Configuration
 @EnableWebSecurity
-@Order(2)
+@Order(1)
 public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	@Autowired
 	private UserDetailsService memberUserDetailsService;
 	
@@ -28,41 +26,55 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
         auth
             .userDetailsService(memberUserDetailsService);
     }
-	
+
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .authorizeRequests()
-                .antMatchers("/login.html", 
-                             "/register.html", 
-                             "/forgotPassword").permitAll()
-//                .antMatchers("/backstage/**").authenticated()
+            .requestMatchers()
+                .antMatchers("/",
+                             "/login",
+                             "/loginPage",
+                             "/register",
+                             "/forgotPassword",
+                             "/events/**")
                 .and()
+
+            .authorizeRequests()
+                .antMatchers("/login",
+                             "loginPage",
+                             "/register",
+                             "/forgotPassword","/").permitAll()
+                .antMatchers("/events/orders/**","/events/order/**","/events/*/tickets").hasRole("Member")
+                .and()
+
             .formLogin()
                 .loginPage("/loginPage")
                 .loginProcessingUrl("/login")
-                .successHandler(authenticationSuccessHandler())
-                .failureHandler(authenticationFailureHandler())
+                .successHandler(memberAuthenticationSuccessHandler())
+                .failureHandler(memberAuthenticationFailureHandler())
                 .permitAll()
                 .and()
             .logout()
-                .logoutSuccessUrl("/index2.html")
+                .logoutSuccessUrl("/")
                 .permitAll()
+                .and()
+            .exceptionHandling()
+                .accessDeniedPage("/loginPage")
                 .and()
             .csrf().disable();
     }
 
-	@Bean(name = "memberAuthenticationSuccessHandler")
-    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+	@Bean
+    public AuthenticationSuccessHandler memberAuthenticationSuccessHandler() {
         return (request, response, authentication) -> {
-            response.sendRedirect("/frontstage");
+            response.sendRedirect("/");
         };
     }
 
-    @Bean(name = "memberAuthenticationFailureHandler")
-    public AuthenticationFailureHandler authenticationFailureHandler() {
+    @Bean
+    public AuthenticationFailureHandler memberAuthenticationFailureHandler() {
         SimpleUrlAuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();
-        failureHandler.setDefaultFailureUrl("/login.html?error=true");
+        failureHandler.setDefaultFailureUrl("/loginPage?error=true");
         failureHandler.setUseForward(false);
         return failureHandler;
     }

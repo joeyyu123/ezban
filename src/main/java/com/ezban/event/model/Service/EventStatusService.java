@@ -17,6 +17,15 @@ public class EventStatusService {
     private EventRepository eventRepository;
 
     /**
+     * 手動上架活動
+     * @param event 要上架的活動
+     */
+    public void publishEvent(Event event) {
+        event.setEventStatus(EventStatus.PUBLISHED);
+        eventRepository.save(event);
+    }
+
+    /**
      * 手動下架活動
      * @param event 要下架的活動
      */
