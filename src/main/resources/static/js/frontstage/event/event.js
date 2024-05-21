@@ -33,4 +33,33 @@ async function initMap() {
 
 
 }
-// function initMap() {
+// 查看活動評論
+function showComments() {
+    const eventNo = window.location.href.split('/')[4];
+    $.ajax({
+        url: '/api/event/comment/' + eventNo,
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            data.forEach(function (comment) {
+                let stars = '';
+                for (let i = 0; i < comment.eventCommentRate; i++) {
+                    stars += '<i class="fa-solid fa-star" style="color: #FFD43B;"></i>';
+                }
+                for (let i = comment.eventCommentRate; i < 5; i++) {
+                    stars += '<i class="fa-regular fa-star" style="color: #FFD43B;"></i>';
+                }
+                $('#comments').append(`
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">${comment.memberNo}</h5>
+                        <div class="card-rating">${stars}</div>
+                        <p class="card-text">${comment.eventCommentContent}</p>
+                    </div>
+                </div>  
+                `)
+            })
+        }
+    })
+}
+showComments();
