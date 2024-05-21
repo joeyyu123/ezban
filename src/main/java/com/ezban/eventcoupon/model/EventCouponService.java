@@ -65,7 +65,8 @@ public class EventCouponService {
         return eventCouponrepository.findAll();
     }
 
-    public List<EventCoupon>getEventCouponsByHostNo(Integer hostNo){
+    /*************************** 取得指定廠商的所有活動優惠券 **************************/
+    public List<EventCoupon> findByHostHostNo(Integer hostNo) {
         return eventCouponrepository.findByHostHostNo(hostNo);
     }
 
