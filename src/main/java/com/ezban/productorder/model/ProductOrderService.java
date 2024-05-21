@@ -5,16 +5,13 @@ import com.ezban.birthdaycoupon.model.BirthdayCouponRepository;
 import com.ezban.host.model.Host;
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberRepository;
-import com.ezban.member.model.MemberService;
 import com.ezban.product.model.Product;
 import com.ezban.product.model.ProductRepository;
 import com.ezban.productorderdetail.model.AddProductOrderDetailDTO;
 import com.ezban.productorderdetail.model.ProductOrderDetail;
 import com.ezban.productorderdetail.model.ProductOrderDetailRepository;
-import com.ezban.ticketorder.model.TicketOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -43,12 +40,11 @@ public class ProductOrderService {
 
         // 獲取購買的商品明細列表
         List<AddProductOrderDetailDTO> productOrderDetailList = addProductOrderDTO.getProductOrderDetail();
-
         // 創建一個Map，用於將商品明細按照廠商分類
         Map<Host, List<AddProductOrderDetailDTO>> productDetailMap = new HashMap<>();
-
         // 查詢所有涉及的產品並按照廠商分類
         for (AddProductOrderDetailDTO orderDetailDTO : productOrderDetailList) {
+
             Optional<Product> productOptional = productRepository.findByProductNo(Integer.valueOf(orderDetailDTO.getProductNo()));
 
             if (productOptional.isPresent()) {
@@ -58,12 +54,13 @@ public class ProductOrderService {
             } else {
                 throw new NoSuchElementException("未找到產品，產品編號: " + orderDetailDTO.getProductNo());
             }
+
         }
 
         // 商品明細按照廠商分類完後，分別創建各自的訂單
         for (Map.Entry<Host, List<AddProductOrderDetailDTO>> entry : productDetailMap.entrySet()) {
-            List<AddProductOrderDetailDTO> hostProductOrderDetails = entry.getValue();
 
+            List<AddProductOrderDetailDTO> hostProductOrderDetails = entry.getValue();
             ProductOrder productOrder = new ProductOrder();
 
             // 轉換 DTO 中的會員編號
@@ -96,6 +93,7 @@ public class ProductOrderService {
 
                 // 查詢並設置生日優惠券
                 if (addProductOrderDTO.getBirthdayCouponNo() != null) {
+
                     String birthdayCouponNoString = addProductOrderDTO.getBirthdayCouponNo();
                     Integer birthdayCouponNo;
                     try {
@@ -110,6 +108,7 @@ public class ProductOrderService {
                     } else {
                         throw new NoSuchElementException("未找到生日優惠券，編號: " + birthdayCouponNo);
                     }
+
                 }
 
                 // 轉換並設置 productCouponDiscount
@@ -134,49 +133,45 @@ public class ProductOrderService {
                 // 處理訂單明細
                 List<ProductOrderDetail> orderDetails = new ArrayList<>();
                 for (AddProductOrderDetailDTO orderDetailDTO : hostProductOrderDetails) {
-                    ProductOrderDetail orderDetail = new ProductOrderDetail();
 
+                    ProductOrderDetail orderDetail = new ProductOrderDetail();
                     // 將訂單設置為廠商各自明細的訂單
                     orderDetail.setProductOrder(productOrder);
-
                     // 查詢產品
                     Product product = productRepository.findByProductNo(Integer.valueOf(orderDetailDTO.getProductNo())).orElseThrow(
                             () -> new NoSuchElementException("未找到產品，產品編號: " + orderDetailDTO.getProductNo())
                     );
-
                     // 設置產品
                     orderDetail.setProduct(product);
-
                     // 設置數量和價格及評論狀態預設為0(未評論)
                     orderDetail.setProductQty(orderDetailDTO.getProductQty());
                     orderDetail.setProductPrice(orderDetailDTO.getProductPrice());
                     orderDetail.setCommentsStatus((byte) 0);
-
                     // 將訂單明細添加到列表中
                     orderDetails.add(orderDetail);
+
                 }
 
                 // 將商品訂單明細設置到商品訂單中
                 productOrder.setProductOrderDetail(orderDetails);
-
                 // 保存訂單
                 repository.save(productOrder);
+
             } catch (NumberFormatException e) {
                 // 處理轉換異常，例如記錄日誌或拋出自定義異常
                 throw new IllegalArgumentException("無效的數值格式", e);
             }
-        }
-    }
 
+        }
+
+    }
 
 
     /*
     訂單狀態別:
-
     ProductPaymentStatus:
     0:已付款
     1:已退款
-
     =======================================
     ProductProcessStatus:
     0:備貨中
@@ -184,24 +179,24 @@ public class ProductOrderService {
     2:已出貨
     3:已退貨
     4:已結案
-
     =======================================
     ProductOrderAllocationStatus:
     0:未撥款
     1:已撥款
-
     =======================================
     */
 
+
     // 員工更新訂單內容
     public void updateProductOrder(UpdateProductOrderDTO updateProductOrderDTO) {
+
         Optional<ProductOrder> optionalProductOrder = repository.findById(updateProductOrderDTO.getProductOrderNo());
         if (optionalProductOrder.isPresent()) {
-            ProductOrder productOrder = optionalProductOrder.get();
 
+            ProductOrder productOrder = optionalProductOrder.get();
             // 比對更新前後的訂單資訊，確認是否有修改
             boolean hasChanges =
-                    (productOrder.getProductPaymentStatus() == null && updateProductOrderDTO.getProductPaymentStatus() != null) ||
+                            (productOrder.getProductPaymentStatus() == null && updateProductOrderDTO.getProductPaymentStatus() != null) ||
                             (productOrder.getProductPaymentStatus() != null && !productOrder.getProductPaymentStatus().equals(updateProductOrderDTO.getProductPaymentStatus())) ||
                             (productOrder.getProductProcessStatus() == null && updateProductOrderDTO.getProductProcessStatus() != null) ||
                             (productOrder.getProductProcessStatus() != null && !productOrder.getProductProcessStatus().equals(updateProductOrderDTO.getProductProcessStatus())) ||
@@ -226,6 +221,7 @@ public class ProductOrderService {
         } else {
             throw new RuntimeException("* 查無訂單可進行修改 ！");
         }
+
     }
 
 
@@ -261,33 +257,36 @@ public class ProductOrderService {
 
     // 會員取消訂單
     public void cancelProductOrderDTO(CancelProductOrderDTO cancelProductOrderDTO) {
+
         Optional<ProductOrder> optionalProductOrder = repository.findById(cancelProductOrderDTO.getProductOrderNo());
         if (optionalProductOrder.isPresent()) {
-            ProductOrder productOrder = optionalProductOrder.get();
 
+            ProductOrder productOrder = optionalProductOrder.get();
             // 更新訂單內容
             if (isCancelAllowed(productOrder)) {
+
                 productOrder.setProductOrderNo(cancelProductOrderDTO.getProductOrderNo());
                 productOrder.setProductProcessStatus((byte) 1);
-
-
                 //若會員取消訂單，則回補庫存數量
                 for (ProductOrderDetail productOrderDetail : productOrder.getProductOrderDetail()) {
+
                     int canceledQuantity = productOrderDetail.getProductQty();
                     Product product = productOrderDetail.getProduct();
                     int currentStock = product.getRemainingQty();
-
                     //現有庫存+商品取消數量=新的庫存量
                     int updatedStock = currentStock + canceledQuantity;
                     product.setRemainingQty(updatedStock);
-                }
 
+                }
                 // 保存更新後的訂單可一併回補商品數量
                 repository.save(productOrder);
+
             } else {
                 throw new RuntimeException("* 訂單已完成備貨處理無法取消訂單，如有需要請洽客服人員 ！");
             }
+
         }
+
     }
 
 
@@ -301,13 +300,14 @@ public class ProductOrderService {
 
     // 廠商更新訂單內容
     public void updateProductOrderByHost(UpdateProductOrderByHostDTO updateProductOrderByHostDTO) {
+
         Optional<ProductOrder> optionalProductOrder = repository.findById(updateProductOrderByHostDTO.getProductOrderNo());
         if (optionalProductOrder.isPresent()) {
-            ProductOrder productOrder = optionalProductOrder.get();
 
+            ProductOrder productOrder = optionalProductOrder.get();
             // 比對更新前後的訂單資訊，確認是否有修改
             boolean hasChanges =
-                    (productOrder.getRecipient() == null && updateProductOrderByHostDTO.getRecipient() != null) ||
+                            (productOrder.getRecipient() == null && updateProductOrderByHostDTO.getRecipient() != null) ||
                             (productOrder.getRecipient() != null && !productOrder.getRecipient().equals(updateProductOrderByHostDTO.getRecipient())) ||
                             (productOrder.getRecipientPhone() == null && updateProductOrderByHostDTO.getRecipientPhone() != null) ||
                             (productOrder.getRecipientPhone() != null && !productOrder.getRecipientPhone().equals(updateProductOrderByHostDTO.getRecipientPhone())) ||
@@ -317,18 +317,20 @@ public class ProductOrderService {
                             (productOrder.getProductProcessStatus() != null && !productOrder.getProductProcessStatus().equals(updateProductOrderByHostDTO.getProductProcessStatus()));
             // 更新
             if (hasChanges) {
+
                 productOrder.setRecipient(updateProductOrderByHostDTO.getRecipient());
                 productOrder.setRecipientPhone(updateProductOrderByHostDTO.getRecipientPhone());
                 productOrder.setRecipientAddress(updateProductOrderByHostDTO.getRecipientAddress());
                 productOrder.setProductProcessStatus(updateProductOrderByHostDTO.getProductProcessStatus());
 
                 repository.save(productOrder);
-            } else {
 
+            } else {
                 // 若沒有修改內容，跳出查無修正內容紀錄的訊息
                 throw new RuntimeException("* 若無更改內容，請點擊取消修改 ！");
             }
-        }
-    }
 
+        }
+
+    }
 }
