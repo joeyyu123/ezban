@@ -50,4 +50,14 @@ public class MemberService {
 		memrepository.updateMemberPoints(memberPoints, memberMail);
 	}
 
+	// 聊天室用,透過memberNo取得memberName
+	public Member findMemberByIdChat(Integer memberNo) {
+		return memrepository.findById(memberNo)
+				.orElseThrow(() -> new RuntimeException("Member not found"));
+	}
+
+	public String getMemberNameByMemberNoChat(Integer memberNo) {
+		Member member = findMemberByIdChat(memberNo);
+		return member.getMemberName();
+	}
 }
