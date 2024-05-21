@@ -114,20 +114,20 @@ $(function(){
 });
 
 // cart badge number
-function getCartQuantity() {
-  let url = `/cart/getCartQuantity`;
-  fetch(url, {
-    method: 'GET'
-  })
-      .then(response => response.json())
-      .then(data => {
-        if (data.cartQuantity != null) {
-          document.querySelector('.cart-icon .badge').innerText = data.cartQuantity > 99 ? '99+' : data.cartQuantity;
-        } else {
-          console.error("無法取得購物車數量");
-        }
-      })
-      .catch(error => console.error('Error:', error));
-}
+// function getCartQuantity() {
+//   let url = `/cart/getCartQuantity`;
+//   fetch(url, {
+//     method: 'GET'
+//   })
+//       .then(response => response.json())
+//       .then(data => {
+//         if (data.cartQuantity != null) {
+//           document.querySelector('.cart-icon .badge').innerText = data.cartQuantity > 99 ? '99+' : data.cartQuantity;
+//         } else {
+//           console.error("無法取得購物車數量");
+//         }
+//       })
+//       .catch(error => console.error('Error:', error));
+// }
 // document.addEventListener('DOMContentLoaded',  getCartQuantity);
 

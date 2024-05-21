@@ -29,8 +29,8 @@
         }
         .form {
             position: relative;
-            width: 75%;
-            margin-top: 50px;
+            width: 90%;
+            margin-top: 30px;
             margin-bottom: 120px;
             padding: 20px;
             background-color: #faf9f9;
@@ -110,16 +110,17 @@
             display: block;
             width: 100%;
             text-align: center;
-            margin: 80px 0 10px 0;
+            margin: 100px 0 20px 0;
         }
-        #update_product_btn {
+        .form_btn {
             border: none;
             border-radius: 18px;
             padding: 8px 12px;
             background-color: #f4e9e6;
             cursor: pointer;
+            margin: 0 10px;
         }
-        #update_product_btn:hover {
+        .form_btn:hover {
             color: gray;
             font-weight: bold;
             box-shadow: 0 1px 2px 2px rgba(231, 229, 229, 0.5);
@@ -130,6 +131,23 @@
             font-style: italic;
             color: red;
         }
+
+        .swal-button-container {
+            text-align: center;
+            width: 100%;
+        }
+        .swal-button-custom {
+            margin: 0 auto;
+            display: block;
+            color: gray;
+            border: none !important;
+            box-shadow: none !important;
+            background-color: #f4e9e6;
+        }
+        .swal-button-custom:hover {
+             background-color: #ead4ce;
+         }
+
     </style>
 </head>
 <body>
@@ -141,12 +159,12 @@
             <h2>編輯商品內容</h2>
         </div>
 
-        <div class="update_form content">
+        <div class="update_form content" style="background: none;">
             <form class="form" th:action="@{/backstage/product/update}" th:object="${productDto}" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="productNo" th:value="${productNo}">
                 <div class="form-group">
-                    <label for="host_no">廠商編號:</label>
-                    <input type="text" id="host_no" th:field="*{hostNo}" required readonly>
+<!--                    <label for="host_no">廠商編號:</label>-->
+                    <input type="hidden" id="host_no" th:field="*{hostNo}" required>
                 </div>
 
                 <div class="form-row">
@@ -172,7 +190,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="product_price">商品價格:</label>
-                        <input type="number" id="product_price" th:field="*{productPrice}" required>
+                        <input type="number" id="product_price" th:field="*{productPrice}" min="1" required>
                     </div>
                     <div class="form-group">
                         <label for="product_status">商品狀態:</label>
@@ -187,11 +205,11 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="product_add_qty">商品上架數量:</label>
-                        <input type="number" id="product_add_qty" th:field="*{productAddQty}" required>
+                        <input type="number" id="product_add_qty" th:field="*{productAddQty}" min="1" required>
                     </div>
                     <div class="form-group">
                         <label for="remaining_qty">庫存數量:</label>
-                        <input type="number" id="remaining_qty" th:field="*{remainingQty}" required>
+                        <input type="number" id="remaining_qty" th:field="*{remainingQty}" min="0" required>
                     </div>
                 </div>
 
@@ -228,13 +246,15 @@
 
 
                 <div class="btn-container">
-                    <button type="submit" id="update_product_btn">修改商品</button>
+                    <button class="form_btn" type="submit" id="update_product_btn">修改商品</button>
+                    <button class="form_btn" type="button" id="cancel_btn" onclick="window.location.href='/backstage/products';">取消修改</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
     /* 檢查商品上下架時間 */
     $(document).ready(function() {
@@ -299,6 +319,22 @@
             $preview.find('img').remove();
         }
     }
+    document.addEventListener('DOMContentLoaded', function() {
+        let urlParams = new URLSearchParams(window.location.search);
+        let success = urlParams.get('success');
+        if (success) {
+            swal({
+                text: "商品修改成功!",
+                icon: "success",
+                button: {
+                    text: "回商品列表",
+                    className: "swal-button-custom"
+                },
+            }).then((value) => {
+                window.location.href = '/backstage/products';
+            });
+        }
+    });
 </script>
 </body>
 </html>

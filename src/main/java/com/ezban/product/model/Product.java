@@ -39,8 +39,7 @@ public class Product implements java.io.Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "host_no", referencedColumnName = "host_no")
-//    @JsonManagedReference
-    @JsonIgnore
+    @JsonManagedReference
     private Host host;
 
     @Column(name = "product_desc" ,columnDefinition = "text")

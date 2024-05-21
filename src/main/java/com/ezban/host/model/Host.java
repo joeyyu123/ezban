@@ -59,6 +59,7 @@ public class Host {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "host")
     @OrderBy("eventCouponNo asc")
+    @JsonBackReference
     private Set<EventCoupon> eventCoupons = new HashSet<EventCoupon>();
 
 

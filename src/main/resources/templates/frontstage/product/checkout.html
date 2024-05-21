@@ -348,7 +348,18 @@
         let selected_option = this.options[this.selectedIndex];
         let discount = selected_option.getAttribute('data-discount') || 0;
         document.querySelector('.coupon_amount').innerText = `-$${discount}`;
-        updateOrderTotal();
+        totalPrice = updateOrderTotal();
+        if (totalPrice < 0) {
+            alert('總金額不能小於0');
+            // 把優惠券選回第一個選項
+            this.selectedIndex = 0;
+            // 創建一個 change 事件
+            var event = new Event('change');
+            // 觸發 change 事件 這樣就能更新總金額
+            this.dispatchEvent(event);
+            updateOrderTotal();
+        }
+
     });
 
     /* 會員使用點數 */
@@ -364,15 +375,23 @@
             this.value = points;
         }
         document.getElementById('points_to_use').innerText = `-$${points}`;
-        updateOrderTotal();
+        totalPrice = updateOrderTotal();
+        if (totalPrice < 0) {
+            alert('總金額不能小於0');
+            this.value = 0;
+            document.getElementById('points_to_use').innerText = `-$${0}`;
+            updateOrderTotal();
+        }
     });
 
-    /* 更新訂單總金額 */
+    /* 更新訂單總金額，並回傳total金額 */
     function updateOrderTotal() {
         let discount = parseInt(document.querySelector('.coupon_amount').innerText.replace('-$', ''));
         let points = parseInt(document.getElementById('points_to_use').innerText.replace('-$', ''));
         let newTotal = initialTotal - discount - points;
         document.getElementById('order_amount').innerText = `NT$${newTotal}`;
+
+        return newTotal
     }
 
     /* 送出訂單 */
@@ -406,7 +425,7 @@
         console.log('訂單資料:', checkoutData);
 
         // 傳送訂單資料到後端
-        fetch('/productOrder/checkout', {
+        fetch('/productorder/insert', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

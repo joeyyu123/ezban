@@ -96,7 +96,8 @@
                             <li class="product_category"><a th:href="@{/product/shopall}"></a></li>
                         </ul>
                     </div>
-                    <a href="#" id="add_to_cart" class="btn btn-main mt-20" style="margin-right: 5px; padding: 11px 12px; font-size: 14px">加入購物車</a>
+                    <a href="#" id="add_to_cart" class="btn btn-main mt-20"
+                       style="margin-right: 5px; padding: 11px 12px; font-size: 14px">加入購物車</a>
                     <a id="addToFavorites" class="btn btn-main mt-20"
                        style="margin-right: 5px;" th:onclick="addToFavorites([[${productNo}]])"><i
                             class="tf-ion-ios-heart"></i> 加入收藏</a>
@@ -113,7 +114,8 @@
                 <div class="tabCommon mt-20">
                     <ul class="nav nav-tabs">
                         <li class="active"><a data-toggle="tab" href="#details" aria-expanded="true">商品描述</a></li>
-                        <li class=""><a data-toggle="tab" href="#reviews" aria-expanded="false">商品評論 (3)</a></li>
+                        <li class=""><a id="comment_count" data-toggle="tab" href="#reviews" aria-expanded="false"></a>
+                        </li>
                     </ul>
                     <div class="tab-content patternbg">
                         <div id="details" class="tab-pane fade active in">
@@ -122,92 +124,8 @@
                         </div>
                         <div id="reviews" class="tab-pane fade">
                             <div class="post-comments">
-                                <ul class="media-list comments-list m-bot-50 clearlist">
-                                    <!-- Comment Item start-->
-                                    <li class="media">
-
-                                        <a class="pull-left" href="#!">
-<!--                                            <img class="media-object comment-avatar" src="images/blog/avater-1.jpg"-->
-<!--                                                 alt="" width="50" height="50"/>-->
-                                        </a>
-
-                                        <div class="media-body">
-                                            <div class="comment-info">
-                                                <h4 class="comment-author">
-                                                    <a href="#!">Jonathon Andrew</a>
-
-                                                </h4>
-                                                <time datetime="2013-04-06T13:53">July 02, 2015, at 11:34</time>
-                                                <a class="comment-button" href="#!"><i class="tf-ion-chatbubbles"></i>Reply</a>
-                                            </div>
-
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at
-                                                magna ut ante eleifend eleifend.Lorem ipsum dolor sit amet, consectetur
-                                                adipisicing elit. Quod laborum minima, reprehenderit laboriosam officiis
-                                                praesentium? Impedit minus provident assumenda quae.
-                                            </p>
-                                        </div>
-
-                                    </li>
-                                    <!-- End Comment Item -->
-
-                                    <!-- Comment Item start-->
-                                    <li class="media">
-
-                                        <a class="pull-left" href="#!">
-<!--                                            <img class="media-object comment-avatar" src="images/blog/avater-4.jpg"-->
-<!--                                                 alt="" width="50" height="50"/>-->
-                                        </a>
-
-                                        <div class="media-body">
-
-                                            <div class="comment-info">
-                                                <div class="comment-author">
-                                                    <a href="#!">Jonathon Andrew</a>
-                                                </div>
-                                                <time datetime="2013-04-06T13:53">July 02, 2015, at 11:34</time>
-                                                <a class="comment-button" href="#!"><i class="tf-ion-chatbubbles"></i>Reply</a>
-                                            </div>
-
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at
-                                                magna ut ante eleifend eleifend. Lorem ipsum dolor sit amet, consectetur
-                                                adipisicing elit. Magni natus, nostrum iste non delectus atque ab a
-                                                accusantium optio, dolor!
-                                            </p>
-
-                                        </div>
-
-                                    </li>
-                                    <!-- End Comment Item -->
-
-                                    <!-- Comment Item start-->
-                                    <li class="media">
-
-                                        <a class="pull-left" href="#!">
-<!--                                            <img class="media-object comment-avatar" src="images/blog/avater-1.jpg"-->
-<!--                                                 alt="" width="50" height="50">-->
-                                        </a>
-
-                                        <div class="media-body">
-
-                                            <div class="comment-info">
-                                                <div class="comment-author">
-                                                    <a href="#!">Jonathon Andrew</a>
-                                                </div>
-                                                <time datetime="2013-04-06T13:53">July 02, 2015, at 11:34</time>
-                                                <a class="comment-button" href="#!"><i class="tf-ion-chatbubbles"></i>Reply</a>
-                                            </div>
-
-                                            <p>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at
-                                                magna ut ante eleifend eleifend.
-                                            </p>
-
-                                        </div>
-
-                                    </li>
+                                <ul class="media-list comments-list m-bot-50 clearlist" id="comments_list">
+                                    <!-- 動態顯示評論-->
                                 </ul>
                             </div>
                         </div>
@@ -224,113 +142,8 @@
                 <h2>相關商品</h2>
             </div>
         </div>
-        <div class="row">
-<!--            <div class="col-md-3">-->
-<!--                <div class="product-item">-->
-<!--                    <div class="product-thumb">-->
-<!--                        <span class="bage">Sale</span>-->
-<!--                        <img class="img-responsive" src="images/shop/products/product-5.jpg" alt="product-img"/>-->
-<!--                        <div class="preview-meta">-->
-<!--                            <ul>-->
-<!--                                <li>-->
-<!--									<span data-toggle="modal" data-target="#product-modal">-->
-<!--										<i class="tf-ion-ios-search"></i>-->
-<!--									</span>-->
-<!--                                </li>-->
-<!--                                <li>-->
-<!--                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>-->
-<!--                                </li>-->
-<!--                                <li>-->
-<!--                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>-->
-<!--                                </li>-->
-<!--                            </ul>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="product-content">-->
-<!--                        <h4><a href="product-single.html">Reef Boardsport</a></h4>-->
-<!--                        <p class="price">$200</p>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-md-3">-->
-<!--                <div class="product-item">-->
-<!--                    <div class="product-thumb">-->
-<!--                        <img class="img-responsive" src="images/shop/products/product-1.jpg" alt="product-img"/>-->
-<!--                        <div class="preview-meta">-->
-<!--                            <ul>-->
-<!--                                <li>-->
-<!--									<span data-toggle="modal" data-target="#product-modal">-->
-<!--										<i class="tf-ion-ios-search-strong"></i>-->
-<!--									</span>-->
-<!--                                </li>-->
-<!--                                <li>-->
-<!--                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>-->
-<!--                                </li>-->
-<!--                                <li>-->
-<!--                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>-->
-<!--                                </li>-->
-<!--                            </ul>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="product-content">-->
-<!--                        <h4><a href="product-single.html">Rainbow Shoes</a></h4>-->
-<!--                        <p class="price">$200</p>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-md-3">-->
-<!--                <div class="product-item">-->
-<!--                    <div class="product-thumb">-->
-<!--                        <img class="img-responsive" src="images/shop/products/product-2.jpg" alt="product-img"/>-->
-<!--                        <div class="preview-meta">-->
-<!--                            <ul>-->
-<!--                                <li>-->
-<!--									<span data-toggle="modal" data-target="#product-modal">-->
-<!--										<i class="tf-ion-ios-search"></i>-->
-<!--									</span>-->
-<!--                                </li>-->
-<!--                                <li>-->
-<!--                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>-->
-<!--                                </li>-->
-<!--                                <li>-->
-<!--                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>-->
-<!--                                </li>-->
-<!--                            </ul>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="product-content">-->
-<!--                        <h4><a href="product-single.html">Strayhorn SP</a></h4>-->
-<!--                        <p class="price">$230</p>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="col-md-3">-->
-<!--                <div class="product-item">-->
-<!--                    <div class="product-thumb">-->
-<!--                        <img class="img-responsive" src="images/shop/products/product-3.jpg" alt="product-img"/>-->
-<!--                        <div class="preview-meta">-->
-<!--                            <ul>-->
-<!--                                <li>-->
-<!--									<span data-toggle="modal" data-target="#product-modal">-->
-<!--										<i class="tf-ion-ios-search"></i>-->
-<!--									</span>-->
-<!--                                </li>-->
-<!--                                <li>-->
-<!--                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>-->
-<!--                                </li>-->
-<!--                                <li>-->
-<!--                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>-->
-<!--                                </li>-->
-<!--                            </ul>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="product-content">-->
-<!--                        <h4><a href="product-single.html">Bradley Mid</a></h4>-->
-<!--                        <p class="price">$200</p>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-
+        <div class="row" id="related_products">
+            <!--動態顯示相關商品-->
         </div>
     </div>
 </section>
@@ -339,21 +152,79 @@
 <div th:replace="frontstage/index2 :: footer"></div>
 
 </body>
-<script th:src="@{/js/frontstage/product/guest.js}"></script>
+<!--<script th:src="@{/js/frontstage/product/guest.js}"></script>-->
 <script th:src="@{/js/frontstage/product/shopdetail.js}"></script>
+<script>
+    // this function input object is from autoGetCommentsDetailByProductNoAPI "userDetails" object(shopdetail.js)
+    function appendCommentToCommentList(commentsDetail, commentCount, averageRate) {
+        let avg_el = document.querySelector('.product_rating');
+        avg_el.innerText = `商品評價: ${averageRate}/5 `;
+        let element = document.getElementById('comments_list');
+        document.querySelector('#comment_count').innerText = `商品評論 (${commentCount})`;
 
+        if (commentCount === 0) {
+            element.innerHTML = `<p>目前尚無評論</p>`
+        } else {
+            html_text = `
+                <li class="media">
+                    <div class="media-body">
+                        <div class="comment-info">
+                            <h4 class="comment-author">
+                                <span id="member_name">${commentsDetail.memberMail}</span>
+                            </h4>
+                            <p>${commentsDetail.rate}</p>
+                        </div>
+                        <p>
+                            ${commentsDetail.comment}
+                        </p>
+                    </div>
+
+                </li>
+            `
+            element.innerHTML += html_text;
+        }
+    }
+
+    // function appendRelatedProductToRelatedProductList(relatedProduct) {
+    //     let element = document.getElementById('related-products');
+    //     let html_text = `
+    //         <div class="row related_products">
+    //             <div class="col-md-3 related_product_card">
+    //                 <div class="product-item">
+    //                     <div class="product-thumb">
+    //                         <img class="img-responsive" src=`/product/getFirstImage/${productNo}` alt="product-img"/>
+    //                     </div>
+    //                     <div class="product-content">
+    //                         <h4><a href="product-single.html">${productName}</a></h4>
+    //                         <p class="price">$`${productPrice}`</p>
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //         `;
+    // }
+</script>
 
 <script th:inline="javascript">
 
     /*<![CDATA[*/
     var productNo = /*[[${productNo}]]*/ 'default';
     /*]]>*/
-    document.addEventListener('DOMContentLoaded', function () {
-        let input_el = document.getElementById('product-quantity');
-        input_el.setAttribute('data-product-no', productNo);
-    });
+
+    // 商品評論
+    autoGetCommentsDetailByProductNoAPI(productNo)
+        .then(function (result) {
+            if (result.count ===0) {
+                appendCommentToCommentList(null, 0);
+            } else {
+                result.details.forEach(function (commentDetail) {
+                    appendCommentToCommentList(commentDetail, result.count, result.averageRate);
+                });
+            }
+        });
+    // 商品輪播圖及詳細資訊
     getProductImages(productNo).then(function (imageUrls) {
-        console.log(imageUrls);
+        // console.log(imageUrls);
         let carouselIndicators = document.querySelector('.carousel-indicators');
         let carouselInner = document.querySelector('.carousel-inner');
 
@@ -379,11 +250,13 @@
         });
     });
     getProductDetail(productNo);
-
-
+    // 加入購物車
     document.getElementById('add_to_cart').addEventListener('click', function (e) {
         e.preventDefault();
+        let input_el = document.getElementById('product-quantity');
+        input_el.setAttribute('data-product-no', productNo);
         let quantity = document.getElementById('product-quantity').value;
+        // console.log('quantity7878:', quantity);
         autoIncreaseCartQuantityAndSetUI(productNo, quantity);
     });
 </script>

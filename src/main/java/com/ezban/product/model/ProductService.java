@@ -12,8 +12,6 @@ public interface ProductService {
 
     Product addProduct(ProductDto productDto);
 
-    Product addProductandImages(ProductDto productDto, MultipartFile[] files) throws IOException;
-
     Product updateProduct(Integer productNo, ProductDto productDto);
 
     Product getProductByProductNo(Integer productNo);

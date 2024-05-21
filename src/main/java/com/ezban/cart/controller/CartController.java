@@ -5,9 +5,7 @@ import com.ezban.birthdaycoupon.model.BirthdayCouponService;
 import com.ezban.cart.model.*;
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberService;
-import oracle.jdbc.proxy.annotation.Post;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.security.Principal;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -74,10 +70,9 @@ public class CartController {
 //    }
 
     @PostMapping("/checkoutPage")
-    public String checkOutPage(
-            Principal principal,
-            Model model,
-            @RequestBody CheckoutRequest checkoutRequest
+    public String checkOutPage(Principal principal,
+                               Model model,
+                               @RequestBody CheckoutRequest checkoutRequest
     ) {
 //        Integer memberNo = Integer.parseInt(principal.getName());
 

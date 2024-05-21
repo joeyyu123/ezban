@@ -43,9 +43,19 @@ async function updateCartQuantityAPI(productNo, quantity) {
 
 }
 
+async function deleteCartAPI(productNo) {
+    let url = `/cart/deleteCartItem/${productNo}`;
+    try {
+        return await fetch(url, {
+            method: 'DELETE'
+        });
+    } catch (e) {
+        return e;
+    }
+}
 // 以遞增delta的方式增加商品數量
 function addToCartLocal(productNo, quantity) {
-    console.log('商品編號:', productNo, '數量:', quantity)
+    // console.log('商品編號:', productNo, '數量:', quantity)
     productNo = parseInt(productNo, 10);
     quantity = parseInt(quantity, 10);
 
@@ -56,31 +66,37 @@ function addToCartLocal(productNo, quantity) {
         cart[productNo] = quantity;
     }
     localStorage.setItem('cart', JSON.stringify(cart));
-    console.log('商品已存入localStorage:', cart);
+    // console.log('商品已存入localStorage:', cart);
 }
 
 // 以直接更新總數量的方式增加商品數量
 function updateCartLocal(productNo, quantity) {
-    console.log('商品編號:', productNo, '數量:', quantity)
+    // console.log('商品編號:', productNo, '數量:', quantity)
     productNo = parseInt(productNo, 10);
     quantity = parseInt(quantity, 10);
 
     let cart = JSON.parse(localStorage.getItem('cart')) || {};
     cart[productNo] = quantity;
     localStorage.setItem('cart', JSON.stringify(cart));
-    console.log('商品已存入localStorage:', cart);
+    // console.log('商品已存入localStorage:', cart);
 
 }
 
 function getCartFromLocal() {
     let cart = JSON.parse(localStorage.getItem('cart')) || {};
-    console.log(cart, 'cart9999');
+    return cart;
+}
+
+function deleteCartFromLocal(productNo) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || {};
+    delete cart[productNo];
+    localStorage.setItem('cart', JSON.stringify(cart));
     return cart;
 }
 
 // 購物車數量顯示在UI
 function setCartQuantityOnUI(cartQuantity) {
-    console.log(cartQuantity, 'cartQuantity')
+    // console.log(cartQuantity, 'cartQuantity')
     if (cartQuantity != null) {
         numProducts = Object.keys(cartQuantity).length;
         document.querySelector('.cart-icon .badge').innerText = numProducts > 99 ? '99+' : numProducts;
@@ -100,7 +116,6 @@ async function autoIncreaseCartQuantity(productNo, quantity) {
         return
     }
     // 預設使用者按下"加入購物車"按鈕時product數量+1
-    addToCartLocal(productNo, quantity);
     Swal.fire({
         icon: 'success',
         title: '成功加入購物車(local storage)',
@@ -130,6 +145,21 @@ async function autoUpdateCartQuantityAndSetUI(productNo, quantity) {
 
 }
 
+async function autoDeleteCart(productNo) {
+    response = await deleteCartAPI(productNo);
+    if (response.status === 200 && !response.url.endsWith('loginPage')) {
+        return
+    }
+    deleteCartFromLocal(productNo);
+}
+
+async function autoDeleteCartAndSetUI(productNo) {
+    await autoDeleteCart(productNo);
+    await autoGetCartQuantityAndSetUI();
+
+}
+
+
 async function autoGetCartQuantity() {
     response = await getCartQuantityAPI();
     // 代表使用者有登入
@@ -143,13 +173,13 @@ async function autoGetCartQuantity() {
             return await autoGetCartQuantity();
         }
         cart = await response.json();
-        console.log(cart, 'cart5555');
+        // console.log(cart, 'cart5555');
         return cart
     }
 
     // 代表使用者沒有登入，資料存放在localStorage
     cart = getCartFromLocal();
-    console.log(cart, 'cart1111');
+    // console.log(cart, 'cart1111');
     return Promise.resolve(cart);
 }
 

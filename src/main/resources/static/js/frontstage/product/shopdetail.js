@@ -1,23 +1,10 @@
-/* 從url取商品編號 */
-// function test(productNo)
-// {
-//     document.addEventListener('DOMContentLoaded', function () {
-//
-//             let input_el = document.getElementById('product-quantity');
-//             input_el.setAttribute('data-product-no', productNo);
-//
-//             // getProductDetail(productNo);
-//             // getProductImages(productNo);
-//
-//     });
-// }
 /* 取商品資訊 */
 function getProductDetail(productNo) {
     let url = `/product/getProductDetail?productNo=${productNo}`;
     fetch(url)
         .then(response => response.json())
         .then(product => {
-            console.log(product, "product")
+            // console.log(product, "product")
             // 頁面有兩個 class="product_name" 元素 -> querySelectorAll
             let productNames = document.querySelectorAll('.product_name');
             productNames.forEach((productName) => {
@@ -37,50 +24,112 @@ async function getProductImages(productNo) {
     try {
         const fetchResponse = await fetch(url);
         const data = await fetchResponse.json();
-        console.log(data, "data")
+        // console.log(data, "data")
         return data;
     } catch (e) {
         return e;
     }
-    // fetch(url)
-    //     .then(response => response.json())
-    //     .then(imageUrls => {
-    //         let carouselIndicators = document.querySelector('.carousel-indicators');
-    //         let carouselInner = document.querySelector('.carousel-inner');
-    //
-    //         imageUrls.forEach((url, index) => {
-    //             // carousel-indicator
-    //             let indicator = document.createElement('li');
-    //             indicator.setAttribute('data-target', '#carousel-custom');
-    //             indicator.setAttribute('data-slide-to', index);
-    //             if (index === 0) indicator.classList.add('active');
-    //             let thumb_img = document.createElement('img');
-    //             thumb_img.src = url;
-    //             indicator.appendChild(thumb_img);
-    //             carouselIndicators.appendChild(indicator);
-    //
-    //             // carousel-inner
-    //             let item = document.createElement('div');
-    //             item.className = 'item' + (index === 0 ? ' active' : '');
-    //             let img = document.createElement('img');
-    //             img.src = url;
-    //             img.setAttribute('data-zoom-image', url);
-    //             item.appendChild(img);
-    //             carouselInner.appendChild(item);
-    //         });
-    //     })
-    //     .catch(error => console.error("讀取圖片失敗", error));
 }
 
-/* 當input值改變時更新data-quantity屬性 */
-// let input = document.getElementById('product-quantity');
-// input.addEventListener('change', function() {
-//     input.setAttribute('data-quantity', input.value);
-// });
+async function getProductCommentsByProductNoAPI(productNo) {
+    let url = `/product/${productNo}/comments`;
+    try {
+        return await fetch(url);
+    } catch (e) {
+        return e;
+    }
+}
 
-/* 加入購物車 */
-// document.getElementById('add_to_cart').addEventListener('click', function (e) {
-//     e.preventDefault();
-//     let quantity = document.getElementById('product-quantity').value;
-//     addToCart(productNo, quantity);
-// });
+async function getUserDetailsByMemberNoAPI(memberNo) {
+    let url = `/product/member/${memberNo}`;
+    try {
+        return await fetch(url);
+    } catch (e) {
+        return e;
+    }
+}
+
+async function autoGetCommentsDetailByProductNoAPI(productNo) {
+    let commentsDetails = [];
+    let totalRate = 0;
+    response = await getProductCommentsByProductNoAPI(productNo);
+    if (response.status !== 200) {
+        console.error("取得商品評論失敗", response);
+        return;
+    }
+    let comments = await response.json();
+    let commentCount = comments.length || 0;
+
+    for (let i = 0; i < comments.length; i++) {
+        let response = await getUserDetailsByMemberNoAPI(comments[i].memberNo);
+        if (response.status !== 200) {
+            console.error("取得使用者資訊失敗", response);
+            return;
+        }
+        let userDetails = await response.json();
+        userDetails.rate = comments[i].productRate;
+        userDetails.comment = comments[i].commentContent;
+        totalRate += comments[i].productRate;
+        commentsDetails.push(userDetails);
+    }
+    // 取到小數點後一位
+    let averageRate = commentCount > 0 ? parseFloat((totalRate / commentCount).toFixed(1)) : 0;
+    return {
+        details: commentsDetails,
+        count: commentCount,
+        averageRate: averageRate
+    };
+}
+
+// 取得當前商品詳細資訊
+// async function getCurrentProductByProductNoAPI(productNo){
+//     let url = `/product/getProductDetail?productNo=${productNo}`;
+//     try {
+//         return await fetch(url);
+//     } catch (e) {
+//         return e;
+//     }
+// }
+// function displayCurrentProductDetails(productNo) {
+//     console.log(productNo, 'productNo');
+//     const productDetailUrl = `/product/getProductDetail?productNo=${productNo}`;
+//     fetchProductDetails(productDetailUrl)
+//         .then(productDetails => {
+//             // 獲取 hostNo 和 productCategoryNo
+//             const hostNo = productDetails.host.hostNo;
+//             const productCategoryNo = productDetails.productCategory.productCategoryNo;
+//
+//             // 使用獲取的 hostNo 和 productCategoryNo 調用 getRelatedProducts
+//             getRelatedProducts(hostNo, productCategoryNo);
+//         });
+// }
+// function getRelatedProducts(hostNo, productCategoryNo) {
+//     let url = `/product/related?hostNo=${hostNo}&productCategoryNo=${productCategoryNo}`;
+//     fetch(url)
+//         .then(response => response.json())
+//         .then(products => {
+//             updateProductsDisplay(products);
+//         })
+//         .catch(error => console.error('Error fetching related products:', error));
+// }
+// function updateProductsDisplay(products) {
+//     let container = document.querySelector('#related_products');
+//     container.innerHTML = '';  // 清空現有內容
+//     products.forEach(product => {
+//         let card = `
+//             <div class="col-md-3 related_product_card">
+//                 <div class="product-item">
+//                     <div class="product-thumb">
+//                         <img class="img-responsive" src="/product/getFirstImage/${productNo}" alt="${product.productName}"/>
+//                     </div>
+//                     <div class="product-content">
+//                         <h4><a href="/product/shopdetail?productNo=${product.productNo}">${product.productName}</a></h4>
+//                         <p class="price">$${product.productPrice}</p>
+//                     </div>
+//                 </div>
+//             </div>`;
+//         container.innerHTML += card;
+//     });
+// }
+//
+// displayCurrentProductDetails(productNo);

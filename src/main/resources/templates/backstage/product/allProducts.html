@@ -25,9 +25,8 @@
             justify-content: center;
             align-items: center;
             position: relative;
-            padding-top: 20px;
             background: #f8f4f2;
-            margin: 30px 0 0 0;
+            margin: 60px 0 0 0;
         }
         .msg {
             color: #ea8383;
@@ -39,7 +38,7 @@
         }
         #all_product thead th {
             border: none;
-            background-color: #f1dfda;
+            background-color: white;
             color: black;
             text-align: center;
             vertical-align: middle;
@@ -49,7 +48,7 @@
             z-index: 1;
         }
         #all_product tbody td {
-            background-color: #faf9f9;
+            background-color: #f8f4f2;
             color: black;
             text-align: center; /* 水平居中對齊 */
             vertical-align: middle; /* 垂直居中對齊 */
@@ -93,6 +92,7 @@
         </div>
         <div class="products content">
             <div class="msg" th:if="${successMessage}" th:text="${successMessage}"></div>
+            <div class="msg" th:if="${errorMessage}" th:text="${errorMessage}"></div>
             <table id="all_product" class="product_list table">
                 <thead>
                 <tr>
@@ -138,7 +138,7 @@
                     <td th:text="${product.productStatus == 0 ? '未上架' : (product.productStatus == 1 ? '上架中' : '已下架')}"></td>
                     <td th:text="${product.remainingQty}"></td>
                     <td>
-                        <a class="edit_btn" th:href="@{/backstage/product/updateProduct/{id}(id=${product.productNo})}">編輯</a>
+                        <a class="edit_btn" th:href="@{/backstage/product/{productNo}/edit(productNo=${product.productNo})}">編輯</a>
                     </td>
                 </tr>
                 </tbody>

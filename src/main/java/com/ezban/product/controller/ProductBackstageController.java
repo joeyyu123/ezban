@@ -1,5 +1,7 @@
 package com.ezban.product.controller;
 
+import com.ezban.host.model.Host;
+import com.ezban.host.model.HostService;
 import com.ezban.product.model.Product;
 import com.ezban.product.model.ProductDto;
 import com.ezban.product.model.ProductMapper;
@@ -24,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/backstage/product")
+@RequestMapping("/backstage")
 public class ProductBackstageController {
 
     @Autowired
@@ -33,36 +35,31 @@ public class ProductBackstageController {
     @Autowired
     private ProductImgService productImgService;
 
-//    @GetMapping("showProducts")
-//    public String showProducts(Model model) {
-//        Product product1 = productServiceImpl.getProductByProductNo(1);
-//        List<Product> productsList = productServiceImpl.getProductsByHost(product1.getHost());
-//        Map<Integer, List<ProductImg>> productImages = new HashMap<>();
-//        for (Product p : productsList) {
-//            List<ProductImg> imgs = productImgService.getImgByProduct(p.getProductNo());
-//            productImages.put(p.getProductNo(), imgs);
-//        }
-//        model.addAttribute("productsList", productsList);
-//        model.addAttribute("productImages", productImages);
-//        model.addAttribute("successMessage", "商品新增成功!");
-//        return "backstage/product/allProducts";
-//    }
+    @Autowired
+    private HostService hostService;
 
-    @GetMapping("showProducts")
-    public String showProducts(@RequestParam("productNo") Integer productNo, Model model
-            , RedirectAttributes redirectAttributes) {
+    /**
+     * 該廠商所有商品頁面
+     */
+    @GetMapping("/products")
+    public String products(Principal principal, Model model) {
+        Host host = hostService.findHostByHostNo(principal.getName()).orElseThrow();
 
-        Product product = productServiceImpl.getProductByProductNo(productNo);
-        if (product == null) {
-            redirectAttributes.addFlashAttribute("errorMessage", "找不到指定的商品");
-            return "redirect:/backstage/product/allProducts";
+        List<Product> productsList = productServiceImpl.getProductsByHost(host);
+        Map<Integer, List<ProductImg>> productImages = new HashMap<>();
+        for (Product p : productsList) {
+            List<ProductImg> imgs = productImgService.getImgByProduct(p.getProductNo());
+            productImages.put(p.getProductNo(), imgs);
         }
-        prepareProductModel(model, product);
+        model.addAttribute("productsList", productsList);
+        model.addAttribute("productImages", productImages);
         return "backstage/product/allProducts";
     }
 
-    /* ========================== 新增商品 ========================== */
-    @GetMapping("addProduct")
+    /**
+     * 新增商品頁面
+     */
+    @GetMapping("/product/addProduct")
     public String getAddProductForm(Principal principal, Model model) {
         Integer hostNo = Integer.parseInt(principal.getName());
         ProductDto productDto = new ProductDto();
@@ -71,26 +68,26 @@ public class ProductBackstageController {
         return "backstage/product/addProduct";
     }
 
-    @PostMapping("insert")
-    public String insert(Principal principal, ProductDto productDto, BindingResult result, Model model,
-                         RedirectAttributes redirectAttributes,
+    /**
+     * 新增商品
+     *
+     * @param principal  使用者
+     * @param productDto 商品資料
+     * @param files      商品圖片
+     */
+    @PostMapping("/product/addProduct")
+    public String insert(Principal principal,
+                         ProductDto productDto,
+                         Model model,
                          @RequestParam("images") MultipartFile[] files) throws IOException {
-        if (result.hasErrors()) {
-            result.getFieldErrors().forEach(fieldError ->
-                    System.out.println("Error in field: '" + fieldError.getField() + "' - " + fieldError.getDefaultMessage()));
-            model.addAttribute("productDto", productDto);
-            return "backstage/product/addProduct";
-        }
 
         if (!productServiceImpl.isAuthenticated(principal, productDto)) {
             return "redirect:/backstage/product/addProduct";
         }
 
         try {
-            Product product = productServiceImpl.addProductandImages(productDto, files);
-            redirectAttributes.addAttribute("productNo", product.getProductNo());
-            redirectAttributes.addFlashAttribute("successMessage", "商品新增成功!");
-            return "redirect:/backstage/product/showProducts";
+            productServiceImpl.addProductandImages(productDto, files);
+            return "redirect:/backstage/product/addProduct?success=true";
 
         } catch (IOException | IllegalArgumentException e) {
             model.addAttribute("productDto", productDto);
@@ -99,7 +96,7 @@ public class ProductBackstageController {
         }
     }
 
-    @GetMapping("/getImage/{productImgNo}")
+    @GetMapping("/product/getImage/{productImgNo}")
     public ResponseEntity<byte[]> getImage(@PathVariable("productImgNo") Integer productImgNo) {
         ProductImg img = productImgService.getImgByImgNo(productImgNo);
         return ResponseEntity.ok()
@@ -107,80 +104,57 @@ public class ProductBackstageController {
                 .body(img.getProductImg());
     }
 
-    /* ========================== 修改商品 ========================== */
 
-    @GetMapping("updateProduct/{productNo}")
-    public String getUpdateProductForm(@PathVariable("productNo") Integer productNo, Model model) {
+    /**
+     * 修改商品頁面
+     */
+    @GetMapping("/product/{productNo}/edit")
+    public String getUpdateProductForm(Principal principal,
+                                       @PathVariable("productNo") Integer productNo,
+                                       RedirectAttributes redirectAttributes,
+                                       Model model) {
         Product product = productServiceImpl.getProductByProductNo(productNo);
+        if (product == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "商品不存在");
+            return "redirect:/backstage/products";
+        }
         ProductDto productDto = ProductMapper.toDto(product);
+        List<ProductImg> productImages = productImgService.getImgByProduct(product.getProductNo());
+
+        // 檢查使用者是否有權修改此商品
+        if (!productServiceImpl.isAuthenticated(principal, productDto)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "您沒有權限修改此商品");
+            return "redirect:/backstage/products";
+        }
+
         model.addAttribute("productDto", productDto);
         model.addAttribute("productNo", productNo);
-
-        // 取商品圖片
-        List<ProductImg> productImages = productImgService.getImgByProduct(product.getProductNo());
         model.addAttribute("productImages", productImages);
 
         return "backstage/product/updateProduct";
     }
 
-    @PostMapping("/update")
-    public String updateProduct(@RequestParam("productNo") Integer productNo, ProductDto productDto,
-                                @RequestParam(required = false) List<Integer> deleteImages,
-                                @RequestParam("productImages") MultipartFile[] files,
-                                RedirectAttributes redirectAttributes,
-                                BindingResult result) throws IOException {
-
-        List<ProductImg> remainingImages = productImgService.getImgByProduct(productNo);
-        // 不需要驗證 !deleteImages.isEmpty()，checkbox沒勾選是null
-        if (deleteImages != null) {
-            // 移除remainingImages中標記刪除的圖片
-            remainingImages.removeIf(image -> deleteImages.contains(image.getProductImgNo()));
-            // 刪除資料庫的圖片
-            productImgService.deleteImgByImgNos(deleteImages);
-            System.out.println("Remaining images count: " + remainingImages.size());
-            System.out.println("Is remainingImages empty: " + remainingImages.isEmpty());
+    /**
+     * 修改商品
+     *
+     * @param productDto   商品資料
+     * @param deleteImages 要刪除的圖片編號
+     * @param files        新增的圖片
+     *
+     */
+    @PostMapping("/product/update")
+    public String update(@RequestParam(required = false) List<Integer> deleteImages,
+                         @RequestParam("productImages") MultipartFile[] files,
+                         ProductDto productDto,
+                         RedirectAttributes redirectAttributes) throws IOException {
+        Integer productNo = productDto.getProductNo();
+        try {
+            productServiceImpl.updateProductAndImages(productDto, deleteImages, files);
+            return "redirect:/backstage/product/" + productNo + "/edit?success=true";
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/backstage/product/" + productNo + "/edit";
         }
-        // 檢查是否有上傳圖片
-        boolean hasValidImg = false;
-        if (files != null) {
-            for (MultipartFile file : files) {
-                if (!file.isEmpty()) {
-                    hasValidImg = true;
-                    break;
-                }
-            }
-        }
-        if (remainingImages.isEmpty() && !hasValidImg) {
-            redirectAttributes.addFlashAttribute("errorMessage", "*請上傳至少一張圖片");
-            return "redirect:/backstage/product/updateProduct/" + productNo;
-        }
-
-        // 處理新上傳的圖片
-        if (hasValidImg) {
-            for (MultipartFile file : files) {
-                if (!file.isEmpty()) {
-                    productImgService.addImage(file, productNo);
-                }
-            }
-        }
-
-        productServiceImpl.updateProduct(productNo, productDto);
-        redirectAttributes.addAttribute("productNo", productNo);
-        redirectAttributes.addFlashAttribute("successMessage", "商品修改成功!");
-        return "redirect:/backstage/product/showProducts";
     }
-
-    private void prepareProductModel(Model model, Product product) {
-        List<Product> productsList = productServiceImpl.getProductsByHost(product.getHost());
-        Map<Integer, List<ProductImg>> productImages = new HashMap<>();
-        for (Product p : productsList) {
-            List<ProductImg> imgs = productImgService.getImgByProduct(p.getProductNo());
-            productImages.put(p.getProductNo(), imgs);
-        }
-
-        model.addAttribute("productsList", productsList);
-        model.addAttribute("productImages", productImages);
-    }
-
 
 }

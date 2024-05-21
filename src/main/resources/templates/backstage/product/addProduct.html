@@ -67,6 +67,11 @@
             height: 150px;
             resize: none;
         }
+        #preview {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
         .btn-container {
             display: block;
             width: 100%;
@@ -91,6 +96,21 @@
             font-style: italic;
             color: red;
         }
+        .swal-button-container {
+            text-align: center;
+            width: 100%;
+        }
+        .swal-button-custom {
+            margin: 0 auto;
+            display: block;
+            color: gray;
+            border: none !important;
+            box-shadow: none !important;
+            background-color: #f4e9e6;
+        }
+        .swal-button-custom:hover {
+            background-color: #ead4ce;
+        }
     </style>
 </head>
 <body>
@@ -102,8 +122,8 @@
             <h2>上架商品</h2>
         </div>
 
-        <div class="add_form content">
-            <form class="form" th:action="@{/backstage/product/insert}" th:object="${productDto}" method="post" enctype="multipart/form-data">
+        <div class="add_form content" style="background: none;">
+            <form class="form" th:action="@{/backstage/product/addProduct}" th:object="${productDto}" method="post" enctype="multipart/form-data" style="width: 90%;">
                 <div class="form-group">
 <!--                    <label for="host_no">廠商編號:</label>-->
                     <input type="hidden" id="host_no" th:field="*{hostNo}" required>
@@ -183,6 +203,7 @@
         </div>
     </div>
 </div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
     /* 檢查商品上下架時間 */
     $(document).ready(function() {
@@ -249,6 +270,22 @@
                 });
             }
         });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        let urlParams = new URLSearchParams(window.location.search);
+        let success = urlParams.get('success');
+        if (success) {
+            swal({
+                text: "商品新增成功!",
+                icon: "success",
+                button: {
+                    text: "回商品列表",
+                    className: "swal-button-custom"
+                },
+            }).then((value) => {
+                window.location.href = '/backstage/products';
+            });
+        }
     });
 </script>
 </body>
