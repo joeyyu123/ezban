@@ -37,7 +37,9 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                              "/register",
                              "/forgotPassword",
                              "/events/**",
-                             "/saveevent/**")
+                             "/saveevent/**",
+                             "/frontstage/memberchat/**",
+                             "/frontstage/qrcodeticket/**")
                 .and()
 
             .authorizeRequests()
@@ -46,7 +48,7 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                              "/register",
                              "/forgotPassword","/").permitAll()
                 .antMatchers("/events/orders/**","/events/order/**","/events/*/tickets",
-                             "/saveevent/**").hasRole("Member")
+                             "/saveevent/**","/frontstage/memberchat/**","/frontstage/qrcodeticket/**").hasRole("Member")
                 .and()
 
             .formLogin()
