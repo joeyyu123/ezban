@@ -1,5 +1,7 @@
 package com.ezban.productcomment.model;
 
+
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,11 +30,9 @@ public class ProductCommentService {
         comments.forEach(comment -> Hibernate.initialize(comment.getMember())); // 初始化延遲加載的Member
         return comments.stream()
                        .map(comment -> new ProductCommentDTO(
-                               comment.getProductCommentNo(),
                                comment.getMember().getMemberNo(),
                                comment.getProductCommentContent(),
-                               comment.getProductRate(),
-                               comment.getProductCommentStatus())) // 包含status字段
+                               comment.getProductRate()))
                        .collect(Collectors.toList());
     }
 
@@ -42,11 +42,9 @@ public class ProductCommentService {
         comments.forEach(comment -> Hibernate.initialize(comment.getMember())); // 初始化延遲加載的Member
         return comments.stream()
                        .map(comment -> new ProductCommentDTO(
-                               comment.getProductCommentNo(),
                                comment.getMember().getMemberNo(),
                                comment.getProductCommentContent(),
-                               comment.getProductRate(),
-                               comment.getProductCommentStatus())) // 包含status字段
+                               comment.getProductRate()))
                        .collect(Collectors.toList());
     }
 
@@ -62,12 +60,5 @@ public class ProductCommentService {
     @Transactional(readOnly = true)
     public long getRatingCount(Integer productNo) {
         return commentRepository.countByProduct_ProductNo(productNo);
-    }
-
-    @Transactional(readOnly = true)
-    public ProductCommentDTO.CommentStatsDTO getCommentStats(Integer productNo) {
-        double averageRating = getAverageRating(productNo);
-        long ratingCount = getRatingCount(productNo);
-        return new ProductCommentDTO.CommentStatsDTO(averageRating, ratingCount);
     }
 }
