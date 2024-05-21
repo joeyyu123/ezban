@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EventService implements ServiceDemo<Event> {
@@ -55,4 +56,7 @@ public class EventService implements ServiceDemo<Event> {
         return principal.getName().equals(event.getHost().getHostNo().toString());
     }
 
+    public Optional<Event> findEventByEventNo(Integer eventNo) {
+        return repository.findById(eventNo);
+    }
 }
