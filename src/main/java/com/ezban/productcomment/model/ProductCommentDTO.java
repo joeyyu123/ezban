@@ -1,26 +1,14 @@
 package com.ezban.productcomment.model;
 
 public class ProductCommentDTO {
-    private Integer productCommentNo;
     private Integer memberNo;
     private String commentContent;
     private Integer productRate;
-    private Integer productCommentStatus;
 
-    public ProductCommentDTO(Integer productCommentNo, Integer memberNo, String commentContent, Integer productRate, Integer productCommentStatus) {
-        this.productCommentNo = productCommentNo;
+    public ProductCommentDTO(Integer memberNo, String commentContent, Integer productRate) {
         this.memberNo = memberNo;
         this.commentContent = commentContent;
         this.productRate = productRate;
-        this.productCommentStatus = productCommentStatus;
-    }
-
-    public Integer getProductCommentNo() {
-        return productCommentNo;
-    }
-
-    public void setProductCommentNo(Integer productCommentNo) {
-        this.productCommentNo = productCommentNo;
     }
 
     public Integer getMemberNo() {
@@ -47,14 +35,7 @@ public class ProductCommentDTO {
         this.productRate = productRate;
     }
 
-    public Integer getProductCommentStatus() {
-        return productCommentStatus;
-    }
-
-    public void setProductCommentStatus(Integer productCommentStatus) {
-        this.productCommentStatus = productCommentStatus;
-    }
-
+    // Nested class for CommentStatsDTO
     public static class CommentStatsDTO {
         private double averageRating;
         private long ratingCount;
