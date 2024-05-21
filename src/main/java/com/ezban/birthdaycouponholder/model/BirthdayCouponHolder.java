@@ -15,9 +15,11 @@ import javax.persistence.Table;
 import com.ezban.birthdaycoupon.model.BirthdayCoupon;
 import com.ezban.member.model.Member;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "birthday_coupon_holder")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class BirthdayCouponHolder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
