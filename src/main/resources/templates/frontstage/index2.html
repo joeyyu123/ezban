@@ -33,7 +33,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
-    <!-- Maith:n jQuery -->
+    <!-- Mait jQuery -->
     <script th:src="@{/plugins/jquery/dist/jquery.min.js}"></script>
     <script th:src="@{/plugins/jquery/dist/jquery-3.7.1.min.js}"></script>
     <!-- Bootstrap 3.1 -->
@@ -81,8 +81,8 @@
             <div class="col-md-6 col-xs-12 col-sm-6">
                 <!-- Cart -->
                 <ul class="top-menu text-right list-inline">
-                    <li class="dropdown cart-nav dropdown-slide">
-                        <a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                    <li class="cart-nav">
+                        <a th:href="@{/cart/items}">
                             <div class="cart-icon" style="margin-right: 3px;">
                                 <i class="bi bi-cart3">
                                     <span class="badge">0</span>
@@ -90,46 +90,20 @@
                             </div>
                             <span class="top-menu-text">購物車</span>
                         </a>
-                        <div class="dropdown-menu cart-dropdown">
-                            <!-- Cart Item -->
-                            <div class="media" th:each="item : ${cart}">
-                                <a class="pull-left" href="#!">
-                                    <img class="media-object" th:src="@{${item.image}}" alt="image"/>
-                                </a>
-                                <div class=" y">
-                                    <h4 class="media-heading"><a href="#!" th:text="${item.name}">Ladies Bag</a></h4>
-                                    <div class="cart-price">
-                                        <span th:text="${item.amount}">1 x</span>
-                                        <span th:text="${item.price}">1250.00</span>
-                                    </div>
-                                    <h5><strong th:text="${item.totalPrice}">$1200</strong></h5>
-                                </div>
-                                <a href="#!" class="remove"><i class="tf-ion-close"></i></a>
-                            </div><!-- / Cart Item -->
-
-                            <div class="cart-summary">
-                                <span>Total</span>
-                                <span class="total-price" th:text="${totalPrice}">$1799.00</span>
-                            </div>
-                            <ul class="text-center cart-buttons">
-                                <li><a th:href="@{/cart/items}" class="btn btn-small">View Cart</a></li>
-                                <li><a th:href="@{/checkout}" class="btn btn-small btn-solid-border">Checkout</a></li>
-                            </ul>
-                        </div>
 
                     </li><!-- / Cart -->
 
-                    <!-- Search -->
-                    <li class="dropdown search dropdown-slide">
-                        <a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
-                            <i class="tf-ion-ios-search-strong"></i><span class="top-menu-text">搜尋</span></a>
-                        <ul class="dropdown-menu search-dropdown">
-                            <li>
-                                <form th:action="@{/search}" action="post"><input type="search" class="form-control"
-                                                                                  placeholder="Search..."></form>
-                            </li>
-                        </ul>
-                    </li><!-- / Search -->
+<!--                    &lt;!&ndash; Search &ndash;&gt;-->
+<!--                    <li class="dropdown search dropdown-slide">-->
+<!--                        <a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">-->
+<!--                            <i class="tf-ion-ios-search-strong"></i><span class="top-menu-text">搜尋</span></a>-->
+<!--                        <ul class="dropdown-menu search-dropdown">-->
+<!--                            <li>-->
+<!--                                <form th:action="@{/search}" action="post"><input type="search" class="form-control"-->
+<!--                                                                                  placeholder="Search..."></form>-->
+<!--                            </li>-->
+<!--                        </ul>-->
+<!--                    </li>&lt;!&ndash; / Search &ndash;&gt;-->
 
                     <!-- Member -->
                     <li class="dropdown member-nav dropdown-slide">
@@ -228,7 +202,7 @@
     <div class="events container">
         <div class="row">
             <div class="title text-center">
-                <h2>Trendy Events</h2>
+                <h2>探索活動</h2>
             </div>
         </div>
         <div class="row">
@@ -458,7 +432,7 @@
             </div>
         </div>
         <div class="see_more">
-            <a th:href="@{/events}">see more</a>
+            <a th:href="@{/events}">查看更多</a>
         </div>
     </div>
 </section>
@@ -467,7 +441,7 @@
     <div class="products container">
         <div class="row">
             <div class="title text-center">
-                <h2>Merchandise</h2>
+                <h2>精選商品</h2>
             </div>
         </div>
         <div class="row">
@@ -683,7 +657,7 @@
                 </div>
             </div>
             <div class="see_more">
-                <a href="shop.html">see more</a>
+                <a th:href="@{/product/shopall}">查看更多</a>
             </div>
             <!-- Modal -->
             <div class="modal product-modal fade" id="product-modal">
@@ -739,21 +713,8 @@ Start Call To Action
                                                    style="width: 44.48px; height: 40px;"></a>
                     </li>
                 </div>
-                <ul class="footer-menu text-uppercase">
-                    <li>
-                        <a href="contact.html">CONTACT</a>
-                    </li>
-                    <li>
-                        <a href="shop.html">SHOP</a>
-                    </li>
-                    <li>
-                        <a href="pricing.html">Pricing</a>
-                    </li>
-                    <li>
-                        <a href="contact.html">PRIVACY POLICY</a>
-                    </li>
-                </ul>
-                <p class="copyright-text">Copyright &copy; <a target="_blank" href="http://www.mobanwang.com/">ez辦 All
+                <p class="copyright-text" style="margin-top: 50px;">
+                    Copyright &copy; <a target="_blank" href="http://www.mobanwang.com/">ez辦 All
                     Rights Reserved.</a></p>
             </div>
         </div>

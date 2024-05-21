@@ -22,7 +22,14 @@
     animation: none !important;
 }
 
-.stars .fa-star {
+.stars .fa-star, .stars .fa-star-half-alt {
     color: #ffd700;  /* 金色 */
 }
+ #addToFavorites:hover {
+     cursor: pointer;
+ }
 
+ .product_price {
+     font-size: 20px;
+     margin-top: 10px;
+ }

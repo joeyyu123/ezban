@@ -5,37 +5,38 @@
 <head th:replace="frontstage/index2 :: head">
 
     <!-- 檢舉Modal開始(點擊我要檢舉觸發彈窗) -->
-    <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
+    <!--    <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog">-->
+    <!--        <div class="modal-dialog" role="document">-->
 
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"
-                        style="color: red; font-weight: bold; font-size: 30px;">
-                        <center>請 輸 入 檢 舉 原 因</center>
-                    </h5>
-                </div>
-                <div class="modal-body">
-                    <!-- 表單 -->
-                    <form id="productReportForm" method="post" action="/productreport/insert">
-                        <div class="mb-3"><label for="reportReason" class="col-form-label">原因說明:</label>
-                            <textarea class="form-control" id="reportReason" name="reportReason"></textarea></div>
-                        <!-- 隱藏的输入字段用於储存訂單編號 -->
-                        <input type="hidden" id="productNo" name="productNo" value="">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <br>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                            onclick="window.location.href='/product/shopdetail'">放棄檢舉
-                    </button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                            th:onclick="submitProductReport([[${productNo}]])">送出檢舉
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!--            <div class="modal-content">-->
+    <!--                <div class="modal-header">-->
+    <!--                    <h5 class="modal-title" id="exampleModalLabel"-->
+    <!--                        style="color: red; font-weight: bold; font-size: 30px;">-->
+    <!--                        <center>請 輸 入 檢 舉 原 因</center>-->
+    <!--                    </h5>-->
+    <!--                </div>-->
+    <!--                <div class="modal-body">-->
+    <!--                    &lt;!&ndash; 表單 &ndash;&gt;-->
+    <!--                    <form id="productReportForm" method="post" action="/productreport/insert">-->
+    <!--                        <div class="mb-3"><label for="reportReason" class="col-form-label">原因說明:</label>-->
+    <!--                            <textarea class="form-control" id="reportReason" name="reportReason"></textarea></div>-->
+    <!--                        &lt;!&ndash; 隱藏的输入字段用於储存訂單編號 &ndash;&gt;-->
+    <!--                        <input type="hidden" id="productNo" name="productNo" value="">-->
+    <!--                    </form>-->
+    <!--                </div>-->
+    <!--                <div class="modal-footer">-->
+    <!--                    <br>-->
+    <!--                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">-->
+    <!--                        &lt;!&ndash;                            onclick="window.location.href='/product/shopdetail?productNo=${productNo}'"&ndash;&gt;-->
+    <!--                        放棄檢舉-->
+    <!--                    </button>-->
+    <!--                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"-->
+    <!--                            th:onclick="submitProductReport([[${productNo}]])">送出檢舉-->
+    <!--                    </button>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
     <!-- 檢舉的Modal結束 -->
 </head>
 <link rel="stylesheet" th:href="@{/css/frontstage/product/shopdetail.css}">
@@ -83,7 +84,7 @@
             <div class="col-md-7">
                 <div class="single-product-details">
                     <h2 class="product_name"></h2>
-                    <div class="product_rating"></div>
+                    <div class="product_rating stars"></div>
                     <p class="product_price"></p>
 
                     <div class="product-quantity">
@@ -98,16 +99,22 @@
                             <li class="product_category"><a th:href="@{/product/shopall}"></a></li>
                         </ul>
                     </div>
-                    <a href="#" id="add_to_cart" class="btn btn-main mt-20"
-                       style="margin-right: 5px; padding: 11px 12px; font-size: 14px">加入購物車</a>
-                    <a id="addToFavorites" class="btn btn-main mt-20"
-                       style="margin-right: 5px;" th:onclick="addToFavorites([[${productNo}]])"><i
-                            class="tf-ion-ios-heart"></i> 加入收藏</a>
-                    <button type="button" id="productReport" class="btn btn-primary btn-lg" data-toggle="modal"
-                            data-target="#staticBackdrop"
-                            style="margin-top: 20px; height: 45px; border-radius: 0; background-color: #000; font-size: 11px;">
-                        <i class="tf-ion-alert"></i>&nbsp;&nbsp;我要檢舉
-                    </button>
+                    <div class="bottons">
+                        <a href="#" id="add_to_cart" class="btn btn-main mt-20"
+                           style="margin-right: 5px; padding: 11px 12px; font-size: 14px">加入購物車</a>
+                        <button type="button" id="productReport" class="btn btn-primary btn-lg" data-toggle="modal"
+                                data-target="#staticBackdrop"
+                                style="margin-top: 20px; height: 45px; border-radius: 0; background-color: #000; font-size: 14px; padding: 11px 12px;">
+                            <i class="tf-ion-alert"></i>&nbsp;&nbsp;我要檢舉
+                        </button>
+                    </div>
+                    <div class="favorite_container" style="margin-top: 20px;">
+                        <a id="addToFavorites"
+                           style="margin-right: 5px; padding: 11px 12px; font-size: 12px; color: #f19075; font-weight: 700;"
+                           th:onclick="addToFavorites([[${productNo}]])">
+                            <i class="tf-ion-ios-heart"></i> 加入收藏清單
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -154,19 +161,17 @@
 <div th:replace="frontstage/index2 :: footer"></div>
 
 </body>
-<!--<script th:src="@{/js/frontstage/product/guest.js}"></script>-->
 <script th:src="@{/js/frontstage/product/shopdetail.js}"></script>
 <script>
     // this function input object is from autoGetCommentsDetailByProductNoAPI "userDetails" object(shopdetail.js)
-    function appendCommentToCommentList(commentsDetail, commentCount, averageRate) {
-        let avg_el = document.querySelector('.product_rating');
-        avg_el.innerHTML = `<span class="stars"></span> ${averageRate}/5 `;
+    function appendCommentToCommentList(commentsDetail, commentCount) {
         let element = document.getElementById('comments_list');
         document.querySelector('#comment_count').innerText = `商品評論 (${commentCount})`;
 
         if (commentCount === 0) {
             element.innerHTML = `<p>目前尚無評論</p>`
         } else {
+            rateHtml = generateStartsHtml(commentsDetail.rate);
             html_text = `
                 <li class="media">
                     <div class="media-body">
@@ -174,7 +179,7 @@
                             <h4 class="comment-author">
                                 <span id="member_name">${commentsDetail.memberMail}</span>
                             </h4>
-                            <p>${commentsDetail.rate}</p>
+                            <p>${rateHtml}</p>
                         </div>
                         <p>
                             ${commentsDetail.comment}
@@ -185,6 +190,50 @@
             `
             element.innerHTML += html_text;
         }
+    }
+
+    function appendStartsToHtml(averageRate) {
+        // 顯示平均評分
+        let avg_el = document.querySelector('.product_rating');
+        avg_el.innerHTML = generateStartsHtml(averageRate);
+    }
+
+    function generateStartsHtml(averageRate){
+        node = document.createElement('div');
+        node.className = 'stars';
+        // 顯示分數數值
+        node.innerHTML+= `<span class="stars"></span> ${averageRate}/5 `;
+
+        // 依照平均分數，動態顯示星星圖案
+        fullStars = Math.floor(averageRate);
+        halfStar = averageRate % 1 >= 0.5 ? 1 : 0;
+        emptyStars = 5 - fullStars - halfStar;
+        console.log('averageRate', averageRate,'fullStars:', fullStars, 'halfStar:', halfStar, 'emptyStars:', emptyStars);
+        node.innerHTML += '<i class="fa fa-star"></i>'.repeat(fullStars) +
+            (halfStar ? '<i class="fa fa-star-half-alt"></i>' : '') +
+            '<i class="far fa-star"></i>'.repeat(emptyStars);
+
+        return node.outerHTML
+    }
+    // // this function input object is from getProductsByHostAndCategoryAPI "relatedProducts" object(shopdetail.js)
+    function appendRelatedProductsToRelatedProductList(relatedProducts) {
+        let element = document.getElementById('related_products');
+        relatedProducts.forEach(function (relatedProduct) {
+            let html_text = `
+             <div class="col-md-3 related_product_card">
+                <div class="product-item">
+                    <div class="product-thumb">
+                        <img class="img-responsive" src="/product/getFirstImage/${relatedProduct.productNo}" alt="${relatedProduct.productNo}"/>
+                    </div>
+                    <div class="product-content">
+                        <h4><a href="/product/shopdetail?productNo=${relatedProduct.productNo}">${relatedProduct.productName}</a></h4>
+                        <p class="price">$${relatedProduct.productPrice}</p>
+                    </div>
+                </div>
+            </div>
+            `;
+            element.innerHTML += html_text;
+        });
     }
 
     // function appendRelatedProductToRelatedProductList(relatedProduct) {
@@ -216,14 +265,17 @@
     // 商品評論
     autoGetCommentsDetailByProductNoAPI(productNo)
         .then(function (result) {
-            if (result.count ===0) {
+            if (result.count === 0) {
                 appendCommentToCommentList(null, 0);
             } else {
                 result.details.forEach(function (commentDetail) {
-                    appendCommentToCommentList(commentDetail, result.count, result.averageRate);
+                    appendCommentToCommentList(commentDetail, result.count);
                 });
             }
+            // 依照comment response取得的平均評分，動態顯示星星
+            appendStartsToHtml(result.averageRate);
         });
+
     // 商品輪播圖及詳細資訊
     getProductImages(productNo).then(function (imageUrls) {
         // console.log(imageUrls);
@@ -251,7 +303,26 @@
             carouselInner.appendChild(item);
         });
     });
-    getProductDetail(productNo);
+
+    getProductDetailAPI(productNo).then(function (product)  {
+        // 頁面有兩個 class="product_name" 元素 -> querySelectorAll
+        let productNames = document.querySelectorAll('.product_name');
+        productNames.forEach((productName) => {
+            productName.innerText = product.productName;
+        })
+        document.querySelector('.product_price').innerText = `NT $${product.productPrice}`;
+        document.querySelector('.product_category').innerText = product.productCategory.productCategoryName;
+        document.querySelector('.product_desc').innerText = product.productDesc;
+
+        // 相關商品
+        hostNo = product.host.hostNo;
+        productCategoryNo = product.productCategory.productCategoryNo;
+        getProductsByHostAndCategoryAPI(productNo, hostNo, productCategoryNo)
+            .then(function (relatedProducts) {
+                appendRelatedProductsToRelatedProductList(relatedProducts);
+            });
+    })
+
     // 加入購物車
     document.getElementById('add_to_cart').addEventListener('click', function (e) {
         e.preventDefault();
@@ -261,6 +332,7 @@
         // console.log('quantity7878:', quantity);
         autoIncreaseCartQuantityAndSetUI(productNo, quantity);
     });
+
 </script>
 
 

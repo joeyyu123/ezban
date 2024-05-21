@@ -108,7 +108,6 @@
                                             <input id="card-cvc" class="form-control" type="tel" maxlength="4"
                                                    placeholder="CVC" name="card_cvc">
                                         </div>
-                                        <!-- 將送出按鈕改為submit類型 -->
                                         <button type="submit" class="btn btn-main mt-20">送出訂單</button>
                                     </div>
                                 </div>
@@ -435,9 +434,24 @@
             .then(response => response.json())
             .then(data => {
                 console.log('訂單成立', data);
+                Swal.fire({
+                    title: '付款成功',
+                    text: '訂單已成功建立。',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    footer: '<a href="/">回首頁</a>',
+                    allowOutsideClick: false
+                });
             })
             .catch(error => {
                 console.error('訂單不成立', error);
+                Swal.fire({
+                    title: '錯誤!',
+                    text: '訂單建立失敗。',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    allowOutsideClick: false
+                });
             });
     }
 

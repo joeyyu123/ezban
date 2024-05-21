@@ -1,20 +1,16 @@
 /* 取商品資訊 */
-function getProductDetail(productNo) {
+async function getProductDetailAPI(productNo) {
     let url = `/product/getProductDetail?productNo=${productNo}`;
-    fetch(url)
-        .then(response => response.json())
-        .then(product => {
-            // console.log(product, "product")
-            // 頁面有兩個 class="product_name" 元素 -> querySelectorAll
-            let productNames = document.querySelectorAll('.product_name');
-            productNames.forEach((productName) => {
-                productName.innerText = product.productName;
-            })
-            document.querySelector('.product_price').innerText = `$${product.productPrice}`;
-            document.querySelector('.product_category').innerText = product.productCategory.productCategoryName;
-            document.querySelector('.product_desc').innerText = product.productDesc;
-        })
-        .catch(error => console.error("取得商品資訊失敗", error));
+    try {
+        response =  await fetch(url);
+        if (response.status !== 200) {
+            console.error("取得商品資訊失敗", response);
+            return;
+        }
+        return await response.json();
+    } catch (e) {
+        return e;
+    }
 }
 
 /* 取商品圖片 */
@@ -79,6 +75,21 @@ async function autoGetCommentsDetailByProductNoAPI(productNo) {
         count: commentCount,
         averageRate: averageRate
     };
+}
+
+// productNo is excluded
+async function getProductsByHostAndCategoryAPI(hostNo, productCategoryNo, productNo) {
+    let url = `/product/related?hostNo=${hostNo}&productCategoryNo=${productCategoryNo}&productNo=${productNo}`;
+    try {
+        response =  await fetch(url);
+        if (response.status !== 200) {
+            console.error("取得相關商品失敗", response);
+            return;
+        }
+        return await response.json();
+    } catch (e) {
+        return e;
+    }
 }
 
 // 取得當前商品詳細資訊
