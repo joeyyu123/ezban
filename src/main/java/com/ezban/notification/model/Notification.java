@@ -6,6 +6,7 @@ import javax.validation.constraints.Size;
 import com.ezban.admin.model.Admin;
 import com.ezban.host.model.Host;
 import com.ezban.member.model.Member;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime; 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "notification")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Notification {
 	
 	@Id

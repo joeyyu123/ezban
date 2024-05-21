@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系統通知</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        #notification-container {
+            width: 80%;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #notifications {
+            margin-top: 20px;
+        }
+
+        .notification {
+            background: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="notification-container">
+        <h1>系統通知</h1>
+        <div id="notifications"></div>
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const notificationContainer = document.getElementById('notifications');
+
+        // 建立一個 WebSocket 連接
+        const socket = new WebSocket('ws://localhost:8080/notifications');
+
+        // 接收到訊息時觸發
+        socket.onmessage = (event) => {
+            const notification = JSON.parse(event.data);
+            displayNotification(notification);
+        };
+
+        // 顯示通知
+        function displayNotification(notification) {
+            const notificationElement = document.createElement('div');
+            notificationElement.className = 'notification';
+            notificationElement.innerText = notification.message;
+            notificationContainer.appendChild(notificationElement);
+        }
+
+        // 獲取以前的通知
+        fetch('/notifications')
+            .then(response => response.json())
+            .then(notifications => {
+                notifications.forEach(notification => {
+                    displayNotification(notification);
+                });
+            });
+    });
+
+    </script>
+</body>
+</html>
