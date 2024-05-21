@@ -9,6 +9,7 @@ import com.ezban.member.model.MemberRepository;
 import com.ezban.product.model.Product;
 import com.ezban.product.model.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
@@ -44,7 +45,7 @@ public class ProductReportService {
 
     // 顯示全部被檢舉的商品
     public List<ProductReport> getAll() {
-        return repository.findAll();
+        return repository.findAll(Sort.by(Sort.Direction.ASC, "reportStatus"));
     }
 
 

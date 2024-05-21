@@ -1,29 +1,43 @@
 package com.ezban.productreport.controller;
 
+import com.ezban.member.model.MemberService;
 import com.ezban.productreport.model.AddProductReportDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.ezban.productreport.model.ProductReportService;
 
+import java.security.Principal;
+
 @Controller
-@RequestMapping("/productreport")
+//@RequestMapping("/productreport")
 public class FrontstageProductReportController {
 
     @Autowired
     ProductReportService productReportSvc;
 
-    // 新增檢舉商品
-    @PostMapping("/insert")
-    public ResponseEntity<?> submitProductReport(@RequestBody AddProductReportDTO addProductReportDTO) {
+    @Autowired
+    MemberService memberService;
+
+
+    /**
+     * 會員需登錄才可進行檢舉
+     * @param principal 當前登入的用戶信息
+     * @return 訂單列表頁面
+     */
+    @PostMapping("/productreport/insert")
+    @PreAuthorize("hasRole('member')")
+    public ResponseEntity<?> submitProductReport(@RequestBody AddProductReportDTO addProductReportDTO, Principal principal) {
 
         try {
 
-            // 先測試資料,之後換成session裡面的memberNo
-            addProductReportDTO.setMemberNo(10);
+            // 從 Principal 對象中獲取當前登錄用戶的會員編號
+            Integer memberNo = Integer.parseInt(principal.getName());
+            addProductReportDTO.setMemberNo(memberNo);
 
             // 執行更新操作
             productReportSvc.addProductReport(addProductReportDTO);
