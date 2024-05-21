@@ -7,6 +7,7 @@ import com.ezban.qrcodeticket.model.QrcodeTicket;
 import com.ezban.qrcodeticket.model.QrcodeTicketService;
 import com.ezban.tickettype.model.TicketType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -219,7 +220,7 @@ public class EventService implements ServiceDemo<Event> {
         List<EventDto> dtoList = (List<EventDto>) redisTemplate.opsForValue().get("trendingEvents");
 
         if (dtoList == null) {
-            List<Event> events = eventRepository.findTop6ByOrderByVisitCountDesc();
+            List<Event> events = eventRepository.findTop6ByOrderByVisitCountDesc(PageRequest.of(0, 6, Sort.by(Sort.Direction.DESC, "visitCount")));
             dtoList = new ArrayList<>();
             for (Event event : events) {
                 dtoList.add(this.convertToDto(event));
@@ -228,6 +229,17 @@ public class EventService implements ServiceDemo<Event> {
         }
 
         return dtoList;
+    }
+
+    // 每10分鐘更新一次熱門活動
+    @Scheduled(fixedRate = 10, timeUnit = TimeUnit.MINUTES)
+    public void syncTrendingEvents() {
+        List<Event> events = eventRepository.findTop6ByOrderByVisitCountDesc(PageRequest.of(0, 6, Sort.by(Sort.Direction.DESC, "visitCount")));
+        List<EventDto> dtoList = new ArrayList<>();
+        for (Event event : events) {
+            dtoList.add(this.convertToDto(event));
+        }
+        redisTemplate.opsForValue().set("trendingEvents", dtoList, 1, TimeUnit.HOURS); // 緩存一小時
     }
 
     public EventDto convertToDto(Event event) {

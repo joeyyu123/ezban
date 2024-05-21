@@ -43,5 +43,6 @@ public interface EventRepository extends JpaRepository<Event, Integer>, JpaSpeci
     List<Event> findByEventCityAndEventCategoryEventCategoryNoAndEventStatus(String city, Integer categoryNo, EventStatus eventStatus, Pageable pageable);
 
 
-    List<Event> findTop6ByOrderByVisitCountDesc();
+    @Query("SELECT e FROM Event e JOIN FETCH e.eventCategory JOIN FETCH e.host")
+    List<Event> findTop6ByOrderByVisitCountDesc(Pageable pageable);
 }
