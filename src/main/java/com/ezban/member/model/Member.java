@@ -90,7 +90,8 @@ public class Member implements Serializable {
 	
 	//生日優惠券用
 	@OneToMany(mappedBy = "member")
-	@JsonBackReference
+//	@JsonBackReference
+	@JsonManagedReference
     private Set<BirthdayCouponHolder> couponHolders;
 
 	public Member() {

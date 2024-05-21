@@ -1,6 +1,11 @@
 package com.ezban.event.model;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -8,11 +13,12 @@ import java.util.List;
 public interface EventRepository extends JpaRepository<Event, Integer> {
     List<Event> findByHostHostNo(Integer HostNo);
 
-    List<Event> findByEventCity(String eventCity);
+    List<Event> findByEventCityAndEventStatus(String eventCity,EventStatus eventStatus, Pageable pageable);
 
     List<Event> findByEventStatus(EventStatus eventStatus);
+    List<Event> findByEventStatus(EventStatus status, Pageable pageable);
 
-    List<Event> findByEventCategoryEventCategoryNoAndEventStatus(Integer eventCategoryNo, EventStatus eventStatus);
+    List<Event> findByEventCategoryEventCategoryNoAndEventStatus(Integer eventCategoryNo, EventStatus eventStatus, Pageable pageable);
 
     /**
      * 取得所有草稿狀態且上架時間小於等於現在時間的活動
@@ -29,4 +35,19 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      * @return List<Event>
      */
     List<Event> findByEventStatusAndEventEndTimeBefore(EventStatus eventStatus, Timestamp eventEndTime);
+
+    List<Event> findByHostHostNoAndEventStatus(Integer host_hostNo, EventStatus eventStatus);
+
+    @Query("SELECT DISTINCT e.eventCity FROM Event e")
+    List<String> findDistinctEventCity();
+
+    List<Event> findByEventCityAndEventCategoryEventCategoryNoAndEventStatus(String city, Integer categoryNo, EventStatus eventStatus, Pageable pageable);
+
+    @Query("SELECT e FROM Event e WHERE e.eventStatus = :status AND " +
+            "(e.eventCity IN :cities OR :cities IS NULL) AND " +
+            "(e.eventCategory.eventCategoryNo IN :categoryNos OR :categoryNos IS NULL)")
+    List<Event> findByEventCityAndEventCategory(@Param("status") EventStatus status,
+                                                @Param("cities") List<String> cities,
+                                                @Param("categoryNos") List<Integer> categoryNos,
+                                                Pageable pageable);
 }

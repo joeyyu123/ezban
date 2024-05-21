@@ -102,7 +102,11 @@ public class TicketOrderController {
         // 建立一個List來存放訂單詳情
         List<Map<String, Integer>> orderDetailList = getOrderDetailList(ticketOrders);
 
-        ticketOrderDetails = ticketOrderService.createOrder(member, orderDetailList);
+        try {
+            ticketOrderDetails = ticketOrderService.createOrder(member, orderDetailList);
+        } catch (InsufficientTicketQuantityException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
         int orderNo = ticketOrderDetails.get(0).getTicketOrder().getTicketOrderNo();
 
 

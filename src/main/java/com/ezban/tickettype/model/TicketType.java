@@ -27,7 +27,6 @@ public class TicketType implements java.io.Serializable{
     @Size(max = 50)
     @NotNull
     @Column(name = "ticket_type_name", nullable = false, length = 50)
-    @JsonView(Views.PublicWithTicketType.class)
     private String ticketTypeName;
 
     @NotNull

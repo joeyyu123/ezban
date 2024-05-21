@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>評星和評論系統</title>
+    <title>事件評分和評論</title>
     <style>
         #star-rating .star {
             font-size: 30px;
@@ -95,12 +95,17 @@
             padding: 5px 10px;
             margin-left: 10px;
         }
+
+        .inactive-comment {
+            opacity: 0.5;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
-    <h1>產品評分和評論</h1>
+    <h1>事件評分和評論</h1>
 
-    <div id="product-info">
+    <div id="event-info">
         <div class="average-rating">
             <span id="average-rating-value">0.0</span>
             <div class="stars" id="average-rating-stars"></div>
@@ -125,7 +130,7 @@
 
     <script>
         var currentRating = 0;
-        var productNo = 1;
+        var eventNo = 1; // 假設的事件編號
 
         function setRating(rating) {
             currentRating = rating;
@@ -140,7 +145,7 @@
         }
 
         function getCurrentMemberNo() {
-            return "1";
+            return "2"; // 假設的會員編號
         }
 
         function submitComment() {
@@ -151,17 +156,17 @@
             }
 
             const data = {
-                product: { productNo: productNo },
+                event: { eventNo: eventNo },
                 member: { memberNo: getCurrentMemberNo() },
-                productCommentContent: commentContent,
-                productRate: currentRating,
-                productCommentDate: new Date().toISOString(),
-                productCommentStatus: 0
+                eventCommentContent: commentContent,
+                eventCommentRate: currentRating,
+                eventCommentTime: new Date().toISOString(),
+                eventCommentStatus: 0
             };
 
             console.log("提交的評論數據:", data);
 
-            fetch('/api/product/comment', {
+            fetch('/api/event/comment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -171,8 +176,8 @@
             .then(response => response.json())
             .then(comment => {
                 alert("評論已提交！");
-                loadComments(productNo);
-                loadCommentStats(productNo);
+                loadComments(eventNo);
+                loadCommentStats(eventNo);
             })
             .catch(error => {
                 console.error('提交評論出錯:', error);
@@ -180,28 +185,32 @@
             });
         }
 
-        function loadComments(productNo) {
-            fetch(`/api/product/comment/${productNo}`)
+        function loadComments(eventNo) {
+            fetch(`/api/event/comment/${eventNo}`)
             .then(response => response.json())
             .then(comments => {
-                console.log(comments);
+                console.log("評論數據:", comments);
                 if (!Array.isArray(comments)) {
                     throw new TypeError('期望得到評論的數組，但實際得到:', comments);
                 }
                 const commentsDisplay = document.getElementById('comments-display');
                 commentsDisplay.innerHTML = '';
                 comments.forEach(comment => {
-                    const stars = '★'.repeat(comment.productRate) + '☆'.repeat(5 - comment.productRate);
-                    const commentItem = `<div class="comment-item">
+                    const stars = '★'.repeat(comment.eventCommentRate) + '☆'.repeat(5 - comment.eventCommentRate);
+                    const commentClass = comment.eventCommentStatus === -1 ? 'inactive-comment' : '';
+                    const commentContent = comment.eventCommentStatus === -1 ? '此評論為不當言論' : comment.eventCommentContent;
+                    const reportButton = comment.eventCommentStatus === -1 ? '' : `<button class="report-button" onclick="reportComment(this.parentElement.parentElement)">檢舉</button>`;
+                    const commentItem = `<div class="comment-item ${commentClass}" data-comment-id="${comment.eventCommentNo}">
                         <div class="comment-header">
                             <span class="member-id">會員編號: ${comment.memberNo}</span>
                             <div class="comment-rating">${stars}</div>
                         </div>
                         <div class="comment-content-wrapper">
-                            <div class="comment-content">${comment.commentContent}</div>
-                            <button class="report-button" data-comment-id="${comment.productCommentNo}" onclick="reportComment(this)">檢舉</button>
+                            <div class="comment-content">${commentContent}</div>
+                            ${reportButton}
                         </div>
                     </div>`;
+                    console.log("生成的 HTML:", commentItem); // 新增的日誌
                     commentsDisplay.innerHTML += commentItem;
                 });
             })
@@ -210,26 +219,40 @@
             });
         }
 
-        function loadCommentStats(productNo) {
-            fetch(`/api/product/comment/stats/${productNo}`)
+        function loadCommentStats(eventNo) {
+            fetch(`/api/event/comment/${eventNo}`)
             .then(response => response.json())
-            .then(stats => {
-                console.log(stats);
-                const averageRatingValue = document.getElementById('average-rating-value');
-                const averageRatingStars = document.getElementById('average-rating-stars');
-                const ratingCount = document.getElementById('rating-count');
+            .then(comments => {
+                console.log("加载的评论数据:", comments);
+                if (!Array.isArray(comments)) {
+                    throw new TypeError('期望得到评论的数组，但实际得到:', comments);
+                }
+                // 过滤掉状态为 -1 的评论
+                const validComments = comments.filter(comment => comment.eventCommentStatus !== -1);
+                if (validComments.length > 0) {
+                    const totalRating = validComments.reduce((sum, comment) => sum + comment.eventCommentRate, 0);
+                    const averageRating = totalRating / validComments.length;
+                    const averageRatingValue = document.getElementById('average-rating-value');
+                    const averageRatingStars = document.getElementById('average-rating-stars');
+                    const ratingCount = document.getElementById('rating-count');
 
-                averageRatingValue.textContent = stats.averageRating.toFixed(1);
-                averageRatingStars.innerHTML = '★'.repeat(Math.round(stats.averageRating)) + '☆'.repeat(5 - Math.round(stats.averageRating));
-                ratingCount.textContent = `(${stats.ratingCount})`;
+                    averageRatingValue.textContent = averageRating.toFixed(1);
+                    averageRatingStars.innerHTML = '★'.repeat(Math.round(averageRating)) + '☆'.repeat(5 - Math.round(averageRating));
+                    ratingCount.textContent = `(${validComments.length})`;
+                } else {
+                    document.getElementById('average-rating-value').textContent = '0.0';
+                    document.getElementById('average-rating-stars').innerHTML = '☆☆☆☆☆';
+                    document.getElementById('rating-count').textContent = '(0)';
+                }
             })
             .catch(error => {
-                console.error('加載評分統計出錯:', error);
+                console.error('加载评分统计出错:', error);
             });
         }
 
-        function reportComment(button) {
-            const commentId = button.getAttribute('data-comment-id');
+
+        function reportComment(commentElement) {
+            const commentId = commentElement.getAttribute('data-comment-id');
             console.log("檢舉評論ID:", commentId); // 日誌
             const reportReason = prompt("請輸入檢舉理由：");
             if (!reportReason) {
@@ -238,30 +261,26 @@
             }
 
             const data = {
-                productCommentNo: parseInt(commentId),
+                eventCommentNo: parseInt(commentId),
                 memberNo: parseInt(getCurrentMemberNo()),
                 reportReason: reportReason,
                 reportDate: new Date().toISOString(),
                 reportStatus: 0
             };
 
-            console.log("提交的檢舉數據:", data); // 日誌
+            console.log("提交的檢舉數據:", data);
 
-            fetch('/api/product/comment/report', {
+            fetch('/api/event/comment/report', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(result => {
                 alert("檢舉已提交！");
+                loadComments(eventNo);
             })
             .catch(error => {
                 console.error('檢舉出錯:', error);
@@ -270,8 +289,8 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            loadComments(productNo);
-            loadCommentStats(productNo);
+            loadComments(eventNo);
+            loadCommentStats(eventNo);
         });
     </script>
 </body>

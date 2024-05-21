@@ -120,4 +120,12 @@ public class QrcodeTicketService {
 
         return qrcodeTicketrepository.findByTicketOrderDetailTicketOrderDetailNo(ticketOrderDetailNo);
     }
+
+    public Integer countByEventNo(Integer eventNo){
+        return qrcodeTicketrepository.countByEventNo(eventNo);
+    }
+
+    public Integer countByEventNoAndTicketUsageStatus(Integer eventNo, Byte ticketUsageStatus){
+        return qrcodeTicketrepository.countByEventNoAndTicketUsageStatus(eventNo, ticketUsageStatus);
+    }
 }

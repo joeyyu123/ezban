@@ -1,4 +1,4 @@
-package com.ezban.product.comment.controller;
+package com.ezban.productcommentcontroller;
 
 
 
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ezban.productcomment.model.ProductComment;
 import com.ezban.productcomment.model.ProductCommentDTO;
-import com.ezban.productcomment.model.ProductCommentDTO.CommentStatsDTO;
 import com.ezban.productcomment.model.ProductCommentService;
 
 @RestController
@@ -51,11 +50,9 @@ public class ProductCommentController {
     }
 
     @GetMapping("/stats/{productNo}")
-    public ResponseEntity<CommentStatsDTO> getCommentStats(@PathVariable Integer productNo) {
+    public ResponseEntity<ProductCommentDTO.CommentStatsDTO> getCommentStats(@PathVariable Integer productNo) {
         try {
-            double averageRating = commentService.getAverageRating(productNo);
-            long ratingCount = commentService.getRatingCount(productNo);
-            CommentStatsDTO stats = new CommentStatsDTO(averageRating, ratingCount);
+            ProductCommentDTO.CommentStatsDTO stats = commentService.getCommentStats(productNo);
             return ResponseEntity.ok(stats);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

@@ -22,6 +22,26 @@
                 <!-- 這裡可以放置你想呈現的內容 -->
                 <div class="container">
                     <h1>活動列表</h1>
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{/backstage/events}" th:classappend="${eventStatus == null}? 'active'">所有活動</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{'/backstage/events'(eventStatus=0)}" th:classappend="${eventStatus == 0}? 'active'">草稿</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{'/backstage/events'(eventStatus=1)}" th:classappend="${eventStatus == 1}? 'active'">上架中</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{'/backstage/events'(eventStatus=2)}" th:classappend="${eventStatus == 2}? 'active'">已下架</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:href="@{'/backstage/events'(eventStatus=3)}" th:classappend="${eventStatus == 3}? 'active'">已結束</a>
+                        </li>
+                    </ul>
+                    <div class="mb3 alert alert-warning" th:if="${events.size() == 0}" th:text="'目前沒有任何活動！'">
+                    </div>
+
                     <table class="table table-striped">
                         <thead>
                         <tr>

@@ -18,60 +18,63 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 @Order(1)
 public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-	private UserDetailsService memberUserDetailsService;
-	
-	@Override
+    @Autowired
+    private UserDetailsService memberUserDetailsService;
+
+    @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-            .userDetailsService(memberUserDetailsService);
+                .userDetailsService(memberUserDetailsService);
     }
 
-	@Override
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .requestMatchers()
+                .requestMatchers()
                 .antMatchers("/",
-                             "/login",
-                             "/loginPage",
-                             "/register",
-                             "/forgotPassword",
-                             "/events/**",
-                             "/cart/**"
-                        )
+                        "/login",
+                        "/loginPage",
+                        "/register",
+                        "/forgotPassword",
+                        "/events/**",
+                        "/cart/**",
+                        "/productorder/**",
+                        "/saveproduct/**")
                 .and()
 
-            .authorizeRequests()
+                .authorizeRequests()
                 .antMatchers("/login",
-                             "loginPage",
-                             "/register",
-                             "/forgotPassword",
-                             "/cart/items",
-                             "/").permitAll()
+                        "loginPage",
+                        "/register",
+                        "/forgotPassword",
+                        "/cart/items",
+                        "/").permitAll()
                 .antMatchers("/events/orders/**",
-                             "/events/order/**",
-                             "/events/*/tickets",
-                             "/cart/**").hasRole("Member")
+                        "/events/order/**",
+                        "/events/*/tickets",
+                        "/cart/**",
+                        "/productorder/**",
+                        "/saveproduct/**").hasRole("Member")
                 .and()
 
-            .formLogin()
+                .formLogin()
                 .loginPage("/loginPage")
                 .loginProcessingUrl("/login")
                 .successHandler(memberAuthenticationSuccessHandler())
                 .failureHandler(memberAuthenticationFailureHandler())
                 .permitAll()
                 .and()
-            .logout()
+                .logout()
                 .logoutSuccessUrl("/")
                 .permitAll()
                 .and()
-            .exceptionHandling()
+                .exceptionHandling()
                 .accessDeniedPage("/loginPage")
                 .and()
-            .csrf().disable();
+                .csrf().disable();
     }
 
-	@Bean
+    @Bean
     public AuthenticationSuccessHandler memberAuthenticationSuccessHandler() {
         return (request, response, authentication) -> {
             response.sendRedirect("/");
@@ -81,7 +84,7 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationFailureHandler memberAuthenticationFailureHandler() {
         SimpleUrlAuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();
-        failureHandler.setDefaultFailureUrl("/loginPage");
+        failureHandler.setDefaultFailureUrl("/loginPage?error=true");
         failureHandler.setUseForward(false);
         return failureHandler;
     }
