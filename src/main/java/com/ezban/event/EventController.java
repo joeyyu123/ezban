@@ -23,7 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Controller
 @RequestMapping("/events")
@@ -129,40 +128,12 @@ public class EventController {
 
     @GetMapping("{eventNo}")
     public String getEvent(Model model, @PathVariable("eventNo") Integer eventNo) {
-        EventDto dto = null;
-        dto = (EventDto) redisTemplate.opsForValue().get("event:" + String.valueOf(eventNo));
-
+        EventDto dto = eventService.getEventDetails(eventNo);
         if (dto != null) {
-            eventService.incrementEventVisitCount(eventNo);
             model.addAttribute("event", dto);
             return "/frontstage/event/event";
         }
-        // 如果 Redis 中沒有，則從資料庫中查找
-        Event event = eventService.findById(eventNo);
-
-        if (event != null) {
-            // 將查找到的活動詳情快取到 Redis
-            dto = eventService.convertToDto(event);
-            eventService.incrementEventVisitCount(eventNo);
-            redisTemplate.opsForValue().set("event:" + eventNo, dto, 1, TimeUnit.HOURS); // 快取一小時
-            //            Integer eventCategoryNo = event.getEventCategory().getEventCategoryNo();
-            model.addAttribute("event", dto);
-//            model.addAttribute("events", eventService.findByEventCategoryNo(eventCategoryNo));
-            return "/frontstage/event/event";
-        }
-
         return "redirect:/events";
-
-
-//            event = eventService.findById(eventNo);
-//            Integer eventCategoryNo = event.getEventCategory().getEventCategoryNo();
-//
-//            // 取得同類別的上架活動
-//            List<Event> events = eventService.findByEventCategoryNo(eventCategoryNo);
-//            model.addAttribute("event", event);
-//            model.addAttribute("events", events);
-//            return "/frontstage/event/event";
-
     }
 
 
@@ -174,13 +145,7 @@ public class EventController {
     @GetMapping("/trending")
     @ResponseBody
     public ResponseEntity<List<EventDto>> getTrendingEvents() {
-        List<EventDto> dtoList = null;
-        List<Event> events = eventService.findTrendingEvents();
-
-        for (Event event : events) {
-            dtoList.add(eventService.convertToDto(event));
-        }
-
+        List<EventDto> dtoList = eventService.findTrendingEvents();
         return ResponseEntity.ok(dtoList);
     }
 

@@ -49,6 +49,7 @@ public class EventService implements ServiceDemo<Event> {
 
     @Override
     public Event findById(Integer pk) {
+
         return eventRepository.findById(pk).get();
     }
 
@@ -56,6 +57,23 @@ public class EventService implements ServiceDemo<Event> {
     public List<Event> findAll() {
 
         return eventRepository.findAll();
+    }
+
+    public EventDto getEventDetails(Integer eventNo) {
+        EventDto dto = (EventDto) redisTemplate.opsForValue().get("event:" + eventNo);
+        if (dto != null) {
+            incrementEventVisitCount(eventNo);
+            return dto;
+        }
+
+        Event event = findById(eventNo);
+        if (event != null) {
+            dto = convertToDto(event);
+            incrementEventVisitCount(eventNo);
+            redisTemplate.opsForValue().set("event:" + eventNo, dto, 1, TimeUnit.HOURS);
+            return dto;
+        }
+        return null;
     }
 
     public List<Event> findByHostNo(Integer hostNo) {
@@ -194,9 +212,22 @@ public class EventService implements ServiceDemo<Event> {
         return eventRepository.findByEventCityAndEventCategoryEventCategoryNoAndEventStatus(city, categoryNo, EventStatus.PUBLISHED, pageable);
     }
 
-    public List<Event> findTrendingEvents() {
+//    public List<Event> findTrendingEvents() {
+//        return eventRepository.findTop6ByOrderByVisitCountDesc();
+//    }
+    public List<EventDto> findTrendingEvents() {
+        List<EventDto> dtoList = (List<EventDto>) redisTemplate.opsForValue().get("trendingEvents");
 
-        return eventRepository.findTop6ByOrderByVisitCountDesc();
+        if (dtoList == null) {
+            List<Event> events = eventRepository.findTop6ByOrderByVisitCountDesc();
+            dtoList = new ArrayList<>();
+            for (Event event : events) {
+                dtoList.add(this.convertToDto(event));
+            }
+            redisTemplate.opsForValue().set("trendingEvents", dtoList, 1, TimeUnit.HOURS); // 緩存一小時
+        }
+
+        return dtoList;
     }
 
     public EventDto convertToDto(Event event) {
