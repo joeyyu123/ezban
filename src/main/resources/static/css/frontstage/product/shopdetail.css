@@ -21,3 +21,8 @@
 .swal2-icon.swal2-success .swal2-success-line-long {
     animation: none !important;
 }
+
+.stars .fa-star {
+    color: #ffd700;  /* 金色 */
+}
+

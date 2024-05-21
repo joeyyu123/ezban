@@ -61,7 +61,7 @@ public class Product implements java.io.Serializable {
     private Timestamp productRemoveTime;
 
     @Column(name = "product_status")
-    private Integer productStatus;
+    private Byte productStatus;
 
     @Column(name = "product_total_rating")
     private Integer productTotalRating;
@@ -153,11 +153,11 @@ public class Product implements java.io.Serializable {
         this.productRemoveTime = productRemoveTime;
     }
 
-    public Integer getProductStatus() {
+    public Byte getProductStatus() {
         return productStatus;
     }
 
-    public void setProductStatus(Integer productStatus) {
+    public void setProductStatus(Byte productStatus) {
         this.productStatus = productStatus;
     }
 
