@@ -1,7 +1,5 @@
 package com.ezban.admin.model;
 
-
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +50,8 @@ public class AdminService {
         adminRepository.save(admin);
 
         // Send email with initial password
-        String message = "Your initial password is: " + rawPassword + ". Please change it upon your first login for security.";
+        String message = "Your initial password is: " + rawPassword
+                + ". Please change it upon your first login for security.";
         hostMailService.sendEmail(admin.getAdminMail(), "Welcome to Ezban", message);
 
         return admin;
@@ -67,8 +66,8 @@ public class AdminService {
             admin.setAdminPwd(rawPassword); // 直接使用未加密密碼
             adminRepository.save(admin);
 
-            hostMailService.sendEmail(admin.getAdminMail(), "Welcome to Ezban",
-                    "Your initial password is: " + rawPassword + ". Please change it upon your first login for security.");
+            hostMailService.sendEmail(admin.getAdminMail(), "Welcome to Ezban", "Your initial password is: " + rawPassword
+                    + ". Please change it upon your first login for security.");
         } else {
             throw new RuntimeException("Admin not found with ID: " + adminNo);
         }
@@ -97,8 +96,7 @@ public class AdminService {
         Optional<Admin> optionalAdmin = adminRepository.findByAdminAccount(adminAccount);
         if (optionalAdmin.isPresent()) {
             Admin admin = optionalAdmin.get();
-            // 直接使用明文比较
-            return rawPassword.equals(admin.getAdminPwd());
+            return rawPassword.equals(admin.getAdminPwd()); // 直接使用明文比較
         } else {
             return false;
         }
@@ -129,14 +127,5 @@ public class AdminService {
 
     public void saveAdmin(Admin admin) {
         adminRepository.save(admin);
-    }
-
-    public Admin getOneAdmin(Integer adminNo) {
-        Optional<Admin> optional = adminRepository.findById(adminNo);
-        return optional.orElse(null); // public T orElse(T other) : 如果值存在就回傳其值，否則回傳other的值
-    }
-
-    public List<Admin> getAll() {
-        return adminRepository.findAll();
     }
 }

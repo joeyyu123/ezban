@@ -1,23 +1,20 @@
 package com.ezban.admin.model;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import com.ezban.authority.model.Authority;
 import com.ezban.eventcommentreport.model.EventCommentReport;
 import com.ezban.productcommentreport.model.ProductCommentReport;
 import com.ezban.productreport.model.ProductReport;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "admin")
 public class Admin implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "admin_no", nullable = false)
@@ -28,7 +25,8 @@ public class Admin implements Serializable {
     @Column(name = "admin_account", nullable = false, length = 20)
     private String adminAccount;
 
-    @Size(max = 60)
+    @Size(max = 20)
+    @NotNull
     @Column(name = "admin_pwd", nullable = false, length = 20)
     private String adminPwd;
 
@@ -45,21 +43,18 @@ public class Admin implements Serializable {
     private String adminPhone;
 
     @Column(name = "admin_status")
-    private Byte adminStatus = 1;
-    
-    @Column(name = "admin_login")
-    private LocalDateTime adminLogin;
-    
-    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Byte adminStatus;
+
+    @OneToMany(mappedBy = "admin")
     private Set<Authority> authorities = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "admin")
     private Set<EventCommentReport> eventCommentReports = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "admin")
     private Set<ProductCommentReport> productCommentReports = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "admin")
     private Set<ProductReport> productReports = new LinkedHashSet<>();
 
     public Integer getAdminNo() {
@@ -118,14 +113,6 @@ public class Admin implements Serializable {
         this.adminStatus = adminStatus;
     }
 
-    public LocalDateTime getAdminLogin() {
-        return adminLogin;
-    }
-
-    public void setAdminLogin(LocalDateTime adminLogin) {
-        this.adminLogin = adminLogin;
-    }
-
     public Set<Authority> getAuthorities() {
         return authorities;
     }
@@ -157,4 +144,5 @@ public class Admin implements Serializable {
     public void setProductReports(Set<ProductReport> productReports) {
         this.productReports = productReports;
     }
+
 }

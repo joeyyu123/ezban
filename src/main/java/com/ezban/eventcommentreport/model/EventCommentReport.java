@@ -6,8 +6,8 @@ import com.ezban.member.model.Member;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.time.Instant;
 
 @Entity
@@ -31,21 +31,18 @@ public class EventCommentReport implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_no")
     private Admin admin;
-    
-    @Size(max = 100)
+
     @Lob
     @Column(name = "report_reason")
     private String reportReason;
-    
+
     @NotNull
     @Column(name = "report_time", nullable = false)
-    private Instant reportTime;
+    private Timestamp reportTime;
 
     @NotNull
     @Column(name = "report_status", nullable = false)
     private Byte reportStatus;
-
-    // Getters and setters...
 
     public Integer getEventCommentReportNo() {
         return eventCommentReportNo;
@@ -87,11 +84,11 @@ public class EventCommentReport implements Serializable {
         this.reportReason = reportReason;
     }
 
-    public Instant getReportTime() {
+    public Timestamp getReportTime() {
         return reportTime;
     }
 
-    public void setReportTime(Instant reportTime) {
+    public void setReportTime(Timestamp reportTime) {
         this.reportTime = reportTime;
     }
 
@@ -103,16 +100,4 @@ public class EventCommentReport implements Serializable {
         this.reportStatus = reportStatus;
     }
 
-    public EventCommentReportDTO toDTO() {
-        return new EventCommentReportDTO(
-            this.eventCommentReportNo,
-            this.eventComment.getEventCommentNo(),
-            this.eventComment.getEventCommentContent(),
-            this.member.getMemberNo(),
-            this.admin != null ? this.admin.getAdminNo() : null,
-            this.reportReason,
-            this.reportTime,
-            this.reportStatus
-        );
-    }
 }

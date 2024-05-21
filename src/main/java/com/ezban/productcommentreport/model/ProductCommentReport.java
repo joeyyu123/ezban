@@ -17,32 +17,28 @@ import javax.validation.constraints.Size;
 import com.ezban.admin.model.Admin;
 import com.ezban.member.model.Member;
 import com.ezban.productcomment.model.ProductComment;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "product_comment_report", schema = "ezban")
 public class ProductCommentReport {
     
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_comment_report_no", nullable = false)
     private Integer productCommentReportNo;
 
-    @NotNull
+	@NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_comment_no", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductComment productComment;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_no", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_no")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Admin admin;
 
     @Size(max = 100)
@@ -114,17 +110,6 @@ public class ProductCommentReport {
     public void setReportStatus(Byte reportStatus) {
         this.reportStatus = reportStatus;
     }
-
-    public ProductCommentReportDTO toDTO() {
-        return new ProductCommentReportDTO(
-            this.productCommentReportNo,
-            this.productComment.getProductCommentNo(),
-            this.productComment.getProductCommentContent(),
-            this.member.getMemberNo(),
-            this.admin != null ? this.admin.getAdminNo() : null,
-            this.reportReason,
-            this.reportDate,
-            this.reportStatus
-        );
-    }
+    
+    
 }
