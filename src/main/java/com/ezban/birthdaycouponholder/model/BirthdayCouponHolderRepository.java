@@ -21,5 +21,17 @@ public interface BirthdayCouponHolderRepository extends JpaRepository<BirthdayCo
  // 使用@Query注解自定义查询，以确保正确地处理基本类型字段的日期操作
     @Query("SELECT bch FROM BirthdayCouponHolder bch WHERE FUNCTION('MONTH', bch.validityDate) <> :month")
     List<BirthdayCouponHolder> findByValidityDateMonthNot(@Param("month") int month);
-	
+
+    // 找會員適用的生日優惠券
+    @Query(value = "SELECT bc.birthday_coupon_no as birthdayCouponNo, " +
+                   "bc.birthday_coupon_discount as birthdayCouponDiscount, " +
+                   "bch.member_no as memberNo, " +
+                   "bch.coupon_usage_status as couponUsageStatus, " +
+                   "bc.birthday_coupon_status as birthdayCouponStatus " +
+                   "FROM birthday_coupon_holder bch " +
+                   "JOIN birthday_coupon bc ON bch.birthday_coupon_no = bc.birthday_coupon_no " +
+                   "WHERE bc.birthday_coupon_status = 1 AND bch.coupon_usage_status = 0 " +
+                   "AND bch.member_no = :memberNo",
+            nativeQuery = true)
+    Object[] findValidCouponForMember(@Param("memberNo") Integer memberNo);
 }

@@ -1,19 +1,20 @@
 package com.ezban.product.controller;
 
-
 import com.ezban.member.model.Member;
-import com.ezban.product.model.Product;
 import com.ezban.product.model.Product;
 import com.ezban.product.model.ProductServiceImpl;
 import com.ezban.productcategory.model.ProductCategory;
 import com.ezban.productcategory.model.ProductCategoryService;
+import com.ezban.productcomment.model.ProductCommentDTO;
+import com.ezban.productcomment.model.ProductCommentService;
 import com.ezban.productimg.model.ProductImg;
 import com.ezban.productimg.model.ProductImgService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,18 +37,17 @@ public class ProductFrontstageController {
     @Autowired
     private ProductCategoryService productCategoryService;
 
+    @Autowired
+    private ProductCommentService productCommentService;
+
     @GetMapping("/shopall")
     public String shopall() {
         return "/frontstage/product/shopall";
     }
 
     @GetMapping("/shopdetail")
-    public String shopdetail(ModelMap model) {
-
-        Product product = new Product();
-        product.setProductNo(11);
-        model.addAttribute("product",product);
-
+    public String shopdetail(@RequestParam(name = "productNo", required = true) String productNo, Model model) {
+        model.addAttribute("productNo", productNo);
         return "/frontstage/product/shopdetail";
     }
 
@@ -67,9 +67,9 @@ public class ProductFrontstageController {
                 .body(product);
     }
 
-    @GetMapping("/getFirstImage/{productImgNo}")
-    public ResponseEntity<byte[]> getFirstImage(@PathVariable("productImgNo") Integer productImgNo) {
-        ProductImg img = productImgService.getFirstProductImg(productImgNo);
+    @GetMapping("/getFirstImage/{productNo}")
+    public ResponseEntity<byte[]> getFirstImage(@PathVariable("productNo") Integer productNo) {
+        ProductImg img = productImgService.getFirstProductImg(productNo);
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(img.getProductImg());
@@ -84,6 +84,14 @@ public class ProductFrontstageController {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(imgUrls);
+    }
+
+    @GetMapping("/getImage/{productImgNo}")
+    public ResponseEntity<byte[]> getImage(@PathVariable("productImgNo") Integer productImgNo) {
+        ProductImg img = productImgService.getImgByImgNo(productImgNo);
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(img.getProductImg());
     }
 
     @GetMapping("/getAllProductCategories")
@@ -102,5 +110,29 @@ public class ProductFrontstageController {
                 .body(products);
     }
 
+    @GetMapping("/related")
+    public ResponseEntity<List<Product>> getProductsByHostandCategory(@RequestParam("productNo") Integer productNo,
+                                                                      @RequestParam("hostNo") Integer hostNo,
+                                                                      @RequestParam("productCategoryNo") Integer productCategoryNo) {
+        List<Product> products = productServiceImpl.getProductsByHostandCategory(hostNo, productCategoryNo, productNo);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(products);
+    }
 
+    @GetMapping("/{productNo}/comments")
+    public ResponseEntity<List<ProductCommentDTO>> getCommemtsByProductNo(@PathVariable Integer productNo) {
+        try {
+            List<ProductCommentDTO> comments = productCommentService.findCommentsByProductNo(productNo);
+            return ResponseEntity.ok(comments);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("member/{memberNo}")
+    public ResponseEntity<Member> getMember(@PathVariable Integer memberNo) {
+        Member member = productServiceImpl.getMemberByMemberNo(memberNo);
+        return ResponseEntity.ok(member);
+    }
 }

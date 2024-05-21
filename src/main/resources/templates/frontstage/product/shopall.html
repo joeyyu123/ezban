@@ -4,7 +4,7 @@
 
 <head th:include="frontstage/index2 :: head"></head>
 <link rel="stylesheet" th:href="@{/css/frontstage/product/shopall.css}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <body id="body">
@@ -38,7 +38,8 @@
                         <div class="panel panel-default">
                             <div class="panel-heading" role="tab" id="allProducts">
                                 <h4 class="panel-title allProducts">
-                                    <a role="button" href="#!" onclick="resetAllProducts()" aria-expanded="true" aria-controls="collapseOne">
+                                    <a role="button" href="#!" onclick="resetAllProducts()" aria-expanded="true"
+                                       aria-controls="collapseOne">
                                         所有商品
                                     </a>
                                 </h4>
@@ -46,12 +47,15 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading" role="tab" id="headingTwo">
                                     <h4 class="panel-title">
-                                        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <a class="collapsed" role="button" data-toggle="collapse"
+                                           data-parent="#accordion" href="#collapseTwo" aria-expanded="false"
+                                           aria-controls="collapseTwo">
                                             商品類別
                                         </a>
                                     </h4>
                                 </div>
-                                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel"
+                                     aria-labelledby="headingTwo">
                                     <div class="panel-body">
                                         <ul class="categories">
                                         </ul>
@@ -197,7 +201,7 @@
                                 allProducts = data.map(product => ({
                                     product_name: product.productName,
                                     product_url: `/product/shopdetail?productNo=${product.productNo}`,
-                                    product_img: `/backstage/product/getFirstImage/${product.productNo}`,
+                                    product_img: `/product/getFirstImage/${product.productNo}`,
                                     price: product.productPrice
                                 }));
                                 changePage(1);
@@ -215,64 +219,13 @@
     function resetAllProducts() {
         getAllProducts();
     }
+</script>
 
-    /* 點擊商品購物車 icon 加入購物車 */
-    function addToCart(element) {
-        let productNo = element.getAttribute('data-product-no');
-        let quantity = 1;
-        let data = {productNo: parseInt(productNo, 10), quantity: quantity};
-        let url = `/cart/addToCart?productNo=${productNo}`;
-        fetch(url,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                        position: 'top',
-                        icon: 'success',
-                        title: data.message,
-                        showConfirmButton: false,
-                        timer: 1000,
-                        showClass: {
-                            popup: `
-                                animate__animated
-                                animate__fadeInDown
-                                animate__faster
-                                `
-                        },
-                        hideClass: {
-                            popup: `
-                              animate__animated
-                              animate__fadeOutUp
-                              animate__faster
-                            `
-                        },
-                        customClass: {
-                            popup: 'swal2-custom',
-                            title: 'swal2-title-custom'
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        text: data.message
-                    });
-                }
-            })
-            .catch(error => {
-                console.error("加入購物車失敗: ", error);
-                Swal.fire({
-                    icon: 'error',
-                    text: '無法加入購物車'
-                });
-            });
+<script>
+    async function addToCart(e) {
+        let productNo = e.getAttribute('data-product-no');
+        // call cartqty.js 自動增加購物車數量到localStorage/server
+        autoIncreaseCartQuantityAndSetUI(productNo, 1)
     }
-
 </script>
 </html>
