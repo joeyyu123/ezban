@@ -78,7 +78,7 @@ public class EventService implements ServiceDemo<Event> {
     /**
      * 複合查詢
      */
-    public List<Event> findByEventCityAndEventCategoryAndEventName(List<String> cities, List<Integer> categoryNos, String eventName, Pageable pageable) {
+    public List<Event> findByEventCityAndEventCategoryAndEventNameAndTime(List<String> cities, List<Integer> categoryNos, String eventName, Date startDate, Date endDate, Pageable pageable) {
         Specification<Event> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -98,6 +98,15 @@ public class EventService implements ServiceDemo<Event> {
             // 查詢活動名稱
             if (eventName != null && !eventName.isEmpty()) {
                 predicates.add(criteriaBuilder.like(root.get("eventName"), "%" + eventName + "%"));
+            }
+
+            // 活動開始時間>=startDate
+            if (startDate != null) {
+                predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("eventStartTime"), startDate));
+            }
+            // 活動開始時間<=endDate
+            if (endDate != null) {
+                predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("eventStartTime"), endDate));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

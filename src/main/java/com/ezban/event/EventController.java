@@ -18,7 +18,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -49,14 +52,30 @@ public class EventController {
     public String getEvents(Model model,
                             @RequestParam(required = false) List<String> cities,
                             @RequestParam(required = false) List<Integer> categoryNos,
-                            @RequestParam(required = false) String eventName) {
+                            @RequestParam(required = false) String eventName,
+                            @RequestParam(required = false) String startTime,
+                            @RequestParam(required = false) String endTime) {
         List<Event> events;
         List<EventCategory> eventCategories = eventCategoryService.findAll();
         List<String> eventCities = eventService.findDistinctEventCity();
         List<EventDto> dtoList = new ArrayList<>();
 
-        if ((cities != null && !cities.isEmpty()) || (categoryNos != null && !categoryNos.isEmpty()) || (eventName != null && !eventName.isEmpty())) {
-            events = eventService.findByEventCityAndEventCategoryAndEventName(cities, categoryNos, eventName, PageRequest.of(0, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "eventStartTime")));
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = null;
+        Date endDate = null;
+        try {
+            if (startTime != null && !startTime.isEmpty()) {
+                startDate = formatter.parse(startTime);
+            }
+            if (endTime != null && !endTime.isEmpty()) {
+                endDate = formatter.parse(endTime);
+            }
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        if ((cities != null && !cities.isEmpty()) || (categoryNos != null && !categoryNos.isEmpty()) || (eventName != null && !eventName.isEmpty()) || (startDate != null) || (endDate != null)) {
+            events = eventService.findByEventCityAndEventCategoryAndEventNameAndTime(cities, categoryNos, eventName, startDate, endDate, PageRequest.of(0, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "eventStartTime")));
         } else {
             events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(0, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "eventStartTime")));
         }
@@ -76,11 +95,27 @@ public class EventController {
     public ResponseEntity<List<EventDto>> getEventsByPage(@PathVariable("page") int page,
                                                           @RequestParam(required = false) List<String> cities,
                                                           @RequestParam(required = false) List<Integer> categoryNos,
-                                                          @RequestParam(required = false) String eventName) {
+                                                          @RequestParam(required = false) String eventName,
+                                                          @RequestParam(required = false) String startTime,
+                                                          @RequestParam(required = false) String endTime) {
         List<Event> events;
 
-        if ((cities != null && !cities.isEmpty()) || (categoryNos != null && !categoryNos.isEmpty()) || (eventName != null && !eventName.isEmpty())) {
-            events = eventService.findByEventCityAndEventCategoryAndEventName(cities, categoryNos, eventName, PageRequest.of(page - 1, PAGE_SIZE));
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = null;
+        Date endDate = null;
+        try {
+            if (startTime != null && !startTime.isEmpty()) {
+                startDate = formatter.parse(startTime);
+            }
+            if (endTime != null && !endTime.isEmpty()) {
+                endDate = formatter.parse(endTime);
+            }
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        if ((cities != null && !cities.isEmpty()) || (categoryNos != null && !categoryNos.isEmpty()) || (eventName != null && !eventName.isEmpty()) || (startDate != null) || (endDate != null)) {
+            events = eventService.findByEventCityAndEventCategoryAndEventNameAndTime(cities, categoryNos, eventName, startDate, endDate, PageRequest.of(page - 1, PAGE_SIZE));
         } else {
             events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(page - 1, PAGE_SIZE));
         }
