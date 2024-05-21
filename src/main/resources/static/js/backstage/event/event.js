@@ -1,12 +1,14 @@
 function previewImage() {
-    let file = document.getElementById("eventImg").files[0];
-    let reader = new FileReader();
-    reader.onload = function (e) {
-        let img = document.getElementById("imagePreview");
-        img.src = e.target.result;
-        img.style.display = "block";
-    };
-    reader.readAsDataURL(file);
+    if (checkFileSize()) {
+        let file = document.getElementById("eventImg").files[0];
+        let reader = new FileReader();
+        reader.onload = function (e) {
+            let img = document.getElementById("imagePreview");
+            img.src = e.target.result;
+            img.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+    }
 }
 
 function dragOverHandler(ev) {
@@ -170,6 +172,23 @@ function setValid(id) {
     element.classList.remove('is-invalid');
     element.classList.add('is-valid');
     element.nextElementSibling.textContent = '';
+}
+
+function checkFileSize() {
+    const fileInput = document.getElementById('eventImg');
+    const maxSize = 10 * 1024 * 1024; // 10MB
+
+    if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        if (file.size > maxSize) {
+            alert('文件大小超過限制，請上傳小於 10MB 的文件。');
+            fileInput.value = ''; // 清空文件輸入
+            return false;
+        } else {
+            return true;
+        }
+    }
+    return false;
 }
 
 document.querySelector('form').addEventListener('submit', function (event) {

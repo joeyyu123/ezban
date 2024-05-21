@@ -74,9 +74,9 @@ public class EventController {
         }
 
         if ((cities != null && !cities.isEmpty()) || (categoryNos != null && !categoryNos.isEmpty()) || (eventName != null && !eventName.isEmpty()) || (startDate != null) || (endDate != null)) {
-            events = eventService.findByEventCityAndEventCategoryAndEventNameAndTime(cities, categoryNos, eventName, startDate, endDate, PageRequest.of(0, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "eventStartTime")));
+            events = eventService.findByEventCityAndEventCategoryAndEventNameAndTime(cities, categoryNos, eventName, startDate, endDate, PageRequest.of(0, PAGE_SIZE, Sort.by(Sort.Direction.ASC, "eventStartTime")));
         } else {
-            events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(0, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "eventStartTime")));
+            events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(0, PAGE_SIZE, Sort.by(Sort.Direction.ASC, "eventStartTime")));
         }
 
         for (Event event : events) {
@@ -114,9 +114,9 @@ public class EventController {
         }
 
         if ((cities != null && !cities.isEmpty()) || (categoryNos != null && !categoryNos.isEmpty()) || (eventName != null && !eventName.isEmpty()) || (startDate != null) || (endDate != null)) {
-            events = eventService.findByEventCityAndEventCategoryAndEventNameAndTime(cities, categoryNos, eventName, startDate, endDate, PageRequest.of(page - 1, PAGE_SIZE));
+            events = eventService.findByEventCityAndEventCategoryAndEventNameAndTime(cities, categoryNos, eventName, startDate, endDate, PageRequest.of(page - 1, PAGE_SIZE,Sort.by(Sort.Direction.ASC, "eventStartTime")));
         } else {
-            events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(page - 1, PAGE_SIZE));
+            events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(page - 1, PAGE_SIZE,Sort.by(Sort.Direction.ASC, "eventStartTime")));
         }
 
         List<EventDto> dtoList = new ArrayList<>();
