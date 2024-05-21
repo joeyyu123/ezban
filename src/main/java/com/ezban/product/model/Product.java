@@ -16,6 +16,7 @@ import com.ezban.host.model.Host;
 import com.ezban.productcategory.model.ProductCategory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @Entity
@@ -30,7 +31,7 @@ public class Product implements java.io.Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_category_no", referencedColumnName = "product_category_no")
-    @JsonIgnore
+    @JsonManagedReference
     private ProductCategory productCategory;
 
     @Column(name = "product_name")
@@ -38,7 +39,7 @@ public class Product implements java.io.Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "host_no", referencedColumnName = "host_no")
-    @JsonIgnore
+    @JsonManagedReference
     private Host host;
 
     @Column(name = "product_desc" ,columnDefinition = "text")
@@ -60,7 +61,7 @@ public class Product implements java.io.Serializable {
     private Timestamp productRemoveTime;
 
     @Column(name = "product_status")
-    private Integer productStatus;
+    private Byte productStatus;
 
     @Column(name = "product_total_rating")
     private Integer productTotalRating;
@@ -152,11 +153,11 @@ public class Product implements java.io.Serializable {
         this.productRemoveTime = productRemoveTime;
     }
 
-    public Integer getProductStatus() {
+    public Byte getProductStatus() {
         return productStatus;
     }
 
-    public void setProductStatus(Integer productStatus) {
+    public void setProductStatus(Byte productStatus) {
         this.productStatus = productStatus;
     }
 

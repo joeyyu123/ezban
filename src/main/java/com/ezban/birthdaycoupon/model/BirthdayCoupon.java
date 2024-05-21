@@ -14,9 +14,11 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.ezban.member.model.Member;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "birthday_coupon")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class BirthdayCoupon implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

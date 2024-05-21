@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:include="backstage/index :: head">
+    <style>
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+        .header-container h2 {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .add_form{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding-top: 20px;
+            background: #f8f4f2;
+            margin: 30px 0 0 0;
+        }
+        .form {
+            position: relative;
+            width: 75%;
+            margin-top: 50px;
+            margin-bottom: 120px;
+            padding: 20px;
+            background-color: #faf9f9;
+            box-shadow: 0 0 5px 3px rgba(231, 229, 229, 0.5);
+        }
+        .form-row {
+            display: flex;
+            justify-content: space-between; /* 兩個input間有間隔 */
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            flex: 1; /* 讓每個 form-group 彈性擴展、平分空間 */
+            margin-right: 10px;
+        }
+
+        .form-group:last-child {
+            margin-right: 0; /* 最後一個元素不需要 margin-right */
+        }
+
+        label {
+            display: block; /* 讓label在input上方 */
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="datetime-local"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 5px;
+        }
+        #product_desc {
+            height: 150px;
+            resize: none;
+        }
+        #preview {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .btn-container {
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin: 80px 0 10px 0;
+        }
+        #add_product_btn {
+            border: none;
+            border-radius: 18px;
+            padding: 8px 12px;
+            background-color: #f4e9e6;
+            cursor: pointer;
+        }
+        #add_product_btn:hover {
+            color: gray;
+            font-weight: bold;
+            box-shadow: 0 1px 2px 2px rgba(231, 229, 229, 0.5);
+        }
+        .error_msg {
+            font-size: 14px;
+            font-weight: bold;
+            font-style: italic;
+            color: red;
+        }
+        .swal-button-container {
+            text-align: center;
+            width: 100%;
+        }
+        .swal-button-custom {
+            margin: 0 auto;
+            display: block;
+            color: gray;
+            border: none !important;
+            box-shadow: none !important;
+            background-color: #f4e9e6;
+        }
+        .swal-button-custom:hover {
+            background-color: #ead4ce;
+        }
+    </style>
+</head>
+<body>
+<div id="wrapper">
+    <nav th:replace="backstage/index :: navbar"></nav>
+    <div class="page-content-wrapper">
+        <div class="header-container">
+            <div th:insert="backstage/index :: hamburger-btn"></div>
+            <h2>上架商品</h2>
+        </div>
+
+        <div class="add_form content" style="background: none;">
+            <form class="form" th:action="@{/backstage/product/addProduct}" th:object="${productDto}" method="post" enctype="multipart/form-data" style="width: 90%;">
+                <div class="form-group">
+<!--                    <label for="host_no">廠商編號:</label>-->
+                    <input type="hidden" id="host_no" th:field="*{hostNo}" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="product_name">商品名稱:</label>
+                        <input type="text" id="product_name" th:field="*{productName}" maxlength="20" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product_category_no">商品類別:</label>
+                        <select id="product_category_no" th:field="*{productCategoryNo}" required>
+                            <option value="">請選擇類別</option>
+                            <option value="1">服飾</option>
+                            <option value="2">配件</option>
+                            <option value="3">廚房用品</option>
+                            <option value="4">生活用品</option>
+                            <option value="5">書籍</option>
+                            <option value="6">文化藝術</option>
+                            <option value="7">戶外用品</option>
+                        </select><br><br>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="product_price">商品價格:</label>
+                        <input type="number" id="product_price" th:field="*{productPrice}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product_status">商品狀態:</label>
+                        <select id="product_status" th:field="*{productStatus}" required>
+                            <option value="0">未上架</option>
+                            <option value="1">上架中</option>
+                            <option value="2">已下架</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="product_add_qty">商品上架數量:</label>
+                        <input type="number" id="product_add_qty" th:field="*{productAddQty}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="remaining_qty">庫存數量:</label>
+                        <input type="number" id="remaining_qty" th:field="*{remainingQty}" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="product_add_time">商品上架時間:</label>
+                        <input type="datetime-local" id="product_add_time" th:field="*{productAddTime}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="product_remove_time">商品下架時間:</label>
+                        <input type="datetime-local" id="product_remove_time" th:field="*{productRemoveTime}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="product_desc">商品描述:</label>
+                    <textarea id="product_desc" th:field="*{productDesc}" required></textarea>
+                </div>
+
+                <label for="imageFile">商品圖片:</label>
+                <div class="error_msg" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+                <input type="file" id="imageFile" name="images" accept="image/*" multiple>
+                <div id="preview"></div>
+
+                <div class="btn-container">
+                    <button id="add_product_btn" type="submit">上架商品</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    /* 檢查商品上下架時間 */
+    $(document).ready(function() {
+        var now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        now.setSeconds(0);
+        now.setMilliseconds(0);
+        // slice(0, 16) 擷取到分鐘
+        $('#product_add_time').attr('min', now.toISOString().slice(0, 16));
+
+        $('#product_add_time').change(function() {
+            var addTime = $(this).val();
+            $('#product_remove_time').attr('min', addTime);
+        });
+
+        $('#product_remove_time').change(function() {
+            var addTime = $('#product_add_time').val();
+            var removeTime = $(this).val();
+            if (removeTime && addTime && removeTime < addTime) {
+                alert("商品下架時間必須晚於上架時間！");
+                $(this).val('');
+            }
+        });
+    });
+    /* 設定商品狀態 */
+    $(document).ready(function () {
+        updateProductStatus();
+    });
+
+    function updateProductStatus() {
+        var addTime = new Date($('#product_add_time').val());
+        var now = new Date();
+        now.setSeconds(0);
+        now.setMilliseconds(0);
+
+        if (addTime > now) {
+            // 若上架時間在系統時間之後，狀態改為0(未上架)
+            $('#product_status').val(0);
+        } else if (addTime.getTime() === now.getTime()) {
+            // 若上架時間等於系統時間，狀態為1(上架中)
+            $('#product_status').val(1);
+        } else {
+            // alert("上架時間不應該早於當下時間，請重新輸入");
+        }
+    }
+    /* 上傳圖片預覽 */
+    $(document).ready(function() {
+        $('#imageFile').on('change', function() {
+            var files = $(this).get(0).files;
+            var preview = $('#preview');
+            preview.empty(); // 清除現有的預覽圖片
+
+            if (files.length > 0) {
+                $.each(files, function(index, file) {
+                    var fileReader = new FileReader();
+                    fileReader.onload = function(e) {
+                        var imgElement = $('<img>').attr({
+                            src: e.target.result,
+                            style: 'max-width: 150px; max-height: 150px; margin-right: 10px; margin-bottom: 10px;'
+                        });
+                        preview.append(imgElement);
+                    };
+                    fileReader.readAsDataURL(file);
+                });
+            }
+        });
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+        let urlParams = new URLSearchParams(window.location.search);
+        let success = urlParams.get('success');
+        if (success) {
+            swal({
+                text: "商品新增成功!",
+                icon: "success",
+                button: {
+                    text: "回商品列表",
+                    className: "swal-button-custom"
+                },
+            }).then((value) => {
+                window.location.href = '/backstage/products';
+            });
+        }
+    });
+</script>
+</body>
+</html>

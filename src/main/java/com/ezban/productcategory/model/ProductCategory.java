@@ -1,6 +1,7 @@
 package com.ezban.productcategory.model;
 
 import com.ezban.product.model.Product;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
@@ -20,6 +21,7 @@ public class ProductCategory {
     private String productCategoryName;
 
     @OneToMany(mappedBy = "productCategory", cascade = CascadeType.ALL)
+    @JsonBackReference
     private Set<Product> products = new LinkedHashSet<>();
 
     public ProductCategory() {

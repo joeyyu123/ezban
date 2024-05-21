@@ -28,6 +28,8 @@
     <link rel="stylesheet" th:href="@{/plugins/slick/slick-theme.css}">
     <!-- Main Stylesheet -->
     <link rel="stylesheet" th:href="@{/css/frontstage/style.css}">
+    <!-- bootstrap icon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
@@ -49,12 +51,13 @@
     <script th:src="@{/plugins/slick/slick-animation.min.js}"></script>
     <!-- Main Js File -->
     <script th:src="@{/js/frontstage/script.js}"></script>
-    <!-- sweetalter -->
+    <!-- sweetalert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- jquery/3.5.1 -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
     <!-- font-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script th:src="@{/js/frontstage/product/cartqty.js}"></script>
 </head>
 
 <body id="body">
@@ -63,28 +66,30 @@
 <section th:fragment="header" class="top-header">
     <div class="container">
         <div class="row">
-            <div class="col-md-4 col-xs-12 col-sm-4">
+            <div class="col-md-6 col-xs-12 col-sm-6">
                 <ul class=" top-menu list-inline">
-                    <li>
-                        <a th:href="@{/backstage/event}" class="btn btn-primary custom-btn" role="button">辦活動</a>
+                    <li class="logo text-center">
+                        <a th:href="@{/index2}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="134.375" height="50">
+                                <image th:href="@{/images/ezban.png}" width="108.5" height="35"/>
+                            </svg>
+                        </a>
                     </li>
                 </ul>
             </div>
-            <div class="col-md-4 col-xs-12 col-sm-4">
-                <div class="logo text-center">
-                    <a th:href="@{/index2}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="134.375" height="50">
-                            <image th:href="@{/images/ezban.png}" width="108.5" height="35"/>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-            <div class="col-md-4 col-xs-12 col-sm-4">
+
+            <div class="col-md-6 col-xs-12 col-sm-6">
                 <!-- Cart -->
                 <ul class="top-menu text-right list-inline">
                     <li class="dropdown cart-nav dropdown-slide">
                         <a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
-                            <i class="tf-ion-android-cart"></i><span class="top-menu-text">購物車</span></a>
+                            <div class="cart-icon" style="margin-right: 3px;">
+                                <i class="bi bi-cart3">
+                                    <span class="badge">0</span>
+                                </i>
+                            </div>
+                            <span class="top-menu-text">購物車</span>
+                        </a>
                         <div class="dropdown-menu cart-dropdown">
                             <!-- Cart Item -->
                             <div class="media" th:each="item : ${cart}">
@@ -107,7 +112,7 @@
                                 <span class="total-price" th:text="${totalPrice}">$1799.00</span>
                             </div>
                             <ul class="text-center cart-buttons">
-                                <li><a th:href="@{/cart}" class="btn btn-small">View Cart</a></li>
+                                <li><a th:href="@{/cart/items}" class="btn btn-small">View Cart</a></li>
                                 <li><a th:href="@{/checkout}" class="btn btn-small btn-solid-border">Checkout</a></li>
                             </ul>
                         </div>
@@ -154,6 +159,10 @@
                             </li>
                         </ul>
                     </li>
+
+                    <li>
+                        <a th:href="@{/backstage/event}" class="btn btn-primary custom-btn" role="button">辦活動</a>
+                    </li>
                 </ul><!-- / .nav .navbar-nav .navbar-right -->
             </div>
         </div>
@@ -164,9 +173,8 @@
 <!-- Main Menu Section -->
 <section class="menu">
     <nav class="navbar navigation">
-        <div class="container">
+        <div class="container" style="height: 50px;">
             <div class="navbar-header">
-                <h2 class="menu-title">Main Menu</h2>
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
                         aria-expanded="false" aria-controls="navbar">
                     <span class="sr-only">Toggle navigation</span>
@@ -179,18 +187,13 @@
             <!-- Navbar Links -->
             <div id="navbar" class="navbar-collapse collapse text-center">
                 <ul class="nav navbar-nav">
-
-
                     <li class="dropdown ">
                         <a th:href="@{/faq}">常見問題</a>
                     </li>
-
-
-                    <!-- Elements -->
+                    <!-- Products -->
                     <li class="dropdown dropdown-slide">
                         <a th:href="@{/product/shopall}" role="button">周邊商品</a>
-                    </li><!-- / Elements -->
-
+                    </li><!-- / Products -->
 
                     <!-- Events -->
                     <li class="dropdown dropdown-slide">
