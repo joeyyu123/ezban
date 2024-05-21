@@ -48,22 +48,51 @@
     </table>
 
     <script>
-        const adminId = 1; // 假設的管理員ID
+        let adminId = null;
 
-        function loadReports() {
-            fetch('/api/event/comment/report')
-            .then(response => response.json())
-            .then(reports => {
+     // 獲取當前登錄的管理員信息
+        async function getCurrentAdmin() {
+            try {
+                let admin = JSON.parse(localStorage.getItem('currentAdmin'));
+                if (!admin) {
+                    const response = await fetch('/api/admin/current', {
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    admin = await response.json();
+                    localStorage.setItem('currentAdmin', JSON.stringify(admin)); // 保存管理員信息到LocalStorage
+                }
+                adminId = admin.adminNo;
+                console.log('當前登錄的管理員ID:', adminId);
+                loadReports();
+            } catch (error) {
+                console.error('獲取當前登錄的管理員信息出錯:', error);
+            }
+        }
+
+        // 加載檢舉數據並顯示在表格中
+        async function loadReports() {
+            try {
+                const response = await fetch('/api/event/comment/report');
+                const reports = await response.json();
                 console.log("檢舉數據:", reports);
 
-                // Sort reports by reportStatus
+                // 按報告狀態排序
                 reports.sort((a, b) => a.reportStatus - b.reportStatus);
 
                 const reportsDisplay = document.getElementById('reports-display');
                 reportsDisplay.innerHTML = '';
+
                 reports.forEach(report => {
                     const reportClass = report.reportStatus !== 0 ? 'inappropriate' : '';
-                    const reportRow = `<tr data-report-id="${report.eventCommentReportNo}" class="comment-item ${reportClass}">
+                    const reportRow = document.createElement('tr');
+                    reportRow.className = `comment-item ${reportClass}`;
+                    reportRow.dataset.reportId = report.eventCommentReportNo;
+                    reportRow.innerHTML = `
                         <td>${report.eventCommentReportNo}</td>
                         <td>${report.eventCommentNo}</td>
                         <td>${report.eventCommentContent}</td>
@@ -75,15 +104,15 @@
                             <button class="action-button" onclick="confirmHandleReport(${report.eventCommentReportNo}, true)">正常發言</button>
                             <button class="action-button" onclick="confirmHandleReport(${report.eventCommentReportNo}, false)">封鎖評論</button>
                         </td>
-                    </tr>`;
-                    reportsDisplay.innerHTML += reportRow;
+                    `;
+                    reportsDisplay.appendChild(reportRow);
                 });
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('加載檢舉出錯:', error);
-            });
+            }
         }
 
+        // 確認處理檢舉
         function confirmHandleReport(reportId, approve) {
             const action = approve ? '正常發言' : '封鎖評論';
             if (confirm(`確定要將此評論設置為"${action}"嗎？`)) {
@@ -91,7 +120,8 @@
             }
         }
 
-        function handleReport(reportId, approve) {
+        // 處理檢舉
+        async function handleReport(reportId, approve) {
             const data = {
                 reportStatus: approve ? 1 : 2,
                 adminNo: adminId
@@ -99,26 +129,26 @@
 
             console.log("處理的檢舉數據:", data);
 
-            fetch(`/api/event/comment/report/${reportId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
+            try {
+                const response = await fetch(`/api/event/comment/report/${reportId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
                 alert(`檢舉已${approve ? '同意' : '拒絕'}！`);
                 loadReports();
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('處理檢舉出錯:', error);
                 alert('處理檢舉失敗');
-            });
+            }
         }
 
+        // 當文檔載入完畢後，開始獲取當前登錄的管理員信息
         document.addEventListener('DOMContentLoaded', () => {
-            loadReports();
+            getCurrentAdmin();
         });
     </script>
 </body>

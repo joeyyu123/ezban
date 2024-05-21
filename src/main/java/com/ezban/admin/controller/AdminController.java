@@ -1,22 +1,31 @@
 package com.ezban.admin.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import com.ezban.admin.model.Admin;
-import com.ezban.admin.model.AdminService;
-import com.ezban.admin.model.AdminRepository;
-import com.ezban.host.model.HostMailService;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ezban.admin.model.Admin;
+import com.ezban.admin.model.AdminRepository;
+import com.ezban.admin.model.AdminService;
+import com.ezban.host.model.HostMailService;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -142,5 +151,17 @@ public class AdminController {
             logger.error("Error setting up password", e);
             return ResponseEntity.badRequest().body("密碼設置失敗: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<?> getCurrentAdmin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName(); // 獲取當前登錄用戶的帳號
+
+        // 根據用戶名獲取管理員信息
+        Admin admin = adminRepository.findByAdminAccount(username)
+            .orElseThrow(() -> new UsernameNotFoundException("找不到當前登錄的管理員"));
+        
+        return ResponseEntity.ok(admin);
     }
 }

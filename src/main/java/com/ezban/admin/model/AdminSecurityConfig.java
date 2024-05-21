@@ -25,11 +25,13 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService adminUserDetailsService;
 
+    // 使用不進行任何操作的密碼編碼器，這在實際應用中是不安全的，僅適用於開發階段
     @Bean
     public PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
 
+    // 配置身份認證管理，指定用戶詳情服務和密碼編碼器
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
@@ -37,37 +39,40 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
             .passwordEncoder(passwordEncoder());
     }
 
+    // 配置HTTP安全規則
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/adminlogin", "/adminregister", "/adminpasswordreset").permitAll() // 确保登录页面路径正确
-                .antMatchers("backstage/adminmanage/*").authenticated()
+                .antMatchers("/adminlogin", "/adminregister", "/adminpasswordreset").permitAll() // 允許所有用戶訪問登錄、註冊和重置密碼頁面
+                .antMatchers("/adminmanage/*").authenticated() // 只有認證用戶能訪問管理後台
                 .and()
             .formLogin()
-                .loginPage("/adminlogin") // 自定义登录页面
-                .loginProcessingUrl("/adminlogin") // 表单提交的URL
-                .successHandler(adminAuthenticationSuccessHandler())
-                .failureHandler(adminAuthenticationFailureHandler())
+                .loginPage("/adminlogin") // 指定自定義登錄頁面的URL
+                .loginProcessingUrl("/adminlogin") // 指定處理登錄請求的URL
+                .successHandler(adminAuthenticationSuccessHandler()) // 登錄成功處理器
+                .failureHandler(adminAuthenticationFailureHandler()) // 登錄失敗處理器
                 .permitAll()
                 .and()
             .logout()
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/adminlogin")
+                .logoutSuccessUrl("/adminlogin") // 登出後重定向到登錄頁面
                 .permitAll()
                 .and()
-            .csrf().disable();
+            .csrf().disable(); // 禁用CSRF保護
     }
 
+    // 登錄成功處理器
     @Bean
     public AuthenticationSuccessHandler adminAuthenticationSuccessHandler() {
         return (request, response, authentication) -> {
             Logger logger = LoggerFactory.getLogger(AdminSecurityConfig.class);
             logger.info("登录成功: 用户名=" + authentication.getName());
-            response.sendRedirect("/adminmanage"); // 登录成功后重定向到/adminmanage
+            response.sendRedirect("/adminmanage"); // 登录成功后重定向到管理页面
         };
     }
 
+    // 登錄失敗處理器
     @Bean
     public AuthenticationFailureHandler adminAuthenticationFailureHandler() {
         SimpleUrlAuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();

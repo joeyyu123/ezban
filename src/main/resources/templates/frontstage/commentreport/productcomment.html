@@ -220,22 +220,36 @@
         }
 
         function loadCommentStats(productNo) {
-            fetch(`/api/product/comment/stats/${productNo}`)
+            fetch(`/api/product/comment/${productNo}`)
             .then(response => response.json())
-            .then(stats => {
-                console.log("評論統計數據:", stats);
-                const averageRatingValue = document.getElementById('average-rating-value');
-                const averageRatingStars = document.getElementById('average-rating-stars');
-                const ratingCount = document.getElementById('rating-count');
+            .then(comments => {
+                console.log("加载的评论数据:", comments);
+                if (!Array.isArray(comments)) {
+                    throw new TypeError('期望得到评论的数组，但实际得到:', comments);
+                }
+                // 过滤掉状态为 -1 的评论
+                const validComments = comments.filter(comment => comment.productCommentStatus !== -1);
+                if (validComments.length > 0) {
+                    const totalRating = validComments.reduce((sum, comment) => sum + comment.productRate, 0);
+                    const averageRating = totalRating / validComments.length;
+                    const averageRatingValue = document.getElementById('average-rating-value');
+                    const averageRatingStars = document.getElementById('average-rating-stars');
+                    const ratingCount = document.getElementById('rating-count');
 
-                averageRatingValue.textContent = stats.averageRating.toFixed(1);
-                averageRatingStars.innerHTML = '★'.repeat(Math.round(stats.averageRating)) + '☆'.repeat(5 - Math.round(stats.averageRating));
-                ratingCount.textContent = `(${stats.ratingCount})`;
+                    averageRatingValue.textContent = averageRating.toFixed(1);
+                    averageRatingStars.innerHTML = '★'.repeat(Math.round(averageRating)) + '☆'.repeat(5 - Math.round(averageRating));
+                    ratingCount.textContent = `(${validComments.length})`;
+                } else {
+                    document.getElementById('average-rating-value').textContent = '0.0';
+                    document.getElementById('average-rating-stars').innerHTML = '☆☆☆☆☆';
+                    document.getElementById('rating-count').textContent = '(0)';
+                }
             })
             .catch(error => {
-                console.error('加載評分統計出錯:', error);
+                console.error('加载评分统计出错:', error);
             });
         }
+
 
         function reportComment(commentElement) {
             const commentId = commentElement.getAttribute('data-comment-id');
