@@ -2,8 +2,10 @@ package com.ezban.ticketorder;
 
 import com.ezban.event.model.Event;
 import com.ezban.event.model.Service.EventService;
+import com.ezban.host.model.Host;
 import com.ezban.host.model.HostService;
 import com.ezban.ticketorder.model.Service.TicketOrderService;
+import com.ezban.ticketorder.model.Service.TicketOrderStatusService;
 import com.ezban.ticketorder.model.TicketOrder;
 import com.ezban.ticketorder.model.TicketOrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,16 +13,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/backstage/events/{eventNo}")
@@ -34,6 +33,9 @@ public class BackstageTicketOrderController {
 
     @Autowired
     TicketOrderService ticketOrderService;
+
+    @Autowired
+    private TicketOrderStatusService ticketOrderStatusService;
 
     @GetMapping("/orders")
     public String showOrders(Model model, Principal principal,
@@ -74,5 +76,20 @@ public class BackstageTicketOrderController {
         model.addAttribute("orderStatus", orderStatus);
         model.addAttribute("event", event);
         return "/backstage/event/ticket-orders";
+    }
+
+    @DeleteMapping("/orders/{ticketOrderNo}")
+    @ResponseBody
+    public ResponseEntity<String> cancelOrder(@PathVariable("ticketOrderNo") Integer ticketOrderNo, Principal principal,@PathVariable Integer eventNo) {
+        Host host = hostService.findHostByHostNo(principal.getName()).orElseThrow();
+        TicketOrder ticketOrder = ticketOrderService.findById(ticketOrderNo);
+
+
+        if (Objects.equals(eventService.findById(eventNo).getHost(), host)) { // 檢查是否為訂單擁有者
+            ticketOrderStatusService.cancelTicketOrder(ticketOrder);
+            return ResponseEntity.ok("取消訂單成功");
+        } else {
+            return ResponseEntity.badRequest().body("Access denied, you are not the owner of this order");
+        }
     }
 }
