@@ -2,14 +2,12 @@ package com.ezban.event;
 
 import com.ezban.event.model.Event;
 import com.ezban.event.model.EventDto;
-import com.ezban.event.model.Service.EventService;
 import com.ezban.event.model.EventStatus;
+import com.ezban.event.model.Service.EventService;
 import com.ezban.eventcategory.model.EventCategory;
 import com.ezban.eventcategory.model.EventCategoryService;
 import com.ezban.host.model.HostService;
 import com.ezban.tickettype.model.TicketTypeService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -58,9 +56,9 @@ public class EventController {
         List<EventDto> dtoList = new ArrayList<>();
 
         if ((cities != null && !cities.isEmpty()) || (categoryNos != null && !categoryNos.isEmpty()) || (eventName != null && !eventName.isEmpty())) {
-            events = eventService.findByEventCityAndEventCategoryAndEventName(cities, categoryNos, eventName, PageRequest.of(0, PAGE_SIZE));
+            events = eventService.findByEventCityAndEventCategoryAndEventName(cities, categoryNos, eventName, PageRequest.of(0, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "eventStartTime")));
         } else {
-            events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(0, PAGE_SIZE));
+            events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(0, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "eventStartTime")));
         }
 
         for (Event event : events) {
