@@ -69,7 +69,7 @@
             <div class="col-md-6 col-xs-12 col-sm-6">
                 <ul class=" top-menu list-inline">
                     <li class="logo text-center">
-                        <a th:href="@{/index2}">
+                        <a th:href="@{/}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="134.375" height="50">
                                 <image th:href="@{/images/ezban.png}" width="108.5" height="35"/>
                             </svg>
@@ -145,8 +145,8 @@
 
 
 <!-- Main Menu Section -->
-<section class="menu">
-    <nav class="navbar navigation">
+<section class="menu" style="height: 50px;">
+    <nav class="navbar navigation" style="height: 50px;">
         <div class="container" style="height: 50px;">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
@@ -162,25 +162,20 @@
             <div id="navbar" class="navbar-collapse collapse text-center">
                 <ul class="nav navbar-nav">
                     <li class="dropdown ">
-                        <a th:href="@{/faq}">常見問題</a>
+                        <a href="#" style="padding: 15px;">聯絡我們</a>
+                    </li>
+                    <li class="dropdown ">
+                        <a th:href="@{/faq}" style="padding: 15px;">常見問題</a>
                     </li>
                     <!-- Products -->
                     <li class="dropdown dropdown-slide">
-                        <a th:href="@{/product/shopall}" role="button">周邊商品</a>
+                        <a th:href="@{/product/shopall}" role="button" style="padding: 15px;">周邊商品</a>
                     </li><!-- / Products -->
 
                     <!-- Events -->
                     <li class="dropdown dropdown-slide">
-                        <a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
-                           data-delay="350"
-                           role="button" aria-haspopup="true" aria-expanded="false">活動<span
-                                class="tf-ion-ios-arrow-down"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="typography.html">Typography</a></li>
-                            <li><a href="buttons.html">Buttons</a></li>
-                            <li><a href="alerts.html">Alerts</a></li>
-                        </ul>
-                    </li><!-- / Blog -->
+                        <a th:href="@{/events}" role="button" style="padding: 15px;">所有活動</a>
+                    </li><!-- / Events -->
                 </ul><!-- / .nav .navbar-nav -->
 
             </div>
@@ -445,38 +440,20 @@
             </div>
         </div>
         <div class="row">
-
             <div class="col-md-3">
                 <div class="product-item">
                     <div class="product-thumb">
-                        <span class="bage">SALE</span>
                         <img class="img-responsive" src="images\products\p1.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-										<span data-toggle="modal" data-target="#product-modal">
-											<i class="tf-ion-ios-search-strong"></i>
-										</span>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
                     </div>
                     <div class="product-content">
                         <h4><a href="product-single.html">客製化牛仔布飲料杯套(烙印皮革)</a></h4>
-                        <span class="price on_sale">$500</span> <span class="price sale_price">$200</span>
+                        <span class="price sale_price">$200</span>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="product-item">
                     <div class="product-thumb">
-                        <span class="bage">SALE</span>
                         <img class="img-responsive" src="images\products\p2.jpg" alt="product-img"/>
                         <div class="preview-meta">
                             <ul>
