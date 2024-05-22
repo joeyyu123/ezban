@@ -46,10 +46,10 @@ public class Admin implements Serializable {
 
     @Column(name = "admin_status")
     private Byte adminStatus = 1;
-
+    
     @Column(name = "admin_login")
     private LocalDateTime adminLogin;
-
+    
     @OneToMany(mappedBy = "admin", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Authority> authorities = new LinkedHashSet<>();
 

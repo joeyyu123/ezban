@@ -41,12 +41,12 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/admin/login", "/adminregister", "/adminpasswordreset").permitAll()
-                .antMatchers("/adminmanage/*").authenticated()
+                .antMatchers("/adminlogin", "/adminregister", "/adminpasswordreset").permitAll() // 确保登录页面路径正确
+                .antMatchers("backstage/adminmanage/*").authenticated()
                 .and()
             .formLogin()
-                .loginPage("/adminlogin") // 自定義登錄頁面的URL
-                .loginProcessingUrl("/admin/login") // 處理登錄請求的URL
+                .loginPage("/adminlogin") // 自定义登录页面
+                .loginProcessingUrl("/adminlogin") // 表单提交的URL
                 .successHandler(adminAuthenticationSuccessHandler())
                 .failureHandler(adminAuthenticationFailureHandler())
                 .permitAll()
@@ -64,7 +64,7 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
         return (request, response, authentication) -> {
             Logger logger = LoggerFactory.getLogger(AdminSecurityConfig.class);
             logger.info("登录成功: 用户名=" + authentication.getName());
-            response.sendRedirect("/adminmanage");
+            response.sendRedirect("/adminmanage"); // 登录成功后重定向到/adminmanage
         };
     }
 
@@ -81,4 +81,7 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
         };
     }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of 3eeb4c9 (Revert "Merge pull request #92 from joeyyu123/eric")
