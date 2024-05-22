@@ -191,8 +191,8 @@
                 <th:block th:each="productOrder : ${productOrderListData}">
                     <tr>
                         <td style="text-align: center" th:text="${'#'+ productOrder.productOrderNo}"></td>
-                        <td style="text-align: center; padding-right: 20px" th:text="${productOrder.member.memberName} + '[' + ${productOrder.member.memberNo} + ']'"></td>
-                        <td style="padding: 5px 5px 5px 0" th:text="${'TWD $ ' + productOrder.productCheckoutAmount}"></td>
+                        <td style="text-align: center; padding-right: 20px" th:text="${productOrder.member.memberName} + ' [' + ${productOrder.member.memberNo} + ']'"></td>
+                        <td style="padding: 5px 5px 5px 10px" th:text="${'NT$ ' + productOrder.productCheckoutAmount}"></td>
                         <td th:text="${#dates.format(productOrder.productOrderdate, 'yyyy-MM-dd HH:mm:ss')}"></td>
                         <td style="padding: 5px 5px 5px 15px" th:if="${productOrder.productPaymentStatus == 0}"><span class="dot-blue"></span>已付款</td>
                         <td style="padding: 5px 5px 5px 15px" th:if="${productOrder.productPaymentStatus == 1}"><span class="dot-red"></span>已退款</td>

@@ -90,8 +90,8 @@
                     <tr>
                         <th>訂單編號</th>
                         <th>商品圖片</th>
-                        <th>商品名稱</th>
-                        <th>商品單價</th>
+                        <th>商品名稱 [編號]</th>
+                        <th>單價</th>
                         <th>數量</th>
                         <th>小計</th>
                     </tr>
@@ -104,10 +104,10 @@
                                 <img th:src="@{/backstage/productorderdetail/DBGifReader(productNo=${productOrderDetail.product.productNo})}"
                                      width="100px">
                             </td>
-                            <td th:text="${productOrderDetail.product.productName}"></td>
+                            <td th:text="${productOrderDetail.product.productName}+ ' [' + ${productOrderDetail.product.productNo}+']'"></td>
                             <td th:text="${productOrderDetail.product.productPrice}"></td>
                             <td th:text="${productOrderDetail.productQty}"></td>
-                            <td th:text="${'TWD $ ' + productOrderDetail.productPrice}"></td>
+                            <td th:text="${'NT$ ' + productOrderDetail.productPrice}"></td>
                         </tr>
                     </th:block>
                     </tbody>

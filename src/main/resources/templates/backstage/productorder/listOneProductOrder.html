@@ -152,17 +152,17 @@
                             <span style="font-weight: bold; font-size: 20px; color: lightgray"> 內容資訊: </span><br/>
                             <span class="dot-black"> 會員姓名(編號): </span><span th:text="${productOrder.member.memberName} + ' (' + ${productOrder.member.memberNo} + ')'"></span><br/>
                             <span class="dot-black"> 商品金額: </span><span
-                                th:text="${'TWD $ ' +productOrder.productPrice}"></span><br/>
+                                th:text="${'NT$ ' +productOrder.productPrice}"></span><br/>
                             <span class="dot-black"> 禮券折扣金額: </span>
                             <span th:if="${productOrder.productCouponDiscount != 0}"
-                                th:text="${'TWD $ ' +productOrder.productCouponDiscount}"></span>
+                                th:text="${'NT$ ' +productOrder.productCouponDiscount}"></span>
                             <span th:if="${productOrder.productCouponDiscount == 0}" style="color: lightgray">未使用</span><br/>
                             <span class="dot-black"> 使用點數: </span>
                             <span th:if="${productOrder.memberPoints != 0}"
                                   th:text="${productOrder.memberPoints}"></span>
                             <span th:if="${productOrder.memberPoints == 0}" style="color: lightgray">未使用</span><br/>
                             <span class="dot-black"> 結帳金額: </span><span
-                                th:text="${'TWD $ ' +productOrder.productCheckoutAmount}"></span><br/>
+                                th:text="${'NT$ ' +productOrder.productCheckoutAmount}"></span><br/>
                             <div class="full-line"></div>
                             <span style="font-weight: bold; font-size: 20px; color: lightgray"> 運送資訊: </span><br/>
                             <span class="dot-lightgray"> 收件人: </span><span th:text="${productOrder.recipient}"></span><br/>
