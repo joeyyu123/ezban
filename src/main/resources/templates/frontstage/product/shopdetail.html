@@ -21,7 +21,7 @@
             <div class="modal-body">
                 <!-- 表單 -->
                 <form id="productReportForm" method="post" action="/productreport/insert">
-                    <div class="mb-3"><label for="reportReason" class="col-form-label">原因說明:</label>
+                    <div class="mb-3"><label for="reportReason" class="col-form-label">原因說明:</label><br/><label style="color: red;">(*提示:字數最大不可超過100個字)</label>
                         <textarea class="form-control" id="reportReason" name="reportReason"></textarea></div>
                     <!-- 隱藏的输入字段用於储存訂單編號 -->
                     <input type="hidden" id="productNo" name="productNo" value="">
@@ -100,11 +100,11 @@
                     <a href="#" id="add_to_cart" class="btn btn-main mt-20"
                        style="margin-right: 5px; padding: 11px 12px; font-size: 14px">加入購物車</a>
                     <a id="addToFavorites" class="btn btn-main mt-20"
-                       style="margin-right: 5px;" th:onclick="addToFavorites([[${productNo}]])"><i
+                       style="margin-right: 5px; padding: 11px 12px; font-size: 14px" th:onclick="addToFavorites([[${productNo}]])"><i
                             class="tf-ion-ios-heart"></i> 加入收藏</a>
                     <button type="button" id="productReport" class="btn btn-primary btn-lg" data-toggle="modal"
                             data-target="#staticBackdrop"
-                            style="margin-top: 20px; height: 45px; border-radius: 0; background-color: #000; font-size: 11px;">
+                            style="margin-top: 20px; height: 45px; border-radius: 0; background-color: #000; font-size: 14px;">
                         <i class="tf-ion-alert"></i>&nbsp;&nbsp;我要檢舉
                     </button>
                 </div>
