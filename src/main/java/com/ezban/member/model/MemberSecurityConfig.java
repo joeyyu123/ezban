@@ -44,6 +44,9 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/forgotPassword",
                         "/auth/status",
                         "/events/**",
+                        "/saveevent/**",
+                        "/frontstage/memberchat/**",
+                        "/frontstage/qrcodeticket/**",
                         "/cart/**",
                         "/productorder/**",
                         "/productreport/**",
@@ -64,7 +67,10 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/cart/**",
                         "/productorder/**",
                         "/productreport/**",
-                        "/saveproduct/**").hasRole("Member")
+                        "/saveproduct/**",
+                        "/saveevent/**",
+                        "/frontstage/memberchat/**",
+                        "/frontstage/qrcodeticket/**").hasRole("Member")
                 .and()
 
                 .formLogin()

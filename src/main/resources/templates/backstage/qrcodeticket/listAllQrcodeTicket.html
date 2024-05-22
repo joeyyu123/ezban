@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:include="backstage/index :: head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+
+    <title>Qr Code</title>
+    <style>
+        #qrcodeTicket th, #qrcodeTicket td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .status-icon i {
+            margin-right: 5px;
+        }
+
+        .status-0 i {
+            color: #ffc107;
+        }
+
+        .status-1 i {
+            color: #28a745;
+        }
+
+        .status-2 i {
+            color: #dc3545;
+        }
+
+        @media (max-width: 768px) {
+            #qrcodeTicket th, #qrcodeTicket td {
+                padding: 4px;
+                font-size: 12px;
+            }
+        }
+
+    </style>
+    <script>
+        $(document).ready(function () {
+            var table = $('#qrcodeTicket').DataTable({
+                "responsive": true,
+                "autoWidth": true,
+                "lengthMenu": [10, 20, 50, 100],
+                "searching": true,
+                "paging": true,
+                "ordering": true,
+                "language": {
+                    "processing": "處理中...",
+                    "loadingRecords": "載入中...",
+                    "lengthMenu": "顯示 _MENU_ 筆結果",
+                    "zeroRecords": "沒有符合的結果",
+                    "info": "顯示第 _START_ 至 _END_ 筆結果，共 <font color='red'>_TOTAL_</font> 筆",
+                    "infoEmpty": "顯示第 0 至 0 筆結果，共 0 筆",
+                    "infoFiltered": "(從 _MAX_ 筆結果中過濾)",
+                    "search": "搜尋:",
+                    "paginate": {
+                        "first": "第一頁",
+                        "previous": "上一頁",
+                        "next": "下一頁",
+                        "last": "最後一頁"
+                    },
+                    "aria": {
+                        "sortAscending": ": 升冪排列",
+                        "sortDescending": ": 降冪排列"
+                    }
+                },
+                "columnDefs": [
+                    {
+                        "targets": 4,
+                        "render": function (data, type, row) {
+                            if (!data) return '日期資訊缺失';
+                            var date = moment(data);
+                            if (!date.isValid()) {
+                                return '日期格式錯誤';
+                            }
+                            return date.format('YYYY/MM/DD HH:mm:ss');
+                        }
+                    },
+                    {
+                        "targets": 5,
+                        "data": null,
+                        "defaultContent": "<button>顯示票券QR Code</button>"
+                    }
+                ]
+            });
+
+            $('#qrcodeTicket tbody').on('click', 'button', function () {
+                console.log("按鈕被點擊");
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+                if (!row.data()) {
+                    tr = $(this).closest('tr').prev('tr');
+                    row = table.row(tr);
+                }
+                var data = row.data();
+                console.log(data);
+                if (!data) {
+                    console.log("未找到資料");
+                    return;
+                }
+
+                $.ajax({
+                    url: '/backstage/qrcodeticket/generateQRCode',
+                    type: 'GET',
+                    data: {
+                        ticketNo: data[0]
+                    },
+                    success: function (response) {
+                        Swal.fire({
+                            title: 'QR Code',
+                            imageUrl: 'data:image/png;base64,' + response,
+                            imageAlt: 'QR Code',
+                            imageWidth: 200,
+                            imageHeight: 200,
+                            confirmButtonText: '關閉'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.reload(); //可以讓點擊關閉按鈕後自動刷新網頁
+                            }
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        Swal.fire('錯誤', '無法生成QR Code: ' + xhr.responseText, 'error');
+                    }
+                });
+            });
+        });
+    </script>
+
+</head>
+<body>
+<div id="wrapper">
+    <nav th:replace="backstage/index :: navbar"></nav>
+    <div class="page-content-wrapper">
+        <div th:insert="backstage/index :: hamburger-btn"></div>
+        <div class="content"></div>
+        <div align="center">
+            <h1>Qr code</h1>
+        </div>
+        <div class="table-responsive">
+            <table id="qrcodeTicket" class="display" style="width:100%">
+                <thead>
+                <tr>
+                    <th>票券編號</th>
+                    <th>票種明細編號</th>
+                    <th>會員編號</th>
+                    <th>票券使用狀態</th>
+                    <th>票券到期時間</th>
+                    <th>QR Code</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="qrcodeTicketMap : ${qrcodeTicketListData}">
+                    <tr>
+                        <td th:text="${qrcodeTicketMap['ticket'].ticketNo}"></td>
+                        <td th:text="${qrcodeTicketMap['ticket'].ticketOrderDetail.ticketOrderDetailNo}"></td>
+                        <td th:text="${qrcodeTicketMap['ticket'].member.memberNo} + '-' + ${qrcodeTicketMap['ticket'].member.memberName}"></td>
+                        <td>
+                <span th:class="${qrcodeTicketMap['ticket'].ticketUsageStatus == 0 ? 'status-icon status-0' :
+                                 (qrcodeTicketMap['ticket'].ticketUsageStatus == 1 ? 'status-icon status-1' : 'status-icon status-2')}">
+                   <i th:class="${qrcodeTicketMap['ticket'].ticketUsageStatus == 0 ? 'fas fa-clock' :
+                                 (qrcodeTicketMap['ticket'].ticketUsageStatus == 1 ? 'fas fa-check-circle' : 'fas fa-times-circle')}"></i>
+                <span th:text="${qrcodeTicketMap['ticket'].ticketUsageStatus == 0 ? '未使用' : (qrcodeTicketMap['ticket'].ticketUsageStatus == 1 ? '已使用' : '已失效')}"></span>
+                </span>
+                        </td>
+                        <td th:text="${qrcodeTicketMap['ticket'].ticketValidTime}"></td>
+                        <td></td>
+                    </tr>
+                </th:block>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
