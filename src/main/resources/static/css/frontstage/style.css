@@ -1015,6 +1015,19 @@ section.events {
   background-color: #f7e6e2;
   box-shadow: 0 0 2px 2px #ecdcd9;
 }
+.small-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.product-content .visit-count {
+  display: flex;
+  align-items: center;
+}
+
+.product-content .event-location {
+  margin-right: 10px; /* 調整間距 */
+}
 
 /*================== products section ====================*/
 section.products {

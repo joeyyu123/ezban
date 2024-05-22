@@ -263,6 +263,9 @@
                         <ul id="form" class="p-3">
 
                             <th:block th:if="${registrationForm == null}">
+                                <div class="alert alert-primary" role="alert">
+                                    記得點擊建立報名表
+                                </div>
                                 <li class="form-item">
                                     <label>姓名</label>
                                     <input type="hidden" name="label" th:value="姓名">

@@ -3,7 +3,6 @@ package com.ezban.ticketregistration;
 import com.ezban.event.model.Event;
 import com.ezban.event.model.Service.EventService;
 import com.ezban.fieldExample.model.FieldExample;
-import com.ezban.registrationform.model.RegistrationForm;
 import com.ezban.registrationform.model.RegistrationFormService;
 import com.ezban.ticketregistration.dto.Person;
 import com.ezban.ticketregistration.dto.Response;
@@ -50,13 +49,17 @@ public class BackstageTicketRegistrationController {
         }
 
         List<TicketRegistration> ticketRegistrations = ticketRegistrationService.findAllByEventNo(eventNo);
+        if(registrationFormService.findByEventNo(eventNo) == null){
+            model.addAttribute("message", "該活動並沒有建立報名表單，無法查看報名資料。");
+            return "/backstage/event/warning";
+        }
         List<FieldExample> questions = registrationFormService.findByEventNo(eventNo).getQuestions();
 
         model.addAttribute("questions", questions);
         model.addAttribute("ticketRegistrations", ticketRegistrations);
         model.addAttribute("event", event);
 
-        return "/backstage/event/ticket_registrations";
+        return "/backstage/event/ticket-registrations";
     }
 
     /**
