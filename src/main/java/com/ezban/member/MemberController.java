@@ -5,6 +5,8 @@ import com.ezban.member.model.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,21 @@ public class MemberController {
 
     @Autowired
     private MemberService memservice;
+    
+    @GetMapping("/currentLogin")
+    @ResponseBody
+    public ResponseEntity<Member> getCurrentMember() {
+        // 假设使用Spring Security来获取当前登录的用户
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String memberMail = authentication.getName(); // 获取当前用户的邮件（或用户名）
+
+        Member member = memservice.getMemberByMemberMail(memberMail);
+        if (member != null) {
+            return new ResponseEntity<>(member, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
     @GetMapping("/{memberNo}")
     @ResponseBody
@@ -44,4 +61,9 @@ public class MemberController {
             return new ResponseEntity<>("會員不存在", HttpStatus.NOT_FOUND);
         }
     }
+    
+    @GetMapping("memberPage")
+	public String getMemberPage() {
+		return "frontstage/member/member";
+	}
 }

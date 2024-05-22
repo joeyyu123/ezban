@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>會員資料管理</title>
+    <title>EZBAN會員中心</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -56,17 +56,18 @@
         }
 
         .message {
-            margin-top: 20px;
+            display: none;
             padding: 10px;
+            margin-top: 10px;
             border-radius: 4px;
         }
 
-        .message.success {
+        .success {
             background-color: #d4edda;
             color: #155724;
         }
 
-        .message.error {
+        .error {
             background-color: #f8d7da;
             color: #721c24;
         }
@@ -110,7 +111,7 @@
                 <input type="text" id="commonRecipientAddressInput" name="commonRecipientAddress"><br>
                 <button type="submit">更新資料</button>
             </form>
-            <div id="message" class="message" style="display: none;"></div>
+            <div id="message" class="message"></div>
         </div>
     </div>
     <script>
@@ -120,7 +121,7 @@
 
         // 加載會員基本信息
         function loadMemberInfo() {
-            fetch('/members/1')
+            fetch('/members/currentLogin')
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('memberMail').textContent = data.memberMail;
@@ -158,7 +159,7 @@
                 commonRecipientAddress: formData.get('commonRecipientAddress')
             };
 
-            fetch('/members/1', {
+            fetch('/members/update/' + document.getElementById('memberMailInput').value, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
