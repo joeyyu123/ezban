@@ -25,7 +25,7 @@ import java.security.Principal;
 public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserDetailsService memberUserDetailsService;
+    private MemberUserDetailsService memberUserDetailsService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
