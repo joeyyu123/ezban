@@ -1,4 +1,4 @@
-package com.ezban.chatroom.config;
+package com.ezban.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -12,14 +12,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/message");
-        config.setApplicationDestinationPrefixes("/hostchat", "/memberchat");
+        // Configuring message brokers
+        config.enableSimpleBroker("/message", "/topic");
+        config.setApplicationDestinationPrefixes("/hostchat", "/memberchat", "/app");
     }
-
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws")
+        // Registering STOMP endpoints
+        registry.addEndpoint("/ws", "/notifications")
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
     }

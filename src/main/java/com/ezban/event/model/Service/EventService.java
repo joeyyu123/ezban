@@ -79,7 +79,7 @@ public class EventService implements ServiceDemo<Event> {
     }
 
     public Optional<Event> findEventByEventNo(Integer eventNo) {
-        return repository.findById(eventNo);
+        return eventRepository.findById(eventNo);
     }
     /**
      * 增加活動瀏覽次數，並且寫入Redis
