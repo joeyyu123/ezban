@@ -3,6 +3,7 @@ package com.ezban.admin.controller;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class AdminLoginController {
 
     @PostMapping("/admin/login")
     @Transactional
-    public RedirectView login(@RequestParam("username") String username, @RequestParam("password") String password) {
+    public RedirectView login(@RequestParam("username") String username, @RequestParam("password") String password, HttpSession session) {
         Optional<Admin> optionalAdmin = adminRepository.findByAdminAccount(username);
         if (optionalAdmin.isPresent()) {
             Admin admin = optionalAdmin.get();
@@ -35,7 +36,8 @@ public class AdminLoginController {
             if (password.equals(admin.getAdminPwd())) { // 直接比較未加密的密碼
                 admin.setAdminLogin(LocalDateTime.now());
                 adminRepository.save(admin);
-                return new RedirectView("/adminmanage"); // 更新重定向到 backstage/index.html
+                session.setAttribute("adminId", admin.getAdminNo()); // 保存管理員 ID 到會話中
+                return new RedirectView("/adminmanage"); // 重定向到管理頁面
             }
         }
         return new RedirectView("/adminlogin.html?error=true"); // 登入失敗時重定向到登入頁面並顯示錯誤訊息

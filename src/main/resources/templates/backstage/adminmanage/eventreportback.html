@@ -28,7 +28,7 @@
     </style>
 </head>
 <body>
-    <h1>管理員檢視和處理檢舉</h1>
+    <h1>活動管理員檢視和處理檢舉</h1>
     <table>
         <thead>
             <tr>
@@ -48,34 +48,15 @@
     </table>
 
     <script>
-        let adminId = null;
-
-     // 獲取當前登錄的管理員信息
-        async function getCurrentAdmin() {
-            try {
-                let admin = JSON.parse(localStorage.getItem('currentAdmin'));
-                if (!admin) {
-                    const response = await fetch('/api/admin/current', {
-                        headers: {
-                            'Accept': 'application/json'
-                        }
-                    });
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    admin = await response.json();
-                    localStorage.setItem('currentAdmin', JSON.stringify(admin)); // 保存管理員信息到LocalStorage
-                }
-                adminId = admin.adminNo;
-                console.log('當前登錄的管理員ID:', adminId);
-                loadReports();
-            } catch (error) {
-                console.error('獲取當前登錄的管理員信息出錯:', error);
-            }
-        }
-
         // 加載檢舉數據並顯示在表格中
         async function loadReports() {
+            const adminId = sessionStorage.getItem('adminId');
+            if (!adminId) {
+                alert('管理員ID無效，請重新登錄');
+                window.location.href = '/adminlogin.html';
+                return;
+            }
+
             try {
                 const response = await fetch('/api/event/comment/report');
                 const reports = await response.json();
@@ -101,8 +82,8 @@
                         <td>${report.formattedReportDate}</td>
                         <td>${report.reportStatus}</td>
                         <td>
-                            <button class="action-button" onclick="confirmHandleReport(${report.eventCommentReportNo}, true)">正常發言</button>
-                            <button class="action-button" onclick="confirmHandleReport(${report.eventCommentReportNo}, false)">封鎖評論</button>
+                            <button class="action-button" onclick="confirmHandleReport(${report.eventCommentReportNo}, true, ${adminId})">正常發言</button>
+                            <button class="action-button" onclick="confirmHandleReport(${report.eventCommentReportNo}, false, ${adminId})">封鎖評論</button>
                         </td>
                     `;
                     reportsDisplay.appendChild(reportRow);
@@ -113,15 +94,15 @@
         }
 
         // 確認處理檢舉
-        function confirmHandleReport(reportId, approve) {
+        function confirmHandleReport(reportId, approve, adminId) {
             const action = approve ? '正常發言' : '封鎖評論';
             if (confirm(`確定要將此評論設置為"${action}"嗎？`)) {
-                handleReport(reportId, approve);
+                handleReport(reportId, approve, adminId);
             }
         }
 
         // 處理檢舉
-        async function handleReport(reportId, approve) {
+        async function handleReport(reportId, approve, adminId) {
             const data = {
                 reportStatus: approve ? 1 : 2,
                 adminNo: adminId
@@ -146,9 +127,9 @@
             }
         }
 
-        // 當文檔載入完畢後，開始獲取當前登錄的管理員信息
+        // 當文檔載入完畢後，開始加載檢舉數據
         document.addEventListener('DOMContentLoaded', () => {
-            getCurrentAdmin();
+            loadReports();
         });
     </script>
 </body>

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -11,8 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -154,14 +153,20 @@ public class AdminController {
     }
 
     @GetMapping("/current")
-    public ResponseEntity<?> getCurrentAdmin() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName(); // 獲取當前登錄用戶的帳號
+    public ResponseEntity<Map<String, Object>> getCurrentAdmin(HttpSession session) {
+        Integer adminId = (Integer) session.getAttribute("adminId");
+        if (adminId == null) {
+            return ResponseEntity.status(401).body(Map.of("error", "未登錄"));
+        }
 
-        // 根據用戶名獲取管理員信息
-        Admin admin = adminRepository.findByAdminAccount(username)
+        Admin admin = adminRepository.findById(adminId)
             .orElseThrow(() -> new UsernameNotFoundException("找不到當前登錄的管理員"));
-        
-        return ResponseEntity.ok(admin);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("adminId", admin.getAdminNo());
+        response.put("adminAccount", admin.getAdminAccount());
+        response.put("adminName", admin.getAdminName());
+
+        return ResponseEntity.ok(response);
     }
 }

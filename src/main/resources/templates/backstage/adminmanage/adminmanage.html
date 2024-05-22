@@ -14,5 +14,31 @@
         <button onclick="window.location.href='/productreportback'">商品評論檢舉管理</button>
         <button onclick="window.location.href='/eventreportback'">活動評論檢舉管理</button>
     </div>
+
+    <script>
+        // 獲取當前登錄的管理員信息並存儲在會話存儲中
+        async function getCurrentAdmin() {
+            try {
+                const response = await fetch('/api/admin/current', {
+                    credentials: 'include' // 確保請求包括憑證
+                });
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+                const data = await response.json();
+                sessionStorage.setItem('adminId', data.adminId);
+                console.log('Current Admin ID:', data.adminId);
+            } catch (error) {
+                console.error('Failed to get current admin:', error);
+                alert('獲取管理員信息失敗，請重新登錄');
+                window.location.href = '/adminlogin';
+            }
+        }
+
+        // 當文檔載入完畢後，獲取當前登錄的管理員信息
+        document.addEventListener('DOMContentLoaded', () => {
+            getCurrentAdmin();
+        });
+    </script>
 </body>
 </html>

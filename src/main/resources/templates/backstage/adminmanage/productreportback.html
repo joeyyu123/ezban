@@ -48,12 +48,33 @@
     </table>
 
     <script>
-        const adminId = 1; // 假設的管理員ID
+        let adminId = null;
 
-        function loadReports() {
-            fetch('/api/product/comment/report')
-            .then(response => response.json())
-            .then(reports => {
+        async function getCurrentAdmin() {
+            try {
+                const response = await fetch('/api/admin/current', {
+                    credentials: 'include' // 確保請求包括憑證
+                });
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+                const data = await response.json();
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                adminId = data.adminId;
+                console.log('Current Admin ID:', adminId);
+            } catch (error) {
+                console.error('Failed to get current admin:', error);
+                alert('獲取管理員信息失敗，請重新登錄');
+                window.location.href = '/adminlogin.html';
+            }
+        }
+
+        async function loadReports() {
+            try {
+                const response = await fetch('/api/product/comment/report');
+                const reports = await response.json();
                 console.log("檢舉數據:", reports);
 
                 // Sort reports by reportStatus
@@ -78,10 +99,9 @@
                     </tr>`;
                     reportsDisplay.innerHTML += reportRow;
                 });
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('加載檢舉出錯:', error);
-            });
+            }
         }
 
         function confirmHandleReport(reportId, approve) {
@@ -91,7 +111,7 @@
             }
         }
 
-        function handleReport(reportId, approve) {
+        async function handleReport(reportId, approve) {
             const data = {
                 reportStatus: approve ? 1 : 2,
                 adminNo: adminId
@@ -99,26 +119,28 @@
 
             console.log("處理的檢舉數據:", data);
 
-            fetch(`/api/product/comment/report/${reportId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(result => {
+            try {
+                const response = await fetch(`/api/product/comment/report/${reportId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
                 alert(`檢舉已${approve ? '同意' : '拒絕'}！`);
                 loadReports();
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('處理檢舉出錯:', error);
                 alert('處理檢舉失敗');
-            });
+            }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            loadReports();
+        document.addEventListener('DOMContentLoaded', async () => {
+            await getCurrentAdmin();
+            if (adminId !== null) {
+                loadReports();
+            }
         });
     </script>
 </body>
