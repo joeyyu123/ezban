@@ -63,10 +63,13 @@ async function autoGetCommentsDetailByProductNoAPI(productNo) {
             return;
         }
         let userDetails = await response.json();
+        userDetails.memberMail = anonymizeEmail(userDetails.memberMail);
         userDetails.rate = comments[i].productRate;
         userDetails.comment = comments[i].commentContent;
         totalRate += comments[i].productRate;
         commentsDetails.push(userDetails);
+
+        console.log(userDetails, "userDetails111", commentsDetails, "commentsDetails222")
     }
     // 取到小數點後一位
     let averageRate = commentCount > 0 ? parseFloat((totalRate / commentCount).toFixed(1)) : 0;
@@ -77,7 +80,7 @@ async function autoGetCommentsDetailByProductNoAPI(productNo) {
     };
 }
 
-// productNo is excluded
+// 相關商品，productNo代表目前商品(excluded)
 async function getProductsByHostAndCategoryAPI(hostNo, productCategoryNo, productNo) {
     let url = `/product/related?hostNo=${hostNo}&productCategoryNo=${productCategoryNo}&productNo=${productNo}`;
     try {
@@ -91,56 +94,3 @@ async function getProductsByHostAndCategoryAPI(hostNo, productCategoryNo, produc
         return e;
     }
 }
-
-// 取得當前商品詳細資訊
-// async function getCurrentProductByProductNoAPI(productNo){
-//     let url = `/product/getProductDetail?productNo=${productNo}`;
-//     try {
-//         return await fetch(url);
-//     } catch (e) {
-//         return e;
-//     }
-// }
-// function displayCurrentProductDetails(productNo) {
-//     console.log(productNo, 'productNo');
-//     const productDetailUrl = `/product/getProductDetail?productNo=${productNo}`;
-//     fetchProductDetails(productDetailUrl)
-//         .then(productDetails => {
-//             // 獲取 hostNo 和 productCategoryNo
-//             const hostNo = productDetails.host.hostNo;
-//             const productCategoryNo = productDetails.productCategory.productCategoryNo;
-//
-//             // 使用獲取的 hostNo 和 productCategoryNo 調用 getRelatedProducts
-//             getRelatedProducts(hostNo, productCategoryNo);
-//         });
-// }
-// function getRelatedProducts(hostNo, productCategoryNo) {
-//     let url = `/product/related?hostNo=${hostNo}&productCategoryNo=${productCategoryNo}`;
-//     fetch(url)
-//         .then(response => response.json())
-//         .then(products => {
-//             updateProductsDisplay(products);
-//         })
-//         .catch(error => console.error('Error fetching related products:', error));
-// }
-// function updateProductsDisplay(products) {
-//     let container = document.querySelector('#related_products');
-//     container.innerHTML = '';  // 清空現有內容
-//     products.forEach(product => {
-//         let card = `
-//             <div class="col-md-3 related_product_card">
-//                 <div class="product-item">
-//                     <div class="product-thumb">
-//                         <img class="img-responsive" src="/product/getFirstImage/${productNo}" alt="${product.productName}"/>
-//                     </div>
-//                     <div class="product-content">
-//                         <h4><a href="/product/shopdetail?productNo=${product.productNo}">${product.productName}</a></h4>
-//                         <p class="price">$${product.productPrice}</p>
-//                     </div>
-//                 </div>
-//             </div>`;
-//         container.innerHTML += card;
-//     });
-// }
-//
-// displayCurrentProductDetails(productNo);

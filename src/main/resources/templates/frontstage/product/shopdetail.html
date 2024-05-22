@@ -58,7 +58,7 @@
 
         </div>
         <div class="row mt-20">
-            <div class="col-md-5">
+            <div class="col-md-6">
                 <div class="single-product-slider">
                     <div id='carousel-custom' class='carousel slide' data-ride='carousel'>
                         <div class='carousel-outer'>
@@ -81,11 +81,20 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-7">
+            <div class="col-md-6">
                 <div class="single-product-details">
-                    <h2 class="product_name"></h2>
-                    <div class="product_rating stars"></div>
-                    <p class="product_price"></p>
+                    <h2 class="product_name" style="margin-top: 10px;"></h2>
+                    <div class="product_rating" style="margin-top: 20px;"></div>
+                    <div class="sales_info">
+                        <ul>
+                            <li>本商品適用生日優惠券及會員點數折抵</li>
+                            <li>全館不限金額免運</li>
+                        </ul>
+                    </div>
+                    <div class="price_block" >
+                        <span style="margin-right: 65px; font-weight: 700;">價錢:</span>
+                        <div class="product_price" style="display: inline-block"></div>
+                    </div>
 
                     <div class="product-quantity">
                         <span>數量:</span>
@@ -96,19 +105,19 @@
                     <div class="product-category">
                         <span>商品類別:</span>
                         <ul>
-                            <li class="product_category"><a th:href="@{/product/shopall}"></a></li>
+                            <li class="product_category" style="margin: 0;"><a th:href="@{/product/shopall}"></a></li>
                         </ul>
                     </div>
-                    <div class="bottons">
+                    <div class="buttons">
                         <a href="#" id="add_to_cart" class="btn btn-main mt-20"
-                           style="margin-right: 5px; padding: 11px 12px; font-size: 14px">加入購物車</a>
+                           style="margin-right: 5px; padding: 11px 12px; font-size: 14px; width: 170px;">加入購物車</a>
                         <button type="button" id="productReport" class="btn btn-primary btn-lg" data-toggle="modal"
                                 data-target="#staticBackdrop"
-                                style="margin-top: 20px; height: 45px; border-radius: 0; background-color: #000; font-size: 14px; padding: 11px 12px;">
+                                style="margin-top: 20px; height: 45px; border-radius: 0; background-color: #000; font-size: 14px; padding: 11px 12px; width: 170px;">
                             <i class="tf-ion-alert"></i>&nbsp;&nbsp;我要檢舉
                         </button>
                     </div>
-                    <div class="favorite_container" style="margin-top: 20px;">
+                    <div class="favorite_container">
                         <a id="addToFavorites"
                            style="margin-right: 5px; padding: 11px 12px; font-size: 12px; color: #f19075; font-weight: 700;"
                            th:onclick="addToFavorites([[${productNo}]])">
@@ -128,7 +137,6 @@
                     </ul>
                     <div class="tab-content patternbg">
                         <div id="details" class="tab-pane fade active in">
-                            <h4>商品描述</h4>
                             <p class="product_desc"></p>
                         </div>
                         <div id="reviews" class="tab-pane fade">
@@ -163,48 +171,17 @@
 </body>
 <script th:src="@{/js/frontstage/product/shopdetail.js}"></script>
 <script>
-    // this function input object is from autoGetCommentsDetailByProductNoAPI "userDetails" object(shopdetail.js)
-    function appendCommentToCommentList(commentsDetail, commentCount) {
-        let element = document.getElementById('comments_list');
-        document.querySelector('#comment_count').innerText = `商品評論 (${commentCount})`;
-
-        if (commentCount === 0) {
-            element.innerHTML = `<p>目前尚無評論</p>`
-        } else {
-            rateHtml = generateStartsHtml(commentsDetail.rate);
-            html_text = `
-                <li class="media">
-                    <div class="media-body">
-                        <div class="comment-info">
-                            <h4 class="comment-author">
-                                <span id="member_name">${commentsDetail.memberMail}</span>
-                            </h4>
-                            <p>${rateHtml}</p>
-                        </div>
-                        <p>
-                            ${commentsDetail.comment}
-                        </p>
-                    </div>
-
-                </li>
-            `
-            element.innerHTML += html_text;
-        }
-    }
-
     function appendStartsToHtml(averageRate) {
         // 顯示平均評分
         let avg_el = document.querySelector('.product_rating');
-        avg_el.innerHTML = generateStartsHtml(averageRate);
+        avg_el.innerHTML = '<span class="rating_title">商品評價:</span> ' + generateStartsHtml(averageRate);
     }
 
     function generateStartsHtml(averageRate){
         node = document.createElement('div');
         node.className = 'stars';
-        // 顯示分數數值
-        node.innerHTML+= `<span class="stars"></span> ${averageRate}/5 `;
 
-        // 依照平均分數，動態顯示星星圖案
+        // 依照平均分數，動態顯示星星
         fullStars = Math.floor(averageRate);
         halfStar = averageRate % 1 >= 0.5 ? 1 : 0;
         emptyStars = 5 - fullStars - halfStar;
@@ -212,6 +189,9 @@
         node.innerHTML += '<i class="fa fa-star"></i>'.repeat(fullStars) +
             (halfStar ? '<i class="fa fa-star-half-alt"></i>' : '') +
             '<i class="far fa-star"></i>'.repeat(emptyStars);
+
+        // 顯示分數數值
+        node.innerHTML+= `<span class="stars"></span> ${averageRate}/5 `;
 
         return node.outerHTML
     }
@@ -236,24 +216,46 @@
         });
     }
 
-    // function appendRelatedProductToRelatedProductList(relatedProduct) {
-    //     let element = document.getElementById('related-products');
-    //     let html_text = `
-    //         <div class="row related_products">
-    //             <div class="col-md-3 related_product_card">
-    //                 <div class="product-item">
-    //                     <div class="product-thumb">
-    //                         <img class="img-responsive" src=`/product/getFirstImage/${productNo}` alt="product-img"/>
-    //                     </div>
-    //                     <div class="product-content">
-    //                         <h4><a href="product-single.html">${productName}</a></h4>
-    //                         <p class="price">$`${productPrice}`</p>
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //         </div>
-    //         `;
-    // }
+    // this function input object is from autoGetCommentsDetailByProductNoAPI "userDetails" object(shopdetail.js)
+    function appendCommentToCommentList(commentsDetail, commentCount) {
+        let element = document.getElementById('comments_list');
+        document.querySelector('#comment_count').innerText = `商品評論 (${commentCount})`;
+
+        if (commentCount === 0) {
+            element.innerHTML = `<p>目前尚無評論</p>`
+        } else {
+            let rateHtml = generateStartsHtml(commentsDetail.rate);
+            let htmlText = `
+                <li class="media">
+                    <div class="media-body">
+                        <div class="comment-info">
+                            <h4 class="comment-author">
+                                <span id="member_name" style="font-size: 14px;">${commentsDetail.memberMail}</span>
+                            </h4>
+                            ${rateHtml}
+                        </div>
+                        <p>
+                            ${commentsDetail.comment}
+                        </p>
+                    </div>
+
+                </li>
+            `
+            element.innerHTML += htmlText;
+        }
+    }
+    function anonymizeEmail(memberMail) {
+        // 從@切分字串，分成local part 和 domain
+        let parts = memberMail.split('@');
+        let account = parts[0];
+        let domain = parts[1];
+        if (account.length > 2) {
+            let maskedaccount = account.substring(0, 2) + '*'.repeat(account.length - 2);
+            return maskedaccount + '@' + domain;
+        }
+        return account + '@' + domain;
+    }
+
 </script>
 
 <script th:inline="javascript">

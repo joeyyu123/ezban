@@ -23,13 +23,69 @@
 }
 
 .stars .fa-star, .stars .fa-star-half-alt {
-    color: #ffd700;  /* 金色 */
+    color: #f49292;
+}
+.product-category ul {
+    padding: 0;
 }
  #addToFavorites:hover {
      cursor: pointer;
+     text-align: center;
  }
 
- .product_price {
-     font-size: 20px;
-     margin-top: 10px;
+.single-product-details {
+    margin-left: 20px;
+}
+.favorite_container {
+    display: flex;
+    width: 350px;
+    justify-content: center;
+    margin-top: 10px;
+}
+.rating_title {
+    margin-right: 10px;
+    font-weight: 700;
+}
+div.stars {
+    display: inline-block;
+}
+.sales_info {
+    margin-top: 30px;
+    background-color: #ffffff;
+    border-left: 5px solid #f6b8a6;
+    padding: 5px 10px;
+    width: 350px;
+}
+.product_price {
+    margin-top: 25px;
+    margin-bottom: 0;
+    font-size: 16px;
+    color: black;
  }
+div.stars {
+    font-size: 16px;
+}
+.buttons {
+    margin-top: 20px;
+}
+.post-comments{
+    margin: auto 0;
+}
+#comments_list li{
+    border-bottom: 1px solid #d7d7d7;
+}
+#comments_list li:last-child {
+    border-bottom: none;
+}
+.comment-author {
+    margin-bottom: 0;
+}
+.comment-author .member_name {
+    font-size: 14px;
+    font-weight: 700;
+}
+.comment-info .stars {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 11px;
+}
