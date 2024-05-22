@@ -8,8 +8,6 @@ public class UpdateProductReportDTO {
 
     private  Integer adminNo;
 
-    private String adminName;
-
     public UpdateProductReportDTO() {
     }
 
@@ -37,11 +35,4 @@ public class UpdateProductReportDTO {
         this.adminNo = adminNo;
     }
 
-    public String getAdminName() {
-        return adminName;
-    }
-
-    public void setAdminName(String adminName) {
-        this.adminName = adminName;
-    }
 }

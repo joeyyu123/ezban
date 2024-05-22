@@ -41,11 +41,11 @@ public class BackstageProductReportController {
     public ResponseEntity<?> updateProductReportStatus(@RequestBody UpdateProductReportDTO updateProductReportDTO) {
 
         try {
-            //拿员工的資料
-            String adminName = updateProductReportDTO.getAdminName();
-            Integer adminNo = updateProductReportDTO.getAdminNo();
+
+            //拿员工的資料(暫定先寫死)
+            Integer adminNo = 2;
             // 執行更新操作並將管理員資訊回傳
-            productReportSvc.updateProductReport(updateProductReportDTO, adminName, adminNo);
+            productReportSvc.updateProductReport(updateProductReportDTO,adminNo);
             // 更新成功，返回 HTTP 200 OK 狀態碼
             return ResponseEntity.ok().build();
         } catch (Exception e) {

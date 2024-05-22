@@ -2,6 +2,7 @@ package com.ezban.productreport.model;
 
 import java.util.List;
 import java.util.Optional;
+import com.ezban.admin.model.Admin;
 import com.ezban.admin.model.AdminRepository;
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberRepository;
@@ -53,15 +54,18 @@ public class ProductReportService {
 
 
     // 更新審核的狀態
-    public void updateProductReport(UpdateProductReportDTO updateProductReportDTO, String adminName, Integer adminNo) {
+    public void updateProductReport(UpdateProductReportDTO updateProductReportDTO,Integer adminNo) {
 
         Optional<ProductReport> optionalProductReport = repository.findById(updateProductReportDTO.getProductReportNo());
         if (optionalProductReport.isPresent()) {
 
             ProductReport productReport = optionalProductReport.get();
             productReport.setReportStatus(updateProductReportDTO.getSelectedValue());
-            // 檢查檢舉狀態是否為2（下架）
+            Optional<Admin> adminOptional = adminRepository.findById(adminNo);
+            Admin admin = adminOptional.orElse(null);
+            productReport.setAdmin(admin);
 
+            // 檢查檢舉狀態是否為2（下架）
             if (updateProductReportDTO.getSelectedValue() == 2) {
 
                 Product product = productReport.getProduct();
