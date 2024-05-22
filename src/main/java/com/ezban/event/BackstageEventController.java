@@ -8,6 +8,8 @@ import com.ezban.eventcategory.model.EventCategory;
 import com.ezban.eventcategory.model.EventCategoryService;
 import com.ezban.host.model.Host;
 import com.ezban.host.model.HostService;
+import com.ezban.registrationform.model.RegistrationForm;
+import com.ezban.registrationform.model.RegistrationFormService;
 import com.ezban.ticketorder.model.Service.TicketOrderStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.net.URI;
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -52,6 +55,9 @@ public class BackstageEventController {
     @Autowired
     TicketOrderStatusService ticketOrderStatusService;
 
+    @Autowired
+    RegistrationFormService registrationFormService;
+
 
     /**
      * 新增活動頁面
@@ -70,7 +76,7 @@ public class BackstageEventController {
     public String create(Model model,
                          Principal principal,
                          @RequestParam Map<String, String> allParams,
-                         @RequestParam(value = "eventImg", required = false) MultipartFile eventImg,RedirectAttributes redirectAttributes) throws IOException {
+                         @RequestParam(value = "eventImg", required = false) MultipartFile eventImg, RedirectAttributes redirectAttributes) throws IOException {
         Host host = null;
         try {
             host = hostService.findHostByHostNo(principal.getName()).orElseThrow();
@@ -108,7 +114,7 @@ public class BackstageEventController {
                 eventsDto.add(eventService.convertToDto(event));
             }
             model.addAttribute("eventStatus", eventStatus);
-            model.addAttribute("events",eventsDto);
+            model.addAttribute("events", eventsDto);
             return "/backstage/event/events";
         }
         List<Event> events = eventService.findByHostNo(host.getHostNo());
@@ -155,13 +161,24 @@ public class BackstageEventController {
         }
         EventStatus status = EventStatus.valueOf(reqMap.get("eventStatus"));
         event.setEventStatus(status);
-        eventService.update(event);
-        ticketOrderStatusService.cancelAllTicketOrder(event);
+        if (status == EventStatus.PUBLISHED) {
+            if (eventService.isPublishable(event)) {
+                eventService.update(event);
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("請先完成活動相關設定");
+            }
+
+
+        } else if (status == EventStatus.ARCHIVED) {
+            eventService.update(event);
+            ticketOrderStatusService.cancelAllTicketOrder(event);
+        }
         return ResponseEntity.ok().build();
     }
 
     /**
-     * 查看活動詳細內容頁面
+     * 查看活動基本資料
      */
     @GetMapping("/events/{eventNo}")
     public String eventInfo(Model model, Principal principal, @PathVariable Integer eventNo) {
@@ -176,25 +193,6 @@ public class BackstageEventController {
         return "/backstage/event/event";
     }
 
-
-
-
-    /**
-     * 修改活動詳細內容
-     */
-    @PutMapping("/events/{eventNo}/desc")
-    @ResponseBody
-    public ResponseEntity<String> updateDesc(Model model, @PathVariable Integer eventNo, @RequestBody Map<String, String> event, Principal principal) {
-        Event existingEvent = eventService.findById(eventNo);
-        if (!eventService.isAuthenticated(principal, existingEvent)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to access this page.");
-        }
-        existingEvent.setEventDesc(event.get("eventDesc"));
-        eventService.update(existingEvent);
-        model.addAttribute("event", existingEvent);
-        model.addAttribute("eventNo", eventNo);
-        return ResponseEntity.status(HttpStatus.OK).body("儲存成功");
-    }
 
     /**
      * 更新活動基本資料
@@ -225,7 +223,7 @@ public class BackstageEventController {
     }
 
     /**
-     * 查看活動描述頁面
+     * 查看活動詳細內容頁面
      */
     @GetMapping("/events/{eventNo}/desc")
     public String desc(Model model, Principal principal, @PathVariable Integer eventNo) {
@@ -236,6 +234,38 @@ public class BackstageEventController {
         }
         model.addAttribute("event", eventService.findById(eventNo));
         return "/backstage/event/event-desc";
+    }
+
+    /**
+     * 新增活動詳細內容
+     */
+    @PostMapping("/events/{eventNo}/desc")
+    @ResponseBody
+    public ResponseEntity<String> addDesc(RedirectAttributes redirectAttributes, @PathVariable Integer eventNo, @RequestBody Map<String, String> event, Principal principal) {
+        Event existingEvent = eventService.findById(eventNo);
+        if (!eventService.isAuthenticated(principal, existingEvent)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to access this page.");
+        }
+        existingEvent.setEventDesc(event.get("eventDesc"));
+        eventService.update(existingEvent);
+        return ResponseEntity.status(HttpStatus.SEE_OTHER).location(URI.create("/backstage/events/" + eventNo + "/ticketTypes")).build();
+    }
+
+    /**
+     * 修改活動詳細內容
+     */
+    @PutMapping("/events/{eventNo}/desc")
+    @ResponseBody
+    public ResponseEntity<String> updateDesc(Model model, @PathVariable Integer eventNo, @RequestBody Map<String, String> event, Principal principal) {
+        Event existingEvent = eventService.findById(eventNo);
+        if (!eventService.isAuthenticated(principal, existingEvent)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to access this page.");
+        }
+        existingEvent.setEventDesc(event.get("eventDesc"));
+        eventService.update(existingEvent);
+        model.addAttribute("event", existingEvent);
+        model.addAttribute("eventNo", eventNo);
+        return ResponseEntity.status(HttpStatus.OK).body("儲存成功");
     }
 
 

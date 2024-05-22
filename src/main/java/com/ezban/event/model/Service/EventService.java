@@ -5,6 +5,8 @@ import com.ezban.eventcategory.model.EventCategoryService;
 import com.ezban.host.model.HostService;
 import com.ezban.qrcodeticket.model.QrcodeTicket;
 import com.ezban.qrcodeticket.model.QrcodeTicketService;
+import com.ezban.registrationform.model.RegistrationForm;
+import com.ezban.registrationform.model.RegistrationFormService;
 import com.ezban.tickettype.model.TicketType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +37,9 @@ public class EventService implements ServiceDemo<Event> {
 
     @Autowired
     QrcodeTicketService qrcodeTicketService;
+
+    @Autowired
+    RegistrationFormService registrationFormService;
 
     @Autowired
     RedisTemplate<String, Object> redisTemplate;
@@ -287,5 +294,12 @@ public class EventService implements ServiceDemo<Event> {
         event.setEventRatingCount(dto.getEventRatingCount());
         event.setVisitCount(dto.getVisitCount());
         return event;
+    }
+
+    public boolean isPublishable(Event event) {
+        RegistrationForm registrationForm = registrationFormService.findByEventNo(String.valueOf(event.getEventNo()));
+        Set<TicketType> ticketType = event.getTicketTypes();
+
+        return !ticketType.isEmpty() && registrationForm != null;
     }
 }
