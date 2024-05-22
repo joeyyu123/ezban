@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserDetailsService adminUserDetailsService;
+    private AdminUserDetailsService adminUserDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
