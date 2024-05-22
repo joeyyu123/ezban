@@ -216,7 +216,7 @@ public class ProductOrderService {
                 repository.save(productOrder);
 
             } else {
-                throw new RuntimeException("* 若無更改內容，請點擊取消修改按鈕 ！");
+                throw new RuntimeException("* 若無更改內容，請點擊取消更新按鈕 ！");
             }
         } else {
             throw new RuntimeException("* 查無訂單可進行修改 ！");
@@ -327,7 +327,7 @@ public class ProductOrderService {
 
             } else {
                 // 若沒有修改內容，跳出查無修正內容紀錄的訊息
-                throw new RuntimeException("* 若無更改內容，請點擊取消修改 ！");
+                throw new RuntimeException("* 若無更改內容，請點擊取消更新 ！");
             }
 
         }
