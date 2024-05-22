@@ -25,16 +25,16 @@ public class AdminPasswordResetController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @PostMapping("/reset-admin-password")
+    @PostMapping("/admin/reset-password")
     @ResponseBody
     public String resetPassword(@RequestParam("adminAccount") String account, @RequestParam("adminMail") String email) {
         Optional<Admin> adminOptional = adminRepository.findByAdminAccountAndAdminMail(account, email);
         if (adminOptional.isPresent()) {
             Admin admin = adminOptional.get();
             String randomPassword = hostMailService.sendRandomPasswordEmail(admin.getAdminMail(), "Password Reset");
-            
-            // String encryptedPassword = passwordEncoder.encode(randomPassword); // 加密密碼
-            // admin.setAdminPwd(encryptedPassword); // 設置加密後密碼
+
+//            String encryptedPassword = passwordEncoder.encode(randomPassword); // 加密密碼
+//            admin.setAdminPwd(encryptedPassword); // 設置加密後密碼
             
             admin.setAdminPwd(randomPassword); // 直接使用未加密的隨機密碼
             

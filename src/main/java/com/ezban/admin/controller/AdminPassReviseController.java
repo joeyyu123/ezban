@@ -1,8 +1,8 @@
 package com.ezban.admin.controller;
 
+import java.util.Optional;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ezban.admin.model.Admin;
 import com.ezban.admin.model.AdminService;
-import com.ezban.host.model.PasswordChangeRequest;
+import com.ezban.admin.model.AdminPasswordChangeRequest;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -27,7 +27,7 @@ public class AdminPassReviseController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/adminpassrevise")
-    public ResponseEntity<Map<String, Object>> changePassword(@RequestBody PasswordChangeRequest request) {
+    public ResponseEntity<Map<String, Object>> changePassword(@RequestBody AdminPasswordChangeRequest request) {
         System.out.println("Received request: Account = " + request.getAccount()
                            + ", OldPassword = " + request.getOldPassword()
                            + ", NewPassword = " + request.getNewPassword());
@@ -35,13 +35,12 @@ public class AdminPassReviseController {
         Optional<Admin> adminOptional = adminService.findAdminByAccount(request.getAccount());
         if (adminOptional.isPresent()) {
             Admin admin = adminOptional.get();
-//   加密邏輯      if (passwordEncoder.matches(request.getOldPassword(), admin.getAdminPwd())) {
+// 加密邏輯            if (passwordEncoder.matches(request.getOldPassword(), admin.getAdminPwd())) {
 //                admin.setAdminPwd(passwordEncoder.encode(request.getNewPassword()));
-           
             if (request.getOldPassword().equals(admin.getAdminPwd())) {//使用未加密密碼
             	admin.setAdminPwd(request.getNewPassword());           //使用未加密密碼
-            
-            	adminService.saveAdmin(admin);
+            	
+                adminService.saveAdmin(admin);
                 Map<String, Object> response = new HashMap<>();
                 response.put("success", true);
                 response.put("message", "密碼更新成功。");

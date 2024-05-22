@@ -1,16 +1,14 @@
-package com.ezban.admin.model; 
+package com.ezban.admin.model;
 
 public class AdminPasswordChangeRequest {
     private String account;
     private String oldPassword;
     private String newPassword;
 
-
     public AdminPasswordChangeRequest() {
     }
 
-    
-    public String admingetAccount() {
+    public String getAccount() {
         return account;
     }
 

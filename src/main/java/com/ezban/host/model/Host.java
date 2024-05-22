@@ -1,21 +1,38 @@
 package com.ezban.host.model;
 
 import java.time.LocalDateTime;
-
-import com.ezban.eventcoupon.model.EventCoupon;
-import com.ezban.product.model.Product;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
+import com.ezban.admin.model.Admin;
+import com.ezban.eventcoupon.model.EventCoupon;
+import com.ezban.product.model.Product;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "host")
+@JsonIgnoreProperties({"products", "eventCoupons"})
 public class Host {
 
     @Id
@@ -47,21 +64,26 @@ public class Host {
     @Column(name = "host_phone", length = 15, unique = true, nullable = false)
     private String hostPhone;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "host_login")
-    private LocalDateTime hostlogin;
+    private LocalDateTime hostLogin;
 
     @Column(name = "host_status", nullable = false)
     private Byte hostStatus = 1;
     
-    @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
     @JsonBackReference
-	private Set<Product> products = new LinkedHashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "admin_no")
+    private Admin admin;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
+    private Set<Product> products = new LinkedHashSet<>();
+
+    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "host")
     @OrderBy("eventCouponNo asc")
-    @JsonBackReference
-    private Set<EventCoupon> eventCoupons = new HashSet<EventCoupon>();
-
+    private Set<EventCoupon> eventCoupons = new HashSet<>();
 
     // Default constructor
     public Host() {}
@@ -102,15 +124,6 @@ public class Host {
     public void setHostPwd(String hostPwd) {
         this.hostPwd = hostPwd;
     }
-	public Set<Product> getProducts() {
-		return products;
-	}
-
-	public void setProducts(Set<Product> products) {
-		this.products = products;
-	}
-
-
 
     public String getHostName() {
         return hostName;
@@ -136,12 +149,12 @@ public class Host {
         this.hostPhone = hostPhone;
     }
 
-    public LocalDateTime getLastLogin() {
-        return hostlogin;
+    public LocalDateTime getHostLogin() {
+        return hostLogin;
     }
 
-    public void sethostlogin(LocalDateTime hostlogin) {
-        this.hostlogin = hostlogin;
+    public void setHostLogin(LocalDateTime hostLogin) {
+        this.hostLogin = hostLogin;
     }
 
     public Byte getHostStatus() {
@@ -152,14 +165,21 @@ public class Host {
         this.hostStatus = hostStatus;
     }
 
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
+    }
+
     public Set<EventCoupon> getEventCoupons() {
-        return this.eventCoupons;
+        return eventCoupons;
     }
 
     public void setEventCoupons(Set<EventCoupon> eventCoupons) {
         this.eventCoupons = eventCoupons;
     }
-
 
     @Override
     public String toString() {
@@ -170,9 +190,8 @@ public class Host {
                 ", hostName='" + hostName + '\'' +
                 ", hostMail='" + hostMail + '\'' +
                 ", hostPhone='" + hostPhone + '\'' +
-                ", lastLogin=" + hostlogin +
+                ", hostLogin=" + hostLogin +
                 ", hostStatus=" + hostStatus +
                 '}';
     }
-
 }

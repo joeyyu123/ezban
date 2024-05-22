@@ -42,7 +42,7 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests()
                 .antMatchers("/adminlogin", "/adminregister", "/adminpasswordreset").permitAll() // 确保登录页面路径正确
-                .antMatchers("backstage/adminmanage/*").authenticated()
+                .antMatchers("/backstage", "/adminmanage/*").authenticated()
                 .and()
             .formLogin()
                 .loginPage("/adminlogin") // 自定义登录页面
@@ -81,7 +81,4 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
         };
     }
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> parent of 3eeb4c9 (Revert "Merge pull request #92 from joeyyu123/eric")

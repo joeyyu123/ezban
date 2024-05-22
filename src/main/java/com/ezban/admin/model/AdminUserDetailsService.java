@@ -32,9 +32,9 @@ public class AdminUserDetailsService implements UserDetailsService {
             Admin admin = query.getSingleResult();
 
             return User.builder()
-                .username(String.valueOf(admin.getAdminNo()))
+                .username(String.valueOf(admin.getAdminNo())) // Assuming you have adminNo in Admin class
                 .password(admin.getAdminPwd())
-                .roles("ADMIN") 
+                .roles("ADMIN")
                 .build();
         } catch (NoResultException e) {
             throw new UsernameNotFoundException("帳號或密碼不正確");

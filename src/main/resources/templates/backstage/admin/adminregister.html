@@ -2,7 +2,6 @@
 <html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>註冊新管理員</title>
     <style>
         .error {
@@ -97,10 +96,19 @@
                 }
 
                 fetch(`http://localhost:8080/api/admin/checkMail/${adminMail}`)
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
                     .then(data => {
                         if (data.exists) {
                             mailError.textContent = '此電子郵件已被使用';
+                            mailError.className = 'error';
+                            checkedMail = false;
+                        } else if (data.error) {
+                            mailError.textContent = data.error;
                             mailError.className = 'error';
                             checkedMail = false;
                         } else {
@@ -127,13 +135,15 @@
                     verificationCodeError.textContent = '驗證碼正確';
                     verificationCodeError.className = 'success';
                     checkedVerificationCode = true;
+
                     setTimeout(function() {
                         document.getElementById('verificationSection').remove();
                         document.getElementById('mailError').textContent = '驗證成功';
                         if (document.getElementById('verificationCode')) {
                             document.getElementById('verificationCode').value = '';
                         }
-                    }, 2000);
+                    }, 1000);
+
                 } else {
                     verificationCodeError.textContent = '驗證碼錯誤，請重新輸入';
                     verificationCodeError.className = 'error';
@@ -173,7 +183,7 @@
             });
 
             // 提交註冊表單
-            document.getElementById('adminregister').addEventListener('submit', function(event) {
+            document.getElementById('registerForm').addEventListener('submit', function(event) {
                 event.preventDefault();
                 let allChecked = checkedAccount && checkedName && checkedMail && checkedPhone && checkedVerificationCode;
 
@@ -199,17 +209,24 @@
                 // 發送表單資料
                 fetch('http://localhost:8080/api/admin/adminregister', {
                     method: 'POST',
-                    body: JSON.stringify(jsonData),
                     headers: {
                         'Content-Type': 'application/json'
-                    }
+                    },
+                    body: JSON.stringify(jsonData)
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        console.error(`HTTP error! status: ${response.status}`);
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.success) {
                         alert('註冊成功');
-                        setTimeout(() => {
-                            window.location.href = '/adminlogin'; // 成功後跳轉
+                        console.log(data);
+                        setTimeout(function() {
+                            window.location.href = '/adminlogin';
                         }, 500);
                     } else {
                         const message = data.message || '註冊失敗，請重試。';
@@ -226,29 +243,27 @@
 </head>
 <body>
     <h1>管理員註冊</h1>
-    <form id="adminregister">
-        <label for="adminAccount">員工帳號:</label>
+    <form id="registerForm">
+        <label for="adminAccount">員工帳號:</label> 
         <input type="text" id="adminAccount" name="adminAccount" required>
-        <br><span id="accountError" class="error"></span><br>
-
-        <label for="adminName">員工名稱:</label>
+        <br> <span id="accountError" class="error"></span><br> 
+        <label for="adminName">員工名稱:</label> 
         <input type="text" id="adminName" name="adminName" required>
-        <br><span id="nameError" class="error"></span><br>
-
-        <label for="adminMail">電子郵件:</label>
+        <br> <span id="nameError" class="error"></span><br> 
+        <label for="adminMail">電子郵件:</label> 
         <input type="email" id="adminMail" name="adminMail" required>
         <button type="button" id="checkMailButton">檢查電子郵件</button>
-        <br><span id="mailError" class="error"></span><br>
+        <br> <span id="mailError" class="error"></span><br>
 
-        <div id="verificationSection" style="display: none;">
-            <label for="verificationCode">驗證碼:</label>
+        <div id="verificationSection" style="display:none;">
+            <label for="verificationCode">驗證碼:</label> 
             <input type="text" id="verificationCode" name="verificationCode">
-            <br><span id="verificationCodeError" class="error"></span><br>
+            <br> <span id="verificationCodeError" class="error"></span><br>
         </div>
 
-        <label for="adminPhone">手機號碼:</label>
+        <label for="adminPhone">手機號碼:</label> 
         <input type="text" id="adminPhone" name="adminPhone" required>
-        <br><span id="phoneError" class="error"></span><br>
+        <br> <span id="phoneError" class="error"></span><br>
 
         <button type="submit">註冊</button>
     </form>

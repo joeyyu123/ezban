@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class PageController {
 
 	@GetMapping("/hostlogin")
-	public String showLoginPage() {
+	public String showhostlogin() {
 		return "backstage/HostLogin/hostlogin";
 	}
 
 	@GetMapping("/hostregister")
-	public String showRegisterPage() {
+	public String showregisterPage() {
 		return "backstage/HostLogin/hostregister";
 	}
 

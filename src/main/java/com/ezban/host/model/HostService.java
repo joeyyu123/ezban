@@ -228,4 +228,3 @@ public class HostService {
 		return hostRepository.findByHostName(hostName).orElse(null);
 	}
 }
-

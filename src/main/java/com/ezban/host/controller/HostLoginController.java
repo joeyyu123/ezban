@@ -27,7 +27,7 @@ public class HostLoginController {
         if (optionalHost.isPresent()) {
             Host host = optionalHost.get();
             if (password.equals(host.getHostPwd())) { // 直接比较未加密的密码
-                host.sethostlogin(LocalDateTime.now());
+                host.setHostLogin(LocalDateTime.now());
                 hostRepository.save(host);
                 return new RedirectView("/backstage"); // 成功登录后重定向到 /backstage
             }
