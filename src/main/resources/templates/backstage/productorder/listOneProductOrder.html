@@ -15,6 +15,12 @@
         line-height: 1.6;
     }
 
+    .clip-img {
+        position: absolute;
+        top: -130px;
+        left: 250px;
+    }
+
     .container {
         max-width: 500px;
         margin: 5px auto;
@@ -122,6 +128,9 @@
         <div class="content">
             <div class="container">
                 <div class="card">
+                <div class="clip-img">
+                    <img src="/images/clip.png" style="width: 400px">
+                </div>
                     <div>
                         <h3 style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; text-align: center;">
                             <span th:if="${functionType == 'update'}"> 訂 單 修 改 成 功 </span></h3>

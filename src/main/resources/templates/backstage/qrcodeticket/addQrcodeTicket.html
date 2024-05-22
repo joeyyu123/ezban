@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <link th:include="backstage/index :: head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+<div id="wrapper">
+    <nav th:replace="backstage/index :: navbar"></nav>
+    <div th:insert="backstage/index :: hamburger-btn"></div>
+    <div class="page-content-wrapper">
+
+
+        <!-- 頁面內容都放在 content 裡面 -->
+        <div class="content">
+            <!-- 這裡可以放置你想呈現的內容 -->
+            <h1>QR Code新增</h1>
+            <div align="center">
+                <h3><b class="text-red">所有欄位皆為必填欄位</b></h3>
+                <form th:action="@{insert}" method="post" th:object="${qrcodeTicket}" enctype="multipart/form-data">
+
+                    <div>
+                        <label>票種:</label>
+                        <select th:field="*{ticketOrderDetail.ticketOrderDetailNo}">
+                            <option th:each="ticketOrderDetail : ${ticketOrderDetailListData}"
+                                    th:value="${ticketOrderDetail.ticketOrderDetailNo}"
+                                    th:text="${ticketOrderDetail.ticketOrderDetailNo}"/>
+                        </select>
+                        <span th:if="${#fields.hasErrors('ticketOrderDetail.ticketOrderDetailNo')}"
+                              th:errors="*{ticketOrderDetail.ticketOrderDetailNo}" class="error"
+                              id="ticketOrderDetail.ticketOrderDetailNo.errors"></span>
+                    </div>
+
+                    <div>
+                        <label>會員名稱:</label>
+                        <select th:field="*{member.memberNo}">
+                            <option th:each="member : ${memberListData}"
+                                    th:value="${member.memberNo}"
+                                    th:text="${member.memberName}"/>
+                        </select>
+                        <span th:if="${#fields.hasErrors('member.memberName')}"
+                              th:errors="*{member.memberName}" class="error"
+                              id="member.memberName.errors"></span>
+                    </div>
+
+                    <div>
+                        <label>票券使用狀態:</label>
+                        <select type="text" th:field="*{ticketUsageStatus}">
+                            <option value="0" th:selected="${ticketUsageStatus == 0}">未使用</option>
+                            <option value="1" th:selected="${ticketUsageStatus == 1}">已使用</option>
+                            <option value="2" th:selected="${ticketUsageStatus == 2}">已失效</option>
+                        </select>
+                        <span th:if="${#fields.hasErrors('ticketUsageStatus')}" th:errors="*{ticketUsageStatus}"
+                              class="error" id="ticketUsageStatus.errors"></span>
+                    </div>
+
+                    <div>
+                        <label>票券到期時間:</label>
+                        <input type="text" id="ticketValidTime-input" th:field="*{ticketValidTime}"
+                               onclick="hideContent('ticketValidTime.errors');"/><br/>
+                        <span th:if="${#fields.hasErrors('ticketValidTime')}" th:errors="*{ticketValidTime}"
+                              class="error" id="ticketValidTime.errors"></span>
+                    </div>
+
+                    <div>
+                        <button type="submit" id="submit"> 送出新增</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script type="text/javascript">
+    function hideContent(d) {
+        document.getElementById(d).style.display = "none";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+
+        const now = new Date(); // 當前時間
+        now.setDate(now.getDate() + 1); // 下一天
+
+        flatpickr("#ticketValidTime-input", {
+            enableTime: true, // 啟用時間選擇
+            time_24hr: true, // 使用 24 小時制
+            dateFormat: "Y-m-d H:i:S", // 包含秒數
+            enableSeconds: true, // 啟用秒數選擇
+            minuteIncrement: 1, // 每次選擇增加 1 分鐘
+            secondIncrement: 1, // 每次選擇增加 1 秒
+            minDate: now, // 最小日期設置為下一天
+        });
+
+
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+
+            /*************************** 發送AJAX請求到後端 ************************************/
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => response.json()) // 轉換為JSON
+                .then(data => {
+                    /*************************** 處理 ********************************************/
+                    if (data.success) {
+                        Swal.fire({
+                            title: '成功!',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: 'ok'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                /*************************** 重導到列表頁面 **********************************/
+                                window.location.href = '/backstage/qrcodeticket/listAllQrcodeTicket';
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: '錯誤!',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: '確認'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: '錯誤!',
+                        text: '錯誤!',
+                        icon: 'error',
+                        confirmButtonText: '確認'
+                    });
+                });
+        });
+    });
+</script>
+</body>
+
+</html>

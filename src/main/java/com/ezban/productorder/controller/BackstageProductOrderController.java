@@ -7,7 +7,6 @@ import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import com.ezban.productorder.model.*;
-import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-//@RequestMapping("/backstage/productorder")
 public class BackstageProductOrderController {
 
     @Autowired
@@ -65,22 +63,27 @@ public class BackstageProductOrderController {
     // 顯示單筆訂單
     @PostMapping("/backstage/productorder/getOneForDisplay")
     public String getOneForDisplay(@RequestParam("productOrderNo") String productOrderNo, ModelMap model) {
-        Integer no = validProductNo(productOrderNo, model);
-        if (no == null) return "backstage/productorder/selectPage";
 
+        Integer no = validProductNo(productOrderNo, model);
+
+        if (no == null) return "backstage/productorder/selectPage";
         ProductOrder productOrder = productOrderSvc.getOneProductOrder(no);
         List<ProductOrder> list = productOrderSvc.getAll();
         model.addAttribute("productOrderListData", list);
+
         if (productOrder == null) {
             model.addAttribute("errorMessage", "* 查無資料，請填入正確的訂單編號 !");
             return "backstage/productorder/selectPage";
         }
+
         model.addAttribute("productOrder", productOrder);
         model.addAttribute("functionType", "query");
         return "backstage/productorder/listOneProductOrder";
-    }
 
+    }
+    // 錯誤訊息
     private static Integer validProductNo(String productOrderNo, ModelMap model) {
+
         String errorMsg = "";
         if (!StringUtils.hasText(productOrderNo)) {
             errorMsg = "* 請填入正確的訂單編號，訂單編號不可為空白 !";
@@ -97,25 +100,28 @@ public class BackstageProductOrderController {
         } catch (NumberFormatException e) {
             errorMsg = "* 查無資料，請填入正確的訂單編號 !";
         }
-
         if (StringUtils.hasText(errorMsg)) {
             model.addAttribute("errorMessage", errorMsg);
             return null;
         }
         return no;
+
     }
 
 
     // 員工更新單筆訂單
     @PostMapping("/backstage/productorder/getOneForUpdate")
     public String getOneForUpdate(@RequestParam("productOrderNo") String productOrderNo, ModelMap model) {
+
         ProductOrder productOrder = productOrderSvc.getOneProductOrder(Integer.valueOf(productOrderNo));
         model.addAttribute("updateProductOrderDTO", productOrder);
         return "backstage/productorder/updateProductOrderInput";
+
     }
 
     @PostMapping("/backstage/productorder/update")
     public String update(@Valid UpdateProductOrderDTO updateProductOrderDTO, BindingResult result, ModelMap model, @RequestParam(required = false) Byte productPaymentStatus) throws IOException, MessagingException {
+
         if (result.hasErrors()) {
             model.addAttribute("updateProductOrderDTO", updateProductOrderDTO);
             return "backstage/productorder/updateProductOrderInput";
@@ -127,6 +133,7 @@ public class BackstageProductOrderController {
             model.addAttribute("errorMessage", e.getMessage());
             return "backstage/productorder/updateProductOrderInput";
         }
+
         ProductOrder updatedProductOrderDTO = productOrderSvc.getOneProductOrder(updateProductOrderDTO.getProductOrderNo());
         model.addAttribute("productOrder", updatedProductOrderDTO);
         model.addAttribute("functionType", "update");
@@ -137,11 +144,12 @@ public class BackstageProductOrderController {
             productOrderEmailService.sendOrderEmail(productOrder);
         }
         return "backstage/productorder/listOneProductOrder";
+
     }
 
 
     /**
-     * 根據登入的廠商編號查詢自己的訂單
+     * 根據登入的廠商編號查詢廠商各自的訂單
      *
      * @param model     模型
      * @param principal 當前登入的廠商信息
@@ -159,18 +167,20 @@ public class BackstageProductOrderController {
     }
 
 
-    // 廠商更新單筆訂單(經由查詢後的跳轉頁,故不進行第二次身分驗證)
+    // 廠商更新單筆訂單
     @PreAuthorize("hasRole('host')")
     @PostMapping("/backstage/productorder/getOneForUpdateByHost")
     public String getOneForUpdateByHost(@RequestParam("productOrderNo") String productOrderNo, ModelMap model) {
+
         ProductOrder productOrder = productOrderSvc.getOneProductOrder(Integer.valueOf(productOrderNo));
         model.addAttribute("updateProductOrderByHostDTO", productOrder);
         return "backstage/productorder/updateProductOrderInputByHost";
-    }
 
+    }
     @PreAuthorize("hasRole('host')")
     @PostMapping("/backstage/productorder/updateByHost")
     public String updateByHost(@Valid UpdateProductOrderByHostDTO updateProductOrderByHostDTO, BindingResult result, ModelMap model) throws IOException {
+
         if (result.hasErrors()) {
             model.addAttribute("updateProductOrderByHostDTO", updateProductOrderByHostDTO);
             return "backstage/productorder/updateProductOrderInputByHost";
@@ -182,10 +192,12 @@ public class BackstageProductOrderController {
             model.addAttribute("errorMessage", e.getMessage());
             return "backstage/productorder/updateProductOrderInputByHost";
         }
+
         ProductOrder updatedProductOrderByHostDTO = productOrderSvc.getOneProductOrder(updateProductOrderByHostDTO.getProductOrderNo());
         model.addAttribute("productOrder", updatedProductOrderByHostDTO);
         model.addAttribute("functionType", "updateByHost");
         return "backstage/productorder/hostListOneProductOrder";
+
     }
 
 }

@@ -3,13 +3,11 @@ package com.ezban.productorder.model;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-
 import com.ezban.birthdaycoupon.model.BirthdayCoupon;
 import com.ezban.member.model.Member;
 import com.ezban.product.model.Product;

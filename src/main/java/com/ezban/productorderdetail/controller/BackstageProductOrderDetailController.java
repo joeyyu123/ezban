@@ -19,18 +19,22 @@ public class BackstageProductOrderDetailController {
     // 員工:依據訂單編號顯示明細
     @PostMapping("/adminOrderDetail/{productOrderNo}")
     public String adminOrderDetail(@PathVariable("productOrderNo") Integer productOrderNo, Model model) {
+
         List<ProductOrderDetail> productOrderDetails = productOrderDetailSVC.findByProductOrder(productOrderNo);
         model.addAttribute("productOrderDetailListData", productOrderDetails);
         return "backstage/productorderdetail/listAllProductOrderDetail";
+
     }
 
 
     // 廠商:依據訂單編號顯示明細
     @PostMapping("/hostOrderDetail/{productOrderNo}")
     public String hostOrderDetail(@PathVariable("productOrderNo") Integer productOrderNo, Model model) {
+
         List<ProductOrderDetail> productOrderDetails = productOrderDetailSVC.findByProductOrder(productOrderNo);
         model.addAttribute("productOrderDetailListData", productOrderDetails);
         return "backstage/productorderdetail/listAllProductOrderDetailByHost";
+
     }
 
 }

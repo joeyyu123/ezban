@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="frontstage/index2 :: head">
+    <title>ezban | 我的活動收藏</title>
+</head>
+
+<style>
+    #example th {
+        padding: 5px;
+        text-align: center;
+        font-size: 16px;
+        line-height: 1.4;
+    }
+
+    #example td {
+        padding: 5px;
+        text-align: center;
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    #example th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+
+    #example tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .dot-lightgray::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 5px;
+        border-radius: 50%;
+        background-color: lightgray;
+    }
+
+    .dot-blue::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 5px;
+        border-radius: 50%;
+        background-color: blue;
+    }
+
+    a.event-link {
+        color: black;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    a.event-link:hover {
+        color: #333;
+        font-weight: bold;
+    }
+</style>
+
+<body id="body" th:data-member-no="${memberNo}">
+<div th:replace="frontstage/index2 :: header"></div>
+<div class="content">
+    <h1 class="page-name" style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; text-align: center;">
+        <i class="fa-regular fa-bookmark"></i> &nbsp;&nbsp;我的活動收藏
+    </h1>
+    <section class="user-dashboard">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="container">
+                        <div class="dashboard-wrapper user-dashboard">
+                            <div class="table-responsive">
+                                <table id="example" class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>活動名稱 - 活動編號</th>
+                                        <th>活動地址</th>
+                                        <th>活動開始時間</th>
+                                        <th>活動結束時間</th>
+                                        <th>活動收藏狀態</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <th:block th:each="saveEvent : ${saveEventListData}">
+                                        <tr th:id="'event-row-' + ${saveEvent.eventNo}">
+                                            <td style="vertical-align: middle">
+                                                <a th:href="@{'/events/' + ${saveEvent.eventNo}}"
+                                                   th:text="${saveEvent.eventName} + ' - ' + ${saveEvent.eventNo}"
+                                                   class="event-link"></a>
+                                            </td>
+                                            <td style="vertical-align: middle" th:text="${saveEvent.eventCity} + ' ' + ${saveEvent.eventDetailedAddress}"></td>
+                                            <td style="vertical-align: middle" th:text="${saveEvent.formattedStartTime}"></td>
+                                            <td style="vertical-align: middle" th:text="${saveEvent.formattedEndTime}"></td>
+                                            <td style="vertical-align: middle">
+                                                <span th:class="${saveEvent.saveStatus == 1} ? 'dot-blue' : 'dot-lightgray'"></span>
+                                                <span th:text="${saveEvent.saveStatus == 1 ? '已收藏' : '未收藏'}" style="margin-right: 10px;"></span> <!-- 添加 margin-right -->
+                                                <a href="#!" th:data-event-no="${saveEvent.eventNo}" onclick="toggleFavorite(this, event)">
+                                                    <button th:text="${saveEvent.saveStatus == 1 ? '取消收藏' : '添加收藏'}" class="btn btn-link"></button>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </th:block>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div th:if="${message != null}">
+                                <p th:text="${message}"></p>
+                            </div>
+                            <div th:if="${error != null}">
+                                <p th:text="${error}"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div th:replace="frontstage/index2 :: footer"></div>
+
+<script>
+    function toggleFavorite(element, event) {
+        event.preventDefault();
+
+        const eventNoStr = element.getAttribute('data-event-no');
+        console.log('Clicked eventNo:', eventNoStr);
+        const eventNo = parseInt(eventNoStr, 10);
+
+        if (isNaN(eventNo)) {
+            console.error('活動編號轉換失敗，值為:', eventNoStr);
+            return;
+        }
+
+        const memberNo = document.getElementById('body').getAttribute('data-member-no');
+        console.log('Member No:', memberNo);
+        const data = {
+            eventNo: eventNo,
+            memberNo: parseInt(memberNo, 10)
+        };
+
+        fetch('/saveevent/insert', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams(data).toString()
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(`回應數據: ${JSON.stringify(data)}`);
+                if (data.success && data.saveStatus === 0) {
+                    const rowId = `event-row-${eventNo}`;
+                    console.log('Row ID:', rowId);
+                    const row = document.getElementById(rowId);
+                    console.log('找到的行:', row);
+                    if (row) {
+                        row.remove();
+                    } else {
+                        console.error('找不到要移除的行，ID:', rowId);
+                    }
+                } else {
+                    console.error("取消收藏操作失敗");
+                }
+            })
+            .catch(error => {
+                console.error('錯誤:', error);
+            });
+    }
+
+    $(document).ready(function(){
+        $('.event-carousel').slick({
+            infinite: true,
+            slidesToShow: 3,
+            slidesToScroll: 1
+        });
+    });
+</script>
+
+</body>
+</html>
