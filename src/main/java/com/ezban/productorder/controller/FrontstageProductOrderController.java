@@ -2,10 +2,8 @@ package com.ezban.productorder.controller;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.NoSuchElementException;
 import javax.validation.Valid;
 
-import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberService;
 import com.ezban.productorder.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-//@RequestMapping("/productorder")
 public class FrontstageProductOrderController {
 
     @Autowired
@@ -34,26 +30,22 @@ public class FrontstageProductOrderController {
     public String insert(@Valid @RequestBody AddProductOrderDTO addProductOrderDTO, BindingResult result, ModelMap model) {
 
         if (result.hasErrors()) {
-
             // 如果有驗證到錯誤，返回到結帳畫面
             model.addAttribute("validationErrors", result.getAllErrors());
             return "frontstage/productorder/insert";
         }
-
         try {
-
             productOrderSvc.addProductOrder(addProductOrderDTO);
         } catch (Exception e) {
-
             // 如果有錯誤，返回到結帳畫面
             model.addAttribute("errorMessage", e.getMessage());
             return "frontstage/productorder/insert";
         }
-
         // 成功新增訂單後重定向到訂單列表頁面
         List<ProductOrder> list = productOrderSvc.getAll();
         model.addAttribute("productOrderListData", list);
         return "redirect:/productorder/listAllProductOrder";
+
     }
 
 
@@ -69,14 +61,12 @@ public class FrontstageProductOrderController {
 
         // 獲取當前登入的會員編號
         Integer memberNo = Integer.parseInt(principal.getName());
-
         // 根據會員編號查找訂單
         List<ProductOrder> productOrders = productOrderSvc.findByMember(memberNo);
-
         // 將訂單列表添加到模型中
         model.addAttribute("productOrderListData", productOrders);
-
         return "frontstage/productorder/productOrderListByMember";
+
     }
 
 
@@ -86,17 +76,15 @@ public class FrontstageProductOrderController {
     public ResponseEntity<?> cancelProductOrder(@RequestBody CancelProductOrderDTO cancelProductOrderDTO) {
 
         try {
-
             // 執行更新操作
             productOrderSvc.cancelProductOrderDTO(cancelProductOrderDTO);
-
             // 更新成功，返回 HTTP 200 OK 狀態碼
             return ResponseEntity.ok().build();
-
         } catch (Exception e) {
-
             // 處理可能的錯誤，例如更新時發生異常
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating product report: " + e.getMessage());
         }
+
     }
+
 }

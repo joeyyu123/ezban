@@ -132,7 +132,9 @@
                         <div class="preview-meta">
                             <ul>
                                 <li>
-                                    <a href="#" ><i class="tf-ion-ios-heart"></i></a>
+                                    <a id="addToFavorites" onclick="addToFavorites(this)" data-product-no="${product.product_no}">
+                                        <i class="tf-ion-ios-heart"></i>
+                                    </a>
                                 </li>
                                 <li>
                                     <a href="#!" onclick="addToCart(this)" data-product-no="${product.product_no}">
@@ -228,4 +230,53 @@
         autoIncreaseCartQuantityAndSetUI(productNo, 1)
     }
 </script>
+
+<!--收藏Ajax開始-->
+<script>
+    async function addToFavorites(e) {
+        let productNo = e.getAttribute('data-product-no');
+
+        // 構建要發送的數據
+        let formData = {
+            productNo: productNo
+        };
+
+        // 先檢查用戶是否已經登錄
+        $.ajax({
+            type: 'GET',
+            url: '/auth/status',
+            success: function (isLoggedIn) {
+                if (!isLoggedIn) {
+                    Swal.fire('請先登入', '很抱歉，需要先登入才能進行收藏', 'warning');
+                    return;
+                }
+
+                // 用戶已登錄，繼續執行收藏操作，構建要發送的數據
+                let formData = {
+                    productNo: productNo
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/saveproduct/insert',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    success: function (response) {
+                        alert(response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('AJAX error response:', status, error);
+                        Swal.fire('提交失敗', '請恰客服人員協助。', 'error');
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error checking auth status:', status, error);
+                Swal.fire('錯誤', '檢查登錄狀態時發生錯誤。', 'error');
+            }
+        });
+    }
+</script>
+<!--收藏Ajax結束-->
+
 </html>
