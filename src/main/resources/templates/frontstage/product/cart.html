@@ -87,6 +87,13 @@
     // }
 
     function showCartItems(items) {
+        let table_el = document.querySelector('.table');
+        if (items.length === 0) {
+            // 沒有商品，顯示提示字
+            table_el.innerHTML = '<p class="empty-cart-message">購物車目前尚無商品</p>';
+            return;
+        }
+
         let container = document.querySelector('.table-content');
         container.innerHTML = '';
         items.forEach(item => {
@@ -141,6 +148,12 @@
     }
 
     function getCartDetailsAPIAndShowCartItems(cart) {
+        // 检查购物车是否为空
+        if (Object.keys(cart).length === 0) {
+            showCartItems([]);
+            return;
+        }
+
         let allItems = [];
         for (let productNo in cart) {
             let url = `/product/getProductDetail?productNo=${productNo}`;
@@ -157,6 +170,7 @@
                         subtotal: data.productPrice * cart[productNo]
                     };
                     allItems.push(item);
+                    // console.log(cart, "0000");
                     showCartItems(allItems);
                 })
                 .catch(error => console.error('Error:', error));
@@ -164,7 +178,7 @@
     }
 
     autoGetCartQuantity().then(cart => {
-        console.log(cart, "9999")
+        // console.log(cart, "9999")
         getCartDetailsAPIAndShowCartItems(cart);
     });
 </script>

@@ -111,7 +111,7 @@ public class ProductFrontstageController {
     }
 
     @GetMapping("/related")
-    public ResponseEntity<List<Product>> getProductsByHostandCategory(@RequestParam("productNo") Integer productNo,
+    public ResponseEntity<List<Product>> getProductsByHostAndCategory(@RequestParam("productNo") Integer productNo,
                                                                       @RequestParam("hostNo") Integer hostNo,
                                                                       @RequestParam("productCategoryNo") Integer productCategoryNo) {
         List<Product> products = productServiceImpl.getProductsByHostandCategory(hostNo, productCategoryNo, productNo);
