@@ -2,48 +2,47 @@
 
 <html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="frontstage/index2 :: head">
-
-    <!-- 檢舉Modal開始(點擊我要檢舉觸發彈窗) -->
-    <div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel"
-                        style="color: red; font-weight: bold; font-size: 30px;">
-                        <center>請 輸 入 檢 舉 原 因</center>
-                    </h5>
-                </div>
-                <div class="modal-body">
-                    <!-- 表單 -->
-                    <form id="productReportForm" method="post" action="/productreport/insert">
-                        <div class="mb-3"><label for="reportReason" class="col-form-label">原因說明:</label>
-                            <textarea class="form-control" id="reportReason" name="reportReason"></textarea></div>
-                        <!-- 隱藏的输入字段用於储存訂單編號 -->
-                        <input type="hidden" id="productNo" name="productNo" value="">
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <br>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                            onclick="window.location.href='/product/shopdetail'">放棄檢舉
-                    </button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                            th:onclick="submitProductReport([[${productNo}]])">送出檢舉
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- 檢舉的Modal結束 -->
-</head>
-<link rel="stylesheet" th:href="@{/css/frontstage/product/shopdetail.css}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<head th:replace="frontstage/index2 :: head"></head>
 
 <body id="body">
 <div th:replace="frontstage/index2 :: header"></div>
 
+<!-- 檢舉Modal開始(點擊我要檢舉觸發彈窗) -->
+<div class="modal fade" id="staticBackdrop" data-backdrop="static" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"
+                    style="color: red; font-weight: bold; font-size: 30px;">
+                    <center>請 輸 入 檢 舉 原 因</center>
+                </h5>
+            </div>
+            <div class="modal-body">
+                <!-- 表單 -->
+                <form id="productReportForm" method="post" action="/productreport/insert">
+                    <div class="mb-3"><label for="reportReason" class="col-form-label">原因說明:</label><br/><label style="color: red;">(*提示:字數最大不可超過100個字)</label>
+                        <textarea class="form-control" id="reportReason" name="reportReason"></textarea></div>
+                    <!-- 隱藏的输入字段用於储存訂單編號 -->
+                    <input type="hidden" id="productNo" name="productNo" value="">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <br>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        id="cancel_report">放棄檢舉
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                        th:onclick="submitProductReport([[${productNo}]])">送出檢舉
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 檢舉的Modal結束 -->
+
+<link rel="stylesheet" th:href="@{/css/frontstage/product/shopdetail.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <section class="single-product">
     <div class="container" style="width: 75%; padding: 0;">
         <div class="row">
@@ -101,11 +100,11 @@
                     <a href="#" id="add_to_cart" class="btn btn-main mt-20"
                        style="margin-right: 5px; padding: 11px 12px; font-size: 14px">加入購物車</a>
                     <a id="addToFavorites" class="btn btn-main mt-20"
-                       style="margin-right: 5px;" th:onclick="addToFavorites([[${productNo}]])"><i
+                       style="margin-right: 5px; padding: 11px 12px; font-size: 14px" th:onclick="addToFavorites([[${productNo}]])"><i
                             class="tf-ion-ios-heart"></i> 加入收藏</a>
                     <button type="button" id="productReport" class="btn btn-primary btn-lg" data-toggle="modal"
                             data-target="#staticBackdrop"
-                            style="margin-top: 20px; height: 45px; border-radius: 0; background-color: #000; font-size: 11px;">
+                            style="margin-top: 20px; height: 45px; border-radius: 0; background-color: #000; font-size: 14px;">
                         <i class="tf-ion-alert"></i>&nbsp;&nbsp;我要檢舉
                     </button>
                 </div>
@@ -216,7 +215,7 @@
     // 商品評論
     autoGetCommentsDetailByProductNoAPI(productNo)
         .then(function (result) {
-            if (result.count ===0) {
+            if (result.count === 0) {
                 appendCommentToCommentList(null, 0);
             } else {
                 result.details.forEach(function (commentDetail) {
@@ -261,82 +260,117 @@
         // console.log('quantity7878:', quantity);
         autoIncreaseCartQuantityAndSetUI(productNo, quantity);
     });
+
+    //  放棄檢舉按鈕
+    document.addEventListener('DOMContentLoaded', function () {
+        let button = document.getElementById('cancel_report');
+        button.setAttribute('data-product-no', productNo);
+        button.onclick = function () {
+            window.location.href = '/product/shopdetail?productNo=' + this.getAttribute('data-product-no');
+        };
+    });
 </script>
 
 
 <!--收藏Ajax開始-->
 <script>
     function addToFavorites(productNo) {
-        var formData = {
-            productNo: productNo,
-        };
 
+        // 先檢查用戶是否已經登錄
         $.ajax({
-            type: 'POST',
-            url: '/saveproduct/insert',
-            contentType: 'application/json',
-            data: JSON.stringify(formData),
-            success: handleSuccess,
-            error: handleError
+            type: 'GET',
+            url: '/auth/status',
+            success: function (isLoggedIn) {
+                if (!isLoggedIn) {
+                    Swal.fire('請先登入', '很抱歉，需要先登入才能進行收藏', 'warning');
+                    return;
+                }
+
+                // 用戶已登錄，繼續執行收藏操作
+                var formData = {
+                    productNo: productNo
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/saveproduct/insert',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    success: function (response) {
+                        alert(response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('AJAX error response:', status, error);
+                        Swal.fire('提交失敗', '請恰客服人員協助。', 'error');
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error checking auth status:', status, error);
+                Swal.fire('錯誤', '檢查登錄狀態時發生錯誤。', 'error');
+            }
         });
     }
-
-    function handleSuccess(response) {
-        console.log('Success response received:', response);
-
-        alert(response);
-        $('#addToFavoritesBtn').css('background color', 'orange'); //加入成功後，按鈕變為橘色(***待確認***)
-    }
-
-    function handleError(xhr, status, erro) {
-        console.log('AJAX error response:', status, erro);
-
-        var errorMessage = xhr.responseText;
-        alert(errorMessage);
-    }
-
 </script>
 <!--收藏Ajax結束-->
 
 <!--檢舉Ajax開始-->
 <script>
     function submitProductReport(productNo) {
-        var reportReason = $("#reportReason").val().trim();
 
-        // 檢查 reportReason 是否為空白
-        if (reportReason === "") {
-            Swal.fire('提交失敗', '檢舉原因不可為空白', 'error');
-            return;
-        }
-        var formData = {
-            productNo: productNo,
-            reportReason: reportReason
-        };
-
+        // 先檢查用戶是否已經登錄
         $.ajax({
-            type: 'POST',
-            url: '/productreport/insert',
-            contentType: 'application/json',
-            data: JSON.stringify(formData),
-            success: function (response) {
-                console.log('Success response received:', response);
-                Swal.fire({
-                    title: '提交成功',
-                    text: "檢舉資料已成功送出。",
-                    icon: 'success',
-                    confirmButtonColor: '#3d5dff',
-                    confirmButtonText: '確定',
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        location.reload();
+            type: 'GET',
+            url: '/auth/status',
+            success: function (isLoggedIn) {
+                if (!isLoggedIn) {
+                    Swal.fire('請先登入', '很抱歉，需要先登入才能進行檢舉', 'warning');
+                    return;
+                }
+
+                var reportReason = $("#reportReason").val().trim();
+
+                // 檢查 reportReason 是否為空白
+                if (reportReason === "") {
+                    Swal.fire('提交失敗', '很抱歉，檢舉原因不可為空白。', 'error');
+                    return;
+                }
+
+                var formData = {
+                    productNo: productNo,
+                    reportReason: reportReason,
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/productreport/insert',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    success: function (response) {
+                        console.log('Success response received:', response);
+                        Swal.fire({
+                            title: '提交成功',
+                            text: "檢舉資料已成功送出，感謝您寶貴的意見。",
+                            icon: 'success',
+                            confirmButtonColor: '#3d5dff',
+                            confirmButtonText: '確定',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.log('AJAX error response:', status, error);
+                        Swal.fire('提交失敗', '請檢查輸入資料是否正確。', 'error');
                     }
                 });
             },
             error: function (xhr, status, error) {
-                console.log('AJAX error response:', status, error);
-                Swal.fire('提交失敗', '請檢查輸入資料是否正確。', 'error');
+                console.log('Error checking auth status:', status, error);
+                Swal.fire('錯誤', '檢查登錄狀態時發生錯誤。', 'error');
             }
         });
     }

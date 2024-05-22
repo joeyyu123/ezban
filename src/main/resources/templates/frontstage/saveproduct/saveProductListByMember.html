@@ -98,11 +98,11 @@
                                             <td style="vertical-align: middle"
                                                 th:text="${saveProduct.product.productName} + '[' + ${saveProduct.product.productNo} + ']'"></td>
                                             <td style="vertical-align: middle">
-                                                <form method="get" th:action="@{/product/shopdetail/(productNo=${saveProduct.product.productNo})}">
+                                                <form method="get" th:action="@{/product/shopdetail}">
                                                     <button type="submit" class="btn btn-link p-0">
                                                         <i class="fa-solid fa-eye btn-icon"></i>
                                                     </button>
-                                                    <input type="hidden" name="product"
+                                                    <input type="hidden" name="productNo"
                                                            th:value="${saveProduct.product.productNo}">
                                                 </form>
                                             </td>
