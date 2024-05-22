@@ -1,11 +1,9 @@
 package com.ezban.productorder.model;
 
-import lombok.Data;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
-@Data
+
 public class UpdateProductOrderByHostDTO {
     private Integer productOrderNo;
 
@@ -62,6 +60,5 @@ public class UpdateProductOrderByHostDTO {
     public void setProductProcessStatus(Byte productProcessStatus) {
         this.productProcessStatus = productProcessStatus;
     }
-
 
 }

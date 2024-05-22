@@ -5,9 +5,14 @@
 <head>
     <link th:include="frontstage/index2 :: head">
 
+    <!--    收藏用的彈窗    -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
         .event-container {
             min-height: 50vh;
+        }
+        .favorite {
+            color: red;
         }
         .product-content {
             height: 60px;
@@ -115,7 +120,7 @@
     </style>
 </head>
 
-<body id="body">
+<body id="body" th:data-member-no="${memberNo}" onload="initFavorites()">
 <div th:replace="frontstage/index2 :: header"></div>
 <!--breadcrumb-->
 <section class="page-header">
@@ -181,7 +186,7 @@
                                                 class="tf-ion-ios-search-strong"></i></a>
                                     </li>
                                     <li>
-                                        <a href="#!"><i class="tf-ion-ios-heart"></i></a>
+                                        <a href="#!" th:data-event-no="${event.eventNo}" onclick="toggleFavorite(this, event)"><i class="tf-ion-ios-heart"></i></a>
                                     </li>
                                 </ul>
                             </div>
@@ -217,6 +222,85 @@
 </section>
 
 <div th:replace="frontstage/index2 :: footer"></div>
+
+<script>
+    function initFavorites() {
+        const memberNo = document.getElementById('body').getAttribute('data-member-no');
+        fetch(`/saveevent/findFavoritesByMember/${memberNo}`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(event => {
+                    const icon = document.querySelector(`a[data-event-no="${event.eventNo}"] i`);
+                    if (icon) {
+                        icon.classList.add('favorite');
+                        icon.style.color = 'red';
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('初始化收藏狀態時出錯:', error);
+            });
+    }
+
+    function toggleFavorite(element, e) {
+        e.preventDefault();
+
+        const icon = element.querySelector('i');
+        const isFavorite = icon.classList.contains('favorite');
+        const eventNoStr = element.getAttribute('data-event-no');
+        const eventNo = parseInt(eventNoStr, 10);
+
+        if (isNaN(eventNo)) {
+            console.error('活動編號轉換失敗，值為:', eventNoStr);
+            return;
+        }
+
+        const newStatus = isFavorite ? 0 : 1;
+        const memberNo = document.getElementById('body').getAttribute('data-member-no');
+
+        const data = {
+            eventNo: eventNo,
+            memberNo: parseInt(memberNo, 10)
+        };
+
+        fetch('/saveevent/insert', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams(data).toString()
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (newStatus === 1) {
+                        icon.classList.add('favorite');
+                        icon.style.color = 'red';
+                        Swal.fire({
+                            title: '已收藏',
+                            text: '你已收藏該活動。',
+                            icon: 'success',
+                            confirmButtonText: '確定'
+                        });
+                    } else {
+                        icon.classList.remove('favorite');
+                        icon.style.color = '';
+                        Swal.fire({
+                            title: '取消收藏',
+                            text: '你已取消收藏該活動。',
+                            icon: 'warning',
+                            confirmButtonText: '確定'
+                        });
+                    }
+                } else {
+                    console.error("收藏操作失敗");
+                }
+            })
+            .catch(error => {
+                console.error('錯誤:', error);
+            });
+    }
+</script>
 
 <script>
     let page = 1;
@@ -274,7 +358,7 @@
                                 </div>
                                 <div class="product-content event-content">
                                     <h4><a href="/events/${event.eventNo}">${event.eventName}</a></h4>
-                                    <p class="date">${eventStartTime} ~ ${eventEndTime}</p>
+                                    <p class="date">${event.eventStartTime} ~ ${event.eventEndTime}</p>
                                     <div class="small-info">
                                         <div class="event-location">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#989797" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">

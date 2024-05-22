@@ -1,6 +1,5 @@
 package com.ezban.productreport.model;
 
-
 import com.ezban.admin.model.Admin;
 import com.ezban.member.model.Member;
 import com.ezban.product.model.Product;
@@ -10,7 +9,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 

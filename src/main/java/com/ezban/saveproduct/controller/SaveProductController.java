@@ -2,7 +2,6 @@ package com.ezban.saveproduct.controller;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 import com.ezban.member.model.MemberService;
 import com.ezban.saveproduct.model.AddSaveProductDTO;
@@ -17,7 +16,6 @@ import com.ezban.saveproduct.model.SaveProduct;
 import com.ezban.saveproduct.model.SaveProductService;
 
 @Controller
-//@RequestMapping("/saveproduct")
 public class SaveProductController {
 
     @Autowired
@@ -25,6 +23,7 @@ public class SaveProductController {
 
     @Autowired
     MemberService memberService;
+
 
     /**
      * 根據會員查找收藏紀錄
@@ -34,14 +33,14 @@ public class SaveProductController {
      */
     @GetMapping("/saveproduct/findByMember")
     public String findByMember(Model model, Principal principal) {
+
         // 獲取當前登入的會員編號
         Integer memberNo = Integer.parseInt(principal.getName());
         // 根據會員編號查找收藏的商品列表
         List<SaveProduct> saveProducts = saveProductSvc.findByMember(memberNo);
-        // 將收藏的商品列表添加到模型中
         model.addAttribute("saveProductListData", saveProducts);
-        // 返回視圖
         return "frontstage/saveproduct/saveProductListByMember";
+
     }
 
 
@@ -69,6 +68,7 @@ public class SaveProductController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("抱歉，您並未成功將商品加入收藏！" );
         }
+
     }
 
 }

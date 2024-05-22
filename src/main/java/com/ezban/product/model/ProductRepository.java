@@ -17,4 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query(value = "SELECT * FROM product WHERE (host_no = ?1 OR product_category_no = ?2) AND product_no <> ?3 LIMIT 4", nativeQuery = true)
     List<Product> findByHostNoandProductCategoryNp(Integer hostNo, Integer productCategoryNo, Integer productNo);
+
+    @Query(value = "SELECT * FROM product WHERE product_status = 1 AND NOW() BETWEEN product_add_time AND product_remove_time;", nativeQuery = true)
+    List<Product> findAll();
 }

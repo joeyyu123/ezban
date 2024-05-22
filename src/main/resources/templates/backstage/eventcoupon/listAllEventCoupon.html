@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:include="backstage/index :: head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <title>所有優惠券資料 - listAllEventCoupon.html</title>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
+
+    <!-- Flatpickr -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <style>
+        /* Styling the table */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #ffffff;
+        }
+
+        table th {
+            white-space: nowrap;
+        }
+
+        table td {
+            border: 1px solid #dddddd;
+            white-space: nowrap;
+            min-width: 40px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            width: 100%;
+            max-width: 1250px;
+            margin-bottom: 15px;
+            margin: 0 auto;
+            clear: both;
+        }
+
+        table thead tr {
+            background-color: #e0e0e0;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #f8f8f8;
+        }
+
+        table tbody tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        .btn {
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .btn-info {
+            background-color: #5bc0de;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 768px) {
+            .table-responsive {
+                max-width: 100%;
+                margin-top: 20px;
+
+                .btn {
+                    padding: 5px;
+                }
+
+                table {
+                    display: block;
+                    width: auto;
+                }
+
+                table thead,
+                table tbody tr {
+                    display: block;
+                }
+
+                table thead tr {
+                    position: absolute;
+                    top: -9999px;
+                    left: -9999px;
+                }
+
+                table tr {
+                    border: 1px solid #ccc;
+                }
+
+                table td {
+                    display: block;
+                    text-align: right;
+                    font-size: 15px;
+                    border-bottom: 1px dotted #ccc;
+                }
+
+                table td::before {
+                    content: attr(data-title);
+                    float: left;
+                    font-weight: bold;
+                    color: #000;
+                }
+
+                table td:last-child {
+                    border-bottom: 0;
+                }
+            }
+        }
+
+        table.dataTable th,
+        table.dataTable td {
+            border-right: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+        }
+
+        table.dataTable thead th,
+        table.dataTable thead td {
+            border-bottom: 1px solid #666;
+        }
+
+        table.dataTable {
+            border-top: 1px solid #ccc;
+            border-left: 1px solid #ccc;
+        }
+
+        #eventCoupon th {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .swal2-popup .swal2-form label,
+        .swal2-popup .swal2-form input,
+        .swal2-popup .swal2-form select,
+        .swal2-popup .swal2-form textarea {
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 8px;
+        }
+
+        .swal2-popup .swal2-form input,
+        .swal2-popup .swal2-form select,
+        .swal2-popup .swal2-form textarea {
+            padding: 8px;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            $('#eventCoupon').DataTable({
+                "responsive": true,
+                "autoWidth": true,
+                "lengthMenu": [10, 20, 50, 100],
+                "searching": true,
+                "paging": true,
+                "ordering": true,
+                "language": {
+                    "processing": "處理中...",
+                    "loadingRecords": "載入中...",
+                    "lengthMenu": "顯示 _MENU_ 筆結果",
+                    "zeroRecords": "沒有符合的結果",
+                    "info": "顯示第 _START_ 至 _END_ 筆結果，共<font color=red> _TOTAL_ </font>筆",
+                    "infoEmpty": "顯示第 0 至 0 筆結果，共 0 筆",
+                    "infoFiltered": "(從 _MAX_ 筆結果中過濾)",
+                    "search": "搜尋:",
+                    "paginate": {
+                        "first": "第一頁",
+                        "previous": "上一頁",
+                        "next": "下一頁",
+                        "last": "最後一頁"
+                    },
+                    "aria": {
+                        "sortAscending": ": 升冪排列",
+                        "sortDescending": ": 降冪排列"
+                    }
+                }
+            });
+
+            // Event listener for the "修改" button clicks
+            $(document).on('click', '.btn-info', function () {
+                const eventCouponNo = $(this).data('eventcouponno');
+                const hostNo = $(this).data('hostno');
+                const eventCouponName = $(this).data('eventcouponname');
+                const couponCode = $(this).data('couponcode');
+                const usageLimit = $(this).data('usagelimit');
+                const remainingTimes = $(this).data('remainingtimes');
+                const minSpend = $(this).data('minspend');
+                const eventCouponDiscount = $(this).data('eventcoupondiscount');
+                const startTime = $(this).data('starttime');
+                const endTime = $(this).data('endtime');
+                const eventCouponStatus = $(this).data('eventcouponstatus');
+                const couponDesc = $(this).data('coupondesc');
+
+                console.log(eventCouponNo, hostNo, eventCouponName, couponCode, usageLimit, remainingTimes, minSpend, eventCouponDiscount, startTime, endTime, eventCouponStatus, couponDesc);
+
+                console.log("活動優惠券號碼:", eventCouponNo);
+                console.log("廠商編號:", hostNo);
+                console.log("活動優惠券名稱:", eventCouponName);
+                console.log("優惠券代碼:", couponCode);
+                console.log("開始時間:", startTime);
+                console.log("結束時間:", endTime);
+
+                // SweetAlert2 modal creation
+                Swal.fire({
+                    title: '修改活動優惠券',
+                    html: `
+                        <div class="swal2-form">
+                            <label for="eventCouponNo">活動優惠券編號:</label>
+                            <input type="text" id="eventCouponNo" name="eventCouponNo" value="${eventCouponNo}" readonly><br>
+
+                            <label for="hostNoVisible">廠商編號:</label>
+                            <input type="text" id="hostNoVisible" value="${hostNo}" readonly>
+                            <input type="hidden" id="hostNo" name="hostNo" value="${hostNo}"><br>
+
+                            <label for="eventCouponName">活動優惠券名稱:</label>
+                            <input type="text" id="eventCouponName" name="eventCouponName" value="${eventCouponName}"><br>
+
+                            <label for="couponCode">優惠券代碼:</label>
+                            <input type="text" id="couponCode" name="couponCode" value="${couponCode}"><br>
+
+                            <label for="usageLimit">使用次數限制:</label>
+                            <input type="number" id="usageLimit" name="usageLimit" value="${usageLimit}"><br>
+
+                            <label for="remainingTimes">剩餘次數:</label>
+                            <input type="number" id="remainingTimes" name="remainingTimes" value="${remainingTimes}"><br>
+
+                            <label for="minSpend">應達消費金額:</label>
+                            <input type="number" id="minSpend" name="minSpend" value="${minSpend}"><br>
+
+                            <label for="eventCouponDiscount">折扣金額:</label>
+                            <input type="number" id="eventCouponDiscount" name="eventCouponDiscount" value="${eventCouponDiscount}"><br>
+
+                            <label for="startTime">起始時間:</label>
+                            <input type="text" id="startTime" name="startTime" value="${startTime.replace('T', ' ')}"><br>
+
+                            <label for="endTime">結束時間:</label>
+                            <input type="text" id="endTime" name="endTime" value="${endTime.replace('T', ' ')}"><br>
+
+                            <label for="eventCouponStatus">優惠券狀態:</label>
+                            <select id="eventCouponStatus" name="eventCouponStatus">
+                                <option value="0" ${eventCouponStatus == 0 ? "selected" : ""}>優惠尚未開始</option>
+                                <option value="1" ${eventCouponStatus == 1 ? "selected" : ""}>優惠中</option>
+                                <option value="2" ${eventCouponStatus == 2 ? "selected" : ""}>優惠已結束</option>
+                            </select><br>
+
+                            <label for="couponDesc">描述:</label>
+                            <textarea id="couponDesc" name="couponDesc" style="width:100%; height:100px; overflow-y:auto; resize:none;">${couponDesc}</textarea>
+                        </div>
+                    `,
+                    showCancelButton: true,
+                    confirmButtonText: '提交',
+                    didOpen: () => {
+                        flatpickr("#startTime", {
+                            enableTime: true,
+                            dateFormat: "Y-m-d H:i:S",
+                            time_24hr: true,
+                            minuteIncrement: 1,
+                            defaultHour: 0, // 設置默認小時
+                            minDate: new Date(), // 只能選取今日以後的時間
+                        });
+                        flatpickr("#endTime", {
+                            enableTime: true,
+                            dateFormat: "Y-m-d H:i:S",
+                            time_24hr: true,
+                            minuteIncrement: 1,
+                            defaultHour: 0, // 設置默認小時
+                            minDate: new Date(), // 只能選取今日以後的時間
+                        });
+
+                        $('#remainingTimes').on('input', function () {
+                            const usageLimitValue = Number($('#usageLimit').val());
+                            const remainingTimesValue = Number($('#remainingTimes').val());
+
+                            if (remainingTimesValue > usageLimitValue) {
+                                Swal.fire('錯誤!', '剩餘次數不能大於使用次數限制！', 'error');
+                                $('#remainingTimes').val('');
+                            }
+                        });
+
+                        $('#eventCouponDiscount').on('input', function () {
+                            const minSpendValue = Number($('#minSpend').val());
+                            const eventCouponDiscountValue = Number($('#eventCouponDiscount').val());
+
+                            if (eventCouponDiscountValue > minSpendValue) {
+                                Swal.fire('錯誤!', '折扣金額不能大於應達消費金額！', 'error');
+                                $('#eventCouponDiscount').val('');
+                            }
+                        });
+                    },
+                    preConfirm: () => {
+                        return {
+                            eventCouponNo: $('#eventCouponNo').val(),
+                            eventCouponName: $('#eventCouponName').val(),
+                            couponCode: $('#couponCode').val(),
+                            usageLimit: $('#usageLimit').val(),
+                            remainingTimes: $('#remainingTimes').val(),
+                            minSpend: $('#minSpend').val(),
+                            eventCouponDiscount: $('#eventCouponDiscount').val(),
+                            startTime: $('#startTime').val(),
+                            endTime: $('#endTime').val(),
+                            eventCouponStatus: $('#eventCouponStatus').val(),
+                            couponDesc: $('#couponDesc').val()
+                        };
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const formData = result.value;
+                        console.log(formData);
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '/backstage/eventcoupon/update', // Update
+                            contentType: 'application/json', // 設定內容類型為 JSON
+                            data: JSON.stringify(formData),
+                            success: function (response) {
+                                console.log('Success response received:', response);
+                                Swal.fire({
+                                    title: '修改成功',
+                                    text: "優惠券已成功更新。",
+                                    icon: 'success',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: '確定',
+                                    allowOutsideClick: false, // 防止點擊視窗外時關閉視窗
+                                    allowEscapeKey: false // 防止按 Escape 鍵關閉視窗
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                    }
+                                });
+                            },
+                            error: function (xhr, status, error) {
+                                console.log('AJAX error response:', status, error);
+                                Swal.fire('修改失敗', '請檢查輸入資料是否正確。', 'error');
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+<div id="wrapper">
+    <nav th:replace="backstage/index :: navbar"></nav>
+    <div class="page-content-wrapper">
+        <div th:insert="backstage/index :: hamburger-btn"></div>
+
+        <div class="content">
+            <h1>活動優惠券</h1>
+        </div>
+
+        <div class="table-responsive">
+            <table id="eventCoupon" class="display">
+                <thead>
+                <tr>
+                    <th>優惠券編號</th>
+                    <th>修改</th>
+                    <th>廠商編號-名稱</th>
+                    <th>活動優惠券名稱</th>
+                    <th>優惠券代碼</th>
+                    <th>剩餘次數</th>
+                    <th>起始時間</th>
+                    <th>結束時間</th>
+                    <th>狀態</th>
+                    <th>使用次數限制</th>
+                    <th>應達消費金額</th>
+                    <th>折扣金額</th>
+                    <th>優惠券描述</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <th:block th:each="eventCoupon : ${eventCouponListData}">
+                    <tr>
+                        <td th:text="${eventCoupon.eventCouponNo}"></td>
+                        <td>
+                            <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
+                                    data-target="#editModal" th:data-eventcouponno="${eventCoupon.eventCouponNo}"
+                                    th:data-hostno="${eventCoupon.host.hostNo}"
+                                    th:data-eventcouponname="${eventCoupon.eventCouponName}"
+                                    th:data-couponcode="${eventCoupon.couponCode}"
+                                    th:data-usagelimit="${eventCoupon.usageLimit}"
+                                    th:data-remainingtimes="${eventCoupon.remainingTimes}"
+                                    th:data-minspend="${eventCoupon.minSpend}"
+                                    th:data-eventcoupondiscount="${eventCoupon.eventCouponDiscount}"
+                                    th:data-starttime="${#dates.format(eventCoupon.startTime, 'yyyy-MM-dd HH:mm:ss')}"
+                                    th:data-endtime="${#dates.format(eventCoupon.endTime, 'yyyy-MM-dd HH:mm:ss')}"
+                                    th:data-eventcouponstatus="${eventCoupon.eventCouponStatus}"
+                                    th:data-coupondesc="${eventCoupon.couponDesc}">
+                                修改
+                            </button>
+                        </td>
+                        <td th:text="${eventCoupon.host.hostNo} + '-' + ${eventCoupon.host.hostName}"></td>
+                        <td th:text="${eventCoupon.eventCouponName}"></td>
+                        <td th:text="${eventCoupon.couponCode}"></td>
+                        <td th:text="${eventCoupon.remainingTimes}"></td>
+                        <td th:text="${#dates.format(eventCoupon.startTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${#dates.format(eventCoupon.endTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${eventCoupon.eventCouponStatus == 0 ? '優惠尚未開始' : (eventCoupon.eventCouponStatus == 1 ? '優惠中' : '優惠已結束')}"></td>
+                        <td th:text="${eventCoupon.usageLimit}"></td>
+                        <td th:text="${eventCoupon.minSpend}"></td>
+                        <td th:text="${eventCoupon.eventCouponDiscount}"></td>
+                        <td th:text="${eventCoupon.couponDesc}"></td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
