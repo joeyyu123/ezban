@@ -191,4 +191,12 @@ public class QrcodeTicketService {
         return ticket != null ? ticket.getTicketNo() : null;
     }
 
+
+    public Integer countByEventNo(Integer eventNo){
+        return qrcodeTicketrepository.countByEventNo(eventNo);
+    }
+
+    public Integer countByEventNoAndTicketUsageStatus(Integer eventNo, Byte ticketUsageStatus){
+        return qrcodeTicketrepository.countByEventNoAndTicketUsageStatus(eventNo, ticketUsageStatus);
+    }
 }

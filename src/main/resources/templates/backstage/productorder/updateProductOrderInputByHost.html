@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link th:include="backstage/index :: head">
+
 <style>
     button {
         padding: 5px;
@@ -57,7 +58,7 @@
             <nav class="navbar navbar-expand-md navbar-dark bg-transparent justify-content-center">
                 <div align="center">
                     <h2 style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; text-align: center;">
-                        <i class="fa-solid fa-file-pen"></i> &nbsp;&nbsp;物 流 資 料 修 改 </h2>
+                        <i class="fa-solid fa-file-pen"></i> &nbsp;&nbsp;物 流 資 料 更 新 </h2>
                 </div>
             </nav>
             <br>
@@ -101,14 +102,13 @@
                                         class="error" style="color: red;" id="recipientAddress.errors"></span>
                     </div>
                     <div>
-                        <label>商品訂單處理狀態:</label>
+                        <label>物流處理狀態:</label>
                         <label>
                             <select th:field="*{productProcessStatus}">
                                 <option value=0>備貨中</option>
-                                <option value=1 disabled>已取消</option>
+                                <option value=1>已取消</option>
                                 <option value=2>已出貨</option>
                                 <option value=3>已退貨</option>
-                                <option value=4 disabled>已結案</option>
                             </select>
                         </label>
                         <br/>
@@ -121,10 +121,10 @@
                         <div></div>
                         <div style="display: flex; justify-content: space-between;">
                             <button type="button"
-                                    onclick="window.location.href='/backstage/productorder/findByHost/{hostNo}'"> 取 消
-                                修 改
+                                    onclick="window.location.href='/backstage/productorder/findByHost'"> 取 消
+                                更 新
                             </button>
-                            <button type="submit" id="submit"> 送 出 修 改</button>
+                            <button type="submit" id="submit"> 送 出 更 新</button>
                         </div>
                         <br>
                         <div class="errorblock" th:utext="${errorMessage}" style="color: red; font-weight: bold;">
@@ -145,4 +145,5 @@
     </div>
 </div>
 </body>
+
 </html>

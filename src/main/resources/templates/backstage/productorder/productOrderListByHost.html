@@ -4,7 +4,6 @@
 <head>
     <title>ezban | host_product_order</title>
 </head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link th:include="backstage/index :: head">
@@ -44,126 +43,125 @@
             <div class="modal-footer">
                 <br>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                        onclick="window.location.href='/backstage/productorder/findByHost/{hostNo}'">返回第一頁
+                        onclick="window.location.href='/backstage/productorder/findByHost'">返回第一頁
                 </button>
             </div>
-
-            <style>
-                #example th {
-                    padding: 5px; /* 調整單元格內邊距 */
-                    text-align: center; /* 將文字置中 */
-                    font-size: 16px; /* 調整字體大小 */
-                    line-height: 1.4; /* 調整行高 */
-                }
-
-                #example td {
-                    padding: 5px; /* 調整單元格內邊距 */
-                    text-align: center; /* 將文字置中 */
-                    font-size: 14px; /* 調整字體大小 */
-                    line-height: 1.4; /* 調整行高 */
-                }
-
-                #example th {
-                    background-color: #f2f2f2; /* 設置表頭背景色 */
-                    font-weight: bold; /* 加粗表頭文字 */
-                }
-
-                #example tr:nth-child(even) {
-                    background-color: #f9f9f9; /* 隔行變色 */
-                }
-
-                .dashboard-menu li a {
-                    display: inline-block;
-                    padding: 8px 16px;
-                    border-radius: 999px; /* 將數值設置為一個足夠大的值，使按鈕呈現橢圓形 */
-                    transition: background-color 0.5s; /* 背景顏色過渡效果 */
-                    text-decoration: none; /* 移除超連結的下劃線 */
-                }
-
-                .dashboard-menu li a:hover {
-                    background-color: lightsteelblue; /* 滑鼠懸停時的背景顏色 */
-                }
-
-                .oval-image {
-                    border-radius: 40%; /* 使用50%的圆角半径可以将图像变成椭圆形 */
-                    width: 50px; /* 调整图像的宽度 */
-                    height: 30px; /* 调整图像的高度 */
-                    opacity: 0.9; /* 设置透明度为 0.8（80% 不透明） */
-                }
-
-                /* 灰色小点样式 */
-                .dot-lightgray::before {
-                    content: '';
-                    display: inline-block;
-                    width: 8px;
-                    height: 8px;
-                    margin-right: 5px; /* 设置小点与文字之间的间距 */
-                    border-radius: 50%;
-                    background-color: lightgray;
-                }
-
-                /* 蓝色小点样式 */
-                .dot-blue::before {
-                    content: '';
-                    display: inline-block;
-                    width: 8px;
-                    height: 8px;
-                    margin-right: 5px;
-                    border-radius: 50%;
-                    background-color: blue;
-                }
-
-                /* 紅色小点样式 */
-                .dot-red::before {
-                    content: '';
-                    display: inline-block;
-                    width: 8px;
-                    height: 8px;
-                    margin-right: 5px;
-                    border-radius: 50%;
-                    background-color: red;
-                }
-
-                /* 橘色小点样式 */
-                .dot-orange::before {
-                    content: '';
-                    display: inline-block;
-                    width: 8px;
-                    height: 8px;
-                    margin-right: 5px;
-                    border-radius: 50%;
-                    background-color: orange;
-                }
-
-                /* 黑色小点样式 */
-                .dot-black::before {
-                    content: '';
-                    display: inline-block;
-                    width: 8px;
-                    height: 8px;
-                    margin-right: 5px;
-                    border-radius: 50%;
-                    background-color: black;
-                }
-
-                tr > th:nth-child(2)::before,
-                tr > th:nth-child(3)::before,
-                tr > th:nth-child(5)::before,
-                tr > th:nth-child(6)::before {
-                    display: none !important;
-                }
-
-                tr > th:nth-child(2)::after,
-                tr > th:nth-child(3)::after,
-                tr > th:nth-child(5)::after,
-                tr > th:nth-child(6)::after {
-                    display: none !important;
-                }
-            </style>
-
         </div>
     </div>
 </div>
+
+<style>
+    #example th {
+        padding: 5px; /* 調整單元格內邊距 */
+        text-align: center; /* 將文字置中 */
+        font-size: 16px; /* 調整字體大小 */
+        line-height: 1.4; /* 調整行高 */
+    }
+
+    #example td {
+        padding: 5px; /* 調整單元格內邊距 */
+        text-align: center; /* 將文字置中 */
+        font-size: 14px; /* 調整字體大小 */
+        line-height: 1.4; /* 調整行高 */
+    }
+
+    #example th {
+        background-color: #f2f2f2; /* 設置表頭背景色 */
+        font-weight: bold; /* 加粗表頭文字 */
+    }
+
+    #example tr:nth-child(even) {
+        background-color: #f9f9f9; /* 隔行變色 */
+    }
+
+    .dashboard-menu li a {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 999px; /* 將數值設置為一個足夠大的值，使按鈕呈現橢圓形 */
+        transition: background-color 0.5s; /* 背景顏色過渡效果 */
+        text-decoration: none; /* 移除超連結的下劃線 */
+    }
+
+    .dashboard-menu li a:hover {
+        background-color: lightsteelblue; /* 滑鼠懸停時的背景顏色 */
+    }
+
+    .oval-image {
+        border-radius: 40%; /* 使用50%的圆角半径可以将图像变成椭圆形 */
+        width: 50px; /* 调整图像的宽度 */
+        height: 30px; /* 调整图像的高度 */
+        opacity: 0.9; /* 设置透明度为 0.8（80% 不透明） */
+    }
+
+    /* 灰色小点样式 */
+    .dot-lightgray::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 5px; /* 设置小点与文字之间的间距 */
+        border-radius: 50%;
+        background-color: lightgray;
+    }
+
+    /* 蓝色小点样式 */
+    .dot-blue::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 5px;
+        border-radius: 50%;
+        background-color: blue;
+    }
+
+    /* 紅色小点样式 */
+    .dot-red::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 5px;
+        border-radius: 50%;
+        background-color: red;
+    }
+
+    /* 橘色小点样式 */
+    .dot-orange::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 5px;
+        border-radius: 50%;
+        background-color: orange;
+    }
+
+    /* 黑色小点样式 */
+    .dot-black::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 5px;
+        border-radius: 50%;
+        background-color: black;
+    }
+
+    tr > th:nth-child(2)::before,
+    tr > th:nth-child(3)::before,
+    tr > th:nth-child(5)::before,
+    tr > th:nth-child(6)::before {
+        display: none !important;
+    }
+
+    tr > th:nth-child(2)::after,
+    tr > th:nth-child(3)::after,
+    tr > th:nth-child(5)::after,
+    tr > th:nth-child(6)::after {
+        display: none !important;
+    }
+</style>
 
 <body style="background-color: #f4e9e6">
 <div id="wrapper">
@@ -172,7 +170,7 @@
     <div class="page-content-wrapper">
         <div class="content">
             <h1 class="page-name" ,
-                style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; margin-right: 80px; margin-bottom: 50px">
+                style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; text-align: left; margin-bottom: 50px">
                 <i class="fa-solid fa-truck-arrow-right"></i> &nbsp;&nbsp; 訂 單 管 理 </h1>
             <div class="dashboard-wrapper user-dashboard">
                 <div class="table-responsive">
@@ -181,7 +179,7 @@
                         <tr>
                             <th>訂單編號</th>
                             <th>訂單成立日期</th>
-                            <th>總金額</th>
+                            <th>結帳金額</th>
                             <th>訂單狀態</th>
                             <th>收件詳情</th>
                             <th>訂單明細</th>
@@ -234,15 +232,15 @@
                                     <form method="post" th:action="@{/backstage/productorder/getOneForUpdateByHost}"
                                           style="margin-bottom: 0;">
 
-                                        <!-- 訂單狀態為"4"，不可編輯 -->
+                                        <!-- 訂單狀態為"1跟4"，不可編輯 -->
                                         <button type="submit" class="btn btn-link p-0"
-                                                th:if="${productOrder.productProcessStatus == 4 }" disabled>
-                                            <i class="fa-solid fa-pencil" style="color: #78797a;font-size: 25px;"></i>
+                                                th:if="${productOrder.productProcessStatus == 1 && productOrder.productProcessStatus == 4}"
+                                                disabled>
                                         </button>
 
-                                        <!-- 訂單狀態不為"4"，可編輯 -->
+                                        <!-- 訂單狀態不為"1跟4"，可編輯 -->
                                         <button type="submit" class="btn btn-link p-0"
-                                                th:if="${productOrder.productProcessStatus != 4}">
+                                                th:if="${productOrder.productProcessStatus != 1 && productOrder.productProcessStatus != 4}">
                                             <i class="fa-solid fa-pencil" style="color: #ff6e3d; font-size: 25px;"></i>
                                         </button>
                                         <input type="hidden" name="productOrderNo"

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="frontstage/index2 :: head"></head>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+<link rel="stylesheet" th:href="@{/css/frontstage/product/cart.css}">
+<script th:src="@{/js/frontstage/product/cart.js}"></script>
+
+<body id="body">
+<div th:replace="frontstage/index2 :: header"></div>
+
+
+<!-- Start breadcrumb -->
+<section class="page-header">
+    <div class="container" style="width: 75%; padding: 0;">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="content">
+                    <h1 class="page-name">購物車</h1>
+                    <ol class="breadcrumb">
+                        <li><a th:href="@{/}">首頁</a></li>
+                        <li class="active">購物車</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</section> <!-- End breadcrumb -->
+
+<div class="page-wrapper" style="padding-top: 30px;">
+    <div class="cart shopping">
+        <div class="container" style="width: 75%;">
+            <div class="product-list">
+                <form method="post">
+                    <table class="table">
+                        <thead>
+                        <tr class="table-title">
+                            <th class="custom-checkbox">
+                                <label class="custom-checkbox-label" for="select-all">
+                                    <input type="checkbox" id="select-all"/>
+                                    <span class="checkmark"></span>全選
+                                </label>
+                            </th>
+                            <th class="">商品名稱</th>
+                            <th class="">單價</th>
+                            <th class="">數量</th>
+                            <th class="">小計</th>
+                            <th class=""></th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-content">
+                        <tr>
+
+                        </tr>
+                        </tbody>
+                    </table>
+                    <a href="#" class="btn btn-main pull-right checkout" onclick="checkLoginAndCheckout()">結帳</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="frontstage/index2 :: footer"></div>
+
+
+</body>
+<script>
+    // function getItemsFromServer() {
+    //     let url = `/cart/getCartItems`;
+    //     fetch(url)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             let allItems = data.items.map(item => ({
+    //                 product_no: item.product.productNo,
+    //                 product_name: item.product.productName,
+    //                 product_url: `/product/shopdetail?productNo=${item.product.productNo}`,
+    //                 product_img: `/product/getFirstImage/${item.product.productNo}`,
+    //                 price: item.product.productPrice,
+    //                 quantity: item.quantity,
+    //                 subtotal: item.product.productPrice * item.quantity
+    //             }));
+    //             showCartItems(allItems);
+    //         })
+    //         .catch(error => console.error('Error:', error));
+    // }
+
+    function showCartItems(items) {
+        let container = document.querySelector('.table-content');
+        container.innerHTML = '';
+        items.forEach(item => {
+            let row = `
+                <tr>
+                   <td class="checkout">
+                        <label class="custom-checkbox-label" for="product${item.product_no}">
+                            <input type="checkbox" name="select-to-checkout" id="product${item.product_no}" data-product-no="${item.product_no}">
+                            <span class="checkmark"></span>
+                        </label>
+                    </td>
+                    <td class="product-thumbnail" style="padding: 15px 8px;">
+                        <div class="product-info">
+                            <a href="${item.product_url}">
+                                <img src="${item.product_img}" alt="product" class="img-responsive" style="width: 80px;">
+                            </a>
+                            <a href="${item.product_url}">${item.product_name}</a>
+                        </div>
+                    </td>
+                    <td class="product-price">
+                        <span class="price">$${item.price}</span>
+                    </td>
+                    <td class="product-quantity">
+                        <div class="quantity">
+                            <input type="text" value="${item.quantity}" class="form-control input-sm" name="cart-quantity" data-product-no="${item.product_no}" onchange="inputQtyChange(this)">
+                    </td>
+                    <td class="product-subtotal" style="padding: 20px;">
+                        <span class="amount">$${item.subtotal}</span>
+                    </td>
+                    <td class="prodcut-remove">
+                        <i class="remove bi bi-trash3" data-product-no = "${item.product_no}"></i>
+                    </td>
+                </tr>
+            `;
+            container.innerHTML += row;
+        });
+
+        // 總計
+        let total = items.reduce((acc, item) => acc + item.subtotal, 0);
+        let totalRow = `
+        <tr>
+            <td colspan="4" class="text-right total" style="padding-top: 16px;">總計</td>
+            <td class="total" style="padding-top: 16px;">
+                <span class="amount">$${total}</span>
+            </td>
+        </tr>
+        `;
+        container.innerHTML += totalRow;
+
+        // 初始化 Touchspin
+        initializeTouchSpin();
+    }
+
+    function getCartDetailsAPIAndShowCartItems(cart) {
+        let allItems = [];
+        for (let productNo in cart) {
+            let url = `/product/getProductDetail?productNo=${productNo}`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    let item = {
+                        product_no: data.productNo,
+                        product_name: data.productName,
+                        product_url: `/product/shopdetail?productNo=${data.productNo}`,
+                        product_img: `/product/getFirstImage/${data.productNo}`,
+                        price: data.productPrice,
+                        quantity: cart[productNo],
+                        subtotal: data.productPrice * cart[productNo]
+                    };
+                    allItems.push(item);
+                    showCartItems(allItems);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    }
+
+    autoGetCartQuantity().then(cart => {
+        console.log(cart, "9999")
+        getCartDetailsAPIAndShowCartItems(cart);
+    });
+</script>
+</html>

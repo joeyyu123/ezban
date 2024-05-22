@@ -3,21 +3,11 @@ package com.ezban.productorder.model;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-
 import com.ezban.birthdaycoupon.model.BirthdayCoupon;
 import com.ezban.member.model.Member;
 import com.ezban.product.model.Product;
@@ -106,8 +96,8 @@ public class ProductOrder implements java.io.Serializable {
     @Max(value = 1, message = "* 商品訂單撥款狀態不正確 !")
     private Byte productOrderAllocationStatus;
 
-    @OneToMany(mappedBy = "productOrder")
-    private List<ProductOrderDetail> productOrderDetails;
+    @OneToMany(mappedBy = "productOrder", cascade = CascadeType.ALL)
+    private List<ProductOrderDetail> productOrderDetail;
 
     public ProductOrder() {
     }
@@ -248,11 +238,15 @@ public class ProductOrder implements java.io.Serializable {
         this.productOrderAllocationStatus = productOrderAllocationStatus;
     }
 
-    public List<ProductOrderDetail> getProductOrderDetails() {
-        return productOrderDetails;
+    public List<ProductOrderDetail> getProductOrderDetail() {
+        return productOrderDetail;
     }
 
-    public void setProductOrderDetails(List<ProductOrderDetail> productOrderDetails) {
-        this.productOrderDetails = productOrderDetails;
+    public void setProductOrderDetail(List<ProductOrderDetail> productOrderDetail) {
+        this.productOrderDetail = productOrderDetail;
     }
+
+    public void setProductList(List<Product> products) {
+    }
+
 }

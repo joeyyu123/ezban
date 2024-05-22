@@ -3,9 +3,7 @@ package com.ezban.ticketorderdetail.model;
 import com.ezban.qrcodeticket.model.QrcodeTicket;
 import com.ezban.ticketorder.model.TicketOrder;
 import com.ezban.tickettype.model.TicketType;
-import com.ezban.tickettype.model.Views;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -24,23 +22,19 @@ public class TicketOrderDetail implements java.io.Serializable {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ticket_type_no", nullable = false)
-    @JsonView(Views.PublicWithTicketType.class)
     private TicketType ticketType;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "ticket_order_no", nullable = false)
-    @JsonView(Views.Public.class)
     private TicketOrder ticketOrder;
 
     @NotNull
     @Column(name = "ticket_type_price", nullable = false)
-    @JsonView(Views.Public.class)
     private Integer ticketTypePrice;
 
     @NotNull
     @Column(name = "ticket_type_qty", nullable = false)
-    @JsonView(Views.Public.class)
     private Integer ticketTypeQty;
 
     @NotNull

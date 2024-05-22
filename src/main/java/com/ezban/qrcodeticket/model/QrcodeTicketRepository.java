@@ -32,4 +32,10 @@ public interface QrcodeTicketRepository extends JpaRepository<QrcodeTicket,Long>
     @Transactional
     @Query("SELECT qt FROM QrcodeTicket qt WHERE qt.member.memberNo = ?1")
     List<QrcodeTicket> findTicketsByMemberNo(Integer memberNo);
+
+    @Query("SELECT COUNT(q) FROM QrcodeTicket q JOIN q.ticketOrderDetail t JOIN t.ticketType tt WHERE tt.event.eventNo = ?1")
+    Integer countByEventNo(Integer eventNo);
+
+    @Query("SELECT COUNT(q) FROM QrcodeTicket q JOIN q.ticketOrderDetail t JOIN t.ticketType tt WHERE tt.event.eventNo = ?1 AND q.ticketUsageStatus = ?2")
+    Integer countByEventNoAndTicketUsageStatus(Integer eventNo, Byte ticketUsageStatus);
 }

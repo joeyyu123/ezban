@@ -3,6 +3,98 @@
 <head>
     <link th:include="backstage/index :: head">
     <!-- 可以在這底下加入其他 css 或是 script    -->
+    <style>
+        .page-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .content {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .header, .status, .ticket-status, .checkin-status {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .header .info {
+            flex: 1;
+            margin-left: 20px;
+        }
+
+        .header .info h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .header .info p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .header .actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .header .actions button {
+            margin-bottom: 10px;
+        }
+
+        .status, .ticket-status, .checkin-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status .item, .ticket-status .item, .checkin-status .item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .status .item h2, .ticket-status .item h2, .checkin-status .item h2 {
+            margin: 0;
+            font-size: 36px;
+        }
+
+        .status .item p, .ticket-status .item p, .checkin-status .item p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .chart {
+            width: 80%; /* 調整圖表的寬度 */
+            max-width: 200px; /* 設置圖表的最大寬度 */
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <div id="wrapper">
@@ -11,10 +103,137 @@
     <div class="page-content-wrapper">
         <!-- 頁面內容都放在 content 裡面 -->
         <div class="content">
-            <h1>這是總覽頁面</h1>
+            <div class="header">
+                <div class="info">
+                    <span hidden id="eventNo" th:text="${event.eventNo}"></span>
+                    <h1 th:text="${event.eventName}"></h1>
+                    <p th:text="${#dates.format(event.eventStartTime, 'yyyy-MM-dd HH:mm:ss')} + ' ~ ' + ${#dates.format(event.eventEndTime, 'yyyy-MM-dd HH:mm:ss')}"></p>
+                </div>
+                <div class="actions">
+                    <button id="publishBtn" class="btn btn-primary" th:if="${event.eventStatus.name() == 'DRAFT'}">立即上架</button>
+                    <button id="archiveBtn" class="btn btn-danger" th:if="${event.eventStatus.name() == 'PUBLISHED'}">立即下架活動</button>
+                </div>
+            </div>
+            <div class="status">
+                <div class="item">
+                    <p>頁面點閱數</p>
+                    <h2 th:text="${event.visitCount}">0</h2>
+                </div>
+                <div class="item">
+                    <p>活動狀態</p>
+                    <h2 th:if="${event.eventStatus.name() == 'DRAFT'}" th:text="'草稿'"></h2>
+                    <h2 th:if="${event.eventStatus.name() == 'PUBLISHED'}" th:text="'上架中'"></h2>
+                    <h2 th:if="${event.eventStatus.name() == 'ARCHIVED'}" th:text="'已下架'"></h2>
+                    <h2 th:if="${event.eventStatus.name() == 'FINISHED'}" th:text="'已結束'"></h2>
+                </div>
+            </div>
+            <div class="ticket-status">
+                <div class="item">
+                    <p th:text="'總販售張數：' + ${ticketInfo.get('totalTickets')}"></p>
+                    <span id="soldTickets" hidden th:text="${ticketInfo.get('soldTickets')}"></span>
+                    <span id="unsoldTickets" hidden th:text="${ticketInfo.get('unsoldTickets')}"></span>
+                    <div class="chart-container">
+                        <div class="chart">
+                            <canvas id="ticketChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="checkin-status">
+                <div class="item">
+                    <p th:text="'總報名人數：' + ${registrationInfo.get('totalCount')}"></p>
+                    <span id="checkedCount" hidden th:text=" ${registrationInfo.get('checkedCount')}"></span>
+                    <span id="uncheckedCount" hidden th:text="${registrationInfo.get('uncheckedCount')}"></span>
+                    <div class="chart-container">
+                        <div class="chart">
+                            <canvas id="checkinChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ticketCtx = document.getElementById('ticketChart').getContext('2d');
+        var checkinCtx = document.getElementById('checkinChart').getContext('2d');
+        var soldTickets = parseInt(document.getElementById('soldTickets').textContent);
+        var unsoldTickets = parseInt(document.getElementById('unsoldTickets').textContent);
+        var checkedCount = parseInt(document.getElementById('checkedCount').textContent);
+        var uncheckedCount = parseInt(document.getElementById('uncheckedCount').textContent);
+        var ticketData = [soldTickets, unsoldTickets];
+        var checkinData = [checkedCount, uncheckedCount];
 
+        var ticketChart = new Chart(ticketCtx, {
+            type: 'pie',
+            data: {
+                labels: ['已販售', '未販售'],
+                datasets: [{
+                    data: ticketData,
+                    backgroundColor: ['#36A2EB', '#FF6384']
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        var checkinChart = new Chart(checkinCtx, {
+            type: 'pie',
+            data: {
+                labels: ['已報到', '未報到'],
+                datasets: [{
+                    data: checkinData,
+                    backgroundColor: ['#4BC0C0', '#FFCE56']
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+
+        // 點擊立即上架、下架活動
+        let eventNo = $('#eventNo').text();
+        $("#publishBtn").click(function () {
+            $.ajax({
+                url: '/backstage/events/' + eventNo + '/status',
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    eventStatus: 'PUBLISHED'
+                }),
+                success: function (data) {
+                    alert('活動已上架');
+                    window.location.href = '/backstage/events/' + eventNo + '/overview';
+                },
+                error: function (xhr, status, error) {
+                    alert('上架失敗');
+                }
+            });
+        });
+
+        $("#archiveBtn").click(function () {
+            if (confirm('是否要下架活動？ 此操作將永久取消已經報名的訂單。')) {
+            $.ajax({
+                url: '/backstage/events/' + eventNo + '/status',
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    eventStatus: 'ARCHIVED'
+                }),
+                success: function (data) {
+                    alert('活動已下架');
+                    window.location.href = '/backstage/events/' + eventNo + '/overview';
+                },
+                error: function (xhr, status, error) {
+                    alert('下架失敗');
+                }
+            });
+            }
+        });
+    });
+</script>
 </body>
 </html>

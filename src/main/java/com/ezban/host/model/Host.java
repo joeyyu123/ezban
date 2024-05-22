@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import com.ezban.eventcoupon.model.EventCoupon;
 import com.ezban.product.model.Product;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.HashSet;
@@ -52,10 +54,12 @@ public class Host {
     private Byte hostStatus = 1;
     
     @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
+    @JsonBackReference
 	private Set<Product> products = new LinkedHashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "host")
     @OrderBy("eventCouponNo asc")
+    @JsonBackReference
     private Set<EventCoupon> eventCoupons = new HashSet<EventCoupon>();
 
 

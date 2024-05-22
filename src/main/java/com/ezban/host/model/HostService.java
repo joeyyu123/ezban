@@ -224,4 +224,7 @@ public class HostService {
 	public String getHostNameByEventNo(Integer eventNo) {
 		return hostRepository.findHostNameByEventNo(eventNo);
 	}
+	public Host findByHostName(String hostName) {
+		return hostRepository.findByHostName(hostName).orElse(null);
+	}
 }
