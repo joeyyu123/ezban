@@ -23,7 +23,6 @@ $(document).ready(function () {
     }
 
     $('[data-toggle="offcanvas"]').click(function () {
-        console.log(this);
         $('#wrapper').toggleClass('toggled');
     });
 });

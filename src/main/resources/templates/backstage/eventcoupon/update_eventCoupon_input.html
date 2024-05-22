@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link th:include="backstage/index :: head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <title>優惠券修改 - update_eventCoupon_input.html</title>
+</head>
+
+<body>
+<div id="wrapper">
+    <nav th:replace="backstage/index :: navbar"></nav>
+    <div class="page-content-wrapper">
+        <div th:insert="backstage/index :: hamburger-btn"></div>
+
+
+        <!-- 頁面內容都放在 content 裡面 -->
+        <div class="content">
+            <!-- 這裡可以放置你想呈現的內容 -->
+            <h1>Host Template</h1>
+            <div align="center">
+                <h3><b>所有欄位皆為必填欄位</b></h3>
+                <form th:action="@{update}" method="post" th:object="${eventCoupon}" enctype="multipart/form-data">
+
+
+                    <div>
+                        <label>廠商編號:</label>
+                        <input type="text" th:field="*{host}" style="border:0px ; font-weight: bold;" readonly/><br/>
+                    </div>
+
+                    <div>
+                        <label>活動優惠券名稱:</label>
+                        <input type="text" th:field="*{eventCouponName}" onclick="hideContent('eventCouponName.errors');" /><br/>
+                        <span  th:if="${#fields.hasErrors('eventCouponName')}" th:errors="*{eventCouponName}" class="error" id="eventCouponName.errors"></span>
+                    </div>
+
+                    <div>
+                        <label>優惠券代碼:</label>
+                        <input type="text" th:field="*{couponCode}" onclick="hideContent('couponCode.errors');" /><br/>
+                        <span  th:if="${#fields.hasErrors('couponCode')}" th:errors="*{couponCode}" class="error" id="couponCode.errors"></span>
+                    </div>
+
+                    <div>
+                        <label>使用次數限制:</label>
+                        <input type="text" th:field="*{usageLimit}" onclick="hideContent('usageLimit.errors');" /><br/>
+                        <span  th:if="${#fields.hasErrors('usageLimit')}" th:errors="*{usageLimit}" class="error" id="usageLimit.errors"></span>
+                    </div>
+
+                    <div>
+                        <label>剩餘次數:</label>
+                        <input type="text" th:field="*{remainingTimes}" onclick="hideContent('remainingTimes.errors');" /><br/>
+                        <span  th:if="${#fields.hasErrors('remainingTimes')}" th:errors="*{remainingTimes}" class="error" id="remainingTimes.errors"></span>
+                    </div>
+
+                    <div>
+                        <label>折扣金額:</label>
+                        <input type="text" th:field="*{eventCouponDiscount}" onclick="hideContent('eventCouponDiscount.errors');" /><br/>
+                        <span  th:if="${#fields.hasErrors('eventCouponDiscount')}" th:errors="*{eventCouponDiscount}" class="error" id="eventCouponDiscount.errors"></span>
+                    </div>
+
+                    <div>
+                        <label>起始使用時間:</label>
+                        <input type="date" th:field="*{startTime}" onclick="hideContent('startTime.errors');" /><br/>
+                        <span  th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}" class="error" id="startTime.errors"></span>
+                    </div>
+
+                    <div>
+                        <label>結束使用時間:</label>
+                        <input type="date" th:field="*{endTime}" onclick="hideContent('endTime.errors');" /><br/>
+                        <span  th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}" class="error" id="endTime.errors"></span>
+                    </div>
+
+                    <div>
+                        <label>活動優惠券狀態:</label>
+                        <input type="text" th:field="*{eventCouponStatus}" onclick="hideContent('eventCouponStatus.errors');" /><br/>
+                        <span  th:if="${#fields.hasErrors('eventCouponStatus')}" th:errors="*{eventCouponStatus}" class="error" id="eventCouponStatus.errors"></span>
+                    </div>
+
+                    <div>
+                        <label>活動優惠券描述:</label>
+                        <input type="text" th:field="*{couponDesc}" onclick="hideContent('couponDesc.errors');" /><br/>
+                        <span  th:if="${#fields.hasErrors('couponDesc')}" th:errors="*{couponDesc}" class="error" id="couponDesc.errors"></span>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

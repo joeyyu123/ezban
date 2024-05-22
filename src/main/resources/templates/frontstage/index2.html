@@ -46,15 +46,15 @@
     <script th:src="@{/plugins/ekko-lightbox/dist/ekko-lightbox.min.js}"></script>
     <!-- Count Down Js -->
     <script th:src="@{/plugins/syo-timer/build/jquery.syotimer.min.js}"></script>
-    <!-- slick Carousel -->
-    <script th:src="@{/plugins/slick/slick.min.js}"></script>
-    <script th:src="@{/plugins/slick/slick-animation.min.js}"></script>
     <!-- Main Js File -->
     <script th:src="@{/js/frontstage/script.js}"></script>
     <!-- sweetalert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- jquery/3.5.1 -->
-<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- slick Carousel -->
+    <script th:src="@{/plugins/slick/slick.min.js}"></script>
+    <script th:src="@{/plugins/slick/slick-animation.min.js}"></script>
     <!-- font-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script th:src="@{/js/frontstage/product/cartqty.js}"></script>
@@ -126,7 +126,13 @@
                                         class="fa-brands fa-shopify"></i> 我的商品訂單</span></a>
                             </li>
                             <li style="display: flex; justify-content: center; align-items: center;">
-                                <a href="/events/orders"><span>我的票券訂單</span></a>
+                                <a href="/events/orders"><span><i
+                                        class="fa-brands fa-shopify"></i> 我的票券訂單</span></a>
+                            </li>
+                            <li style="display: flex; justify-content: center; align-items: center;">
+                                <a th:href="@{/saveevent/findByMember/{memberNo}(memberNo=${memberNo})}">
+                                    <span><i class="fa-solid fa-bookmark"></i> 我的活動追蹤</span>
+                                </a>
                             </li>
                             <li style="display: flex; justify-content: center; align-items: center;">
                                 <a href="/saveproduct/findByMember"><span><i
@@ -185,14 +191,9 @@
     </nav>
 </section>
 
-<!--<div class="event_carousel autoplay">-->
-<!--    <div><img src="images\events\e7.jpg"></div>-->
-<!--    <div><img src="images\events\e8.png"></div>-->
-<!--    <div><img src="images\events\e9.jpg"></div>-->
-<!--    <div><img src="images\events\e10.jpg"></div>-->
-<!--    <div><img src="images\events\e11.jpg"></div>-->
-<!--    <div><img src="images\events\e12.jpg"></div>-->
-<!--</div>-->
+<div class="event_carousel autoplay" >
+    <div th:each="event : ${events}"><a th:href="@{'/events/' + ${event.eventNo}}"><img th:src="'data:image/jpeg;base64, '+${event.eventImg}" alt="event-img"></a></div>
+</div>
 
 <section class="events section">
     <div class="events container">
@@ -202,45 +203,44 @@
             </div>
         </div>
         <div class="row">
-<!--            <div class="col-md-4">-->
-<!--                <div class="product-item">-->
-<!--                    <div class="product-thumb">-->
-<!--                        <span class="bage">NEW</span>-->
-<!--                        <img class="img-responsive" src="images\events\e1.jpg" alt="product-img"/>-->
-<!--                        <div class="preview-meta">-->
-<!--                            <ul>-->
-<!--                                <li>-->
-<!--                                    <a href="#!"><i class="tf-ion-ios-search-strong"></i></a>-->
-<!--                                </li>-->
-<!--                                <li>-->
-<!--                                    <a href="#!"><i class="tf-ion-ios-heart"></i></a>-->
-<!--                                </li>-->
-<!--                                <li>-->
-<!--                                    <a href="#!">-->
-<!--                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"-->
-<!--                                             fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">-->
-<!--                                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>-->
-<!--                                            <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>-->
-<!--                                        </svg>-->
-<!--                                    </a>-->
-<!--                                </li>-->
-<!--                            </ul>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="product-content">-->
-<!--                        <p class="date">2024.04.13 (Sat) 11:00 - 04.21 (Sun) 18:00</p>-->
-<!--                        <h4><a href="product-single.html">創意實踐家| 承辦馬拉松路跑專業團隊</a></h4>-->
-<!--                        <div class="event_location">-->
-<!--                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#989797"-->
-<!--                                 class="bi bi-geo-alt-fill" viewBox="0 0 16 16">-->
-<!--                                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>-->
-<!--                            </svg>-->
-<!--                            <span class="location">Taipei City</span>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-
+            <div class="col-md-4" th:each="event : ${events}">
+                <div class="product-item">
+                    <div class="product-thumb">
+                        <img class="img-responsive" th:src="'data:image/jpeg;base64, '+${event.eventImg}"
+                             alt="event-img"/>
+                        <div class="preview-meta">
+                            <ul>
+                                <li>
+                                    <a th:href="@{'/events/' + ${event.eventNo}}"><i
+                                            class="tf-ion-ios-search-strong"></i></a>
+                                </li>
+                                <li>
+                                    <a href="#!"><i class="tf-ion-ios-heart"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="product-content event-content">
+                        <h4><a th:href="@{'/events/' + ${event.eventNo}}" th:text="${event.eventName}"></a></h4>
+                        <p class="date"
+                           th:text="${#dates.format(event.eventStartTime, 'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#dates.format(event.eventEndTime, 'yyyy-MM-dd HH:mm')}"></p>
+                        <div class="small-info">
+                            <div class="event-location">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#989797"
+                                     class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                    <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+                                </svg>
+                                <span class="location" th:text="${event.eventCity}"></span>
+                            </div>
+                            <div class="visit-count">
+                                <i class="fa-regular fa-eye"></i>
+                                <span class="location" th:text="${event.visitCount}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="see_more">
             <a th:href="@{/events}">查看更多</a>
         </div>

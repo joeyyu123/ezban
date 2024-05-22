@@ -39,4 +39,17 @@ public class TicketOrderDetailService implements ServiceDemo<TicketOrderDetail> 
     public List<TicketOrderDetail> findByOrderNo(Integer orderNo){
         return repository.findByTicketOrderTicketOrderNo(orderNo);
     }
+
+    public TicketOrderDetailDto convertTicketOrderDetailToDto(TicketOrderDetail ticketOrderDetail){
+        TicketOrderDetailDto dto = new TicketOrderDetailDto();
+        dto.setTicketOrderNo(ticketOrderDetail.getTicketOrder().getTicketOrderNo());
+        dto.setTicketTypeName(ticketOrderDetail.getTicketType().getTicketTypeName());
+        dto.setTicketTypePrice(ticketOrderDetail.getTicketTypePrice());
+        dto.setTicketTypeQty(ticketOrderDetail.getTicketTypeQty());
+        return dto;
+    }
+
+    public List<TicketOrderDetailDto> convertTicketOrderDetailsToDtos(List<TicketOrderDetail> ticketOrderDetails){
+        return ticketOrderDetails.stream().map(this::convertTicketOrderDetailToDto).toList();
+    }
 }

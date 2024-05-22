@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link th:include="backstage/index :: head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Flatpickr -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        padding-bottom: 20px; /* 確保下方留有空白 */
+    }
+
+    form {
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border: 1px solid #ccc; /* 添加外框線 */
+        margin-bottom: 20px; /* 在表單底部留空白 */
+    }
+
+    form div {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-size: 16px; /* 增加字體大小以提高可讀性 */
+        margin-bottom: 5px;
+        text-align: left;
+    }
+
+    input[type="text"], select {
+        width: 100%;
+        padding: 12px; /* 增加填充以方便觸控操作 */
+        font-size: 16px; /* 增加字體大小 */
+        border: 1px solid #ccc; /* 添加邊框以提高視覺分辨 */
+    }
+
+    form div:last-child {
+        justify-content: center; /* Flexbox 水平居中 */
+        display: flex; /* 確保使用 Flexbox 布局 */
+    }
+
+    button {
+        padding: 12px 20px;
+        background-color: blue;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .text-red {
+        color: red;
+    }
+
+    @media (min-width: 600px) {
+        form div {
+            flex-direction: row; /* 橫向布局 */
+            align-items: center; /* 垂直居中對齊 */
+        }
+
+        label {
+            flex: 1; /* 標籤和輸入欄位等寬 */
+            text-align: right; /* 標籤文字右對齊 */
+            margin-right: 10px; /* 標籤與輸入欄位之間的距離 */
+        }
+
+        input[type="text"], select {
+            flex: 3; /* 輸入欄位占據更多空間 */
+        }
+    }
+
+    @media (min-width: 1024px) {
+        form {
+            width: 50%; /* 表單在大屏幕上的最大寬度 */
+            margin: 0 auto; /* 中央對齊 */
+        }
+    }
+</style>
+
+<body>
+<div id="wrapper">
+    <nav th:replace="backstage/index :: navbar"></nav>
+    <div class="page-content-wrapper">
+        <div th:insert="backstage/index :: hamburger-btn"></div>
+        <div class="content">
+            <h1>優惠券資料新增</h1>
+            <div align="center">
+                <h3><b class="text-red">所有欄位皆為必填欄位</b></h3>
+                <form id="eventCouponForm" enctype="multipart/form-data">
+                    <div>
+                        <label>廠商:</label>
+                        <input type="text" id="hostName" th:value="${host.hostName}" readonly/>
+                        <input type="hidden" id="hostNo" th:value="${host.hostNo}"/>
+                        <span id="host.hostNo.errors" class="error"></span>
+                    </div>
+                    <div>
+                        <label>優惠券名稱:</label>
+                        <input type="text" id="eventCouponName" onclick="hideContent('eventCouponName.errors');"/><br/>
+                        <span id="eventCouponName.errors" class="error"></span>
+                    </div>
+                    <div>
+                        <label>優惠券代碼:</label>
+                        <input type="text" id="couponCode" onclick="hideContent('couponCode.errors');"/><br/>
+                        <span id="couponCode.errors" class="error"></span>
+                    </div>
+                    <div>
+                        <label>使用次數限制:</label>
+                        <input type="text" id="usageLimit" onclick="hideContent('usageLimit.errors');"/><br/>
+                        <span id="usageLimit.errors" class="error"></span>
+                    </div>
+                    <div>
+                        <label>剩餘次數:</label>
+                        <input type="text" id="remainingTimes" onclick="hideContent('remainingTimes.errors');"/><br/>
+                        <span id="remainingTimes.errors" class="error"></span>
+                    </div>
+                    <div>
+                        <label>應達消費金額:</label>
+                        <input type="text" id="minSpend" onclick="hideContent('minSpend.errors');"/><br/>
+                        <span id="minSpend.errors" class="error"></span>
+                    </div>
+                    <div>
+                        <label>折扣金額:</label>
+                        <input type="text" id="eventCouponDiscount"
+                               onclick="hideContent('eventCouponDiscount.errors');"/><br/>
+                        <span id="eventCouponDiscount.errors" class="error"></span>
+                    </div>
+                    <div>
+                        <label>起始使用時間:</label>
+                        <input type="text" id="startTime-input" onclick="hideContent('startTime.errors');"/><br/>
+                        <span id="startTime.errors" class="error"></span>
+                    </div>
+                    <div>
+                        <label>結束使用時間:</label>
+                        <input type="text" id="endTime-input" onclick="hideContent('endTime.errors');"/><br/>
+                        <span id="endTime.errors" class="error"></span>
+                    </div>
+                    <div>
+                        <label>優惠券狀態:</label>
+                        <select id="eventCouponStatus">
+                            <option value="0">優惠尚未開始</option>
+                            <option value="1">優惠中</option>
+                            <option value="2">優惠已結束</option>
+                        </select>
+                        <span id="eventCouponStatus.errors" class="error"></span>
+                    </div>
+                    <div>
+                        <label>優惠券描述:</label>
+                        <input type="text" id="couponDesc" onclick="hideContent('couponDesc.errors');"/><br/>
+                        <span id="couponDesc.errors" class="error"></span>
+                    </div>
+                    <div>
+                        <div>
+                            <button type="button" id="submit">送出新增</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div style="border-top: 1px solid #ccc; padding: 20px 0;"></div>
+</div>
+
+<!-- JavaScript -->
+<script type="text/javascript">
+    function hideContent(d) {
+        document.getElementById(d).style.display = "none";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const usageInput = document.getElementById('usageLimit');
+        const remainingInput = document.getElementById('remainingTimes');
+        const minSpendInput = document.getElementById('minSpend');
+        const discountInput = document.getElementById('eventCouponDiscount');
+
+        // 為剩餘次數輸入欄位添加監聽事件
+        remainingInput.addEventListener('input', function () {
+            const usageValue = Number(usageInput.value);
+            const remainingValue = Number(remainingInput.value);
+
+            if (remainingValue > usageValue) {
+                Swal.fire('錯誤!', '剩餘次數不能大於使用次數限制！', 'error');
+                remainingInput.value = '';
+            }
+        });
+
+        // 為折扣金額輸入欄位添加監聽事件
+        discountInput.addEventListener('input', function () {
+            const minSpendValue = Number(minSpendInput.value);
+            const discountValue = Number(discountInput.value);
+
+            if (discountValue > minSpendValue) {
+                Swal.fire('錯誤!', '折扣金額不能大於應達消費金額！', 'error');
+                discountInput.value = '';
+            }
+        });
+
+        const now = new Date(); // 當前時間
+        now.setDate(now.getDate() + 1); // 下一天
+
+        flatpickr("#startTime-input", {
+            enableTime: true, // 啟用時間選擇
+            time_24hr: true, // 使用 24 小時制
+            dateFormat: "Y-m-d H:i:S", // 包含秒數
+            enableSeconds: true, // 啟用秒數選擇
+            minuteIncrement: 1, // 每次選擇增加 1 分鐘
+            secondIncrement: 1, // 每次選擇增加 1 秒
+            minDate: now, // 最小日期設置為下一天
+            onChange: (selectedDates) => {
+                const startTime = selectedDates[0];
+                document.getElementById("endTime-input")._flatpickr.set("minDate", startTime);
+            },
+        });
+
+        flatpickr("#endTime-input", {
+            enableTime: true, // 啟用時間選擇
+            time_24hr: true, // 使用 24 小時制
+            dateFormat: "Y-m-d H:i:S", // 包含秒數
+            enableSeconds: true, // 啟用秒數選擇
+            minuteIncrement: 1, // 每次選擇增加 1 分鐘
+            secondIncrement: 1, // 每次選擇增加 1 秒
+            minDate: now, // 最小日期設置為下一天
+            onChange: (selectedDates) => {
+                const endTime = selectedDates[0];
+                const startTime = document.getElementById("startTime-input")._flatpickr.selectedDates[0];
+
+                if (endTime <= startTime) {
+                    Swal.fire('錯誤!', '結束使用時間必須大於起始使用時間！', 'error');
+                    document.getElementById("endTime-input")._flatpickr.clear(); // 清空選擇的結束時間
+                }
+            },
+        });
+
+        document.getElementById("submit").addEventListener("click", function () {
+            const formData = {
+                host: {
+                    hostNo: document.getElementById("hostNo").value
+                },
+                eventCouponName: document.getElementById("eventCouponName").value,
+                couponCode: document.getElementById("couponCode").value,
+                usageLimit: document.getElementById("usageLimit").value,
+                remainingTimes: document.getElementById("remainingTimes").value,
+                minSpend: document.getElementById("minSpend").value,
+                eventCouponDiscount: document.getElementById("eventCouponDiscount").value,
+                startTime: document.getElementById("startTime-input").value,
+                endTime: document.getElementById("endTime-input").value,
+                eventCouponStatus: document.getElementById("eventCouponStatus").value,
+                couponDesc: document.getElementById("couponDesc").value
+            };
+
+            fetch('/backstage/eventcoupon/insert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: '成功!',
+                            text: data.message,
+                            icon: 'success',
+                            confirmButtonText: 'ok'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // 重導到列表頁面
+                                window.location.href = '/backstage/eventcoupon/listAllEventCoupon';
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: '錯誤!',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: '確認'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: '錯誤!',
+                        text: '發生錯誤!',
+                        icon: 'error',
+                        confirmButtonText: '確認'
+                    });
+                });
+        });
+    });
+</script>
+</body>
+</html>

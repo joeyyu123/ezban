@@ -1,17 +1,23 @@
 package com.ezban.controller;
 
+import com.ezban.event.model.EventDto;
+import com.ezban.event.model.Service.EventService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.servlet.http.HttpSession;
-
+import java.util.List;
 
 @Controller
 public class FrontstageController {
+    @Autowired
+    EventService eventService;
 
     @GetMapping("")
-    public String index(HttpSession session) {
-//        session.setAttribute("memberNo", 2);
+    public String index(Model model) {
+        List<EventDto> trendingEvents = eventService.findTrendingEvents();
+        model.addAttribute("events", trendingEvents);
         return "/frontstage/index2";
     }
 
