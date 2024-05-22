@@ -27,10 +27,8 @@ public class SaveProductService {
     public SaveProduct toggleSaveStatus(AddSaveProductDTO addSaveProductDTO) {
 
         SaveProduct saveProduct;
-
         // 1. 有沒有 SaveProduct(用 ProductNo and MemberNo 檢查)
         Optional<SaveProduct> saveProducts = saveProductRepository.findSaveProductByMemberAndProduct(addSaveProductDTO.getMemberNo(), addSaveProductDTO.getProductNo());
-
         if (saveProducts.isEmpty()) {
 
             // 1-1. 沒有;則新增收藏
@@ -47,17 +45,19 @@ public class SaveProductService {
 
         // 1-2. 有;則修改狀態為取消收藏
         else {
+
             saveProduct = saveProducts.get();
             if (saveProduct.getSaveStatus() == 1) {
                 saveProduct.setSaveStatus((byte) 0);
             } else {
                 saveProduct.setSaveStatus((byte) 1);
             }
-
             saveProductRepository.save(saveProduct);
+
         }
 
         return saveProduct;
+
     }
 
 

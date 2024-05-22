@@ -216,8 +216,15 @@ public class HostService {
 		return getOneHost(hostNo).getEventCoupons();
 	}
 
+	public Host getHostByEventNo(Integer eventNo) {
+		return hostRepository.findHostByEventNo(eventNo)
+				.orElseThrow(() -> new RuntimeException("Host not found"));
+	}
+
+	public String getHostNameByEventNo(Integer eventNo) {
+		return hostRepository.findHostNameByEventNo(eventNo);
+	}
 	public Host findByHostName(String hostName) {
 		return hostRepository.findByHostName(hostName).orElse(null);
 	}
 }
-

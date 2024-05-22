@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ezban.admin.model.Admin;
 import com.ezban.admin.model.AdminRepository;
-import com.ezban.host.model.HostMailService;
 
 @RestController
 public class AdminRegisterController {
@@ -36,10 +35,10 @@ public class AdminRegisterController {
             }
 
             adminRepository.save(admin);
-           
+
             return ResponseEntity.ok("註冊成功");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("註冊時發生內部錯誤: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("註冊時發生內部錯誤：" + e.getMessage());
         }
     }
 }

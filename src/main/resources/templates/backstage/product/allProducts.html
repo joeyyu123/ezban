@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <link th:include="backstage/index :: head">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.jqueryui.min.css" />
+    <style>
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+        .header-container h2 {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .products {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: #f8f4f2;
+            margin: 60px 0 0 0;
+        }
+        .msg {
+            color: #ea8383;
+            font-weight: bold;
+        }
+        #all_product_wrapper {
+            margin-top: 30px;
+            margin-bottom: 120px;
+        }
+        #all_product thead th {
+            border: none;
+            background-color: white;
+            color: black;
+            text-align: center;
+            vertical-align: middle;
+            font-weight: normal;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        #all_product tbody td {
+            background-color: #f8f4f2;
+            color: black;
+            text-align: center; /* 水平居中對齊 */
+            vertical-align: middle; /* 垂直居中對齊 */
+        }
+
+        /* 商品名稱 */
+        th:nth-child(1) { width: 200px; }
+        /* 商品圖片 */
+        th:nth-child(2) { width: 200px; }
+        /* 售價 */
+        th:nth-child(3) { width: 100px; }
+        /* 商品狀態 */
+        th:nth-child(4) { width: 150px; }
+        /* 庫存量 */
+        th:nth-child(5) { width: 80px; }
+        /* 編輯 */
+        th:nth-child(6) { width: 100px; }
+
+        .edit_btn {
+            /*border: 1px solid black;*/
+            padding: 7px 10px;
+            border-radius: 15px;
+            color: black;
+            background-color: #f4e9e6;
+        }
+        .edit_btn:hover {
+            text-decoration: none;
+            background-color: #f1dfda;
+            color: gray;
+        }
+    </style>
+</head>
+
+<body>
+<div id="wrapper">
+    <nav th:replace="backstage/index :: navbar"></nav>
+    <div class="page-content-wrapper">
+        <div class="header-container">
+            <div th:insert="backstage/index :: hamburger-btn"></div>
+            <h2>我的商品列表</h2>
+        </div>
+        <div class="products content">
+            <div class="msg" th:if="${successMessage}" th:text="${successMessage}"></div>
+            <div class="msg" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+            <table id="all_product" class="product_list table">
+                <thead>
+                <tr>
+                    <th>商品名稱</th>
+                    <th>商品圖片</th>
+                    <th>售價</th>
+                    <th>商品狀態</th>
+                    <th>庫存量</th>
+                    <th>查看/編輯</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product, iterStat : ${productsList}">
+                    <td th:text="${product.productName}"></td>
+                    <td>
+                    <div th:id="'carouselExample' + ${iterStat.index}" class="carousel slide">
+                        <ol class="carousel-indicators">
+                            <li th:each="image, imageStat : ${productImages[__${product.productNo}__]}"
+                            th:data-target="'#carouselExample' + ${iterStat.index}"
+                            th:data-slide-to="${imageStat.index}"
+                            th:class="${imageStat.first} ? 'active' : ''"></li>
+                        </ol>
+                        <div class="carousel-inner">
+                            <div th:each="image, imageStat : ${productImages[__${product.productNo}__]}"
+                            class="carousel-item" th:classappend="${imageStat.first} ? 'active' : ''">
+                                <img th:src="@{'/getImage/' + ${image?.productImgNo}}" class="d-block w-100"
+                                th:alt="'商品圖片' + ${imageStat.index}">
+                            </div>
+                        </div>
+                        <a th:href="'#carouselExample' + ${iterStat.index}" class="carousel-control-prev"
+                        role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a th:href="'#carouselExample' + ${iterStat.index}" class="carousel-control-next"
+                        role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    </td>
+                    <td th:text="${product.productPrice}"></td>
+                    <td th:text="${product.productStatus == 0 ? '未上架' : (product.productStatus == 1 ? '上架中' : '已下架')}"></td>
+                    <td th:text="${product.remainingQty}"></td>
+                    <td>
+                        <a class="edit_btn" th:href="@{/backstage/product/{productNo}/edit(productNo=${product.productNo})}">編輯</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<script	src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script>
+    /* JQuery DataTable */
+    $(document).ready(function() {
+        $('#all_product').DataTable({
+            "lengthMenu": [3 ,5, 10],
+            "searching": true,  //搜尋功能, 預設是開啟
+            "paging": true,     //分頁功能, 預設是開啟
+            "ordering": true,   //排序功能, 預設是開啟
+            "language": {
+                "processing": "處理中...",
+                "loadingRecords": "載入中...",
+                "lengthMenu": "顯示 _MENU_ 筆結果",
+                "zeroRecords": "沒有符合的結果",
+                "info": "第 _START_ 至 _END_ 筆結果  共<font> _TOTAL_ </font>筆",
+                "infoEmpty": "顯示第 0 至 0 筆結果，共 0 筆",
+                "infoFiltered": "(從 _MAX_ 筆結果中過濾)",
+                "infoPostFix": "",
+                "search": "搜尋:",
+                "paginate": {
+                    "first": "第一頁",
+                    "previous": "上一頁",
+                    "next": "下一頁",
+                    "last": "最後一頁"
+                },
+                "aria": {
+                    "sortAscending":  ": 升冪排列",
+                    "sortDescending": ": 降冪排列"
+                }
+            }
+        });
+    });
+
+    /* 取消商品輪播圖自動輪播 */
+    $(document).ready(function () {
+        $('[id^=carouselExample]').each(function () {
+            $(this).carousel({
+                interval: false
+            });
+        });
+    });
+</script>
+</body>
+</html>

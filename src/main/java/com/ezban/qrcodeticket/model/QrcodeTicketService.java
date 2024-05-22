@@ -7,17 +7,23 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Hashtable;
+import java.security.Key;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
 
 @Service("qrcodeTicketService")
 public class QrcodeTicketService {
@@ -29,6 +35,11 @@ public class QrcodeTicketService {
     @Autowired
     ApplicationContext applicationContext;
 
+    @Autowired
+    JwtUtil jwtUtil;
+
+    @Value("${jwt.secret.key}")
+    private String secretKey;
 
     public void addQrcodeTicket(QrcodeTicket qrcodeTicket) {
         qrcodeTicketrepository.save(qrcodeTicket);
@@ -99,6 +110,14 @@ public class QrcodeTicketService {
         return qrImage;
     }
 
+//    public String generateQRCodeBase64(String data) throws WriterException, IOException {
+//        BufferedImage qrCode = generateQRCodeLogo(data, 600, 600);
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        ImageIO.write(qrCode, "PNG", baos);
+//        byte[] imageBytes = baos.toByteArray();
+//        return Base64.getEncoder().encodeToString(imageBytes);
+//    }
+
     /*******************************判斷QR Code狀態*****************************************/
     public boolean redeemTicket(Long ticketNo) {
         Optional<QrcodeTicket> optional = qrcodeTicketrepository.findById(ticketNo);
@@ -120,6 +139,58 @@ public class QrcodeTicketService {
 
         return qrcodeTicketrepository.findByTicketOrderDetailTicketOrderDetailNo(ticketOrderDetailNo);
     }
+
+    public Integer getHostNoByTicketNo(long ticketNo) {
+        System.out.println("Querying hostNo for ticketNo " + ticketNo);
+        Integer hostNo = qrcodeTicketrepository.findHostNoByTicketNo(ticketNo);
+        System.out.println("Found hostNo: " + hostNo);
+        return hostNo;
+    }
+
+    // 新增檢查票券是否屬於指定會員的方法
+    public boolean isTicketBelongToMember(Integer ticketOrderDetailNo, Integer memberNo) {
+        List<QrcodeTicket> tickets = qrcodeTicketrepository.findByTicketOrderDetailTicketOrderDetailNo(ticketOrderDetailNo);
+        return tickets.stream().anyMatch(ticket -> ticket.getMember().getMemberNo().equals(memberNo));
+    }
+
+    // 使用JwtUtil產生JWT Token
+    public String generateJwtToken(Long ticketOrderDetailNo) {
+        return jwtUtil.generateToken(ticketOrderDetailNo);
+    }
+
+    // 使用JwtUtil驗證JWT Token
+    public boolean validateJwtToken(String token) {
+        try {
+            jwtUtil.validateToken(token);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    private Key getSigningKey() {
+        return Keys.hmacShaKeyFor(secretKey.getBytes());
+    }
+
+    public Long getTicketOrderDetailNoFromJwt(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return Long.parseLong(claims.getSubject());
+    }
+
+    // 根據會員編號查找票券的方法
+    public List<QrcodeTicket> findTicketsByMemberNo(Integer memberNo) {
+        return qrcodeTicketrepository.findTicketsByMemberNo(memberNo);
+    }
+
+    public Long getTicketNoByOrderDetailNo(Integer ticketOrderDetailNo) {
+        QrcodeTicket ticket = qrcodeTicketrepository.findByTicketOrderDetailNo(ticketOrderDetailNo);
+        return ticket != null ? ticket.getTicketNo() : null;
+    }
+
 
     public Integer countByEventNo(Integer eventNo){
         return qrcodeTicketrepository.countByEventNo(eventNo);

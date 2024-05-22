@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Member QR Code Tickets</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>Your QR Code Tickets</h1>
+<div id="tickets"></div>
+
+<script>
+    $(document).ready(function() {
+        $.get("/frontstage/qrcodeticket/getMemberTickets", function(tickets) {
+            if (tickets.length > 0) {
+                tickets.forEach(function(ticketOrderDetailNo) {
+                    $.get("/frontstage/qrcodeticket/generateQRCode", { ticketOrderDetailNo: ticketOrderDetailNo }, function(data) {
+                        if (data) {
+                            $('#tickets').append('<div>Ticket No: ' + ticketOrderDetailNo + '<br/><img src="data:image/png;base64,' + data + '" /></div><hr/>');
+                        }
+                    }).fail(function(xhr, status, error) {
+                        console.error("Failed to generate QR Code: ", xhr.responseText);
+                        alert("Failed to generate QR Code: " + xhr.responseText);
+                    });
+                });
+            } else {
+                $('#tickets').html('<p>You have no tickets.</p>');
+            }
+        }).fail(function(xhr, status, error) {
+            console.error("Failed to load tickets: ", xhr.responseText);
+            alert("Failed to load tickets: " + xhr.responseText);
+        });
+    });
+</script>
+</body>
+</html>

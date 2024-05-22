@@ -168,4 +168,30 @@ public class BirthdayCouponService {
 		LocalDate threeMonthsAgo = LocalDate.now().minusMonths(3);
 		birthdayCouponHolderRepository.deleteByValidityDateBefore(threeMonthsAgo);
 	}
+
+	public BirthdayCouponResponse getValidCoupon(Integer memberNo) {
+		Object[] nestedResult = birthdayCouponHolderRepository.findValidCouponForMember(memberNo);
+		if (nestedResult != null && nestedResult.length > 0 && nestedResult[0] instanceof Object[]) {
+			Object[] result = (Object[]) nestedResult[0]; // 取得 inner Object[]
+			if (result.length >= 5) {
+				Integer birthdayCouponNo = (Integer) result[0];
+				Integer birthdayCouponDiscount = (Integer) result[1];
+				Integer memberNoResult = (Integer) result[2];
+				Byte birthdayCouponStatus = (Byte) result[3];
+				Byte couponUsageStatus = (Byte) result[4];
+				return new BirthdayCouponResponse(
+						birthdayCouponNo,
+						birthdayCouponDiscount,
+						memberNoResult,
+						birthdayCouponStatus,
+						couponUsageStatus
+				);
+			} else {
+				System.out.println("Unexpected result array length: " + result.length);
+			}
+		} else {
+			System.out.println("Query returned null or empty array");
+		}
+		return null;
+	}
 }

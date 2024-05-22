@@ -51,7 +51,7 @@ public class ProductDto {
     private String productRemoveTime;
 
     @NotNull
-    private Integer productStatus;
+    private Byte productStatus;
 
     public Integer getProductCategoryNo() {
         return productCategoryNo;
@@ -133,11 +133,11 @@ public class ProductDto {
         this.productRemoveTime = productRemoveTime;
     }
 
-    public Integer getProductStatus() {
+    public Byte getProductStatus() {
         return productStatus;
     }
 
-    public void setProductStatus(Integer productStatus) {
+    public void setProductStatus(Byte productStatus) {
         this.productStatus = productStatus;
     }
 

@@ -40,11 +40,12 @@ public class HostSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.requestMatchers()
-                .antMatchers("/backstage/**", "/qaback**", "/hostlogin", "/hostregister", "/passwordreset", "/host/login")
+                .antMatchers("/backstage/**", "/qaback**", "/hostlogin", "/hostregister", "/passwordreset", "/host/login","/backstage/hostchat/**","/backstage/eventcoupon/**","/backstage/qrcodeticket/**")
                 .and()
             .authorizeRequests()
                 .antMatchers("/hostlogin", "/hostregister", "/passwordreset").permitAll()
-                .antMatchers("/backstage/**", "/qaback**").hasRole("HOST")
+                .antMatchers("/backstage/**", "/qaback**","/backstage/hostchat/**",
+                             "/backstage/eventcoupon/**","/backstage/qrcodeticket/**").hasRole("HOST")
                 .and()
             .formLogin()
                 .loginPage("/hostlogin")
@@ -73,10 +74,8 @@ public class HostSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationFailureHandler hostAuthenticationFailureHandler() {
         SimpleUrlAuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();
-        failureHandler.setDefaultFailureUrl("/hostlogin");  // Updated to remove the .html suffix
+        failureHandler.setDefaultFailureUrl("/hostlogin?error=true");
         failureHandler.setUseForward(false);
         return failureHandler;
     }
-
-
 }

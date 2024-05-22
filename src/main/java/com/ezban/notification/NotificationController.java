@@ -1,71 +1,34 @@
 package com.ezban.notification;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.ezban.notification.model.Notification;
 import com.ezban.notification.model.NotificationService;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/notifications")
 public class NotificationController {
 
-    @Autowired
-    private NotificationService notifyservice;
+    private final NotificationService notificationService;
 
-    @GetMapping
-    public List<Notification> getAllNotifications() {
-    	
-        return notifyservice.getAllNotifications();
+    public NotificationController(NotificationService notificationService) {
+        this.notificationService = notificationService;
     }
 
-    @GetMapping("/{notificationNo}")
-    public Notification getNotificationById(@PathVariable Integer notificationNo) {
-    	
-        return notifyservice.getNotificationById(notificationNo);
-    }
-    
-    @GetMapping("/mem-notification/{memberNo}")
-    public List<Notification> findByMemberNo(@PathVariable Integer memberNo){
-    	
-    	return notifyservice.findByMemberMemberNo(memberNo);
-    }
-    
-    @GetMapping("/host-notification/{hostNo}")
-    public List<Notification> findByHostNo(@PathVariable Integer hostNo){
-    	
-    	return notifyservice.findByHostHostNo(hostNo);
-    }
-    
-    @GetMapping("/admin-notification/{adminNo}")
-    public List<Notification> findByAdminNo(@PathVariable Integer adminNo){
-    	
-    	return notifyservice.findByAdminAdminNo(adminNo);
-    }
-    
-    public List<Notification> findAllByOrderByNotificationTimeDesc(){
-    	
-        return notifyservice.findAllByOrderByNotificationTimeDesc();
-    }
-    
-    @GetMapping("/notification-asc")
-    public List<Notification> findAllByOrderByNotificationTimeAsc(){
-    	
-    	return notifyservice.findAllByOrderByNotificationTimeAsc();
+    @PostMapping("/notify")
+    public void notify(@RequestBody NotificationRequest request) {
+        notificationService.sendNotification(request.getMessage());
     }
 
-    @PostMapping
-    public Notification createNotification(@RequestBody Notification notification) {
-    	
-        return notifyservice.saveNotification(notification);
-    }
+    public static class NotificationRequest {
+        private String message;
 
-    @PutMapping("/{notificationNo}/markAsRead")
-    public void markNotificationAsRead(@PathVariable Integer notificationNo) {
-    	
-    	notifyservice.markAsRead(notificationNo);
-    }
+        public String getMessage() {
+            return message;
+        }
 
+        public void setMessage(String message) {
+            this.message = message;
+        }
+    }
 }

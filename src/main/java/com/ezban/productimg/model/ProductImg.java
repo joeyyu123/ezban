@@ -50,7 +50,7 @@ public class ProductImg {
 
     // 回傳圖片url
     public String getImageUrl() {
-        return "/backstage/product/getImage/" + this.productImgNo;
+        return "/product/getImage/" + this.productImgNo;
     }
 
 }
