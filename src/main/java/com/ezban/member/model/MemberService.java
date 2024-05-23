@@ -3,6 +3,7 @@ package com.ezban.member.model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -10,6 +11,14 @@ public class MemberService {
 
 	@Autowired
 	private MemberRepository memrepository;
+	
+	public List<Member> getAllMembers() {
+		return memrepository.findAll();
+	}
+	
+	public Member getMemberById(Integer memberNo) {
+		return memrepository.getById(memberNo);
+	}
 
 	public Member getMemberByMemberNo(String memberNo) {
 		try {
