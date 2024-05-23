@@ -41,11 +41,12 @@ create table admin
     admin_no      int auto_increment
         primary key,
     admin_account varchar(20) not null,
-    admin_pwd     varchar(20) not null,
+    admin_pwd     varchar(60) not null,
     admin_name    varchar(50) null,
     admin_mail    varchar(50) null,
     admin_phone   varchar(15) null,
     admin_status  tinyint     null,
+    admin_login   DATETIME    NULL,
     constraint admin_uk_1
         unique (admin_account),
     constraint admin_uk_2
@@ -2134,16 +2135,16 @@ create table product_report
 );
 
 insert into product_report (product_no, member_no, admin_no, report_reason, report_date, report_status)
-values (1,  1, null, '商品描述中含有不當字眼' , 	 now(), 0),
+values (1,  1, 2, '商品描述中含有不當字眼' , 	 now(), 0),
        (10, 6, 2, '價格太貴' ,          	     now(), 1),
        (5,  2, 2, '商品名稱用字不當' ,     	 now(), 2),
        (7,  3, 2, '不實用' ,             	 now(), 1),
-       (5,  3, null, '檢舉是不需要理由的' , 		 now(), 0),
-       (18, 2, null, '商品描述不清楚' ,     		 now(), 0),
+       (5,  3, 2, '檢舉是不需要理由的' , 		 now(), 0),
+       (18, 2, 2, '商品描述不清楚' ,     		 now(), 0),
        (11, 4, 2, '商品照片太模糊' ,        	 now(), 2),
        (15, 5, 2, '商品數量太少根本搶不到' ,  	 now(), 1),
-       (10, 8, null, '商品照片放太少,不夠我參考' ,  now(), 0),
-       (5,  7, null, '價格太便宜懷疑材質有問題' ,   now(), 0);
+       (10, 8, 2, '商品照片放太少,不夠我參考' ,  now(), 0),
+       (5,  7, 2, '價格太便宜懷疑材質有問題' ,   now(), 0);
 
 
 create table product_order
@@ -2173,10 +2174,10 @@ insert into product_order (member_no, product_price, product_coupon_discount, pr
                            birthday_coupon_no, recipient, recipient_phone, recipient_address, product_orderdate,
                            product_paydate, order_closedate, product_payment_status, product_process_status,
                            product_order_allocation_amount, product_order_allocation_status)
-values (1, 1250, 0,  1250, 0,   null, '張雨琪', '0912345678', '台北市大安區復興南路一段100號',  now(), now(),  null, 1,  1,  0, 0),
-       (3, 150,  0,  50,   100, null, '李思婷', '0934567890', '桃園市桃園區中正路300號',       now(), now(),  now(), 0,  4,  150,  1),
+values (1, 1250, 0,  1250, 0,   null, '張雨琪', '0912345678', '台北市大安區復興南路一段100號',  now(), now(),  now(), 1,  1,  0, 0),
+       (3, 150,  0,  50,   100, null, '李思婷', '0934567890', '桃園市桃園區中正路300號',       now(), now(),  null, 0,  4,  150,  1),
        (9, 250,  0,  100,  100, null, '許心如', '0921098765', '苗栗縣苗栗市中正路二段50號',    now(), now(),  null,  0,  0,  250,  0),
-       (7, 250,  50, 200,  0,   1, '吳雅琴', '0903210987', '宜蘭縣宜蘭市舊城路一段80號',    now(), now(),  now(),  0,  4,  250,  1),
+       (7, 250,  50, 200,  0,   1, '吳雅琴', '0903210987', '宜蘭縣宜蘭市舊城路一段80號',    now(), now(),  null,  0,  4,  250,  1),
        (2, 500,  50, 450,  0,   1, '王宇軒', '0928765432', '新北市板橋區文化路二段50號',    now(), now(),  null,  0,  0,  500,  0),
        (5, 250,  0,  250,  0,   null, '林雅琪', '0956123456', '台南市中西區民權路二段200號',   now(), now(),  null,  1,  1,  0,  0),
        (7, 790,  50, 740,  0,   1, '吳雅琴', '0903210987', '宜蘭縣宜蘭市舊城路一段80號',    now(), now(),  null,  0,  0,  790,  0),

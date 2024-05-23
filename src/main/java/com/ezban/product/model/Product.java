@@ -177,4 +177,3 @@ public class Product implements java.io.Serializable {
         this.productRatingCount = productRatingCount;
     }
 }
-

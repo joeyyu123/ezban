@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>企業登入</title>
+    <title>管理員登入</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
@@ -45,9 +45,9 @@
 </head>
 <body>
     <div class="login-container">
-        <h2 class="text-center">企業登入</h2>
+        <h2 class="text-center">管理員登入</h2>
 
-        <form action="/host/login" method="post">
+        <form action="/admin/login" method="post">
             <div class="form-group">
                 <label for="username">使用者名稱：</label>
                 <input type="text" id="username" name="username" class="form-control" placeholder="請輸入使用者名稱">
@@ -63,15 +63,17 @@
         </form>
 
         <p class="text-center">
-            <a href="/forgot_password">忘記密碼？</a>
+            <a href="/passwordreset">忘記密碼？</a>
         </p>
         <p class="text-center">
-            <a href="/hostRegister.html">前往註冊</a>
+            <a href="/adminpassrevise">修改密碼</a>
+        </p>
+        <p class="text-center">
+            <a href="/adminregister">前往註冊</a>
         </p>
     </div>
 
     <script>
-        // Show error message only when the error parameter exists
         const params = new URLSearchParams(window.location.search);
         const errorElement = document.querySelector("#error-message");
 
