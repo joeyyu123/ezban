@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 
-<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-hant"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:fragment="head">
 
@@ -120,20 +122,20 @@
                             <li style="display: flex; justify-content: center; align-items: center;">
                                 <a href="/registerPage"><span>加入會員</span></a>
                             </li>
-                            <li style="display: flex; justify-content: center; align-items: center;">
+                            <li  style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
                                 <a href="/productorder/findByMember"><span><i
                                         class="fa-brands fa-shopify"></i> 我的商品訂單</span></a>
-                            </li>
-                            <li style="display: flex; justify-content: center; align-items: center;">
+                            </li >
+                            <li style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
                                 <a href="/events/orders"><span><i
                                         class="fa-brands fa-shopify"></i> 我的票券訂單</span></a>
                             </li>
-                            <li style="display: flex; justify-content: center; align-items: center;">
+                            <li style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
                                 <a th:href="@{/saveevent/findByMember/{memberNo}(memberNo=${memberNo})}">
                                     <span><i class="fa-solid fa-bookmark"></i> 我的活動追蹤</span>
                                 </a>
                             </li>
-                            <li style="display: flex; justify-content: center; align-items: center;">
+                            <li style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
                                 <a href="/saveproduct/findByMember"><span><i
                                         class="fa-solid fa-bookmark"></i> 我的商品追蹤</span></a>
                             </li>
