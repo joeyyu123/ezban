@@ -154,8 +154,7 @@
                         </td>
                         <td th:text="${#dates.format(order.ticketOrderTime, 'yyyy-MM-dd HH:mm')}"></td>
                         <td th:text="'NT$' + ${order.ticketOrderAmount}"></td>
-                        <td th:text="'NT$' + ${order.eventCouponDiscount}"></td>
-                        <td th:text="'NT$' + ${order.ticketCheckoutAmount}"></td>
+                        <td th:text="'NT$' + (${order.eventCouponDiscount} != null ? ${order.eventCouponDiscount} : 0)"></td>                        <td th:text="'NT$' + ${order.ticketCheckoutAmount}"></td>
                         <td>
                             <span th:if="${order.ticketOrderStatus.value == 0}" th:text="'未付款'"></span>
                             <span th:if="${order.ticketOrderStatus.value == 1}" th:text="'已完成'"></span>
