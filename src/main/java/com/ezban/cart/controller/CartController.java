@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/cart")
@@ -41,16 +42,16 @@ public class CartController {
         return "frontstage/login";
     }
 
-    @PostMapping("/checkUser")
-    public ResponseEntity<?> checkUser(HttpSession session) {
-        Integer memberNo = (Integer) session.getAttribute("memberNo");
-        if (memberNo != null) {
-            // 使用者已登入，return memberNo
-            return ResponseEntity.ok().body("{\"isLogged\": true, \"memberNo\": " + memberNo + "}");
-        } else {
-            return ResponseEntity.ok().body("{\"isLogged\": false}");
-        }
-    }
+//    @PostMapping("/checkUser")
+//    public ResponseEntity<?> checkUser(HttpSession session) {
+//        Integer memberNo = (Integer) session.getAttribute("memberNo");
+//        if (memberNo != null) {
+//            // 使用者已登入，return memberNo
+//            return ResponseEntity.ok().body("{\"isLogged\": true, \"memberNo\": " + memberNo + "}");
+//        } else {
+//            return ResponseEntity.ok().body("{\"isLogged\": false}");
+//        }
+//    }
 
 //    @PostMapping("/checkout")
 //    public ResponseEntity<?> processCheckout(
@@ -80,12 +81,12 @@ public class CartController {
         return "frontstage/product/checkout";
     }
 
-    @GetMapping("/getMemberInfo")
-    public ResponseEntity<?> getMemberInfo(Principal principal) {
-        Integer memberNo = Integer.parseInt(principal.getName());
-        Member member = memberService.getMemberById(memberNo);
-        return ResponseEntity.ok().body(member);
-    }
+//    @GetMapping("/getMemberInfo")
+//    public ResponseEntity<?> getMemberInfo(Principal principal) {
+//        Integer memberNo = Integer.parseInt(principal.getName());
+//        Optional<Member> member = memberService.getMemberById(memberNo);
+//        return ResponseEntity.ok().body(member);
+//    }
 
     @GetMapping("/getCartItems")
     public ResponseEntity<GetCartItemsResponse> getCartItems(Principal principal) {
@@ -102,6 +103,7 @@ public class CartController {
         BirthdayCouponResponse coupon = birthdayCouponService.getValidCoupon(memberNo);
         return ResponseEntity.ok().body(Objects.requireNonNullElse(coupon, "{\"message\": \"無適用優惠券\"}"));
     }
+
     // 以直接更新總數量的方式增加商品數量
     @PutMapping("/updateQty")
     public ResponseEntity<String> updateQty(Principal principal,
@@ -141,7 +143,6 @@ public class CartController {
 
     /**
      * 取得會員購物車數量以顯示在 badge
-     *
      */
     @GetMapping("/getCartQuantity")
     public ResponseEntity<?> getCartQuantity(Principal principal) {

@@ -9,7 +9,7 @@
     <!-- Basic Page Needs
     ================================================== -->
     <meta charset="utf-8">
-    <title>ez辦 | Home</title>
+    <title>ezban</title>
     <!-- Mobile Specific Metas
     ================================================== -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -53,13 +53,14 @@
     <!-- sweetalert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- jquery/3.5.1 -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
     <!-- slick Carousel -->
     <script th:src="@{/plugins/slick/slick.min.js}"></script>
     <script th:src="@{/plugins/slick/slick-animation.min.js}"></script>
     <!-- font-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script th:src="@{/js/frontstage/product/cartqty.js}"></script>
+
 </head>
 
 <body id="body">
@@ -255,240 +256,15 @@
                 <h2>精選商品</h2>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\products\p1.jpg" alt="product-img"/>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">客製化牛仔布飲料杯套(烙印皮革)</a></h4>
-                        <span class="price sale_price">$200</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\products\p2.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-										<span data-toggle="modal" data-target="#product-modal">
-											<i class="tf-ion-ios-search-strong"></i>
-										</span>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">前漂運動毛巾</a></h4>
-                        <span class="price on_sale">$200</span> <span class="price sale_price">$150</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\products\p3.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-										<span data-toggle="modal" data-target="#product-modal">
-											<i class="tf-ion-ios-search-strong"></i>
-										</span>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">限定拼圖明信片套組</a></h4>
-                        <span class="price">$200</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\products\p4.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-										<span data-toggle="modal" data-target="#product-modal">
-											<i class="tf-ion-ios-search-strong"></i>
-										</span>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">紗布長毛巾</a></h4>
-                        <span class="price">$200</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\products\p5.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-										<span data-toggle="modal" data-target="#product-modal">
-											<i class="tf-ion-ios-search-strong"></i>
-										</span>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">手印棉帆布</a></h4>
-                        <span class="price">$200</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\products\p6.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-										<span data-toggle="modal" data-target="#product-modal">
-											<i class="tf-ion-ios-search-strong"></i>
-										</span>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">日本柴犬唐草風寵物飾品-離家出走小包袱</a></h4>
-                        <span class="price">$200</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\products\p7.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-										<span data-toggle="modal" data-target="#product-modal">
-											<i class="tf-ion-ios-search-strong"></i>
-										</span>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">文學獎藏書票套組</a></h4>
-                        <span class="price">$800</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\products\p8.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-										<span data-toggle="modal" data-target="#product-modal">
-											<i class="tf-ion-ios-search-strong"></i>
-										</span>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">多功能運動雪克杯600ml</a></h4>
-                        <span class="price">$450</span>
-                    </div>
-                </div>
-            </div>
-            <div class="see_more">
-                <a th:href="@{/product/shopall}">查看更多</a>
-            </div>
-            <!-- Modal -->
-            <div class="modal product-modal fade" id="product-modal">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <i class="tf-ion-close"></i>
-                </button>
-                <div class="modal-dialog " role="document">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-8 col-sm-6 col-xs-12">
-                                    <div class="modal-image">
-                                        <img class="img-responsive" src="images/shop/products/modal-product.jpg"
-                                             alt="product-img"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-sm-6 col-xs-12">
-                                    <div class="product-short-details">
-                                        <h2 class="product-title">GM Pendant, Basalt Grey</h2>
-                                        <p class="product-price">$200</p>
-                                        <p class="product-short-description">
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem iusto nihil
-                                            cum. Illo laborum numquam rem aut officia dicta cumque.
-                                        </p>
-                                        <a href="cart.html" class="btn btn-main">Add To Cart</a>
-                                        <a href="product-single.html" class="btn btn-transparent">View Product
-                                            Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div><!-- /.modal -->
-
+        <div class="row" id="index_products">
+            <!-- 動態顯示商品 -->
+        </div>
+        <div class="see_more">
+            <a th:href="@{/product/shopall}">查看更多</a>
         </div>
     </div>
 </section>
+
 
 
 <!--
@@ -514,6 +290,6 @@ Start Call To Action
     </div>
 </footer>
 
-
+<script th:src="@{/js/frontstage/index2.js}"></script>
 </body>
 </html>

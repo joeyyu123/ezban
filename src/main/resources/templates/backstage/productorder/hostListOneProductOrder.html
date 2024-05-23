@@ -153,10 +153,10 @@
                             <span class="dot-black"> 會員姓名(編號): </span><span
                                 th:text="${productOrder.member.memberName} + ' (' + ${productOrder.member.memberNo} + ')'"></span><br/>
                             <span class="dot-black"> 商品金額: </span><span
-                                th:text="${'TWD $ ' +productOrder.productPrice}"></span><br/>
+                                th:text="${'NT$ ' +productOrder.productPrice}"></span><br/>
                             <span class="dot-black"> 禮券折扣金額: </span>
                             <span th:if="${productOrder.productCouponDiscount != 0}"
-                                  th:text="${'TWD $ ' +productOrder.productCouponDiscount}"></span>
+                                  th:text="${'NT$ ' +productOrder.productCouponDiscount}"></span>
                             <span th:if="${productOrder.productCouponDiscount == 0}"
                                   style="color: lightgray">未使用</span><br/>
                             <span class="dot-black"> 使用點數: </span>
@@ -164,7 +164,7 @@
                                   th:text="${productOrder.memberPoints}"></span>
                             <span th:if="${productOrder.memberPoints == 0}" style="color: lightgray">未使用</span><br/>
                             <span class="dot-black"> 結帳金額: </span><span
-                                th:text="${'TWD $ ' +productOrder.productCheckoutAmount}"></span><br/>
+                                th:text="${'NT$ ' +productOrder.productCheckoutAmount}"></span><br/>
                             <div class="full-line"></div>
                             <span style="font-weight: bold; font-size: 20px; color: lightgray"> 運送資訊: </span><br/>
                             <span class="dot-lightgray"> 收件人: </span><span
@@ -178,19 +178,13 @@
                             <span> 付款狀態: </span>
                             <span th:if="${productOrder.productPaymentStatus == 0}"><span class="dot-blue"></span>已付款</span>
                             <span th:if="${productOrder.productPaymentStatus == 1}"><span class="dot-red"></span>已退款</span>
-                            <span>&nbsp;&nbsp;</span><span> 處理狀態: </span><span
+                            <span>&nbsp;&nbsp;</span><span> &nbsp;&nbsp;&nbsp;處理狀態: </span><span
                                 th:switch="${productOrder.productProcessStatus}">
                             <span th:case="0"><span class="dot-lightgray"></span>備貨中</span>
                             <span th:case="1" style="color: red"><span class="dot-orange"></span>已取消</span>
                             <span th:case="2"><span class="dot-blue"></span>已出貨</span>
                             <span th:case="3"><span class="dot-red"></span>已退貨</span>
                             <span th:case="4"><span class="dot-black"></span>已結案</span>
-                            <span>&nbsp;&nbsp;</span><span> 撥款狀態: </span>
-                            <span th:if="${productOrder.productOrderAllocationStatus == 0}"><span
-                                    class="dot-lightgray"></span>未撥款</span><br/>
-                            <span th:if="${productOrder.productOrderAllocationStatus == 1}"><span
-                                    class="dot-blue"></span>已撥款</span><br/>
-                            </span>
                         </table>
                     </div>
                 </div>

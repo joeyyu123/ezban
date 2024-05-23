@@ -316,7 +316,7 @@
         // 相關商品
         hostNo = product.host.hostNo;
         productCategoryNo = product.productCategory.productCategoryNo;
-        getProductsByHostAndCategoryAPI(productNo, hostNo, productCategoryNo)
+        getProductsByHostAndCategoryAPI(hostNo, productCategoryNo, productNo)
             .then(function (relatedProducts) {
                 appendRelatedProductsToRelatedProductList(relatedProducts);
             });

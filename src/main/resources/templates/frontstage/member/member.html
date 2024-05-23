@@ -3,172 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Management</title>
+    <title>EZBAN會員中心</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
-        header {
-            background-color: #4CAF50;
-            color: white;
-            padding: 1em 0;
-            text-align: center;
+        #app {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        section {
-            padding: 2em;
+        h1, h2 {
+            color: #333;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 2em;
-        }
-
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-
-        th, td {
-            padding: 1em;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        form div {
-            margin-bottom: 1em;
+        form {
+            margin-top: 20px;
         }
 
         label {
-            display: inline-block;
-            width: 100px;
+            display: block;
+            margin-bottom: 5px;
         }
 
         input {
-            padding: 0.5em;
-            width: calc(100% - 120px);
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
 
         button {
-            padding: 0.5em 1em;
-            background-color: #4CAF50;
-            color: white;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #218838;
+        }
+
+        .message {
+            display: none;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
         }
     </style>
 </head>
 <body>
-    <header>
-        <h1>Member Management</h1>
-    </header>
-
-    <section id="member-list-section">
-        <h2>Member List</h2>
-        <table id="member-list">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Email</th>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Status</th>
-                    <th>Points</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Member rows will be inserted here by JavaScript -->
-            </tbody>
-        </table>
-    </section>
-
-    <section id="member-form-section">
-        <h2>Update Member</h2>
-        <form id="member-form">
-            <div>
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-            <div>
-                <label for="status">Status:</label>
-                <input type="number" id="status" name="status">
-                <button type="button" id="update-status-button">Update Status</button>
-            </div>
-            <div>
-                <label for="points">Points:</label>
-                <input type="number" id="points" name="points">
-                <button type="button" id="update-points-button">Update Points</button>
-            </div>
-        </form>
-    </section>
-
+    <div id="app">
+        <h1>會員資料管理</h1>
+        <div id="member-info">
+            <h2>會員基本信息</h2>
+            <p>會員帳號(電子郵件): <span id="memberMail"></span></p>
+            <p>姓名: <span id="memberName"></span></p>
+            <p>地址: <span id="address"></span></p>
+            <p>電話號碼: <span id="memberPhone"></span></p>
+            <p>生日: <span id="birthday"></span></p>
+            <p>性別: <span id="gender"></span></p>
+            <p>常用收件人姓名: <span id="commonRecipient"></span></p>
+            <p>常用收件人電話號碼: <span id="commonRecipientPhone"></span></p>
+            <p>常用收件人地址: <span id="commonRecipientAddress"></span></p>
+        </div>
+        <div id="edit-form">
+            <h2>編輯會員資料</h2>
+            <form id="memberForm">
+                <label for="memberMailInput">會員帳號(電子郵件):</label>
+                <input type="email" id="memberMailInput" name="memberMail" readonly><br>
+                <label for="memberNameInput">姓名:</label>
+                <input type="text" id="memberNameInput" name="memberName"><br>
+                <label for="addressInput">地址:</label>
+                <input type="text" id="addressInput" name="address"><br>
+                <label for="memberPhoneInput">電話號碼:</label>
+                <input type="text" id="memberPhoneInput" name="memberPhone"><br>
+                <label for="birthdayInput">生日:</label>
+                <input type="date" id="birthdayInput" name="birthday" readonly><br>
+                <label for="genderInput">性別:</label>
+                <input type="text" id="genderInput" name="gender" readonly><br>
+                <label for="commonRecipientInput">常用收件人姓名:</label>
+                <input type="text" id="commonRecipientInput" name="commonRecipient"><br>
+                <label for="commonRecipientPhoneInput">常用收件人電話號碼:</label>
+                <input type="text" id="commonRecipientPhoneInput" name="commonRecipientPhone"><br>
+                <label for="commonRecipientAddressInput">常用收件人地址:</label>
+                <input type="text" id="commonRecipientAddressInput" name="commonRecipientAddress"><br>
+                <button type="submit">更新資料</button>
+            </form>
+            <div id="message" class="message"></div>
+        </div>
+    </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const memberList = document.getElementById('member-list').getElementsByTagName('tbody')[0];
-            const updateStatusButton = document.getElementById('update-status-button');
-            const updatePointsButton = document.getElementById('update-points-button');
+    document.addEventListener('DOMContentLoaded', function () {
+        const memberForm = document.getElementById('memberForm');
+        const messageDiv = document.getElementById('message');
 
-            // Fetch and display members
-            function fetchMembers() {
-                fetch('/members')
-                    .then(response => response.json())
-                    .then(data => {
-                        memberList.innerHTML = '';
-                        data.forEach(member => {
-                            const row = memberList.insertRow();
-                            row.insertCell(0).textContent = member.id;
-                            row.insertCell(1).textContent = member.email;
-                            row.insertCell(2).textContent = member.name;
-                            row.insertCell(3).textContent = member.phone;
-                            row.insertCell(4).textContent = member.status;
-                            row.insertCell(5).textContent = member.points;
-                            const actionsCell = row.insertCell(6);
-                            actionsCell.innerHTML = '<button onclick="editMember(' + member.id + ')">Edit</button><button onclick="deleteMember(' + member.id + ')">Delete</button>';
-                        });
-                    })
-                    .catch(error => console.error('Error fetching members:', error));
-            }
+        // 加載會員基本信息
+        function loadMemberInfo() {
+            fetch('/members/currentLogin')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('memberMail').textContent = data.memberMail;
+                    document.getElementById('memberName').textContent = data.memberName;
+                    document.getElementById('address').textContent = data.address;
+                    document.getElementById('memberPhone').textContent = data.memberPhone;
+                    document.getElementById('birthday').textContent = data.birthday;
+                    document.getElementById('gender').textContent = data.gender;
+                    document.getElementById('commonRecipient').textContent = data.commonRecipient;
+                    document.getElementById('commonRecipientPhone').textContent = data.commonRecipientPhone;
+                    document.getElementById('commonRecipientAddress').textContent = data.commonRecipientAddress;
 
-            fetchMembers();
+                    document.getElementById('memberMailInput').value = data.memberMail;
+                    document.getElementById('memberNameInput').value = data.memberName;
+                    document.getElementById('addressInput').value = data.address;
+                    document.getElementById('memberPhoneInput').value = data.memberPhone;
+                    document.getElementById('birthdayInput').value = data.birthday;
+                    document.getElementById('genderInput').value = data.gender;
+                    document.getElementById('commonRecipientInput').value = data.commonRecipient;
+                    document.getElementById('commonRecipientPhoneInput').value = data.commonRecipientPhone;
+                    document.getElementById('commonRecipientAddressInput').value = data.commonRecipientAddress;
+                });
+        }
 
-            // Update member status
-            updateStatusButton.addEventListener('click', function() {
-                const email = document.getElementById('email').value;
-                const status = document.getElementById('status').value;
-                fetch(`/members/status/${email}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ memberStatus: status })
+        // 更新會員資料
+        memberForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            const formData = new FormData(memberForm);
+            const data = {
+                memberName: formData.get('memberName'),
+                address: formData.get('address'),
+                memberPhone: formData.get('memberPhone'),
+                commonRecipient: formData.get('commonRecipient'),
+                commonRecipientPhone: formData.get('commonRecipientPhone'),
+                commonRecipientAddress: formData.get('commonRecipientAddress')
+            };
+
+            fetch('/members/update/' + document.getElementById('memberMailInput').value, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    } else {
+                        throw new Error('會員資料更新失敗');
+                    }
                 })
-                .then(response => response.ok ? alert('Status updated successfully') : Promise.reject('Failed to update status'))
-                .catch(error => console.error('Error updating status:', error));
-            });
-
-            // Update member points
-            updatePointsButton.addEventListener('click', function() {
-                const email = document.getElementById('email').value;
-                const points = document.getElementById('points').value;
-                fetch(`/members/points/${email}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ memberPoints: points })
+                .then(message => {
+                    messageDiv.textContent = message;
+                    messageDiv.className = 'message success';
+                    messageDiv.style.display = 'block';
+                    loadMemberInfo();
                 })
-                .then(response => response.ok ? alert('Points updated successfully') : Promise.reject('Failed to update points'))
-                .catch(error => console.error('Error updating points:', error));
-            });
+                .catch(error => {
+                    messageDiv.textContent = error.message;
+                    messageDiv.className = 'message error';
+                    messageDiv.style.display = 'block';
+                });
         });
+
+        loadMemberInfo();
+    });
     </script>
 </body>
 </html>
