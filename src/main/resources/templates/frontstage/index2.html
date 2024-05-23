@@ -117,10 +117,10 @@
                             </svg>
                             <span class="top-menu-text">會員</span></a>
                         <ul class="dropdown-menu">
-                            <li style="display: flex; justify-content: center; align-items: center;">
+                            <li sec:authorize="!hasRole('ROLE_Member')" style="display: flex; justify-content: center; align-items: center;">
                                 <a href="/loginPage"><span>登入</span></a>
                             </li>
-                            <li style="display: flex; justify-content: center; align-items: center;">
+                            <li sec:authorize="!hasRole('ROLE_Member')" style="display: flex; justify-content: center; align-items: center;">
                                 <a href="/registerPage"><span>加入會員</span></a>
                             </li>
                             <li  style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
