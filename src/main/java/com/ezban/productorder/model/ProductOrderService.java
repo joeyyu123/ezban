@@ -10,7 +10,6 @@ import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberRepository;
 import com.ezban.product.model.Product;
 import com.ezban.product.model.ProductRepository;
-import com.ezban.product.model.ProductService;
 import com.ezban.product.model.ProductServiceImpl;
 import com.ezban.productorderdetail.model.AddProductOrderDetailDTO;
 import com.ezban.productorderdetail.model.ProductOrderDetail;
