@@ -141,7 +141,11 @@ public class ProductServiceImpl implements ProductService {
 
         Integer currentStock = product.getRemainingQty();
         if (currentStock >= quantity) {
-            product.setRemainingQty(currentStock - quantity);
+            int newStock = currentStock - quantity;
+            product.setRemainingQty(newStock);
+            if (newStock == 0) {
+                product.setProductStatus((byte) 2);
+            }
             productRepository.save(product);
             return true;
         } else {

@@ -89,3 +89,8 @@ div.stars {
     margin-bottom: 5px;
     font-size: 11px;
 }
+#related_products {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}

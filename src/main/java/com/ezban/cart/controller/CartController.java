@@ -41,16 +41,16 @@ public class CartController {
         return "frontstage/login";
     }
 
-    @PostMapping("/checkUser")
-    public ResponseEntity<?> checkUser(HttpSession session) {
-        Integer memberNo = (Integer) session.getAttribute("memberNo");
-        if (memberNo != null) {
-            // 使用者已登入，return memberNo
-            return ResponseEntity.ok().body("{\"isLogged\": true, \"memberNo\": " + memberNo + "}");
-        } else {
-            return ResponseEntity.ok().body("{\"isLogged\": false}");
-        }
-    }
+//    @PostMapping("/checkUser")
+//    public ResponseEntity<?> checkUser(HttpSession session) {
+//        Integer memberNo = (Integer) session.getAttribute("memberNo");
+//        if (memberNo != null) {
+//            // 使用者已登入，return memberNo
+//            return ResponseEntity.ok().body("{\"isLogged\": true, \"memberNo\": " + memberNo + "}");
+//        } else {
+//            return ResponseEntity.ok().body("{\"isLogged\": false}");
+//        }
+//    }
 
 //    @PostMapping("/checkout")
 //    public ResponseEntity<?> processCheckout(
