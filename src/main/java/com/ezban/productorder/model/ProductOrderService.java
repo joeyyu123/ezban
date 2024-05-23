@@ -18,6 +18,7 @@ import com.ezban.productorderdetail.model.ProductOrderDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -54,6 +55,7 @@ public class ProductOrderService {
     CartService cartService;
 
     // 新增訂單
+    @Transactional
     public void addProductOrder(@Valid AddProductOrderDTO addProductOrderDTO) {
 
         // 獲取購買的商品明細列表
