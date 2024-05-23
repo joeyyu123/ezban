@@ -22,8 +22,9 @@ public class EventCommentController {
     @Autowired
     private MemberService memService;
 
-    @GetMapping("/member/{memberId}")
-    public ResponseEntity<List<EventComment>> getCommentsByMember(@PathVariable Integer memberNo) {
+    @GetMapping("/member/{memberNo}")
+    @ResponseBody
+    public ResponseEntity<List<EventComment>> getCommentsByMember(@PathVariable("memberNo") Integer memberNo) {
         Member member = memService.getMemberById(memberNo);
         if (member == null) {
             return ResponseEntity.notFound().build();
@@ -31,4 +32,5 @@ public class EventCommentController {
         List<EventComment> comments = eventCommentService.getCommentsByMember(member);
         return ResponseEntity.ok(comments);
     }
+
 }
