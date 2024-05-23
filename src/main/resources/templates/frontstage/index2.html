@@ -193,7 +193,7 @@
     </nav>
 </section>
 
-<div class="event_carousel autoplay" >
+<div class="event_carousel autoplay" style="margin-top: 30px;">
     <div th:each="event : ${events}"><a th:href="@{'/events/' + ${event.eventNo}}"><img th:src="'data:image/jpeg;base64, '+${event.eventImg}" alt="event-img"></a></div>
 </div>
 
