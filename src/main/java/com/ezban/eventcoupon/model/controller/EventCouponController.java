@@ -87,11 +87,9 @@ public class EventCouponController {
     /*
      * This method will be called on addEventCoupon.html form submission, handling POST request It also validates the user input
      */
-    @PostMapping(value = "/insert", consumes = "application/json", produces = "application/json")
+    @PostMapping("/insert")
     public ResponseEntity<Map<String, Object>> insert(@Valid @RequestBody EventCoupon eventCoupon, BindingResult result, Principal principal) {
         /*************************** 1.接收請求參數 - 輸入格式的錯誤處理 ************************/
-        System.out.println("Received request to insert EventCoupon");
-        System.out.println("EventCoupon: " + eventCoupon);
         if (result.hasErrors()) {
             // 驗證失敗，返回錯誤訊息
             return ResponseEntity.badRequest().body(Map.of(
@@ -222,13 +220,9 @@ public class EventCouponController {
     @GetMapping("/{couponCode}")
     public ResponseEntity<?> checkCouponCode(@PathVariable String couponCode) {
         Optional<EventCoupon> coupon = eventCouponRepository.findByCouponCode(couponCode);
-        if (coupon.isPresent()) {
-            return ResponseEntity.ok(coupon.get().getEventCouponDiscount());
-        } else {
-            return ResponseEntity.badRequest().body("Invalid coupon code");
-        }
+        return coupon.map(eventCoupon -> ResponseEntity.ok(eventCoupon.getEventCouponDiscount()))
+                .orElseGet(() -> ResponseEntity.badRequest().body(Integer.valueOf("Invalid coupon code")));
     }
-
 
     @ModelAttribute("hostListData")
     protected List<Host> referenceListData() {
