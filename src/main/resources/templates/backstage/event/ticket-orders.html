@@ -129,9 +129,7 @@
             <div class="mb3 alert alert-warning" th:if="${message}" th:text="${message}">
             </div>
             <div class="ticketOrders">
-                <div class="mb-3" th:if="${#lists.isEmpty(ticketOrdersPage.content)}">
-                    <div class="alert alert-info">目前沒有任何訂單</div>
-                </div>
+
                 <table class="ticketOrderTable">
                     <thead>
                     <tr>
@@ -143,18 +141,19 @@
                         <th>訂單金額</th>
                         <th>訂單狀態</th>
                         <th>訂單明細</th>
-<!--                        <th>操作</th>-->
+                        <!--                        <th>操作</th>-->
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="order : ${ticketOrdersPage.content}">
                         <td th:text="${order.ticketOrderNo}"></td>
                         <td>
-                            <a th:href="'/events/'+${order.ticketOrderDetails[0]?.ticketType?.event?.eventNo}" th:text="${order.ticketOrderDetails[0]?.ticketType?.event?.eventName}"></a>
+                            <a th:href="'/events/'+${order.ticketOrderDetails[0]?.ticketType?.event?.eventNo}"
+                               th:text="${order.ticketOrderDetails[0]?.ticketType?.event?.eventName}"></a>
                         </td>
                         <td th:text="${#dates.format(order.ticketOrderTime, 'yyyy-MM-dd HH:mm')}"></td>
                         <td th:text="'NT$' + ${order.ticketOrderAmount}"></td>
-                        <td th:text="'NT$' + ${order.eventCouponDiscount}"></td>
+                        <td th:text="'NT$' + (${order.eventCouponDiscount} != null ? ${order.eventCouponDiscount} : 0)"></td>
                         <td th:text="'NT$' + ${order.ticketCheckoutAmount}"></td>
                         <td>
                             <span th:if="${order.ticketOrderStatus.value == 0}" th:text="'未付款'"></span>
@@ -162,23 +161,28 @@
                             <span th:if="${order.ticketOrderStatus.value == 2}" th:text="'已取消'"></span>
                         </td>
                         <td>
-                            <button id="order-detail-btn" type="button" class="order-detail-btn btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                            <button id="order-detail-btn" type="button" class="order-detail-btn btn btn-primary"
+                                    data-toggle="modal" data-target="#exampleModal">
                                 查看訂單明細
                             </button>
 
-<!--                            <div th:each="ticketOrderDetail : ${order.ticketOrderDetails}">-->
-<!--                                <span th:text="${ticketOrderDetail.ticketType.ticketTypeName} + ' X ' + ${ticketOrderDetail.ticketTypeQty}"></span><br>-->
-<!--                                <span th:text="'單價: ' + ${ticketOrderDetail.ticketTypePrice}"></span><br>-->
-<!--                                <span th:text="'金額: ' + ${ticketOrderDetail.ticketTypePrice} * ${ticketOrderDetail.ticketTypeQty}"></span><br>-->
-<!--                            </div>-->
+                            <!--                            <div th:each="ticketOrderDetail : ${order.ticketOrderDetails}">-->
+                            <!--                                <span th:text="${ticketOrderDetail.ticketType.ticketTypeName} + ' X ' + ${ticketOrderDetail.ticketTypeQty}"></span><br>-->
+                            <!--                                <span th:text="'單價: ' + ${ticketOrderDetail.ticketTypePrice}"></span><br>-->
+                            <!--                                <span th:text="'金額: ' + ${ticketOrderDetail.ticketTypePrice} * ${ticketOrderDetail.ticketTypeQty}"></span><br>-->
+                            <!--                            </div>-->
                         </td>
-<!--                        <td>-->
-<!--                            <button class="btn btn-danger cancel-order-btn" th:if="${order.ticketOrderStatus.value != 2}">取消訂單</button>-->
-<!--                        </td>-->
+                        <!--                        <td>-->
+                        <!--                            <button class="btn btn-danger cancel-order-btn" th:if="${order.ticketOrderStatus.value != 2}">取消訂單</button>-->
+                        <!--                        </td>-->
                     </tr>
                     </tbody>
                 </table>
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="mb-3" th:if="${#lists.isEmpty(ticketOrdersPage.content)}">
+                    <div class="alert alert-info">目前沒有任何訂單</div>
+                </div>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                     aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -283,6 +287,7 @@
             });
         })
     });
+
     function changePageSize() {
         let pageSize = $('#pageSize').val();
         let currentUrl = new URL(window.location.href);
