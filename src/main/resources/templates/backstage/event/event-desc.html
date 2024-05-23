@@ -19,7 +19,8 @@
             <h2>活動詳細資訊</h2>
             <div id="editor" th:utext="${event.eventDesc}"></div>
 
-            <input type="submit" class="btn btn-primary btn-lg" id="save" value="儲存">
+            <input th:if="${message != null}" type="submit" class="btn btn-primary btn-lg" id="save" value="儲存">
+            <input th:if="${message == null}" type="submit" class="btn btn-primary btn-lg" id="create" value="下一步">
         </div>
 
     </div>
@@ -36,32 +37,66 @@
             console.error(error);
         });
 
-    document.getElementById('save').addEventListener('click', function () {
-        let eventDesc = editor.getData();
+    let saveBtn = document.getElementById('save');
+    let createBtn = document.getElementById('create');
 
-        fetch(window.location.pathname, {
-            method: "put",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                eventDesc: eventDesc
-            })
-        }).then(function (response) {
+
+    if (saveBtn) {
+        saveBtn.addEventListener('click', function () {
+            let eventDesc = editor.getData();
+
+            fetch(window.location.pathname, {
+                method: "put",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    eventDesc: eventDesc
+                })
+            }).then(function (response) {
                 if (!response.ok) {
                     throw new Error(response.status);
                 }
                 return response;
             })
-            .then(function (result) {
-                if (result.ok) {
-                    alert("儲存成功~");
+                .then(function (result) {
+                    if (result.ok) {
+                        alert("儲存成功~");
+                    }
+                })
+                .catch(function (error) {
+                    console.error('儲存失敗:', error);
+                })
+        });
+    }
+    if (createBtn) {
+        createBtn.addEventListener('click', function () {
+            let eventDesc = editor.getData();
+
+            fetch(window.location.pathname, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    eventDesc: eventDesc
+                })
+            }).then(function (response) {
+                if (!response.ok) {
+                    throw new Error(response.status);
                 }
+                return response;
             })
-            .catch(function (error) {
-                console.error('儲存失敗:', error);
-            })
-    });
+                .then(function (result) {
+                    if (result.redirected) {
+                        window.location.href = result.url;
+                    }
+                })
+                .catch(function (error) {
+                    console.error('儲存失敗:', error);
+                })
+        });
+    }
 
 
 </script>

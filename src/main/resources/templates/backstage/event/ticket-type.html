@@ -79,13 +79,17 @@
                     </div>
                     <div class="row ticket-type" th:each="ticketType:${ticketTypes}">
                         <input type="hidden" name="ticketTypeNo" th:value="${ticketType.ticketTypeNo}">
-                        <input required type="text" class="col form-control" name="ticketTypeName" th:value="${ticketType.ticketTypeName}"
+                        <input required type="text" class="col form-control" name="ticketTypeName"
+                               th:value="${ticketType.ticketTypeName}"
                                placeholder="請輸入票種名稱">
-                        <input required type="number" class="col form-control" name="ticketTypePrice" th:value="${ticketType.ticketTypePrice}"
+                        <input required type="number" class="col form-control" name="ticketTypePrice"
+                               th:value="${ticketType.ticketTypePrice}"
                                placeholder="請輸入票種價格">
-                        <input required type="number" class="col form-control" name="ticketTypeQty" th:value="${ticketType.ticketTypeQty}"
+                        <input required type="number" class="col form-control" name="ticketTypeQty"
+                               th:value="${ticketType.ticketTypeQty}"
                                placeholder="請輸入票種數量">
-                        <input required type="number" class="col form-control" name="includedTickets" th:value="${ticketType.includedTickets}"
+                        <input required type="number" class="col form-control" name="includedTickets"
+                               th:value="${ticketType.includedTickets}"
                                placeholder="票種為幾人套票">
                         <input required type="number" class="col form-control" name="purchaseQuantityLimit"
                                th:value="${ticketType.purchaseQuantityLimit}" placeholder="每人可購買張數">
@@ -133,8 +137,11 @@
 
 
                 </div>
-                <div class="d-grid col-6 mx-auto">
+                <div class="d-grid col-6 mx-auto" th:if="${!ticketTypes.isEmpty()}">
                     <button id="save-btn" class="btn btn-primary" type="button">儲存</button>
+                </div>
+                <div class="d-grid col-6 mx-auto" th:if="${ticketTypes.isEmpty()}">
+                    <button id="create-btn" class="btn btn-primary" type="button">下一步</button>
                 </div>
 
 
@@ -229,9 +236,9 @@
         $('.ticket-type .delete-button').click(function () {
             if (confirm("確定要刪除此票種嗎?")) {
                 let ticketTypeNo = $(this).closest(".ticket-type").find('input[name="ticketTypeNo"]').val()
-                let ticketType =  $(this).closest('.ticket-type');
+                let ticketType = $(this).closest('.ticket-type');
                 $.ajax({
-                    url: window.location.href +'/'+ ticketTypeNo,
+                    url: window.location.href + '/' + ticketTypeNo,
                     type: "DELETE",
                     success: function (result) {
                         ticketType.remove();
@@ -327,6 +334,51 @@
                 error: function (xhr, status, error) {
                     console.error('儲存失敗:', error);
                 }
+            });
+
+        });
+        $('#create-btn').click(function (e) {
+            e.preventDefault();
+            if (!validateRequiredFields()) {
+                return;
+            }
+            let ticketTypes = [];
+
+            $('.ticket-type-new').each(function () {
+                let ticketType = {
+                    ticketTypeName: $(this).find('input[name="ticketTypeName"]').val(),
+                    ticketTypePrice: $(this).find('input[name="ticketTypePrice"]').val(),
+                    ticketTypeQty: $(this).find('input[name="ticketTypeQty"]').val(),
+                    includedTickets: $(this).find('input[name="includedTickets"]').val(),
+                    ticketTypeInfo: $(this).find('textarea[name="ticketTypeInfo"]').val(),
+                    purchaseStartTime: new Date($(this).find('input[name="purchaseStartTime"]').val()),
+                    purchaseEndTime: new Date($(this).find('input[name="purchaseEndTime"]').val()),
+                    purchaseQuantityLimit: $(this).find('input[name="purchaseQuantityLimit"]').val()
+                };
+                ticketTypes.push(ticketType);
+            });
+            if (ticketTypes.length === 0) {
+                alert("請至少新增一個票種");
+                return;
+            }
+            fetch(window.location.href, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    ticketTypes: ticketTypes,
+                })
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    throw new Error("儲存失敗");
+                }
+            })
+            .catch(error => {
+                console.error('儲存失敗:', error);
             });
 
         });

@@ -4,12 +4,14 @@ import com.ezban.birthdaycoupon.model.BirthdayCoupon;
 import com.ezban.birthdaycoupon.model.BirthdayCouponRepository;
 import com.ezban.birthdaycouponholder.model.BirthdayCouponHolder;
 import com.ezban.birthdaycouponholder.model.BirthdayCouponHolderRepository;
+import com.ezban.cart.model.CartService;
 import com.ezban.host.model.Host;
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberRepository;
 import com.ezban.product.model.Product;
 import com.ezban.product.model.ProductRepository;
 import com.ezban.product.model.ProductService;
+import com.ezban.product.model.ProductServiceImpl;
 import com.ezban.productorderdetail.model.AddProductOrderDetailDTO;
 import com.ezban.productorderdetail.model.ProductOrderDetail;
 import com.ezban.productorderdetail.model.ProductOrderDetailRepository;
@@ -46,7 +48,10 @@ public class ProductOrderService {
     MemberRepository memberRepository;
 
     @Autowired
-    ProductService productService;
+    ProductServiceImpl productServiceImpl;
+
+    @Autowired
+    CartService cartService;
 
     // 新增訂單
     public void addProductOrder(@Valid AddProductOrderDTO addProductOrderDTO) {
@@ -105,6 +110,11 @@ public class ProductOrderService {
                 repository.save(productOrder);
                 // 更新會員剩餘點數
                 memberRepository.save(member);
+                // 刪除購物車中的商品
+                Integer memberNo = productOrder.getMember().getMemberNo();
+                for (AddProductOrderDetailDTO orderDetailDTO : hostProductOrderDetails) {
+                    cartService.deleteCartItem(memberNo, Integer.valueOf(orderDetailDTO.getProductNo()));
+                }
 
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("無效的數值格式", e);
@@ -196,7 +206,7 @@ public class ProductOrderService {
             Product product = productRepository.findByProductNo(Integer.valueOf(orderDetailDTO.getProductNo()))
                     .orElseThrow(() -> new NoSuchElementException("未找到產品，產品編號: " + orderDetailDTO.getProductNo()));
 
-            boolean stockUpdated = productService.checkAndUpdateStock(product.getProductNo(), orderDetailDTO.getProductQty());
+            boolean stockUpdated = productServiceImpl.checkAndUpdateStock(product.getProductNo(), orderDetailDTO.getProductQty());
             if (!stockUpdated) {
                 throw new IllegalStateException("商品庫存不足，產品編號: " + orderDetailDTO.getProductNo());
             }

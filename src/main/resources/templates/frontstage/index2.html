@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 
-<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-hant"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:fragment="head">
 
@@ -51,14 +53,14 @@
     <!-- sweetalert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- jquery/3.5.1 -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
     <!-- slick Carousel -->
     <script th:src="@{/plugins/slick/slick.min.js}"></script>
     <script th:src="@{/plugins/slick/slick-animation.min.js}"></script>
     <!-- font-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script th:src="@{/js/frontstage/product/cartqty.js}"></script>
-<!--    <script th:src="@{/js/frontstage/index2.js}"></script>-->
+
 </head>
 
 <body id="body">
@@ -121,20 +123,20 @@
                             <li style="display: flex; justify-content: center; align-items: center;">
                                 <a href="/registerPage"><span>加入會員</span></a>
                             </li>
-                            <li style="display: flex; justify-content: center; align-items: center;">
+                            <li  style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
                                 <a href="/productorder/findByMember"><span><i
                                         class="fa-brands fa-shopify"></i> 我的商品訂單</span></a>
-                            </li>
-                            <li style="display: flex; justify-content: center; align-items: center;">
+                            </li >
+                            <li style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
                                 <a href="/events/orders"><span><i
                                         class="fa-brands fa-shopify"></i> 我的票券訂單</span></a>
                             </li>
-                            <li style="display: flex; justify-content: center; align-items: center;">
+                            <li style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
                                 <a th:href="@{/saveevent/findByMember/{memberNo}(memberNo=${memberNo})}">
                                     <span><i class="fa-solid fa-bookmark"></i> 我的活動追蹤</span>
                                 </a>
                             </li>
-                            <li style="display: flex; justify-content: center; align-items: center;">
+                            <li style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
                                 <a href="/saveproduct/findByMember"><span><i
                                         class="fa-solid fa-bookmark"></i> 我的商品追蹤</span></a>
                             </li>
@@ -288,6 +290,6 @@ Start Call To Action
     </div>
 </footer>
 
-
+<script th:src="@{/js/frontstage/index2.js}"></script>
 </body>
 </html>
