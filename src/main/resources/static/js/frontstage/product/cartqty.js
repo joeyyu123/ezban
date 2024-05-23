@@ -109,7 +109,7 @@ async function autoIncreaseCartQuantity(productNo, quantity) {
     if (response.status === 200 && !response.url.endsWith('loginPage')) {
         Swal.fire({
             icon: 'success',
-            title: '成功加入購物車(redis)',
+            title: '成功加入購物車',
             showConfirmButton: false,
             timer: 1500
         });
@@ -118,7 +118,7 @@ async function autoIncreaseCartQuantity(productNo, quantity) {
     // 預設使用者按下"加入購物車"按鈕時product數量+1
     Swal.fire({
         icon: 'success',
-        title: '成功加入購物車(local storage)',
+        title: '成功加入購物車',
         showConfirmButton: false,
         timer: 1500
     });
