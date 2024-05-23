@@ -10,6 +10,7 @@ import com.ezban.member.model.MemberRepository;
 import com.ezban.product.model.Product;
 import com.ezban.product.model.ProductRepository;
 import com.ezban.product.model.ProductService;
+import com.ezban.product.model.ProductServiceImpl;
 import com.ezban.productorderdetail.model.AddProductOrderDetailDTO;
 import com.ezban.productorderdetail.model.ProductOrderDetail;
 import com.ezban.productorderdetail.model.ProductOrderDetailRepository;
@@ -46,7 +47,7 @@ public class ProductOrderService {
     MemberRepository memberRepository;
 
     @Autowired
-    ProductService productService;
+    ProductServiceImpl productServiceImpl;
 
     // 新增訂單
     public void addProductOrder(@Valid AddProductOrderDTO addProductOrderDTO) {
@@ -196,7 +197,7 @@ public class ProductOrderService {
             Product product = productRepository.findByProductNo(Integer.valueOf(orderDetailDTO.getProductNo()))
                     .orElseThrow(() -> new NoSuchElementException("未找到產品，產品編號: " + orderDetailDTO.getProductNo()));
 
-            boolean stockUpdated = productService.checkAndUpdateStock(product.getProductNo(), orderDetailDTO.getProductQty());
+            boolean stockUpdated = productServiceImpl.checkAndUpdateStock(product.getProductNo(), orderDetailDTO.getProductQty());
             if (!stockUpdated) {
                 throw new IllegalStateException("商品庫存不足，產品編號: " + orderDetailDTO.getProductNo());
             }
