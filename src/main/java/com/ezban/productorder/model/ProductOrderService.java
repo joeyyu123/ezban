@@ -10,7 +10,6 @@ import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberRepository;
 import com.ezban.product.model.Product;
 import com.ezban.product.model.ProductRepository;
-import com.ezban.product.model.ProductService;
 import com.ezban.product.model.ProductServiceImpl;
 import com.ezban.productorderdetail.model.AddProductOrderDetailDTO;
 import com.ezban.productorderdetail.model.ProductOrderDetail;
@@ -18,6 +17,7 @@ import com.ezban.productorderdetail.model.ProductOrderDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -54,6 +54,7 @@ public class ProductOrderService {
     CartService cartService;
 
     // 新增訂單
+    @Transactional
     public void addProductOrder(@Valid AddProductOrderDTO addProductOrderDTO) {
 
         // 獲取購買的商品明細列表
