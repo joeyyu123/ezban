@@ -129,7 +129,7 @@
                     });
             });
 
-         // 檢查驗證碼
+            // 檢查驗證碼
             document.getElementById('verificationCode').addEventListener('input', function() {
                 const userVerificationCode = this.value;
                 const verificationCodeError = document.getElementById('verificationCodeError');
@@ -146,7 +146,7 @@
                         if (document.getElementById('verificationCode')) {
                             document.getElementById('verificationCode').value = ''; // 清空驗證碼欄位
                         }
-                    }, 2000);
+                    }, 1000);
 
                 } else {
                     verificationCodeError.textContent = '驗證碼錯誤，請重新輸入';
@@ -155,7 +155,7 @@
                 }
             });
 
-         // 檢查手機號碼
+            // 檢查手機號碼
             document.getElementById('hostPhone').addEventListener('input', function() {
                 const hostPhone = this.value;
                 const phoneError = document.getElementById('phoneError');
@@ -186,8 +186,7 @@
                     });
             });
 
-
-         // 提交註冊表單
+            // 提交註冊表單
             document.getElementById('registerForm').addEventListener('submit', function(event) {
                 event.preventDefault();
                 let allChecked = checkedAccount && checkedName && checkedMail && checkedPhone && checkedVerificationCode;
@@ -212,12 +211,12 @@
                 console.log("Sending JSON Data:", jsonData);
 
                 // 發送表單資料
-                fetch('http://localhost:8080/api/host/register', {
+                fetch('http://localhost:8080/api/host/hostregister', {
                     method: 'POST',
-                    body: JSON.stringify(jsonData),
                     headers: {
                         'Content-Type': 'application/json'
-                    }
+                    },
+                    body: JSON.stringify(jsonData)
                 })
                 .then(response => {
                     if (!response.ok) {
@@ -230,6 +229,9 @@
                     if (data.success) {
                         alert('註冊成功');
                         console.log(data);
+                        setTimeout(function() {
+                            window.location.href = '/hostlogin';
+                        }, 500);
                     } else {
                         const message = data.message || '註冊失敗，請重試。';
                         document.getElementById('errorMessage').textContent = message;
@@ -245,7 +247,7 @@
 </head>
 <body>
     <h1>企業會員註冊</h1>
-    <form id="registerForm" action="http://localhost:8080/api/host/register" method="post">
+    <form id="registerForm">
         <label for="hostAccount">企業帳號:</label> 
         <input type="text" id="hostAccount" name="hostAccount" required>
         <br> <span id="accountError" class="error"></span><br> 
