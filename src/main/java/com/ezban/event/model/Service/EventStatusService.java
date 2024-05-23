@@ -16,6 +16,9 @@ public class EventStatusService {
     @Autowired
     private EventRepository eventRepository;
 
+    @Autowired
+    private EventService eventService;
+
     /**
      * 手動上架活動
      * @param event 要上架的活動
@@ -44,8 +47,10 @@ public class EventStatusService {
         List<Event> updatedEvents = new ArrayList<>();
         for (Event event : events) {
             // 將活動狀態改為上架
-            event.setEventStatus(EventStatus.PUBLISHED);
-            updatedEvents.add(event);
+            if(eventService.isPublishable(event)) {
+                event.setEventStatus(EventStatus.PUBLISHED);
+                updatedEvents.add(event);
+            }
         }
         eventRepository.saveAll(updatedEvents);
     }

@@ -11,10 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+
+import static java.net.URI.create;
 
 @Controller
 @RequestMapping("/backstage/events/{eventNo}/ticketTypes")
@@ -43,7 +46,28 @@ public class BackstageTicketTypeController {
 
     @PostMapping("")
     @ResponseBody
-    public ResponseEntity<String> addTicketType(Principal principal, @PathVariable Integer eventNo,Model model,@RequestBody Map<String, List<TicketType>> reqMap){
+    public ResponseEntity<String> addTicketType(Principal principal, @PathVariable Integer eventNo, RedirectAttributes redirectAttributes, @RequestBody Map<String, List<TicketType>> reqMap){
+        List<TicketType> ticketTypes = reqMap.get("ticketTypes");
+        Event event = eventService.findById(eventNo);
+        if (!eventService.isAuthenticated(principal, event)){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to access this page.");
+        }
+        if (ticketTypes == null || ticketTypes.isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No ticket types provided.");
+        }
+        for (TicketType ticketType : ticketTypes) {
+            ticketType.setRemainingTicketQty(ticketType.getTicketTypeQty());
+            ticketType.setEvent(event);
+        }
+
+        ticketTypeService.saveAllAndFlush(ticketTypes);
+
+        return ResponseEntity.status(HttpStatus.SEE_OTHER).location(create("/backstage/events/" + eventNo + "/form")).build();
+    }
+
+    @PutMapping("")
+    @ResponseBody
+    public ResponseEntity<String> updateTicketType(Principal principal, @PathVariable Integer eventNo,Model model,@RequestBody Map<String, List<TicketType>> reqMap){
         List<TicketType> ticketTypes = reqMap.get("ticketTypes");
         Event event = eventService.findById(eventNo);
         if (!eventService.isAuthenticated(principal, event)){
