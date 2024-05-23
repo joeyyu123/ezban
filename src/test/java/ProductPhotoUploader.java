@@ -7,13 +7,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 
-public class PhotoUploader {
+public class ProductPhotoUploader {
     public static void main(String[] args) throws IOException {
         String url = "jdbc:mysql://localhost:3306/ezban";
         String user = "root";
         String password = "a123456";
 
-        String filePath = "C:/Users/TMP14/Downloads/event-photo";
+        String filePath = "C:/Users/TMP14/Pictures/product";
 
 
         File folder = ResourceUtils.getFile(filePath);
@@ -22,14 +22,14 @@ public class PhotoUploader {
 
             if (file.isFile() && file.getName().endsWith(".jpg")) {
                 // 讀取圖片檔案
-                int eventNo = Integer.parseInt(file.getName().split("\\.")[0]);
-
+                String firstpart = file.getName().split("_")[0];
+                int productNo = Integer.parseInt(firstpart.substring("product".length()));
                 byte[] imageData = Files.readAllBytes(file.toPath());
                 try (Connection conn = DriverManager.getConnection(url, user, password)) {
-                    String sql = "UPDATE event SET event_img = ? WHERE event_no = ?";
+                    String sql = "INSERT INTO product_img (product_no, product_img) VALUES (?, ?)";
                     try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                        pstmt.setBytes(1, imageData);
-                        pstmt.setInt(2, eventNo);
+                        pstmt.setInt(1, productNo);
+                        pstmt.setBytes(2, imageData);
                         pstmt.executeUpdate();
 
                     }
