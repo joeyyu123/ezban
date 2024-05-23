@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import com.ezban.eventcoupon.model.EventCoupon;
 import com.ezban.product.model.Product;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -59,7 +61,7 @@ public class Host {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "host")
     @OrderBy("eventCouponNo asc")
-    @JsonBackReference
+    @JsonIgnore
     private Set<EventCoupon> eventCoupons = new HashSet<EventCoupon>();
 
 

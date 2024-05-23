@@ -3,7 +3,10 @@ package com.ezban.eventcoupon.model;
 
 import com.ezban.host.model.Host;
 import com.ezban.ticketorder.model.TicketOrder;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -25,6 +28,7 @@ public class EventCoupon implements java.io.Serializable {
     
     @ManyToOne
     @JoinColumn(name = "host_no")
+    @JsonIgnore
     private Host host;
 
     @Size(max = 100)
