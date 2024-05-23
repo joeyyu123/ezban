@@ -103,6 +103,7 @@ public class CartController {
         BirthdayCouponResponse coupon = birthdayCouponService.getValidCoupon(memberNo);
         return ResponseEntity.ok().body(Objects.requireNonNullElse(coupon, "{\"message\": \"無適用優惠券\"}"));
     }
+
     // 以直接更新總數量的方式增加商品數量
     @PutMapping("/updateQty")
     public ResponseEntity<String> updateQty(Principal principal,
@@ -142,7 +143,6 @@ public class CartController {
 
     /**
      * 取得會員購物車數量以顯示在 badge
-     *
      */
     @GetMapping("/getCartQuantity")
     public ResponseEntity<?> getCartQuantity(Principal principal) {

@@ -8,6 +8,9 @@
         .container {
             width: 85%;
         }
+        .event-container {
+            min-height: 68vh;
+        }
 
         .header-background {
             background: url('https://placehold.co/600x200') no-repeat center center;
@@ -192,6 +195,7 @@
         }
 
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <body id="body">
@@ -201,8 +205,8 @@
 <section class=" section">
     <div class="container">
         <div class="container-fluid">
-            <div class="container">
-                <img id="imagePreview" th:if="${event.eventImg != null}" class="" th:src="'data:image/jpeg;base64, '+${event.getEventImgBase64()}" alt="Event Banner">
+            <div class="event-container container">
+                <img id="imagePreview" th:if="${event.eventImg != null}" class="" th:src="'data:image/jpeg;base64, '+${event.eventImg}" alt="Event Banner">
                 <img id="imagePreview" th:if="${event.eventImg == null}" class="" th:src="@{/images/未上傳圖片.jpg}"
 
                      alt="Event Banner">
@@ -224,31 +228,10 @@
                     <p th:utext="${event.eventDesc}"></p>
 
 
-<!--                    <h3>You may like other events</h3>-->
-<!--                    <div class="row">-->
-<!--                        <div class="col-md-4" th:each="event : ${events}">-->
-<!--                            <div class="product-item">-->
-<!--                                <div class="product-thumb">-->
-<!--                                    <img class="img-responsive"-->
-<!--                                         th:src="'data:image/jpeg;base64, '+${event.getEventImgBase64()}"-->
-<!--                                         alt="event-img"/>-->
-<!--                                </div>-->
-<!--                                <div class="product-content">-->
-<!--                                    <p class="date"-->
-<!--                                       th:text="${#dates.format(event.eventStartTime, 'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#dates.format(event.eventEndTime, 'yyyy-MM-dd HH:mm')}"></p>-->
-<!--                                    <h4><a th:href="@{'/events/' + ${event.eventNo}}" th:text="${event.eventName}"></a>-->
-<!--                                    </h4>-->
-<!--                                    <div class="event_location">-->
-<!--                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#989797"-->
-<!--                                             class="bi bi-geo-alt-fill" viewBox="0 0 16 16">-->
-<!--                                            <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>-->
-<!--                                        </svg>-->
-<!--                                        <span class="location" th:text="${event.eventCity}"></span>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
+                    <h3>活動評論</h3>
+                    <div class="row" id="comments">
+
+                    </div>
                 </div>
             </div>
             <div class="fixed-box">

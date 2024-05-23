@@ -197,6 +197,7 @@
     var connected = false;
     var selectedUser = null;
     var memberNo = /*[[${memberNo}]]*/ '[[${memberNo}]]';
+    var memberName = /*[[${memberName}]]*/ '[[${memberName}]]';
     var hostName = /*[[${hostName}]]*/ '[[${hostName}]]';
     var eventNo = /*[[${eventNo}]]*/ '[[${eventNo}]]';
 
@@ -297,6 +298,7 @@
     // 顯示訊息
     function displayMessage(message) {
         console.log(`Displaying message from ${message.sender} to ${message.receiver}: ${message.message}`);
+
         var messageList = document.getElementById('chatHistory');
         var msgElement = document.createElement('div');
         msgElement.classList.add('message');
@@ -322,6 +324,7 @@
         var messageInput = $('#messageInput').val();
         if (messageInput) {
             var messageObj = {
+                'type':'host',
                 'message': messageInput,
                 'sender': hostName,
                 'receiver': selectedUser,
@@ -354,9 +357,9 @@
     }
 
     function loadChatHistory() {
-        console.log(`Loading chat history for member ${memberNo} and host ${hostName}`);
+        console.log(`Loading chat history for member ${memberName} and host ${hostName}`);
         $.ajax({
-            url: `/backstage/hostchat/history/${memberNo}/${hostName}`,
+            url: `/backstage/hostchat/history/${memberName}/${hostName}`,
             method: 'GET',
             success: function (chatHistory) {
                 console.log('Loaded chat history:', chatHistory);

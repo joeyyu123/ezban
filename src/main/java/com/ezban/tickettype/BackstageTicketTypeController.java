@@ -38,7 +38,7 @@ public class BackstageTicketTypeController {
         model.addAttribute("eventNo", eventNo);
         model.addAttribute("event", eventService.findById(eventNo));
 
-        return "/backstage/event/ticketType";
+        return "/backstage/event/ticket-type";
     }
 
     @PostMapping("")
@@ -48,6 +48,9 @@ public class BackstageTicketTypeController {
         Event event = eventService.findById(eventNo);
         if (!eventService.isAuthenticated(principal, event)){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not authorized to access this page.");
+        }
+        if (ticketTypes == null || ticketTypes.isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No ticket types provided.");
         }
         for (TicketType ticketType : ticketTypes) {
             ticketType.setRemainingTicketQty(ticketType.getTicketTypeQty());

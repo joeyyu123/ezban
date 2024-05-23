@@ -15,6 +15,8 @@ import com.ezban.tickettype.model.TicketType;
 import com.ezban.tickettype.model.TicketTypeRepository;
 import com.ezban.tickettype.model.TicketTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -196,6 +198,18 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
 
     public List<TicketOrder> findByEventNoAndTicketOrderNo(Integer eventNo, Integer ticketOrderNo) {
         return ticketOrderRepository.findByEventNoAndTicketOrderNo(eventNo,ticketOrderNo,Sort.by("ticketOrderTime").descending());
+    }
+
+    public Page<TicketOrder> findByEvent(Event event, Pageable pageable) {
+        return ticketOrderRepository.findByEventNo(event.getEventNo(), pageable);
+    }
+
+    public Page<TicketOrder> findByEventAndStatus(Event event, TicketOrderStatus orderStatus, Pageable pageable) {
+        return ticketOrderRepository.findByEventNoAndStatus(event.getEventNo(), orderStatus, pageable);
+    }
+
+    public Page<TicketOrder> findByEventNoAndTicketOrderNo(Integer eventNo, Integer ticketOrderNo, Pageable pageable) {
+        return ticketOrderRepository.findByEventNoAndTicketOrderNo(eventNo, ticketOrderNo, pageable);
     }
 
     public boolean isAuthorizedForTicketOrder(Principal principal, Integer ticketOrderNo){

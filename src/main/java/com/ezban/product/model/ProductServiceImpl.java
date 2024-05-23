@@ -134,7 +134,6 @@ public class ProductServiceImpl implements ProductService {
      *
      */
     @Transactional
-    @Override
     public boolean checkAndUpdateStock(Integer productNo, Integer quantity) {
         Product product = productRepository.findById(productNo).orElseThrow(() ->
                 new EntityNotFoundException("查無此商品")

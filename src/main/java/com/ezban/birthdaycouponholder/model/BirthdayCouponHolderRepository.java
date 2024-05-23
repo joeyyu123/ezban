@@ -2,7 +2,9 @@ package com.ezban.birthdaycouponholder.model;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
+import com.ezban.birthdaycoupon.model.BirthdayCoupon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -34,4 +36,8 @@ public interface BirthdayCouponHolderRepository extends JpaRepository<BirthdayCo
                    "AND bch.member_no = :memberNo",
             nativeQuery = true)
     Object[] findValidCouponForMember(@Param("memberNo") Integer memberNo);
+
+    // 產生訂單要更改狀態使用
+    Optional<BirthdayCouponHolder> findByBirthdayCoupon(BirthdayCoupon birthdayCoupon);
+
 }

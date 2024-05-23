@@ -1,17 +1,16 @@
 package com.ezban.event.model;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.sql.Timestamp;
 import java.util.List;
 
-public interface EventRepository extends JpaRepository<Event, Integer> {
-    List<Event> findByHostHostNo(Integer HostNo);
+public interface EventRepository extends JpaRepository<Event, Integer>, JpaSpecificationExecutor<Event> {
+    List<Event> findByHostHostNoOrderByEventNoDesc(Integer HostNo, Sort sort);
 
     List<Event> findByEventCityAndEventStatus(String eventCity,EventStatus eventStatus, Pageable pageable);
 
@@ -36,18 +35,14 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
      */
     List<Event> findByEventStatusAndEventEndTimeBefore(EventStatus eventStatus, Timestamp eventEndTime);
 
-    List<Event> findByHostHostNoAndEventStatus(Integer host_hostNo, EventStatus eventStatus);
+    List<Event> findByHostHostNoAndEventStatusOrderByEventNoDesc(Integer host_hostNo, EventStatus eventStatus);
 
     @Query("SELECT DISTINCT e.eventCity FROM Event e")
     List<String> findDistinctEventCity();
 
     List<Event> findByEventCityAndEventCategoryEventCategoryNoAndEventStatus(String city, Integer categoryNo, EventStatus eventStatus, Pageable pageable);
 
-    @Query("SELECT e FROM Event e WHERE e.eventStatus = :status AND " +
-            "(e.eventCity IN :cities OR :cities IS NULL) AND " +
-            "(e.eventCategory.eventCategoryNo IN :categoryNos OR :categoryNos IS NULL)")
-    List<Event> findByEventCityAndEventCategory(@Param("status") EventStatus status,
-                                                @Param("cities") List<String> cities,
-                                                @Param("categoryNos") List<Integer> categoryNos,
-                                                Pageable pageable);
+
+    @Query("SELECT e FROM Event e JOIN FETCH e.eventCategory JOIN FETCH e.host")
+    List<Event> findTop6ByOrderByVisitCountDesc(Pageable pageable);
 }

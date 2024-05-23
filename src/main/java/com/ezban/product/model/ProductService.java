@@ -22,7 +22,5 @@ public interface ProductService {
 
     List<Product> getAll();
 
-    boolean checkAndUpdateStock(Integer productNo, Integer quantity);
-
     public boolean isAuthenticated(Principal principal, ProductDto productDto);
 }

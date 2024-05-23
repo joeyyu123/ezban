@@ -1,6 +1,7 @@
 package com.ezban.event;
 
 import com.ezban.event.model.Event;
+import com.ezban.event.model.EventDto;
 import com.ezban.event.model.Service.EventService;
 import com.ezban.event.model.EventStatus;
 import com.ezban.eventcategory.model.EventCategory;
@@ -22,6 +23,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -68,10 +70,14 @@ public class BackstageEventController {
     public String create(Model model,
                          Principal principal,
                          @RequestParam Map<String, String> allParams,
-                         @RequestParam(value = "eventImg", required = false) MultipartFile eventImg) throws IOException {
-
-        Host host = hostService.findHostByHostNo(principal.getName()).orElseThrow();
-
+                         @RequestParam(value = "eventImg", required = false) MultipartFile eventImg,RedirectAttributes redirectAttributes) throws IOException {
+        Host host = null;
+        try {
+            host = hostService.findHostByHostNo(principal.getName()).orElseThrow();
+        } catch (Exception e) {
+            model.addAttribute("message", "你不是主辦單位，無權新增活動");
+            return "/backstage/event/warning";
+        }
         Event event = new Event();
         EventCategory category = eventCategoryService.findById(Integer.parseInt(allParams.get("eventCategory")));
         event.setHost(host);
@@ -93,16 +99,24 @@ public class BackstageEventController {
      * 顯示活動列表頁面
      */
     @GetMapping("/events")
-    public String events(Model model, Principal principal,@RequestParam(value = "eventStatus", required = false) Integer eventStatus) {
+    public String events(Model model, Principal principal, @RequestParam(value = "eventStatus", required = false) Integer eventStatus) {
         Host host = hostService.findHostByHostNo(principal.getName()).orElseThrow();
-
-        if (eventStatus!= null) {
+        if (eventStatus != null) {
+            List<Event> events = eventService.findByHostNoAndStatus(host.getHostNo(), eventStatus);
+            List<EventDto> eventsDto = new ArrayList<>();
+            for (Event event : events) {
+                eventsDto.add(eventService.convertToDto(event));
+            }
             model.addAttribute("eventStatus", eventStatus);
-            model.addAttribute("events", eventService.findByHostNoAndStatus(host.getHostNo(), eventStatus));
+            model.addAttribute("events",eventsDto);
             return "/backstage/event/events";
         }
-
-        model.addAttribute("events", eventService.findByHostNo(host.getHostNo()));
+        List<Event> events = eventService.findByHostNo(host.getHostNo());
+        List<EventDto> eventsDto = new ArrayList<>();
+        for (Event event : events) {
+            eventsDto.add(eventService.convertToDto(event));
+        }
+        model.addAttribute("events", eventsDto);
         return "/backstage/event/events";
     }
 
@@ -134,7 +148,7 @@ public class BackstageEventController {
      */
     @PutMapping("/events/{eventNo}/status")
     @ResponseBody
-    public ResponseEntity<?> updateStatus(Model model, @PathVariable Integer eventNo, @RequestBody Map<String, String> reqMap, Principal principal) {
+    public ResponseEntity<?> updateStatus(@PathVariable Integer eventNo, @RequestBody Map<String, String> reqMap, Principal principal) {
         Event event = eventService.findById(eventNo);
         if (!eventService.isAuthenticated(principal, event)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to access this page.");
@@ -234,6 +248,8 @@ public class BackstageEventController {
         event.setEventEndTime(formatDate(allParams.get("eventEndTime")));
         event.setEventCity(allParams.get("eventCity"));
         event.setEventDetailedAddress(allParams.get("eventDetailedAddress"));
+        event.setRegisteredCount(0);
+        event.setVisitCount(0);
     }
 
     /**
