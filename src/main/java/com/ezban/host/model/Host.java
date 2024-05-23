@@ -70,8 +70,6 @@ public class Host {
 
     @Column(name = "host_status", nullable = false)
     private Byte hostStatus = 1;
-    
-
 
     @JsonManagedReference
     @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
