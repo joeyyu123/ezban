@@ -129,9 +129,7 @@
             <div class="mb3 alert alert-warning" th:if="${message}" th:text="${message}">
             </div>
             <div class="ticketOrders">
-                <div class="mb-3" th:if="${#lists.isEmpty(ticketOrdersPage.content)}">
-                    <div class="alert alert-info">目前沒有任何訂單</div>
-                </div>
+
                 <table class="ticketOrderTable">
                     <thead>
                     <tr>
@@ -177,6 +175,9 @@
                     </tr>
                     </tbody>
                 </table>
+                <div class="mb-3" th:if="${#lists.isEmpty(ticketOrdersPage.content)}">
+                    <div class="alert alert-info">目前沒有任何訂單</div>
+                </div>
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
