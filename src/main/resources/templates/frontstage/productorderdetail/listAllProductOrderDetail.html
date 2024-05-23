@@ -66,8 +66,8 @@
                                 <table id="example" class="table">
                                     <thead>
                                     <tr>
-                                        <th>NO.</th>
                                         <th>訂單編號</th>
+                                        <th>廠商名稱 [編號]</th>
                                         <th>商品圖片</th>
                                         <th>商品名稱</th>
                                         <th>單價</th>
@@ -78,10 +78,11 @@
                                     <tbody>
                                     <th:block th:each="productOrderDetail : ${productOrderDetailListData}">
                                         <tr>
-                                            <td style="vertical-align: middle"
-                                                th:text="${productOrderDetail.productOrderDetailNo}"></td>
+
                                             <td style="vertical-align: middle"
                                                 th:text="${productOrderDetail.productOrder.productOrderNo}"></td>
+                                            <td style="vertical-align: middle"
+                                                th:text="${productOrderDetail.product.host.hostName + ' ['+productOrderDetail.product.host.hostNo + ']'}"></td>
                                             <td>
                                                 <img th:src="@{/productorderdetail/DBGifReader(productNo=${productOrderDetail.product.productNo})}"
                                                      width="100px">
@@ -89,11 +90,11 @@
                                             <td style="vertical-align: middle"
                                                 th:text="${productOrderDetail.product.productName}"></td>
                                             <td style="vertical-align: middle"
-                                                th:text="${'TWD $ '+ productOrderDetail.product.productPrice}"></td>
+                                                th:text="${'NT$ '+ productOrderDetail.product.productPrice}"></td>
                                             <td style="vertical-align: middle"
                                                 th:text="${productOrderDetail.productQty}"></td>
                                             <td style="vertical-align: middle"
-                                                th:text="${'TWD $ ' + productOrderDetail.productPrice}"></td>
+                                                th:text="${'NT$ ' + productOrderDetail.productPrice}"></td>
                                         </tr>
                                     </th:block>
                                     </tbody>
