@@ -151,14 +151,16 @@
     tr > th:nth-child(2)::before,
     tr > th:nth-child(3)::before,
     tr > th:nth-child(5)::before,
-    tr > th:nth-child(6)::before {
+    tr > th:nth-child(6)::before,
+    tr > th:nth-child(7)::before {
         display: none !important;
     }
 
     tr > th:nth-child(2)::after,
     tr > th:nth-child(3)::after,
     tr > th:nth-child(5)::after,
-    tr > th:nth-child(6)::after {
+    tr > th:nth-child(6)::after,
+    tr > th:nth-child(7)::after {
         display: none !important;
     }
 </style>
@@ -191,7 +193,7 @@
                             <tr>
                                 <td th:text="${'#'+ productOrder.productOrderNo}"></td>
                                 <td th:text="${#dates.format(productOrder.productOrderdate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                                <td th:text="${'TWD $ ' + productOrder.productCheckoutAmount}"></td>
+                                <td th:text="${'NT$ ' + productOrder.productCheckoutAmount}"></td>
                                 <td th:data-status="${productOrder.productProcessStatus}">
                                     <span th:if="${productOrder.productProcessStatus == 0}"><span
                                             class="dot-lightgray"></span>備貨中</span>

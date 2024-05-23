@@ -96,7 +96,7 @@
                                                      width="100px">
                                             </td>
                                             <td style="vertical-align: middle"
-                                                th:text="${saveProduct.product.productName} + '[' + ${saveProduct.product.productNo} + ']'"></td>
+                                                th:text="${saveProduct.product.productName} + ' [' + ${saveProduct.product.productNo} + ']'"></td>
                                             <td style="vertical-align: middle">
                                                 <form method="get" th:action="@{/product/shopdetail}">
                                                     <button type="submit" class="btn btn-link p-0">
@@ -107,7 +107,7 @@
                                                 </form>
                                             </td>
                                             <td style="vertical-align: middle"
-                                                th:text="${'TWD $ '+saveProduct.product.productPrice}"></td>
+                                                th:text="${'NT$ '+saveProduct.product.productPrice}"></td>
                                             <td style="vertical-align: middle"
                                                 th:data-status="${saveProduct.saveStatus}">
                                                 <span th:if="${saveProduct.saveStatus == 0}"><span
