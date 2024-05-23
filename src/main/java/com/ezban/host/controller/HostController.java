@@ -81,7 +81,6 @@ public class HostController {
             response.put("message", "註冊失敗，請重試。");
             return ResponseEntity.badRequest().body(response);
         }
-
     }
 
     @GetMapping("/checkAccount/{account}")
