@@ -20,7 +20,6 @@ public class MemberController {
     @GetMapping("/currentLogin")
     @ResponseBody
     public ResponseEntity<Member> getCurrentMember() {
-        // 假设使用Spring Security来获取当前登录的用户
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String memberMail = authentication.getName(); // 获取当前用户的邮件（或用户名）
 
