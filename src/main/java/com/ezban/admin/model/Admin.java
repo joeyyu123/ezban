@@ -1,20 +1,24 @@
 package com.ezban.admin.model;
 
-import com.ezban.authority.model.Authority;
-import com.ezban.eventcommentreport.model.EventCommentReport;
-import com.ezban.productcommentreport.model.ProductCommentReport;
-import com.ezban.productreport.model.ProductReport;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.util.LinkedHashSet;
-import java.util.Set;
+
+import com.ezban.eventcommentreport.model.EventCommentReport;
+import com.ezban.productcommentreport.model.ProductCommentReport;
+import com.ezban.productreport.model.ProductReport;
+import com.ezban.product.model.Product;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "admin")
 public class Admin implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "admin_no", nullable = false)
@@ -25,8 +29,7 @@ public class Admin implements Serializable {
     @Column(name = "admin_account", nullable = false, length = 20)
     private String adminAccount;
 
-    @Size(max = 20)
-    @NotNull
+    @Size(max = 60)
     @Column(name = "admin_pwd", nullable = false, length = 20)
     private String adminPwd;
 
@@ -43,19 +46,14 @@ public class Admin implements Serializable {
     private String adminPhone;
 
     @Column(name = "admin_status")
-    private Byte adminStatus;
+    private Byte adminStatus = 1;
+    
+    @Column(name = "admin_login")
+    private LocalDateTime adminLogin;
 
-    @OneToMany(mappedBy = "admin")
-    private Set<Authority> authorities = new LinkedHashSet<>();
+  
 
-    @OneToMany(mappedBy = "admin")
-    private Set<EventCommentReport> eventCommentReports = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "admin")
-    private Set<ProductCommentReport> productCommentReports = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "admin")
-    private Set<ProductReport> productReports = new LinkedHashSet<>();
+    // Getters and setters...
 
     public Integer getAdminNo() {
         return adminNo;
@@ -113,36 +111,14 @@ public class Admin implements Serializable {
         this.adminStatus = adminStatus;
     }
 
-    public Set<Authority> getAuthorities() {
-        return authorities;
+    public LocalDateTime getAdminLogin() {
+        return adminLogin;
     }
 
-    public void setAuthorities(Set<Authority> authorities) {
-        this.authorities = authorities;
+    public void setAdminLogin(LocalDateTime adminLogin) {
+        this.adminLogin = adminLogin;
     }
 
-    public Set<EventCommentReport> getEventCommentReports() {
-        return eventCommentReports;
-    }
-
-    public void setEventCommentReports(Set<EventCommentReport> eventCommentReports) {
-        this.eventCommentReports = eventCommentReports;
-    }
-
-    public Set<ProductCommentReport> getProductCommentReports() {
-        return productCommentReports;
-    }
-
-    public void setProductCommentReports(Set<ProductCommentReport> productCommentReports) {
-        this.productCommentReports = productCommentReports;
-    }
-
-    public Set<ProductReport> getProductReports() {
-        return productReports;
-    }
-
-    public void setProductReports(Set<ProductReport> productReports) {
-        this.productReports = productReports;
-    }
-
+    
+    
 }
