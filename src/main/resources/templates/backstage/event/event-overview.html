@@ -143,7 +143,7 @@
                 <div class="item">
                     <p th:text="'總報名人數：' + ${registrationInfo.get('totalCount')}"></p>
                     <span id="checkedCount" hidden th:text=" ${registrationInfo.get('checkedCount')}"></span>
-                    <span id="uncheckedCount" hidden th:text="${registrationInfo.get('uncheckedCount')}"></span>
+                    <span id="uncheckedCount" hidden th:text="${registrationInfo.get('unCheckedCount')}"></span>
                     <div class="chart-container">
                         <div class="chart">
                             <canvas id="checkinChart"></canvas>
@@ -209,7 +209,7 @@
                     window.location.href = '/backstage/events/' + eventNo + '/overview';
                 },
                 error: function (xhr, status, error) {
-                    alert('上架失敗');
+                    alert("請先完成票券設定以及活動報名表設定");
                 }
             });
         });

@@ -2,14 +2,12 @@ package com.ezban.event;
 
 import com.ezban.event.model.Event;
 import com.ezban.event.model.EventDto;
-import com.ezban.event.model.Service.EventService;
 import com.ezban.event.model.EventStatus;
+import com.ezban.event.model.Service.EventService;
 import com.ezban.eventcategory.model.EventCategory;
 import com.ezban.eventcategory.model.EventCategoryService;
 import com.ezban.host.model.HostService;
 import com.ezban.tickettype.model.TicketTypeService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -20,9 +18,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Controller
 @RequestMapping("/events")
@@ -49,28 +49,38 @@ public class EventController {
 
     @GetMapping("")
     public String getEvents(Model model,
-                            @RequestParam(required = false) String city,
-                            @RequestParam(required = false) Integer categoryNo) {
+                            @RequestParam(required = false) List<String> cities,
+                            @RequestParam(required = false) List<Integer> categoryNos,
+                            @RequestParam(required = false) String eventName,
+                            @RequestParam(required = false) String startTime,
+                            @RequestParam(required = false) String endTime) {
         List<Event> events;
         List<EventCategory> eventCategories = eventCategoryService.findAll();
         List<String> eventCities = eventService.findDistinctEventCity();
         List<EventDto> dtoList = new ArrayList<>();
 
-        if (city != null && categoryNo != null) {
-            events = eventService.findByEventCityAndEventCategory(city, categoryNo, PageRequest.of(0, PAGE_SIZE));
-        }
-        else if (city != null) {
-            events = eventService.findByEventCity(city, PageRequest.of(0, PAGE_SIZE));
-        }
-        else if (categoryNo != null) {
-            events = eventService.findByEventCategoryNo(categoryNo, PageRequest.of(0, PAGE_SIZE));
-        } else {
-            events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(0, PAGE_SIZE));
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = null;
+        Date endDate = null;
+        try {
+            if (startTime != null && !startTime.isEmpty()) {
+                startDate = formatter.parse(startTime);
+            }
+            if (endTime != null && !endTime.isEmpty()) {
+                endDate = formatter.parse(endTime);
+            }
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
 
+        if ((cities != null && !cities.isEmpty()) || (categoryNos != null && !categoryNos.isEmpty()) || (eventName != null && !eventName.isEmpty()) || (startDate != null) || (endDate != null)) {
+            events = eventService.findByEventCityAndEventCategoryAndEventNameAndTime(cities, categoryNos, eventName, startDate, endDate, PageRequest.of(0, PAGE_SIZE, Sort.by(Sort.Direction.ASC, "eventStartTime")));
+        } else {
+            events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(0, PAGE_SIZE, Sort.by(Sort.Direction.ASC, "eventStartTime")));
+        }
 
         for (Event event : events) {
-            dtoList.add(convertToDto(event));
+            dtoList.add(eventService.convertToDto(event));
         }
 
         model.addAttribute("events", dtoList);
@@ -79,76 +89,51 @@ public class EventController {
         return "/frontstage/event/events";
     }
 
-    /**
-     * 所有活動的分頁功能
-     *
-     * @param page
-     * @return
-     */
     @GetMapping("/page/{page}")
     @ResponseBody
     public ResponseEntity<List<EventDto>> getEventsByPage(@PathVariable("page") int page,
-                                                          @RequestParam(required = false) String city,
-                                                          @RequestParam(required = false) Integer categoryNo) {
+                                                          @RequestParam(required = false) List<String> cities,
+                                                          @RequestParam(required = false) List<Integer> categoryNos,
+                                                          @RequestParam(required = false) String eventName,
+                                                          @RequestParam(required = false) String startTime,
+                                                          @RequestParam(required = false) String endTime) {
         List<Event> events;
 
-        if (city != null && categoryNo != null) {
-            events = eventService.findByEventCityAndEventCategory(city, categoryNo, PageRequest.of(page - 1, PAGE_SIZE));
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = null;
+        Date endDate = null;
+        try {
+            if (startTime != null && !startTime.isEmpty()) {
+                startDate = formatter.parse(startTime);
+            }
+            if (endTime != null && !endTime.isEmpty()) {
+                endDate = formatter.parse(endTime);
+            }
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
-        else if (city != null) {
-            events = eventService.findByEventCity(city, PageRequest.of(page - 1, PAGE_SIZE));
-        }
-        else if (categoryNo != null) {
-            events = eventService.findByEventCategoryNo(categoryNo, PageRequest.of(page - 1, PAGE_SIZE));
+
+        if ((cities != null && !cities.isEmpty()) || (categoryNos != null && !categoryNos.isEmpty()) || (eventName != null && !eventName.isEmpty()) || (startDate != null) || (endDate != null)) {
+            events = eventService.findByEventCityAndEventCategoryAndEventNameAndTime(cities, categoryNos, eventName, startDate, endDate, PageRequest.of(page - 1, PAGE_SIZE,Sort.by(Sort.Direction.ASC, "eventStartTime")));
         } else {
-            events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(page - 1, PAGE_SIZE));
+            events = eventService.findByEventStatus(EventStatus.PUBLISHED, PageRequest.of(page - 1, PAGE_SIZE,Sort.by(Sort.Direction.ASC, "eventStartTime")));
         }
-
-
 
         List<EventDto> dtoList = new ArrayList<>();
         for (Event event : events) {
-            dtoList.add(convertToDto(event));
+            dtoList.add(eventService.convertToDto(event));
         }
         return ResponseEntity.ok(dtoList);
     }
 
     @GetMapping("{eventNo}")
     public String getEvent(Model model, @PathVariable("eventNo") Integer eventNo) {
-        EventDto dto = null;
-        dto = (EventDto) redisTemplate.opsForValue().get("event:" + String.valueOf(eventNo));
-
+        EventDto dto = eventService.getEventDetails(eventNo);
         if (dto != null) {
-            eventService.incrementEventVisitCount(eventNo);
             model.addAttribute("event", dto);
             return "/frontstage/event/event";
         }
-        // 如果 Redis 中沒有，則從資料庫中查找
-        Event event = eventService.findById(eventNo);
-
-        if (event != null) {
-            // 將查找到的活動詳情快取到 Redis
-            dto = convertToDto(event);
-            eventService.incrementEventVisitCount(eventNo);
-            redisTemplate.opsForValue().set("event:" + eventNo, dto, 1, TimeUnit.HOURS); // 快取一小時
-            //            Integer eventCategoryNo = event.getEventCategory().getEventCategoryNo();
-            model.addAttribute("event", dto);
-//            model.addAttribute("events", eventService.findByEventCategoryNo(eventCategoryNo));
-            return "/frontstage/event/event";
-        }
-
         return "redirect:/events";
-
-
-//            event = eventService.findById(eventNo);
-//            Integer eventCategoryNo = event.getEventCategory().getEventCategoryNo();
-//
-//            // 取得同類別的上架活動
-//            List<Event> events = eventService.findByEventCategoryNo(eventCategoryNo);
-//            model.addAttribute("event", event);
-//            model.addAttribute("events", events);
-//            return "/frontstage/event/event";
-
     }
 
 
@@ -157,57 +142,12 @@ public class EventController {
      *
      * @return
      */
-    // TODO: 未完成
     @GetMapping("/trending")
     @ResponseBody
     public ResponseEntity<List<EventDto>> getTrendingEvents() {
-        List<EventDto> dtoList = null;
-//        List<Event> events = eventService;
-
+        List<EventDto> dtoList = eventService.findTrendingEvents();
         return ResponseEntity.ok(dtoList);
     }
 
-    private EventDto convertToDto(Event event) {
-        EventDto dto = new EventDto();
-        dto.setEventNo(event.getEventNo());
-        dto.setEventImg(event.getEventImgBase64());
-        dto.setEventName(event.getEventName());
-        dto.setEventCategoryName(event.getEventCategory().getEventCategoryName());
-        dto.setHostName(event.getHost().getHostName());
-        dto.setEventCity(event.getEventCity());
-        dto.setEventDesc(event.getEventDesc());
-        dto.setEventDetailedAddress(event.getEventDetailedAddress());
-        dto.setEventAddTime(event.getEventAddTime());
-        dto.setEventRemoveTime(event.getEventRemoveTime());
-        dto.setEventStartTime(event.getEventStartTime());
-        dto.setEventEndTime(event.getEventEndTime());
-        dto.setRegisteredCount(event.getRegisteredCount());
-        dto.setEventStatus(event.getEventStatus());
-        dto.setTotalRating(event.getTotalRating());
-        dto.setEventRatingCount(event.getEventRatingCount());
-        dto.setVisitCount(event.getVisitCount());
-        return dto;
-    }
 
-    private Event convertFromDto(EventDto dto) {
-        Event event = new Event();
-        event.setEventNo(dto.getEventNo());
-        event.setEventImgBase64(dto.getEventImg());
-        event.setEventName(dto.getEventName());
-        event.setEventCategory(eventCategoryService.findByEventCategoryName(dto.getEventCategoryName()));
-        event.setHost(hostService.findByHostName(dto.getHostName()));
-        event.setEventCity(dto.getEventCity());
-        event.setEventDesc(dto.getEventDesc());
-        event.setEventDetailedAddress(dto.getEventDetailedAddress());
-        event.setEventAddTime(dto.getEventAddTime());
-        event.setEventRemoveTime(dto.getEventRemoveTime());
-        event.setEventStartTime(dto.getEventStartTime());
-        event.setEventEndTime(dto.getEventEndTime());
-        event.setRegisteredCount(dto.getRegisteredCount());
-        event.setEventStatus(dto.getEventStatus());
-        event.setTotalRating(dto.getTotalRating());
-        event.setEventRatingCount(dto.getEventRatingCount());
-        event.setVisitCount(dto.getVisitCount());
-        return event;
-    }
 }

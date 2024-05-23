@@ -1,12 +1,15 @@
 package com.ezban.event;
 
 import com.ezban.event.model.Event;
+import com.ezban.event.model.EventDto;
 import com.ezban.event.model.Service.EventService;
 import com.ezban.event.model.EventStatus;
 import com.ezban.eventcategory.model.EventCategory;
 import com.ezban.eventcategory.model.EventCategoryService;
 import com.ezban.host.model.Host;
 import com.ezban.host.model.HostService;
+import com.ezban.registrationform.model.RegistrationForm;
+import com.ezban.registrationform.model.RegistrationFormService;
 import com.ezban.ticketorder.model.Service.TicketOrderStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,11 +20,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.net.URI;
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -50,6 +55,9 @@ public class BackstageEventController {
     @Autowired
     TicketOrderStatusService ticketOrderStatusService;
 
+    @Autowired
+    RegistrationFormService registrationFormService;
+
 
     /**
      * 新增活動頁面
@@ -68,10 +76,14 @@ public class BackstageEventController {
     public String create(Model model,
                          Principal principal,
                          @RequestParam Map<String, String> allParams,
-                         @RequestParam(value = "eventImg", required = false) MultipartFile eventImg) throws IOException {
-
-        Host host = hostService.findHostByHostNo(principal.getName()).orElseThrow();
-
+                         @RequestParam(value = "eventImg", required = false) MultipartFile eventImg, RedirectAttributes redirectAttributes) throws IOException {
+        Host host = null;
+        try {
+            host = hostService.findHostByHostNo(principal.getName()).orElseThrow();
+        } catch (Exception e) {
+            model.addAttribute("message", "你不是主辦單位，無權新增活動");
+            return "/backstage/event/warning";
+        }
         Event event = new Event();
         EventCategory category = eventCategoryService.findById(Integer.parseInt(allParams.get("eventCategory")));
         event.setHost(host);
@@ -93,16 +105,24 @@ public class BackstageEventController {
      * 顯示活動列表頁面
      */
     @GetMapping("/events")
-    public String events(Model model, Principal principal,@RequestParam(value = "eventStatus", required = false) Integer eventStatus) {
+    public String events(Model model, Principal principal, @RequestParam(value = "eventStatus", required = false) Integer eventStatus) {
         Host host = hostService.findHostByHostNo(principal.getName()).orElseThrow();
-
-        if (eventStatus!= null) {
+        if (eventStatus != null) {
+            List<Event> events = eventService.findByHostNoAndStatus(host.getHostNo(), eventStatus);
+            List<EventDto> eventsDto = new ArrayList<>();
+            for (Event event : events) {
+                eventsDto.add(eventService.convertToDto(event));
+            }
             model.addAttribute("eventStatus", eventStatus);
-            model.addAttribute("events", eventService.findByHostNoAndStatus(host.getHostNo(), eventStatus));
+            model.addAttribute("events", eventsDto);
             return "/backstage/event/events";
         }
-
-        model.addAttribute("events", eventService.findByHostNo(host.getHostNo()));
+        List<Event> events = eventService.findByHostNo(host.getHostNo());
+        List<EventDto> eventsDto = new ArrayList<>();
+        for (Event event : events) {
+            eventsDto.add(eventService.convertToDto(event));
+        }
+        model.addAttribute("events", eventsDto);
         return "/backstage/event/events";
     }
 
@@ -134,20 +154,31 @@ public class BackstageEventController {
      */
     @PutMapping("/events/{eventNo}/status")
     @ResponseBody
-    public ResponseEntity<?> updateStatus(Model model, @PathVariable Integer eventNo, @RequestBody Map<String, String> reqMap, Principal principal) {
+    public ResponseEntity<?> updateStatus(@PathVariable Integer eventNo, @RequestBody Map<String, String> reqMap, Principal principal) {
         Event event = eventService.findById(eventNo);
         if (!eventService.isAuthenticated(principal, event)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to access this page.");
         }
         EventStatus status = EventStatus.valueOf(reqMap.get("eventStatus"));
         event.setEventStatus(status);
-        eventService.update(event);
-        ticketOrderStatusService.cancelAllTicketOrder(event);
+        if (status == EventStatus.PUBLISHED) {
+            if (eventService.isPublishable(event)) {
+                eventService.update(event);
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("請先完成活動相關設定");
+            }
+
+
+        } else if (status == EventStatus.ARCHIVED) {
+            eventService.update(event);
+            ticketOrderStatusService.cancelAllTicketOrder(event);
+        }
         return ResponseEntity.ok().build();
     }
 
     /**
-     * 查看活動詳細內容頁面
+     * 查看活動基本資料
      */
     @GetMapping("/events/{eventNo}")
     public String eventInfo(Model model, Principal principal, @PathVariable Integer eventNo) {
@@ -162,25 +193,6 @@ public class BackstageEventController {
         return "/backstage/event/event";
     }
 
-
-
-
-    /**
-     * 修改活動詳細內容
-     */
-    @PutMapping("/events/{eventNo}/desc")
-    @ResponseBody
-    public ResponseEntity<String> updateDesc(Model model, @PathVariable Integer eventNo, @RequestBody Map<String, String> event, Principal principal) {
-        Event existingEvent = eventService.findById(eventNo);
-        if (!eventService.isAuthenticated(principal, existingEvent)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to access this page.");
-        }
-        existingEvent.setEventDesc(event.get("eventDesc"));
-        eventService.update(existingEvent);
-        model.addAttribute("event", existingEvent);
-        model.addAttribute("eventNo", eventNo);
-        return ResponseEntity.status(HttpStatus.OK).body("儲存成功");
-    }
 
     /**
      * 更新活動基本資料
@@ -211,7 +223,7 @@ public class BackstageEventController {
     }
 
     /**
-     * 查看活動描述頁面
+     * 查看活動詳細內容頁面
      */
     @GetMapping("/events/{eventNo}/desc")
     public String desc(Model model, Principal principal, @PathVariable Integer eventNo) {
@@ -224,6 +236,38 @@ public class BackstageEventController {
         return "/backstage/event/event-desc";
     }
 
+    /**
+     * 新增活動詳細內容
+     */
+    @PostMapping("/events/{eventNo}/desc")
+    @ResponseBody
+    public ResponseEntity<String> addDesc(RedirectAttributes redirectAttributes, @PathVariable Integer eventNo, @RequestBody Map<String, String> event, Principal principal) {
+        Event existingEvent = eventService.findById(eventNo);
+        if (!eventService.isAuthenticated(principal, existingEvent)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to access this page.");
+        }
+        existingEvent.setEventDesc(event.get("eventDesc"));
+        eventService.update(existingEvent);
+        return ResponseEntity.status(HttpStatus.SEE_OTHER).location(URI.create("/backstage/events/" + eventNo + "/ticketTypes")).build();
+    }
+
+    /**
+     * 修改活動詳細內容
+     */
+    @PutMapping("/events/{eventNo}/desc")
+    @ResponseBody
+    public ResponseEntity<String> updateDesc(Model model, @PathVariable Integer eventNo, @RequestBody Map<String, String> event, Principal principal) {
+        Event existingEvent = eventService.findById(eventNo);
+        if (!eventService.isAuthenticated(principal, existingEvent)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to access this page.");
+        }
+        existingEvent.setEventDesc(event.get("eventDesc"));
+        eventService.update(existingEvent);
+        model.addAttribute("event", existingEvent);
+        model.addAttribute("eventNo", eventNo);
+        return ResponseEntity.status(HttpStatus.OK).body("儲存成功");
+    }
+
 
     private void setEventInfo(@RequestParam Map<String, String> allParams, Event event, EventCategory category) {
         event.setEventName(allParams.get("eventName"));
@@ -234,6 +278,8 @@ public class BackstageEventController {
         event.setEventEndTime(formatDate(allParams.get("eventEndTime")));
         event.setEventCity(allParams.get("eventCity"));
         event.setEventDetailedAddress(allParams.get("eventDetailedAddress"));
+        event.setRegisteredCount(0);
+        event.setVisitCount(0);
     }
 
     /**

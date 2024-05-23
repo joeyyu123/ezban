@@ -37,7 +37,7 @@ public class TicketTypeController {
         model.addAttribute("event", event);
         model.addAttribute("ticketTypes", ticketTypes);
         model.addAttribute("now", new Timestamp(System.currentTimeMillis()));
-        return "/frontstage/event/ticketType";
+        return "/frontstage/event/ticket-type";
     }
 
     /**

@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 
-<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+<html lang="zh-hant"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:fragment="head">
 
     <!-- Basic Page Needs
     ================================================== -->
     <meta charset="utf-8">
-    <title>ez辦 | Home</title>
+    <title>ezban</title>
     <!-- Mobile Specific Metas
     ================================================== -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -33,7 +35,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
-    <!-- Maith:n jQuery -->
+    <!-- Mait jQuery -->
     <script th:src="@{/plugins/jquery/dist/jquery.min.js}"></script>
     <script th:src="@{/plugins/jquery/dist/jquery-3.7.1.min.js}"></script>
     <!-- Bootstrap 3.1 -->
@@ -51,13 +53,14 @@
     <!-- sweetalert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- jquery/3.5.1 -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
     <!-- slick Carousel -->
     <script th:src="@{/plugins/slick/slick.min.js}"></script>
     <script th:src="@{/plugins/slick/slick-animation.min.js}"></script>
     <!-- font-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script th:src="@{/js/frontstage/product/cartqty.js}"></script>
+
 </head>
 
 <body id="body">
@@ -69,7 +72,7 @@
             <div class="col-md-6 col-xs-12 col-sm-6">
                 <ul class=" top-menu list-inline">
                     <li class="logo text-center">
-                        <a th:href="@{/index2}">
+                        <a th:href="@{/}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="134.375" height="50">
                                 <image th:href="@{/images/ezban.png}" width="108.5" height="35"/>
                             </svg>
@@ -81,8 +84,8 @@
             <div class="col-md-6 col-xs-12 col-sm-6">
                 <!-- Cart -->
                 <ul class="top-menu text-right list-inline">
-                    <li class="dropdown cart-nav dropdown-slide">
-                        <a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                    <li class="cart-nav">
+                        <a th:href="@{/cart/items}">
                             <div class="cart-icon" style="margin-right: 3px;">
                                 <i class="bi bi-cart3">
                                     <span class="badge">0</span>
@@ -90,46 +93,20 @@
                             </div>
                             <span class="top-menu-text">購物車</span>
                         </a>
-                        <div class="dropdown-menu cart-dropdown">
-                            <!-- Cart Item -->
-                            <div class="media" th:each="item : ${cart}">
-                                <a class="pull-left" href="#!">
-                                    <img class="media-object" th:src="@{${item.image}}" alt="image"/>
-                                </a>
-                                <div class=" y">
-                                    <h4 class="media-heading"><a href="#!" th:text="${item.name}">Ladies Bag</a></h4>
-                                    <div class="cart-price">
-                                        <span th:text="${item.amount}">1 x</span>
-                                        <span th:text="${item.price}">1250.00</span>
-                                    </div>
-                                    <h5><strong th:text="${item.totalPrice}">$1200</strong></h5>
-                                </div>
-                                <a href="#!" class="remove"><i class="tf-ion-close"></i></a>
-                            </div><!-- / Cart Item -->
-
-                            <div class="cart-summary">
-                                <span>Total</span>
-                                <span class="total-price" th:text="${totalPrice}">$1799.00</span>
-                            </div>
-                            <ul class="text-center cart-buttons">
-                                <li><a th:href="@{/cart/items}" class="btn btn-small">View Cart</a></li>
-                                <li><a th:href="@{/checkout}" class="btn btn-small btn-solid-border">Checkout</a></li>
-                            </ul>
-                        </div>
 
                     </li><!-- / Cart -->
 
-                    <!-- Search -->
-                    <li class="dropdown search dropdown-slide">
-                        <a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
-                            <i class="tf-ion-ios-search-strong"></i><span class="top-menu-text">搜尋</span></a>
-                        <ul class="dropdown-menu search-dropdown">
-                            <li>
-                                <form th:action="@{/search}" action="post"><input type="search" class="form-control"
-                                                                                  placeholder="Search..."></form>
-                            </li>
-                        </ul>
-                    </li><!-- / Search -->
+<!--                    &lt;!&ndash; Search &ndash;&gt;-->
+<!--                    <li class="dropdown search dropdown-slide">-->
+<!--                        <a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">-->
+<!--                            <i class="tf-ion-ios-search-strong"></i><span class="top-menu-text">搜尋</span></a>-->
+<!--                        <ul class="dropdown-menu search-dropdown">-->
+<!--                            <li>-->
+<!--                                <form th:action="@{/search}" action="post"><input type="search" class="form-control"-->
+<!--                                                                                  placeholder="Search..."></form>-->
+<!--                            </li>-->
+<!--                        </ul>-->
+<!--                    </li>&lt;!&ndash; / Search &ndash;&gt;-->
 
                     <!-- Member -->
                     <li class="dropdown member-nav dropdown-slide">
@@ -146,19 +123,20 @@
                             <li style="display: flex; justify-content: center; align-items: center;">
                                 <a href="/registerPage"><span>加入會員</span></a>
                             </li>
-                            <li style="display: flex; justify-content: center; align-items: center;">
+                            <li  style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
                                 <a href="/productorder/findByMember"><span><i
                                         class="fa-brands fa-shopify"></i> 我的商品訂單</span></a>
+                            </li >
+                            <li style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
+                                <a href="/events/orders"><span><i
+                                        class="fa-brands fa-shopify"></i> 我的票券訂單</span></a>
                             </li>
-                            <li style="display: flex; justify-content: center; align-items: center;">
-                                <a href="/events/orders"><span>我的票券訂單</span></a>
-                            </li>
-                            <li style="display: flex; justify-content: center; align-items: center;">
+                            <li style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
                                 <a th:href="@{/saveevent/findByMember/{memberNo}(memberNo=${memberNo})}">
-                                    <span><i class="fa-solid fa-bookmark"></i> 我的活動收藏紀錄</span>
+                                    <span><i class="fa-solid fa-bookmark"></i> 我的活動追蹤</span>
                                 </a>
                             </li>
-                            <li style="display: flex; justify-content: center; align-items: center;">
+                            <li style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
                                 <a href="/saveproduct/findByMember"><span><i
                                         class="fa-solid fa-bookmark"></i> 我的商品追蹤</span></a>
                             </li>
@@ -176,8 +154,8 @@
 
 
 <!-- Main Menu Section -->
-<section class="menu">
-    <nav class="navbar navigation">
+<section class="menu" style="height: 50px;">
+    <nav class="navbar navigation" style="height: 50px;">
         <div class="container" style="height: 50px;">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
@@ -193,25 +171,20 @@
             <div id="navbar" class="navbar-collapse collapse text-center">
                 <ul class="nav navbar-nav">
                     <li class="dropdown ">
-                        <a th:href="@{/faq}">常見問題</a>
+                        <a href="#" style="padding: 15px;">聯絡我們</a>
+                    </li>
+                    <li class="dropdown ">
+                        <a th:href="@{/faq}" style="padding: 15px;">常見問題</a>
                     </li>
                     <!-- Products -->
                     <li class="dropdown dropdown-slide">
-                        <a th:href="@{/product/shopall}" role="button">周邊商品</a>
+                        <a th:href="@{/product/shopall}" role="button" style="padding: 15px;">周邊商品</a>
                     </li><!-- / Products -->
 
                     <!-- Events -->
                     <li class="dropdown dropdown-slide">
-                        <a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"
-                           data-delay="350"
-                           role="button" aria-haspopup="true" aria-expanded="false">活動<span
-                                class="tf-ion-ios-arrow-down"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="typography.html">Typography</a></li>
-                            <li><a href="buttons.html">Buttons</a></li>
-                            <li><a href="alerts.html">Alerts</a></li>
-                        </ul>
-                    </li><!-- / Blog -->
+                        <a th:href="@{/events}" role="button" style="padding: 15px;">所有活動</a>
+                    </li><!-- / Events -->
                 </ul><!-- / .nav .navbar-nav -->
 
             </div>
@@ -220,250 +193,58 @@
     </nav>
 </section>
 
-<div class="event_carousel autoplay">
-    <div><img src="images\events\e7.jpg"></div>
-    <div><img src="images\events\e8.png"></div>
-    <div><img src="images\events\e9.jpg"></div>
-    <div><img src="images\events\e10.jpg"></div>
-    <div><img src="images\events\e11.jpg"></div>
-    <div><img src="images\events\e12.jpg"></div>
+<div class="event_carousel autoplay" >
+    <div th:each="event : ${events}"><a th:href="@{'/events/' + ${event.eventNo}}"><img th:src="'data:image/jpeg;base64, '+${event.eventImg}" alt="event-img"></a></div>
 </div>
 
 <section class="events section">
     <div class="events container">
         <div class="row">
             <div class="title text-center">
-                <h2>Trendy Events</h2>
+                <h2>探索活動</h2>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-4" th:each="event : ${events}">
                 <div class="product-item">
                     <div class="product-thumb">
-                        <span class="bage">NEW</span>
-                        <img class="img-responsive" src="images\events\e1.jpg" alt="product-img"/>
+                        <img class="img-responsive" th:src="'data:image/jpeg;base64, '+${event.eventImg}"
+                             alt="event-img"/>
                         <div class="preview-meta">
                             <ul>
                                 <li>
-                                    <a href="#!"><i class="tf-ion-ios-search-strong"></i></a>
+                                    <a th:href="@{'/events/' + ${event.eventNo}}"><i
+                                            class="tf-ion-ios-search-strong"></i></a>
                                 </li>
                                 <li>
                                     <a href="#!"><i class="tf-ion-ios-heart"></i></a>
                                 </li>
-                                <li>
-                                    <a href="#!">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                             fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
-                                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                                            <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
-                                        </svg>
-                                    </a>
-                                </li>
                             </ul>
                         </div>
                     </div>
-                    <div class="product-content">
-                        <p class="date">2024.04.13 (Sat) 11:00 - 04.21 (Sun) 18:00</p>
-                        <h4><a href="product-single.html">創意實踐家| 承辦馬拉松路跑專業團隊</a></h4>
-                        <div class="event_location">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#989797"
-                                 class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-                                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
-                            </svg>
-                            <span class="location">Taipei City</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\events\e2.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-ios-search-strong"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                             fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
-                                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                                            <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
-                                        </svg>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <p class="date">2024.04.13 (Sat) 11:00 - 04.21 (Sun) 18:00</p>
-                        <h4><a href="product-single.html">淨攤總動員 | 淨攤志工招募</a></h4>
-                        <div class="event_location">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#989797"
-                                 class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-                                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
-                            </svg>
-                            <span class="location">New Taipei City</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\events\e3.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-ios-search-strong"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                             fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
-                                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                                            <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
-                                        </svg>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <p class="date">2024.04.13 (Sat) 11:00 - 04.21 (Sun) 18:00</p>
-                        <h4><a href="product-single.html">【閱讀推動】110學年度與作家有約活動報名開始</a></h4>
-                        <div class="event_location">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#989797"
-                                 class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-                                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
-                            </svg>
-                            <span class="location">Taipei City</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\events\e4.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-ios-search-strong"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                             fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
-                                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                                            <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
-                                        </svg>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <p class="date">2024.04.13 (Sat) 11:00 - 04.21 (Sun) 18:00</p>
-                        <h4><a href="product-single.html">臺中市新社區櫻花季健行活動2024</a></h4>
-                        <div class="event_location">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#989797"
-                                 class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-                                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
-                            </svg>
-                            <span class="location">Taichung City</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\events\e5.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-ios-search-strong"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                             fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
-                                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                                            <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
-                                        </svg>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <p class="date">2024.04.13 (Sat) 11:00 - 04.21 (Sun) 18:00</p>
-                        <h4><a href="product-single.html">2022 台北國際烘焙暨設備展</a></h4>
-                        <div class="event_location">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#989797"
-                                 class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-                                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
-                            </svg>
-                            <span class="location">Taipei City</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\events\e6.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-ios-search-strong"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                             fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 16 16">
-                                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                                            <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
-                                        </svg>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <p class="date">2024.04.13 (Sat) 11:00 - 04.21 (Sun) 18:00</p>
-                        <h4><a href="product-single.html">展昭台中寵物用品展| HotPets 哈寵誌</a></h4>
-                        <div class="event_location">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#989797"
-                                 class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
-                                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
-                            </svg>
-                            <span class="location">Taichung City</span>
+                    <div class="product-content event-content">
+                        <h4><a th:href="@{'/events/' + ${event.eventNo}}" th:text="${event.eventName}"></a></h4>
+                        <p class="date"
+                           th:text="${#dates.format(event.eventStartTime, 'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#dates.format(event.eventEndTime, 'yyyy-MM-dd HH:mm')}"></p>
+                        <div class="small-info">
+                            <div class="event-location">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#989797"
+                                     class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                                    <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+                                </svg>
+                                <span class="location" th:text="${event.eventCity}"></span>
+                            </div>
+                            <div class="visit-count">
+                                <i class="fa-regular fa-eye"></i>
+                                <span class="location" th:text="${event.visitCount}"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="see_more">
-            <a th:href="@{/events}">see more</a>
+            <a th:href="@{/events}">查看更多</a>
         </div>
     </div>
 </section>
@@ -472,261 +253,18 @@
     <div class="products container">
         <div class="row">
             <div class="title text-center">
-                <h2>Merchandise</h2>
+                <h2>精選商品</h2>
             </div>
         </div>
-        <div class="row">
-
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <span class="bage">SALE</span>
-                        <img class="img-responsive" src="images\products\p1.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-										<span data-toggle="modal" data-target="#product-modal">
-											<i class="tf-ion-ios-search-strong"></i>
-										</span>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">客製化牛仔布飲料杯套(烙印皮革)</a></h4>
-                        <span class="price on_sale">$500</span> <span class="price sale_price">$200</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <span class="bage">SALE</span>
-                        <img class="img-responsive" src="images\products\p2.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-										<span data-toggle="modal" data-target="#product-modal">
-											<i class="tf-ion-ios-search-strong"></i>
-										</span>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">前漂運動毛巾</a></h4>
-                        <span class="price on_sale">$200</span> <span class="price sale_price">$150</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\products\p3.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-										<span data-toggle="modal" data-target="#product-modal">
-											<i class="tf-ion-ios-search-strong"></i>
-										</span>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">限定拼圖明信片套組</a></h4>
-                        <span class="price">$200</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\products\p4.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-										<span data-toggle="modal" data-target="#product-modal">
-											<i class="tf-ion-ios-search-strong"></i>
-										</span>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">紗布長毛巾</a></h4>
-                        <span class="price">$200</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\products\p5.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-										<span data-toggle="modal" data-target="#product-modal">
-											<i class="tf-ion-ios-search-strong"></i>
-										</span>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">手印棉帆布</a></h4>
-                        <span class="price">$200</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\products\p6.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-										<span data-toggle="modal" data-target="#product-modal">
-											<i class="tf-ion-ios-search-strong"></i>
-										</span>
-                                </li>
-                                <li>
-                                    <a href="#"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">日本柴犬唐草風寵物飾品-離家出走小包袱</a></h4>
-                        <span class="price">$200</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\products\p7.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-										<span data-toggle="modal" data-target="#product-modal">
-											<i class="tf-ion-ios-search-strong"></i>
-										</span>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">文學獎藏書票套組</a></h4>
-                        <span class="price">$800</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="product-item">
-                    <div class="product-thumb">
-                        <img class="img-responsive" src="images\products\p8.jpg" alt="product-img"/>
-                        <div class="preview-meta">
-                            <ul>
-                                <li>
-										<span data-toggle="modal" data-target="#product-modal">
-											<i class="tf-ion-ios-search-strong"></i>
-										</span>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-ios-heart"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="tf-ion-android-cart"></i></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="product-content">
-                        <h4><a href="product-single.html">多功能運動雪克杯600ml</a></h4>
-                        <span class="price">$450</span>
-                    </div>
-                </div>
-            </div>
-            <div class="see_more">
-                <a href="shop.html">see more</a>
-            </div>
-            <!-- Modal -->
-            <div class="modal product-modal fade" id="product-modal">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <i class="tf-ion-close"></i>
-                </button>
-                <div class="modal-dialog " role="document">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-8 col-sm-6 col-xs-12">
-                                    <div class="modal-image">
-                                        <img class="img-responsive" src="images/shop/products/modal-product.jpg"
-                                             alt="product-img"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-sm-6 col-xs-12">
-                                    <div class="product-short-details">
-                                        <h2 class="product-title">GM Pendant, Basalt Grey</h2>
-                                        <p class="product-price">$200</p>
-                                        <p class="product-short-description">
-                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem iusto nihil
-                                            cum. Illo laborum numquam rem aut officia dicta cumque.
-                                        </p>
-                                        <a href="cart.html" class="btn btn-main">Add To Cart</a>
-                                        <a href="product-single.html" class="btn btn-transparent">View Product
-                                            Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div><!-- /.modal -->
-
+        <div class="row" id="index_products">
+            <!-- 動態顯示商品 -->
+        </div>
+        <div class="see_more">
+            <a th:href="@{/product/shopall}">查看更多</a>
         </div>
     </div>
 </section>
+
 
 
 <!--
@@ -744,27 +282,14 @@ Start Call To Action
                                                    style="width: 44.48px; height: 40px;"></a>
                     </li>
                 </div>
-                <ul class="footer-menu text-uppercase">
-                    <li>
-                        <a href="contact.html">CONTACT</a>
-                    </li>
-                    <li>
-                        <a href="shop.html">SHOP</a>
-                    </li>
-                    <li>
-                        <a href="pricing.html">Pricing</a>
-                    </li>
-                    <li>
-                        <a href="contact.html">PRIVACY POLICY</a>
-                    </li>
-                </ul>
-                <p class="copyright-text">Copyright &copy; <a target="_blank" href="http://www.mobanwang.com/">ez辦 All
+                <p class="copyright-text" style="margin-top: 50px;">
+                    Copyright &copy; <a target="_blank" href="http://www.mobanwang.com/">ez辦 All
                     Rights Reserved.</a></p>
             </div>
         </div>
     </div>
 </footer>
 
-
+<script th:src="@{/js/frontstage/index2.js}"></script>
 </body>
 </html>

@@ -34,56 +34,39 @@
                             <div class="form-group">
                                 <input type="hidden" name="member_no" id="member_no">
                                 <label for="full_name">姓名</label>
-                                <input type="text" class="form-control" id="full_name" placeholder="" name="full_name">
+                                <input type="text" class="form-control" id="full_name" placeholder="" name="full_name" required>
                             </div>
                             <div class="form-group">
                                 <label for="user_email">信箱</label>
                                 <input type="text" class="form-control" id="user_email" placeholder=""
-                                       name="user_email">
+                                       name="user_email" required>
                             </div>
                             <div class="form-group">
                                 <label for="user_phone">電話</label>
                                 <input type="text" class="form-control" id="user_phone" placeholder=""
-                                       name="user_phone">
+                                       name="user_phone" required>
                             </div>
                         </div>
                         <div class="block billing-details">
                             <h4 class="widget-title">收件人資料</h4>
                             <label class="custom-checkbox-label" for="common_receiver">
                                 <input type="checkbox" class="common_receiver" id="common_receiver"
-                                       name="common_receiver" onchange="autoFillInfo()">
+                                       name="common_receiver" onchange="autoFillInfo()" required>
                                 <span class="checkmark"></span>常用收件人
                             </label>
                             <div class="form-group">
                                 <label for="receive_full_name">姓名</label>
                                 <input type="text" class="form-control" id="receive_full_name" placeholder=""
-                                       name="receive_full_name">
+                                       name="receive_full_name" required>
                             </div>
                             <div class="form-group">
                                 <label for="receive_phone">電話</label>
                                 <input type="text" class="form-control" id="receive_phone" placeholder=""
                                        name="receive_phone">
                             </div>
-                            <div class="checkout-country-code clearfix">
-                                <div class="form-group">
-                                    <label for="receive_post_code">郵遞區號</label>
-                                    <input class="js-demeter-tw-zipcode-selector form-control" id="receive_post_code"
-                                           data-city="#city" data-dist="#dist" placeholder="" style="width: 180px;"/>
-                                </div>
-                                <div class="form-group">
-                                    <label for="city">城市</label>
-                                    <select id="city" class="form-control" name="city" placeholder=""
-                                            style="height: 50px; width: 180px; padding-left: 80px;"></select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="dist">地區</label>
-                                    <select id="dist" class="form-control" name="dist" placeholder=""
-                                            style="height: 50px; width: 213px; padding-left: 80px;"></select>
-                                </div>
-                            </div>
                             <div class="form-group">
                                 <label for="receive_address">地址</label>
-                                <input type="text" class="form-control" id="receive_address" placeholder="">
+                                <input type="text" class="form-control" id="receive_address" placeholder="" required>
                             </div>
                         </div>
                         <div class="block">
@@ -95,20 +78,19 @@
                                         <div class="form-group">
                                             <label for="card-number">Card Number <span class="required">*</span></label>
                                             <input id="card-number" class="form-control" type="tel"
-                                                   placeholder="•••• •••• •••• ••••" name="card_number">
+                                                   placeholder="•••• •••• •••• ••••" name="card_number" required>
                                         </div>
                                         <div class="form-group half-width padding-right">
                                             <label for="card-expiry">Expiry (MM/YY) <span
                                                     class="required">*</span></label>
                                             <input id="card-expiry" class="form-control" type="tel"
-                                                   placeholder="MM / YY" name="card_expiry">
+                                                   placeholder="MM / YY" name="card_expiry" required>
                                         </div>
                                         <div class="form-group half-width padding-left">
                                             <label for="card-cvc">Card Code <span class="required">*</span></label>
                                             <input id="card-cvc" class="form-control" type="tel" maxlength="4"
-                                                   placeholder="CVC" name="card_cvc">
+                                                   placeholder="CVC" name="card_cvc" required>
                                         </div>
-                                        <!-- 將送出按鈕改為submit類型 -->
                                         <button type="submit" class="btn btn-main mt-20">送出訂單</button>
                                     </div>
                                 </div>
@@ -121,8 +103,8 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading" role="tab" id="headingTwo">
                                         <h4 class="panel-title">
-                                            <a class="collapsed" role="button" data-toggle="collapse"
-                                               data-parent="#accordion" href="#collapseTwo" aria-expanded="false"
+                                            <a class="" role="button" data-toggle="collapse"
+                                               data-parent="#accordion" href="#collapseTwo" aria-expanded="true"
                                                aria-controls="collapseTwo">
                                                 購物車明細 <i class="bi bi-caret-down-fill" style="color: #bbb5b5"></i>
                                             </a>
@@ -181,7 +163,6 @@
 </div>
 <div th:replace="frontstage/index2 :: footer"></div>
 
-<script src="https://demeter.5fpro.com/tw/zipcode-selector.js"></script>
 <script th:inline="javascript">
 
     let initialTotal = 0;
@@ -435,9 +416,24 @@
             .then(response => response.json())
             .then(data => {
                 console.log('訂單成立', data);
+                Swal.fire({
+                    title: '付款成功',
+                    text: '訂單已成功建立。',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    footer: '<a href="/">回首頁</a>',
+                    allowOutsideClick: false
+                });
             })
             .catch(error => {
                 console.error('訂單不成立', error);
+                Swal.fire({
+                    title: '錯誤!',
+                    text: '訂單建立失敗。',
+                    icon: 'error',
+                    showConfirmButton: false,
+                    allowOutsideClick: false
+                });
             });
     }
 
@@ -445,10 +441,13 @@
     function collectItems() {
         var items = [];
         document.querySelectorAll('.order_detail li').forEach(item => {
+            let productQty = parseInt(item.querySelector('.quantity').innerText.replace('數量: ', ''), 10);
+            let unitPrice = parseInt(item.querySelector('.price').innerText.replace('單價: NT$', ''), 10);
+            let totalPrice = unitPrice * productQty;
             items.push({
                 productNo: item.querySelector('input#product_no').value,
-                productQty: parseInt(item.querySelector('.quantity').innerText.replace('數量: ', ''), 10),
-                productPrice: parseInt(item.querySelector('.price').innerText.replace('單價: NT$', ''))
+                productQty: productQty,
+                productPrice: totalPrice
             });
         });
         return items;

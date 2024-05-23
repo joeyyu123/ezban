@@ -190,6 +190,59 @@
                 $(li_el).find("input[name='label']").toggleClass("hidden");
             });
 
+            // 建立報名表按鈕
+            $(document).on("click", "#create-form", function() {
+                let question_list = [];
+                let form_items = $("#form").children();
+                form_items.each(function() {
+                    let question = {};
+                    let label_input = $(this).find("input[name='label']");
+                    let component_input = $(this).find("input[name='component']");
+                    let options_input = $(this).find("textarea[name='options']");
+                    let required_input = $(this).find("input[name='required']");
+                    let orderBy_input = $(this).find("input[name='orderBy']");
+
+                    // 針對option欄位做處理
+                    let options = options_input.val();
+                    let optionsArray = [];
+                    if (options !== undefined) {
+                        optionsArray = options.substring(1, options.length - 1).split(',').map(options => options.trim());
+                    }
+
+
+                    question.label = label_input.val();
+                    question.component = component_input.val();
+                    question.options = optionsArray;
+                    question.required = required_input.val();
+                    question.orderBy = orderBy_input.val();
+
+                    question_list.push(question);
+                });
+
+                fetch(window.location.href, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        questions: question_list,
+                    })
+                })
+                .then(response => {
+                    if(response.redirected) {
+                        window.location.href = response.url;
+                    } else {
+                        console.log(response.json());
+                    }
+                })
+
+                .catch(error => {
+                    alert('儲存失敗: \n' + error);
+                });
+
+
+            });
+
             // 儲存表單按鈕
             $(document).on("click", "#save-form", function() {
                 let question_list = [];
@@ -222,7 +275,7 @@
 
                 $.ajax({
                     url: window.location.href,
-                    type: "POST",
+                    type: "PUT",
                     contentType: "application/json",
                     data: JSON.stringify({
                         questions: question_list,
@@ -260,6 +313,9 @@
 
                     <div class="puttable col">
                         <label>您的報名表</label>
+                        <div th:if="${registrationForm == null}" class="alert alert-primary" role="alert">
+                            記得點擊建立報名表
+                        </div>
                         <ul id="form" class="p-3">
 
                             <th:block th:if="${registrationForm == null}">
@@ -390,7 +446,7 @@
                             </th:block>
                         </ul>
                         <button th:if="${registrationForm != null}" class=" btn btn-primary btn-block " id="save-form">儲存報名表</button>
-                        <button th:if="${registrationForm == null}" class=" btn btn-primary btn-block " id="save-form">建立報名表</button>
+                        <button th:if="${registrationForm == null}" class=" btn btn-primary btn-block " id="create-form">建立報名表</button>
 
 
                     </div>

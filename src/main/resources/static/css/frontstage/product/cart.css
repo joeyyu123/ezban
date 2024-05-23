@@ -90,3 +90,11 @@ i.remove {
 .checkout {
     font-size: 14px;
 }
+
+.empty-cart-message {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    color: #666;
+    font-style: italic;
+}

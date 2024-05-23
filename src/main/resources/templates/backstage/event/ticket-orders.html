@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link th:include="backstage/index :: head">
+    <!-- 可以在這底下加入其他 css 或是 script    -->
+    <style>
+        .ticketOrderTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1em;
+            min-width: 400px;
+        }
+
+        .ticketOrderTable thead tr {
+            background-color: #009879;
+            color: #ffffff;
+            text-align: left;
+        }
+
+        .ticketOrderTable th, .ticketOrderTable td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+        }
+
+        .ticketOrderTable tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .ticketOrderTable tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+
+        .ticketOrderTable tbody tr:last-of-type {
+            border-bottom: 2px solid #009879;
+        }
+
+        .ticketOrderTable tbody tr.active-row {
+            font-weight: bold;
+            color: #009879;
+        }
+
+        .order-actions button {
+            background-color: white;
+            color: black;
+            padding: 5px 10px;
+            border: black 1px solid;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .order-actions button.cancel-order-btn {
+            color: red;
+            border: red 1px solid;
+        }
+
+        .order-actions button:hover {
+            background-color: lightgray;
+            color: black;
+        }
+
+        .order-actions button.cancel-order-btn:hover {
+            color: red;
+            background-color: #ffd9d9;
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .pagination {
+            margin: 0 auto;
+        }
+
+        .page-size {
+            margin-left: auto;
+        }
+    </style>
+</head>
+
+<body>
+<div id="wrapper">
+    <nav th:replace="backstage/event/event :: navbar"></nav>
+    <div th:insert="backstage/index :: hamburger-btn"></div>
+    <div class="page-content-wrapper">
+
+
+        <!-- 頁面內容都放在 content 裡面 -->
+        <div class="content">
+            <!-- 這裡可以放置你想呈現的內容 -->
+            <h1>票券訂單</h1>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{'/backstage/events/'+${event.eventNo}+'/orders'}"
+                       th:classappend="${orderStatus == null}? 'active'">所有訂單</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{'/backstage/events/'+${event.eventNo}+'/orders'(orderStatus=1)}"
+                       th:classappend="${orderStatus == 1}? 'active'">已完成</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{'/backstage/events/'+${event.eventNo}+'/orders'(orderStatus=0)}"
+                       th:classappend="${orderStatus == 0}? 'active'">未付款</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{'/backstage/events/'+${event.eventNo}+'/orders'(orderStatus=2)}"
+                       th:classappend="${orderStatus == 2}? 'active'">已取消</a>
+                </li>
+            </ul>
+            <div class="seach row g-3">
+                <div class="col-md-4">
+                    <input id="orderNo" class="form-control" type="number" placeholder="訂單編號查詢">
+                </div>
+                <button id="search-btn" class="btn btn-primary">搜尋</button>
+
+                <div class="col page-size" th:if="${ticketOrdersPage.totalPages > 0}">
+                    <label for="pageSize">每頁顯示筆數:</label>
+                    <select id="pageSize" class="form-select" onchange="changePageSize()">
+                        <option th:value="10" th:text="10" th:selected="${ticketOrdersPage.size == 10}"></option>
+                        <option th:value="20" th:text="20" th:selected="${ticketOrdersPage.size == 20}"></option>
+                        <option th:value="50" th:text="50" th:selected="${ticketOrdersPage.size == 50}"></option>
+                    </select>
+                </div>
+            </div>
+            <div class="mb3 alert alert-warning" th:if="${message}" th:text="${message}">
+            </div>
+            <div class="ticketOrders">
+                <div class="mb-3" th:if="${#lists.isEmpty(ticketOrdersPage.content)}">
+                    <div class="alert alert-info">目前沒有任何訂單</div>
+                </div>
+                <table class="ticketOrderTable">
+                    <thead>
+                    <tr>
+                        <th>訂單編號</th>
+                        <th>活動名稱</th>
+                        <th>訂單建立時間</th>
+                        <th>總金額</th>
+                        <th>折扣金額</th>
+                        <th>訂單金額</th>
+                        <th>訂單狀態</th>
+                        <th>訂單明細</th>
+<!--                        <th>操作</th>-->
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="order : ${ticketOrdersPage.content}">
+                        <td th:text="${order.ticketOrderNo}"></td>
+                        <td>
+                            <a th:href="'/events/'+${order.ticketOrderDetails[0]?.ticketType?.event?.eventNo}" th:text="${order.ticketOrderDetails[0]?.ticketType?.event?.eventName}"></a>
+                        </td>
+                        <td th:text="${#dates.format(order.ticketOrderTime, 'yyyy-MM-dd HH:mm')}"></td>
+                        <td th:text="'NT$' + ${order.ticketOrderAmount}"></td>
+                        <td th:text="'NT$' + ${order.eventCouponDiscount}"></td>
+                        <td th:text="'NT$' + ${order.ticketCheckoutAmount}"></td>
+                        <td>
+                            <span th:if="${order.ticketOrderStatus.value == 0}" th:text="'未付款'"></span>
+                            <span th:if="${order.ticketOrderStatus.value == 1}" th:text="'已完成'"></span>
+                            <span th:if="${order.ticketOrderStatus.value == 2}" th:text="'已取消'"></span>
+                        </td>
+                        <td>
+                            <button id="order-detail-btn" type="button" class="order-detail-btn btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                查看訂單明細
+                            </button>
+
+<!--                            <div th:each="ticketOrderDetail : ${order.ticketOrderDetails}">-->
+<!--                                <span th:text="${ticketOrderDetail.ticketType.ticketTypeName} + ' X ' + ${ticketOrderDetail.ticketTypeQty}"></span><br>-->
+<!--                                <span th:text="'單價: ' + ${ticketOrderDetail.ticketTypePrice}"></span><br>-->
+<!--                                <span th:text="'金額: ' + ${ticketOrderDetail.ticketTypePrice} * ${ticketOrderDetail.ticketTypeQty}"></span><br>-->
+<!--                            </div>-->
+                        </td>
+<!--                        <td>-->
+<!--                            <button class="btn btn-danger cancel-order-btn" th:if="${order.ticketOrderStatus.value != 2}">取消訂單</button>-->
+<!--                        </td>-->
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                ...
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pagination-container">
+                <div class="pagination">
+                    <ul class="pagination" th:if="${ticketOrdersPage.totalPages > 0}">
+                        <li class="page-item" th:classappend="${ticketOrdersPage.hasPrevious()} ? '' : 'disabled'">
+                            <a class="page-link"
+                               th:href="@{'/backstage/events/'+${event.eventNo}+'/orders'(page=${ticketOrdersPage.number - 1}, size=${ticketOrdersPage.size}, orderStatus=${orderStatus})}">上一頁</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, ticketOrdersPage.totalPages - 1)}"
+                            th:classappend="${ticketOrdersPage.number == i} ? 'active'">
+                            <a class="page-link"
+                               th:href="@{'/backstage/events/'+${event.eventNo}+'/orders'(page=${i}, size=${ticketOrdersPage.size}, orderStatus=${orderStatus})}"
+                               th:text="${i + 1}">1</a>
+                        </li>
+                        <li class="page-item" th:classappend="${ticketOrdersPage.hasNext()} ? '' : 'disabled'">
+                            <a class="page-link"
+                               th:href="@{'/backstage/events/'+${event.eventNo}+'/orders'(page=${ticketOrdersPage.number + 1}, size=${ticketOrdersPage.size}, orderStatus=${orderStatus})}">下一頁</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        // 取消訂單
+        $('.cancel-order-btn').click(function () {
+            if (confirm('取消訂單')) {
+                let ticketOrderNo = $(this).closest('tr').find('td:first').text();
+                $.ajax({
+                    url: window.location.href + '/' + ticketOrderNo,
+                    type: 'DELETE',
+                    success: function (data) {
+                        alert('訂單已取消');
+                        location.reload();
+                    },
+                    error: function (error) {
+                        alert('取消訂單失敗');
+                    }
+                });
+            }
+        });
+// 搜尋
+        $('#search-btn').click(function () {
+            let orderNo = $('#orderNo').val();
+            if (orderNo) {
+                window.location.href = window.location.pathname + '?ticketOrderNo=' + orderNo;
+            } else {
+                alert('請輸入訂單編號');
+            }
+        });
+
+        $(".order-detail-btn").click(function () {
+            let ticketOrderNo = $(this).closest('tr').find('td:first').text();
+            $.ajax({
+                url: window.location.href + '/' + ticketOrderNo,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    let modalBody = $('#exampleModal .modal-body');
+                    modalBody.empty();
+                    let table = `<table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>票券名稱</th>
+                                            <th>單價</th>
+                                            <th>數量</th>
+                                            <th>總金額</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>`;
+                    data.forEach(function (detail) {
+                        table += `<tr>
+                                    <td>${detail.ticketTypeName}</td>
+                                    <td>${detail.ticketTypePrice}</td>
+                                    <td>${detail.ticketTypeQty}</td>
+                                    <td>${detail.ticketTypePrice * detail.ticketTypeQty}</td>
+                                  </tr>`;
+                    });
+                    table += `</tbody></table>`;
+                    modalBody.append(table);
+                }
+            });
+        })
+    });
+    function changePageSize() {
+        let pageSize = $('#pageSize').val();
+        let currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('size', pageSize);
+        currentUrl.searchParams.set('page', 0); // 重置到第一頁
+        window.location.href = currentUrl.toString();
+    }
+</script>
+</body>
+
+</html>
