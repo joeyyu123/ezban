@@ -70,12 +70,7 @@ public class Host {
 
     @Column(name = "host_status", nullable = false)
     private Byte hostStatus = 1;
-    
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "admin_no")
-    private Admin admin;
-
+  
     @JsonManagedReference
     @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
     private Set<Product> products = new LinkedHashSet<>();
