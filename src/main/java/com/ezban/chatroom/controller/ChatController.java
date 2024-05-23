@@ -50,13 +50,23 @@ public class ChatController {
     private ChatService chatService;
 
     // host聊天介面
-    @GetMapping("/backstage/hostchat/hostchat")
+    @GetMapping("/backstage/hostchat")
     public String hostChat(Model model, Principal principal) {
         String hostNo = principal.getName();
         Host host = hostService.findHostByHostNo(hostNo).orElseThrow();
         model.addAttribute("hostName", host.getHostName());
+
+        // 查詢與 Host 相關的所有 EventNo
+        List<Integer> eventNos = eventService.findEventNoByHostNo(Integer.parseInt(hostNo));
+        if (!eventNos.isEmpty()) {
+            model.addAttribute("eventNo", eventNos.get(0)); // 假設只使用第一個 eventNo
+        } else {
+            model.addAttribute("eventNo", null); // 或者處理未找到 eventNo 的情況
+        }
+
         return "backstage/hostchat/hostchat";
     }
+
 
     //member聊天介面
     @GetMapping("/frontstage/memberchat")
@@ -74,7 +84,6 @@ public class ChatController {
         }
         return "frontstage/memberchat/memberchat";
     }
-
 
 
     // 顯示活動聊天頁面
@@ -100,48 +109,83 @@ public class ChatController {
         return "event";
     }
 
-    // 處理 member 發送訊息的 WebSocket 請求
+    // 處理 member與 host 發送訊息的 WebSocket 請求
     @MessageMapping("/sendMessage/{eventNo}")
-    public void receiveMessageFromMember(@Payload ChatMessage chatMessage, @DestinationVariable String eventNo) {
-        System.out.println("Received message from member: " + chatMessage);
+    @SendTo("/message/event/{eventNo}")
+    public void receiveMessage(@Payload ChatMessage chatMessage, @DestinationVariable Integer eventNo) {
+        System.out.println("Received message: " + chatMessage.getMessage() + " for event: " + eventNo);
+        chatMessage.setEventNo(eventNo); // 确保设置 eventNo
         chatService.saveChatMessage(chatMessage);
         messagingTemplate.convertAndSend("/message/event/" + eventNo, chatMessage);
     }
 
-    // 處理 host 發送訊息的 WebSocket 請求
-    @MessageMapping("/hostchat/sendMessage/{eventNo}")
-    public void receiveMessageFromHost(@Payload ChatMessage chatMessage, @DestinationVariable String eventNo) {
-        System.out.println("Received message from host: " + chatMessage);
+
+    private void handleMemberMessage(ChatMessage chatMessage, String eventNo) {
+        chatService.saveChatMessage(chatMessage);
+        messagingTemplate.convertAndSend("/message/event/" + eventNo, chatMessage);
+    }
+
+    private void handleHostMessage(ChatMessage chatMessage, String eventNo) {
         chatService.saveChatMessage(chatMessage);
         messagingTemplate.convertAndSend("/message/event/" + eventNo, chatMessage);
     }
 
     // 獲取 member 的歷史聊天紀錄
-    @GetMapping("/frontstage/memberchat/history/{memberNo}/{hostAccount}")
+    @GetMapping("/frontstage/memberchat/history/{memberName}/{hostName}/{eventNo}")
     @ResponseBody
-    public List<ChatMessage> getMemberChatHistory(@PathVariable String memberNo, @PathVariable String hostAccount) {
-        List<ChatMessage> chatHistory = chatService.getChatHistory(memberNo, hostAccount);
-        System.out.println("Fetching chat history for member: " + memberNo + " and host: " + hostAccount);
+    public List<ChatMessage> getMemberChatHistory(@PathVariable String memberName, @PathVariable String hostName, @PathVariable Integer eventNo) {
+        System.out.println("Received request for chat history");
+        System.out.println("Member name: " + memberName);
+        System.out.println("Host name: " + hostName);
+        System.out.println("Event No: " + eventNo);
+        List<ChatMessage> chatHistory;
+        try {
+            chatHistory = chatService.getChatHistory(memberName, hostName, eventNo);
+        } catch (Exception e) {
+            System.err.println("Error fetching chat history: " + e.getMessage());
+            throw e; // 記錄此錯誤以幫助診斷問題
+        }
+
         System.out.println("Chat history: " + chatHistory);
         return chatHistory;
     }
 
+
     // 獲取 host 的歷史聊天紀錄
-    @GetMapping("/backstage/hostchat/history/{memberName}/{hostName}")
+    @GetMapping("/backstage/hostchat/history/{memberName}/{hostName}/{eventNo}")
     @ResponseBody
-    public List<ChatMessage> getHostChatHistory(@PathVariable String memberName, @PathVariable String hostName) {
-        List<ChatMessage> chatHistory = chatService.getChatHistory(memberName, hostName);
-        System.out.println("Fetching chat history for member: " + memberName + " and host: " + hostName);
+    public List<ChatMessage> getHostChatHistory(@PathVariable String memberName, @PathVariable String hostName, @PathVariable Integer eventNo) {
+        System.out.println("Fetching chat history for host: " + hostName + " and member: " + memberName + " for event: " + eventNo);
+        List<ChatMessage> chatHistory;
+        try {
+            chatHistory = chatService.getChatHistory(memberName, hostName, eventNo);
+            System.out.println("Chat history: " + chatHistory);
+        } catch (Exception e) {
+            System.err.println("Error fetching chat history: " + e.getMessage());
+            throw e;
+        }
+
         System.out.println("Chat history: " + chatHistory);
         return chatHistory;
     }
+
 
     // 獲取 host 的最後訊息
     @GetMapping("/backstage/hostchat/lastMessages")
     @ResponseBody
-    public Map<String, ChatMessage> getLastMessages(Principal principal) {
+    public Map<String, ChatMessage> getHostLastMessages(Principal principal) {
         String hostNo = principal.getName();
-        return chatService.getLastMessages(hostNo);
+        Map<String, ChatMessage> lastMessages = chatService.getHostLastMessages(hostNo);
+        System.out.println("Last messages: " + lastMessages);
+        return lastMessages;
+    }
+
+    // 獲取 member 的最後訊息
+    @GetMapping("/frontstage/memberchat/lastMessages")
+    @ResponseBody
+    public Map<String, ChatMessage> getMemberLastMessages(Principal principal) {
+        String memberNo = principal.getName();
+        return chatService.getMemberLastMessages(memberNo);
     }
 
     // 取得與當前廠商有過聯繫的所有會員
@@ -149,7 +193,9 @@ public class ChatController {
     @ResponseBody
     public List<String> getMembers(Principal principal) {
         String hostNo = principal.getName();
-        return chatService.getMembersByHost(hostNo);
+        List<String> members = chatService.getMembersByHost(hostNo);
+        System.out.println("Members: " + members);
+        return members;
     }
 
     @GetMapping("/frontstage/memberchat/checkLoginStatus")

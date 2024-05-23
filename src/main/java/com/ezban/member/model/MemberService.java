@@ -1,5 +1,6 @@
 package com.ezban.member.model;
 
+import com.ezban.host.model.Host;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,5 +60,9 @@ public class MemberService {
 	public String getMemberNameByMemberNoChat(Integer memberNo) {
 		Member member = findMemberByIdChat(memberNo);
 		return member.getMemberName();
+	}
+
+	public Optional<Member> findMemberByMemberNo(String memberNo) {
+		return memrepository.findMemberByMemberNo(Integer.valueOf(memberNo));
 	}
 }
