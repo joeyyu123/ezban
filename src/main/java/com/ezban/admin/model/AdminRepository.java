@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
 public interface AdminRepository extends JpaRepository<Admin, Integer> {
     Optional<Admin> findByAdminAccount(String adminAccount);  
     Optional<Admin> findByAdminName(String adminName);

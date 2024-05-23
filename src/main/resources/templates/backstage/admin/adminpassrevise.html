@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>修改密碼</title>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container">
+		<h2>修改密碼</h2>
+		<form id="passwordForm" method="post">
+			<div class="form-group">
+				<label for="username">帳號：</label> <input type="text"
+					class="form-control" id="username" required>
+			</div>
+			<div class="form-group">
+				<label for="currentPassword">當前密碼：</label> <input type="password"
+					class="form-control" id="currentPassword" required>
+			</div>
+			<div class="form-group">
+				<label for="newPassword">新密碼：</label> <input type="password"
+					class="form-control" id="newPassword" required>
+			</div>
+			<div class="form-group">
+				<label for="confirmPassword">確認新密碼：</label> <input type="password"
+					class="form-control" id="confirmPassword" required>
+			</div>
+			<button type="submit" class="btn btn-primary">提交修改</button>
+			<div id="message" class="form-group"></div>
+		</form>
+	</div>
+
+	<script>
+document.getElementById('passwordForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    const currentPassword = document.getElementById('currentPassword').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const messageElement = document.getElementById('message');
+
+    if (newPassword !== confirmPassword) {
+        messageElement.textContent = '密碼不一致';
+        messageElement.style.color = 'red';
+    } else {
+        
+        fetch('http://localhost:8080/api/admin/adminpassrevise', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                account: username,
+                oldPassword: currentPassword,
+                newPassword: newPassword
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                messageElement.textContent = '密碼更新成功。';
+                messageElement.style.color = 'green';
+                
+                setTimeout(function() {
+                    window.location.href = '/adminlogin'; //成功後跳轉的頁面
+                }, 1000); // 1秒後跳轉
+            } else {
+                messageElement.textContent = data.message || '更新密碼失敗';
+                messageElement.style.color = 'red';
+            }
+        })
+        .catch(error => {
+        	console.log(error);
+        	messageElement.textContent = error.message || '請求發生錯誤';
+            messageElement.style.color = 'red';
+        });
+    }
+});
+</script>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
