@@ -78,18 +78,18 @@
                                         <div class="form-group">
                                             <label for="card-number">Card Number <span class="required">*</span></label>
                                             <input id="card-number" class="form-control" type="tel"
-                                                   placeholder="•••• •••• •••• ••••" name="card_number">
+                                                   placeholder="•••• •••• •••• ••••" name="card_number" required>
                                         </div>
                                         <div class="form-group half-width padding-right">
                                             <label for="card-expiry">Expiry (MM/YY) <span
                                                     class="required">*</span></label>
                                             <input id="card-expiry" class="form-control" type="tel"
-                                                   placeholder="MM / YY" name="card_expiry">
+                                                   placeholder="MM / YY" name="card_expiry" required>
                                         </div>
                                         <div class="form-group half-width padding-left">
                                             <label for="card-cvc">Card Code <span class="required">*</span></label>
                                             <input id="card-cvc" class="form-control" type="tel" maxlength="4"
-                                                   placeholder="CVC" name="card_cvc">
+                                                   placeholder="CVC" name="card_cvc" required>
                                         </div>
                                         <button type="submit" class="btn btn-main mt-20">送出訂單</button>
                                     </div>
@@ -163,7 +163,6 @@
 </div>
 <div th:replace="frontstage/index2 :: footer"></div>
 
-<script src="https://demeter.5fpro.com/tw/zipcode-selector.js"></script>
 <script th:inline="javascript">
 
     let initialTotal = 0;
@@ -442,10 +441,13 @@
     function collectItems() {
         var items = [];
         document.querySelectorAll('.order_detail li').forEach(item => {
+            let productQty = parseInt(item.querySelector('.quantity').innerText.replace('數量: ', ''), 10);
+            let unitPrice = parseInt(item.querySelector('.price').innerText.replace('單價: NT$', ''), 10);
+            let totalPrice = unitPrice * productQty;
             items.push({
                 productNo: item.querySelector('input#product_no').value,
-                productQty: parseInt(item.querySelector('.quantity').innerText.replace('數量: ', ''), 10),
-                productPrice: parseInt(item.querySelector('.price').innerText.replace('單價: NT$', ''))
+                productQty: productQty,
+                productPrice: totalPrice
             });
         });
         return items;
