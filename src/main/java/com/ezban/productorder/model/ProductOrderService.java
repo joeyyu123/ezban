@@ -4,6 +4,7 @@ import com.ezban.birthdaycoupon.model.BirthdayCoupon;
 import com.ezban.birthdaycoupon.model.BirthdayCouponRepository;
 import com.ezban.birthdaycouponholder.model.BirthdayCouponHolder;
 import com.ezban.birthdaycouponholder.model.BirthdayCouponHolderRepository;
+import com.ezban.cart.model.CartService;
 import com.ezban.host.model.Host;
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberRepository;
@@ -48,6 +49,9 @@ public class ProductOrderService {
 
     @Autowired
     ProductServiceImpl productServiceImpl;
+
+    @Autowired
+    CartService cartService;
 
     // 新增訂單
     public void addProductOrder(@Valid AddProductOrderDTO addProductOrderDTO) {
@@ -106,6 +110,11 @@ public class ProductOrderService {
                 repository.save(productOrder);
                 // 更新會員剩餘點數
                 memberRepository.save(member);
+                // 刪除購物車中的商品
+                Integer memberNo = productOrder.getMember().getMemberNo();
+                for (AddProductOrderDetailDTO orderDetailDTO : hostProductOrderDetails) {
+                    cartService.deleteCartItem(memberNo, Integer.valueOf(orderDetailDTO.getProductNo()));
+                }
 
             } catch (NumberFormatException e) {
                 throw new IllegalArgumentException("無效的數值格式", e);
