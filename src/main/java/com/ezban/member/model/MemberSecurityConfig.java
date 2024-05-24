@@ -46,6 +46,7 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                 .requestMatchers()
                 .antMatchers("/",
                         "/login",
+                        "/logout",
                         "/loginPage",
                         "/register",
                         "/forgotPassword",
@@ -90,6 +91,7 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout()
+                .logoutUrl("/logout") // 确保登出URL正确
                 .logoutSuccessUrl("/")
                 .permitAll()
                 .and()
