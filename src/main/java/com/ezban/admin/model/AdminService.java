@@ -136,7 +136,7 @@ public class AdminService {
         return optional.orElse(null); // public T orElse(T other) : 如果值存在就回傳其值，否則回傳other的值
     }
 
-    public List<Admin> getAll() {
+    public List<Admin> getAllAdmins() {
         return adminRepository.findAll();
     }
     
@@ -154,4 +154,17 @@ public class AdminService {
             throw new RuntimeException("Admin with id " + id + " not found");
         }
     }
+    
+    @Transactional(rollbackFor = Exception.class)
+    public void enableAdmin(Integer id) {
+        Optional<Admin> optionalAdmin = adminRepository.findById(id);
+        if (optionalAdmin.isPresent()) {
+            Admin admin = optionalAdmin.get();
+            admin.setAdminStatus((byte) 1); // 啟用
+            adminRepository.save(admin);
+        } else {
+            throw new RuntimeException("Admin with id " + id + " not found");
+        }
+    }
+
 }
