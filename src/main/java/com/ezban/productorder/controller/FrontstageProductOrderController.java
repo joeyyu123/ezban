@@ -32,14 +32,14 @@ public class FrontstageProductOrderController {
         if (result.hasErrors()) {
             // 如果有驗證到錯誤，返回到結帳畫面
             model.addAttribute("validationErrors", result.getAllErrors());
-            return "frontstage/productorder/insert";
+            return "frontstage/product/checkout";
         }
         try {
             productOrderSvc.addProductOrder(addProductOrderDTO);
         } catch (Exception e) {
             // 如果有錯誤，返回到結帳畫面
             model.addAttribute("errorMessage", e.getMessage());
-            return "frontstage/productorder/insert";
+            return "frontstage/product/checkout";
         }
         // 成功新增訂單後重定向到訂單列表頁面
         List<ProductOrder> list = productOrderSvc.getAll();

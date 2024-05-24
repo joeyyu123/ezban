@@ -25,10 +25,7 @@ import javax.validation.constraints.Size;
 import com.ezban.admin.model.Admin;
 import com.ezban.eventcoupon.model.EventCoupon;
 import com.ezban.product.model.Product;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 @Entity
 @Table(name = "host")
@@ -75,10 +72,11 @@ public class Host {
     @OneToMany(mappedBy = "host", cascade = CascadeType.ALL)
     private Set<Product> products = new LinkedHashSet<>();
 
-    @JsonManagedReference
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "host")
     @OrderBy("eventCouponNo asc")
-    private Set<EventCoupon> eventCoupons = new HashSet<>();
+    @JsonIgnore
+    private Set<EventCoupon> eventCoupons = new HashSet<EventCoupon>();
+
 
     // Default constructor
     public Host() {}

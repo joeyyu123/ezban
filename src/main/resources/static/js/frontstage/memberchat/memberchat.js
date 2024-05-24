@@ -36,7 +36,7 @@ $(document).ready(function() {
                 initializeWebSocket(memberName, hostName, eventNo);
 
                 // 加載聊天歷史
-                loadChatHistory(memberName, hostName);
+                loadChatHistory(memberName, hostName,eventNo);
 
                 // 綁定事件前先解除綁定，確保只綁定一次
                 $('#messageInput').off('keypress').on('keypress', handleKeyPress);
@@ -51,9 +51,9 @@ $(document).ready(function() {
         });
     }
 
-    function loadChatHistory(memberName, hostName) {
+    function loadChatHistory(memberName, hostName, eventNo) {
         $.ajax({
-            url: '/frontstage/memberchat/history/' + memberName + '/' + hostName,
+            url: '/frontstage/memberchat/history/' + encodeURIComponent(memberName) + '/' + encodeURIComponent(hostName) + '/' + eventNo,
             method: 'GET',
             success: function(chatHistory) {
                 console.log('Loaded chat history:', chatHistory);
@@ -61,15 +61,22 @@ $(document).ready(function() {
                     showMessage(message, memberName);
                 });
             },
-            error: function(error) {
-                console.error('Error loading chat history:', error);
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error loading chat history:', {
+                    readyState: jqXHR.readyState,
+                    responseText: jqXHR.responseText,
+                    status: jqXHR.status,
+                    statusText: jqXHR.statusText,
+                    textStatus: textStatus,
+                    errorThrown: errorThrown
+                });
             }
         });
     }
 
     function initializeWebSocket(memberName, hostName, eventNo) {
-        if (connected && stompClient !== null) {
-            return; // 如果已經連接，則不再初始化
+        if (stompClient !== null && connected) {
+            stompClient.disconnect();  // 確保先斷開現有連接
         }
         var socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
@@ -77,11 +84,14 @@ $(document).ready(function() {
         stompClient.connect({}, function(frame) {
             connected = true;
             $('#status').text('已連線').css('color', 'green');
+            console.log('Connected: ' + frame);
             stompClient.subscribe(`/message/event/${eventNo}`, function(message) {
+                console.log('Received message: ' + message.body);
                 showMessage(JSON.parse(message.body), memberName);
             });
         }, function(error) {
             $('#status').text('未連線').css('color', 'red');
+            console.error('Error: ' + error);
             connected = false;
         });
     }
@@ -90,10 +100,12 @@ $(document).ready(function() {
         var chatInput = $('#messageInput').val();
         if (chatInput) {
             var messageObj = {
+                'type':'member',
                 'message': chatInput,
                 'sender': memberName,
                 'receiver': hostName,
-                'timestamp': new Date().toISOString()
+                'timestamp': new Date().toISOString(),
+                'eventNo': eventNo
             };
             stompClient.send(`/memberchat/sendMessage/${eventNo}`, {}, JSON.stringify(messageObj));
             $('#messageInput').val('');

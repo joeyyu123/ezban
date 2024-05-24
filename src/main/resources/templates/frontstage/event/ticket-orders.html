@@ -169,6 +169,19 @@
 
         <h1>票券訂單</h1>
 
+        <section class="single-product" style="padding: 0;">
+            <div class="container" style="width: 75%; padding: 0; margin: 0;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <ol class="breadcrumb" style="padding: 0;">
+                            <li><a th:href="@{/}">首頁</a></li>
+                            <li class=" eventOrder active">票券訂單</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <ul class="nav nav-tabs">
 
             <li class="nav-item">
@@ -252,7 +265,10 @@
                         </button>
                     </td>
                     <td>
-                        <button class="btn btn-danger cancel-order-btn" th:if="${order.ticketOrderStatus.value != 2}">
+                        <button class="btn btn-primary" th:if="${order.eventStatus.value == 3 }">
+                            評論
+                        </button>
+                        <button class="btn btn-danger cancel-order-btn" th:if="${order.ticketOrderStatus.value != 2 && order.eventStatus.value == 1}">
                             取消訂單
                         </button>
                     </td>

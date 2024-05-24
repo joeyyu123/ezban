@@ -174,6 +174,7 @@
     <div th:insert="backstage/index :: hamburger-btn"></div>
     <div class="page-content-wrapper">
         <input type="hidden" id="memberNo" th:value="${memberNo}">
+        <input type="hidden" id="memberName" th:value="${memberName}">
         <input type="hidden" id="hostName" th:value="${hostName}">
         <input type="hidden" id="eventNo" th:value="${eventNo}">
         <div id="contactList">
@@ -204,24 +205,33 @@
     console.log("hostName: ", hostName);
 
     $(document).ready(function () {
-        connect();
-        loadChatHistory();
+        var memberName = $('#memberName').val();
+        var hostName = $('#hostName').val();
+        var eventNo = $('#eventNo').val();
+        connect();  // 建立WebSocket连接
+        loadContacts();
+        // 確保只有在變數存在的情況下才加載聊天歷史
+        if (memberName && hostName && eventNo) {
+            loadChatHistory(memberName, hostName, eventNo);
+        }
     });
 
     function connect() {
         if (stompClient !== null && stompClient.connected) {
+            console.log('WebSocket already connected');
             return;
         }
         var socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
+        var eventNo = $('#eventNo').val();
         stompClient.connect({}, function (frame) {
             connected = true;
             console.log('已連接: ' + frame);
             stompClient.subscribe(`/message/event/${eventNo}`, function (messageOutput) {
                 var message = JSON.parse(messageOutput.body);
-                displayMessage(message);
+                console.log('Received message: ', message);
+                showMessage(message, hostName, true);
             });
-            loadContacts();
         }, function (error) {
             console.error('WebSocket 錯誤: ' + error);
             connected = false;
@@ -233,17 +243,20 @@
         fetch('/backstage/hostchat/lastMessages')
             .then(response => response.json())
             .then(lastMessages => {
+                console.log('Last messages:', lastMessages);
                 fetch('/backstage/hostchat/members')
                     .then(response => response.json())
                     .then(contacts => {
+                        console.log('Members:', contacts);
                         var contactList = document.getElementById('contactNames');
                         contactList.innerHTML = '';
                         contacts.forEach(contact => {
                             var lastMessage = lastMessages[contact];
-                            if (lastMessage && contact !== hostName) {
+                            if (lastMessage) {
                                 var contactElement = document.createElement('div');
                                 contactElement.classList.add('contact');
-                                contactElement.onclick = function (event) {
+                                contactElement.id = `contact_${contact}`;
+                                contactElement.onclick = function(event) {
                                     selectedUser = contact;
                                     document.getElementById('chatHistory').innerHTML = '';
                                     document.getElementById('inputArea').style.display = 'flex';
@@ -256,7 +269,27 @@
                                     <span class="name">${contact}</span>
                                     <p id="lastMessage_${contact}">${truncateMessage(lastMessage.message, 20)}</p>
                                 </div>
-                                <span class="time" id="lastTime_${contact}">${lastMessage.timestamp ? new Date(lastMessage.timestamp).toLocaleDateString() : ''}</span>
+                                <span class="time" id="lastTime_${contact}">${lastMessage.timestamp ? new Date(lastMessage.timestamp).toLocaleString() : ''}</span>
+                            `;
+                                contactList.appendChild(contactElement);
+                            } else {
+                                var contactElement = document.createElement('div');
+                                contactElement.classList.add('contact');
+                                contactElement.id = `contact_${contact}`;
+                                contactElement.onclick = function(event) {
+                                    selectedUser = contact;
+                                    document.getElementById('chatHistory').innerHTML = '';
+                                    document.getElementById('inputArea').style.display = 'flex';
+                                    fetchHistory(contact);
+                                    event.stopPropagation();
+                                };
+                                contactElement.innerHTML = `
+                                <img src="https://via.placeholder.com/40" alt="${contact}">
+                                <div class="contact-info">
+                                    <span class="name">${contact}</span>
+                                    <p id="lastMessage_${contact}">No messages</p>
+                                </div>
+                                <span class="time" id="lastTime_${contact}"></span>
                             `;
                                 contactList.appendChild(contactElement);
                             }
@@ -272,50 +305,94 @@
     }
 
     // 獲取指定用戶的聊天歷史
-    function fetchHistory(memberName) {
-        console.log(`Fetching history for ${memberName}`);
-        fetch(`/backstage/hostchat/history/${memberName}/${hostName}`)
-            .then(response => response.json())
-            .then(messages => {
-                console.log(`Received messages: ${JSON.stringify(messages)}`);
+    function fetchHistory(contact) {
+        var eventNo = $('#eventNo').val();
+        $.ajax({
+            url: `/backstage/hostchat/history/${contact}/${hostName}/${eventNo}`,
+            method: 'GET',
+            success: function(chatHistory) {
                 var messageList = document.getElementById('chatHistory');
                 messageList.innerHTML = '';
-                if (messages && messages.length > 0) {
-                    messages.forEach(message => {
-                        displayMessage(message);
-                    });
-                } else {
-                    var noMessagesElement = document.createElement('div');
-                    noMessagesElement.innerText = '沒有聊天記錄';
-                    messageList.appendChild(noMessagesElement);
-                }
-            })
-            .catch(error => {
+                chatHistory.forEach(message => {
+                    showMessage(message, hostName, false); // false 表示這不是新訊息，不更新左側列表
+                });
+            },
+            error: function(error) {
                 console.error('獲取歷史訊息錯誤:', error);
-            });
+            }
+        });
     }
 
     // 顯示訊息
-    function displayMessage(message) {
-        console.log(`Displaying message from ${message.sender} to ${message.receiver}: ${message.message}`);
+    function showMessage(message, sender, isNewMessage = true) {
+        console.log('Displaying message: ', message);
 
-        var messageList = document.getElementById('chatHistory');
-        var msgElement = document.createElement('div');
-        msgElement.classList.add('message');
-        msgElement.classList.add(message.sender === hostName ? 'mine' : 'theirs');
-        msgElement.innerText = message.message;
-        var timestampElement = document.createElement('span');
-        timestampElement.classList.add('timestamp');
-        timestampElement.innerText = new Date(message.timestamp).toLocaleString();
-        msgElement.appendChild(timestampElement);
-        messageList.appendChild(msgElement);
-        messageList.scrollTop = messageList.scrollHeight;
+        // 檢查是否選中對應的聯繫人
+        if (selectedUser !== message.sender && selectedUser !== message.receiver) {
+            // 不顯示訊息，但仍然更新聯繫人列表
+            if (isNewMessage) {
+                updateContactList(message);
+            }
+            return;
+        }
 
-        var lastMessageElement = document.getElementById(`lastMessage_${message.sender}`);
-        var lastTimeElement = document.getElementById(`lastTime_${message.sender}`);
-        if (lastMessageElement && lastTimeElement) {
-            lastMessageElement.innerText = truncateMessage(message.message, 20);
-            lastTimeElement.innerText = new Date(message.timestamp).toLocaleDateString();
+        var chatHistory = $('#chatHistory');
+        var messageElement = $('<div>').addClass('message').text(message.message);
+
+        if (message.sender === sender) {
+            messageElement.addClass('mine');
+        } else {
+            messageElement.addClass('theirs');
+        }
+
+        var timestampElement = $('<span>').addClass('timestamp').text(new Date(message.timestamp).toLocaleString());
+        messageElement.append(timestampElement);
+        chatHistory.append(messageElement);
+        chatHistory.scrollTop(chatHistory[0].scrollHeight); // 滾動到最新訊息
+
+        // 只有在新消息到来时，才更新左侧列表
+        if (isNewMessage) {
+            updateContactList(message);
+        }
+    }
+
+
+    function updateContactList(message) {
+        var contactList = document.getElementById('contactNames');
+        var contact = message.sender === hostName ? message.receiver : message.sender;
+
+        // 嘗試通過 ID 找到member元素
+        var contactElement = document.getElementById(`contact_${contact}`);
+
+        if (contactElement) {
+            // 更新最後的訊息和時間
+            document.getElementById(`lastMessage_${contact}`).innerText = truncateMessage(message.message, 20);
+            document.getElementById(`lastTime_${contact}`).innerText = new Date(message.timestamp).toLocaleDateString();
+
+            // 移動member到列表頂部
+            contactList.removeChild(contactElement);
+            contactList.insertBefore(contactElement, contactList.firstChild);
+        } else {
+            // 如果member不存在，創建一個新的元素
+            var newContactElement = document.createElement('div');
+            newContactElement.classList.add('contact');
+            newContactElement.id = `contact_${contact}`;
+            newContactElement.onclick = function(event) {
+                selectedUser = contact;
+                document.getElementById('chatHistory').innerHTML = '';
+                document.getElementById('inputArea').style.display = 'flex';
+                fetchHistory(contact);
+                event.stopPropagation();
+            };
+            newContactElement.innerHTML = `
+            <img src="https://via.placeholder.com/40" alt="${contact}">
+            <div class="contact-info">
+                <span class="name">${contact}</span>
+                <p id="lastMessage_${contact}">${truncateMessage(message.message, 20)}</p>
+            </div>
+            <span class="time" id="lastTime_${contact}">${new Date(message.timestamp).toLocaleDateString()}</span>
+        `;
+            contactList.insertBefore(newContactElement, contactList.firstChild);
         }
     }
 
@@ -328,8 +405,10 @@
                 'message': messageInput,
                 'sender': hostName,
                 'receiver': selectedUser,
-                'timestamp': new Date().toISOString()
+                'timestamp': new Date().toISOString(),
+                'eventNo': eventNo
             };
+            console.log('Sending message: ', messageObj);
             stompClient.send(`/hostchat/sendMessage/${eventNo}`, {}, JSON.stringify(messageObj));
             $('#messageInput').val('');
         }
@@ -356,23 +435,29 @@
         return message.length > maxLength ? message.substring(0, maxLength) + '...' : message;
     }
 
-    function loadChatHistory() {
-        console.log(`Loading chat history for member ${memberName} and host ${hostName}`);
+    function loadChatHistory(memberName, hostName, eventNo) {
         $.ajax({
-            url: `/backstage/hostchat/history/${memberName}/${hostName}`,
+            url: `/frontstage/memberchat/history/${encodeURIComponent(memberName)}/${encodeURIComponent(hostName)}/${eventNo}`,
             method: 'GET',
-            success: function (chatHistory) {
+            success: function(chatHistory) {
                 console.log('Loaded chat history:', chatHistory);
-                chatHistory.forEach(function (message) {
-                    console.log(`Displaying message: ${JSON.stringify(message)}`);
-                    displayMessage(message);
+                chatHistory.forEach(function(message) {
+                    showMessage(message, memberName,false);
                 });
             },
-            error: function (error) {
-                console.error('Error loading chat history:', error);
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error loading chat history:', {
+                    readyState: jqXHR.readyState,
+                    responseText: jqXHR.responseText,
+                    status: jqXHR.status,
+                    statusText: jqXHR.statusText,
+                    textStatus: textStatus,
+                    errorThrown: errorThrown
+                });
             }
         });
     }
+
 </script>
 </body>
 </html>

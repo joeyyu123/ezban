@@ -9,6 +9,7 @@ public class ChatMessage {
     private String receiver;
     private String message;
     private String timestamp;
+    private Integer eventNo;
 
     public ChatMessage() {
     }
@@ -60,6 +61,14 @@ public class ChatMessage {
         this.timestamp = timestamp;
     }
 
+    public Integer getEventNo() {
+        return eventNo;
+    }
+
+    public void setEventNo(Integer eventNo) {
+        this.eventNo = eventNo;
+    }
+
     @Override
     public String toString() {
         return "ChatMessage{" +
@@ -67,6 +76,7 @@ public class ChatMessage {
                 ", receiver='" + receiver + '\'' +
                 ", message='" + message + '\'' +
                 ", timestamp='" + timestamp + '\'' +
+                ", eventNo='" + eventNo + '\'' +
                 '}';
     }
 }

@@ -134,7 +134,8 @@
                                 <i class="fas fa-save"></i> 送出
                             </button>
                         </td>
-                        <td th:text="${productReport.admin?.adminName} + ' [' + ${productReport.admin?.adminNo} + ']'"></td>
+                        <td th:if="${productReport.admin != null}" th:text="${productReport.admin?.adminName} + ' [' + ${productReport.admin?.adminNo} + ']'"></td>
+                        <td th:if="${productReport.admin == null}">-</td>
                     </tr>
                 </th:block>
                 </tbody>

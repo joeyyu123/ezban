@@ -1,3 +1,10 @@
+.products .product-item:hover .product-thumb:before {
+  opacity: 1;
+}
+.products .product-item:hover .preview-meta {
+  opacity: 1;
+  transform: translateY(-20px);
+}
 .product-content {
     height: 60px;
 }

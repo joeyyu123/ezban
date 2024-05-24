@@ -2,7 +2,6 @@ package com.ezban.qrcodeticket.controller;
 
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberService;
-import com.ezban.qrcodeticket.model.JwtUtil;
 import com.ezban.qrcodeticket.model.QrcodeTicket;
 import com.ezban.qrcodeticket.model.QrcodeTicketService;
 import com.ezban.ticketorderdetail.model.TicketOrderDetail;
@@ -41,9 +40,6 @@ public class QrcodeTicketController {
 
     @Autowired
     TicketOrderDetailService ticketOrderDetailSvc;
-
-    @Autowired
-    private JwtUtil jwtUtil;
 
     @GetMapping("/select_page")
     public String selectPage() {
@@ -167,72 +163,45 @@ public class QrcodeTicketController {
 
     /*******************************產生QR Code*********************************************/
     @GetMapping("/generateQRCode")
-    @ResponseBody
-    public ResponseEntity<String> generateQRCode(@RequestParam Integer ticketOrderDetailNo, Principal principal) {
-        Integer memberNo = Integer.parseInt(principal.getName());
-        boolean isTicketBelongToMember = qrcodeTicketSvc.isTicketBelongToMember(ticketOrderDetailNo, memberNo);
-        if (!isTicketBelongToMember) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("您沒有權限產生此票券的QR Code");
-        }
-
-        String jwtToken = qrcodeTicketSvc.generateJwtToken(Long.valueOf(ticketOrderDetailNo));
-        String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        String fullUrl = baseUrl + "/backstage/qrcodeticket/coupon/redeem?token=" + jwtToken;
-
+    public ResponseEntity<String> generateQRCode(@RequestParam("ticketNo") Long ticketNo, Principal principal) {
         try {
-            BufferedImage qrCode = qrcodeTicketSvc.generateQRCodeLogo(fullUrl, 200, 200);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(qrCode, "PNG", baos);
-            byte[] imageBytes = baos.toByteArray();
-            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+            Integer hostNo = qrcodeTicketSvc.getHostNoByTicketNo(ticketNo);
 
-            System.out.println("Generated QR Code with URL: " + fullUrl);
+            // 確認當前登入的主辦方是否是這張票券所屬的主辦方
+            if (!principal.getName().equals(hostNo.toString())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("您沒有權限生成此票券的QR Code");
+            }
+
+
+
+            BufferedImage qrCode = qrcodeTicketSvc.generateQRCodeLogo(String.valueOf(ticketNo), 6000, 6000);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ImageIO.write(qrCode, "PNG", byteArrayOutputStream);
+            byte[] imageData = byteArrayOutputStream.toByteArray();
+            String base64Image = Base64.getEncoder().encodeToString(imageData);
+
             return ResponseEntity.ok(base64Image);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("生成QR Code失敗");
+            return ResponseEntity.internalServerError().body("產生QR Code錯誤: " + e.getMessage());
         }
     }
 
     /*******************************QR Code兌換*********************************************/
     @GetMapping("/coupon/redeem")
-    public ResponseEntity<String> redeemCoupon(@RequestParam String token, Principal principal) {
+    public ResponseEntity<String> redeemCoupon(@RequestParam Long ticketNo) {
         try {
-            // 驗證 token 並取得 ticketOrderDetailNo
-            Long ticketOrderDetailNo = jwtUtil.validateToken(token);
-            System.out.println("已驗證的 ticketOrderDetailNo: " + ticketOrderDetailNo);
-
-            // 根據 ticketOrderDetailNo 查詢 ticketNo
-            Long ticketNo = qrcodeTicketSvc.getTicketNoByOrderDetailNo(ticketOrderDetailNo.intValue()); // 將 Long 轉為 Integer
-            System.out.println("查詢到的 ticketNo: " + ticketNo);
-
-            Integer hostNo = qrcodeTicketSvc.getHostNoByTicketNo(ticketNo);
-            System.out.println("Querying hostNo for ticketNo " + ticketNo);
-            System.out.println("Found hostNo: " + hostNo);
-
-            if (hostNo == null) {
-                System.out.println("HostNo is null for ticketNo: " + ticketNo);
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("無法找到對應的主辦方");
-            }
-
-            System.out.println("Principal name: " + principal.getName());
-
-            if (!principal.getName().equals(hostNo.toString())) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("您無權限驗證此票券");
-            }
-
             boolean success = qrcodeTicketSvc.redeemTicket(ticketNo);
             if (success) {
-                return ResponseEntity.ok("編號:" + ticketNo + "的優惠券已成功兌換");
+                return ResponseEntity.ok("編號:" + ticketNo + "的QR Code已成功兌換");
             } else {
-                return ResponseEntity.badRequest().body("兌換優惠券失敗，優惠券可能已被使用或不存在");
+                return ResponseEntity.badRequest().body("兌換QR Code失敗，QR Code可能已被使用或不存在");
             }
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("發生錯誤:" + e.getMessage());
         }
     }
-
 
     @ModelAttribute("memberListData")
     protected List<Member> referenceListData() {
