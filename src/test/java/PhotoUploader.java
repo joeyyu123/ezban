@@ -11,9 +11,9 @@ public class PhotoUploader {
     public static void main(String[] args) throws IOException {
         String url = "jdbc:mysql://localhost:3306/ezban";
         String user = "root";
-        String password = "1qaz2wsx";
+        String password = "a123456";
 
-        String filePath = "";
+        String filePath = "C:/Users/TMP14/Downloads/event-photo";
 
 
         File folder = ResourceUtils.getFile(filePath);

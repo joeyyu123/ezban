@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品管理員檢視和處理檢舉</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            text-align: center;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+            text-align: center;
+        }
+        .action-button {
+            margin-right: 10px;
+        }
+        .comment-item.inappropriate {
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <h1>活動管理員檢視和處理檢舉</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>檢舉編號</th>
+                <th>評論編號</th>
+                <th>評論內容</th>
+                <th>檢舉人會員編號</th>
+                <th>檢舉原因</th>
+                <th>檢舉日期</th>
+                <th>檢舉狀態</th>
+                <th>是否通過檢舉</th>
+            </tr>
+        </thead>
+        <tbody id="reports-display">
+            <!-- 檢舉將會顯示在這裡 -->
+        </tbody>
+    </table>
+
+    <script>
+        // 加載檢舉數據並顯示在表格中
+        async function loadReports() {
+            const adminId = sessionStorage.getItem('adminId');
+            if (!adminId) {
+                alert('獲取管理員信息失敗，請重新登錄');
+                window.location.href = '/adminlogin';
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/event/comment/report');
+                const reports = await response.json();
+                console.log("檢舉數據:", reports);
+
+                // 按報告狀態排序
+                reports.sort((a, b) => a.reportStatus - b.reportStatus);
+
+                const reportsDisplay = document.getElementById('reports-display');
+                reportsDisplay.innerHTML = '';
+
+                reports.forEach(report => {
+                    const reportClass = report.reportStatus !== 0 ? 'inappropriate' : '';
+                    const reportRow = document.createElement('tr');
+                    reportRow.className = `comment-item ${reportClass}`;
+                    reportRow.dataset.reportId = report.eventCommentReportNo;
+                    reportRow.innerHTML = `
+                        <td>${report.eventCommentReportNo}</td>
+                        <td>${report.eventCommentNo}</td>
+                        <td>${report.eventCommentContent}</td>
+                        <td>${report.memberNo}</td>
+                        <td>${report.reportReason}</td>
+                        <td>${report.formattedReportDate}</td>
+                        <td>${report.reportStatus}</td>
+                        <td>
+                            <button class="action-button" onclick="confirmHandleReport(${report.eventCommentReportNo}, true, ${adminId})">正常發言</button>
+                            <button class="action-button" onclick="confirmHandleReport(${report.eventCommentReportNo}, false, ${adminId})">封鎖評論</button>
+                        </td>
+                    `;
+                    reportsDisplay.appendChild(reportRow);
+                });
+            } catch (error) {
+                console.error('加載檢舉出錯:', error);
+            }
+        }
+
+        // 確認處理檢舉
+        function confirmHandleReport(reportId, approve, adminId) {
+            const action = approve ? '正常發言' : '封鎖評論';
+            if (confirm(`確定要將此評論設置為"${action}"嗎？`)) {
+                handleReport(reportId, approve, adminId);
+            }
+        }
+
+        // 處理檢舉
+        async function handleReport(reportId, approve, adminId) {
+            const data = {
+                reportStatus: approve ? 1 : 2,
+                adminNo: adminId
+            };
+
+            console.log("處理的檢舉數據:", data);
+
+            try {
+                const response = await fetch(`/api/event/comment/report/${reportId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                alert(`檢舉已${approve ? '拒絕' : '同意'}！`);
+                loadReports();
+            } catch (error) {
+                console.error('處理檢舉出錯:', error);
+                alert('處理檢舉失敗');
+            }
+        }
+
+        // 當文檔載入完畢後，開始加載檢舉數據
+        document.addEventListener('DOMContentLoaded', () => {
+            loadReports();
+        });
+    </script>
+</body>
+</html>

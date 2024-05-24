@@ -10,6 +10,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -25,7 +28,7 @@ import java.security.Principal;
 public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserDetailsService memberUserDetailsService;
+    private MemberUserDetailsService memberUserDetailsService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -33,8 +36,8 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-            .userDetailsService(memberUserDetailsService)
-            .passwordEncoder(passwordEncoder);
+                .userDetailsService(memberUserDetailsService)
+                .passwordEncoder(memberPasswordEncoder());
     }
 
     @Override
@@ -94,6 +97,12 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable();
     }
 
+    @Bean
+    public PasswordEncoder memberPasswordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
+
+//        return new BCryptPasswordEncoder(); // 加密要這行
+    }
     @Bean
     public AuthenticationSuccessHandler memberAuthenticationSuccessHandler() {
         return (request, response, authentication) -> {

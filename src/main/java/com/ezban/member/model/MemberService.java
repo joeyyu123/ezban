@@ -1,6 +1,8 @@
 package com.ezban.member.model;
 
+import com.ezban.host.model.Host;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -63,8 +65,12 @@ public class MemberService {
         return memberRepository.findById(memberNo).orElseThrow(() -> new RuntimeException("Member not found"));
     }
 
-    public String getMemberNameByMemberNoChat(Integer memberNo) {
-        Member member = findMemberByIdChat(memberNo);
-        return member.getMemberName();
-    }
+	public String getMemberNameByMemberNoChat(Integer memberNo) {
+		Member member = findMemberByIdChat(memberNo);
+		return member.getMemberName();
+	}
+
+	public Optional<Member> findMemberByMemberNo(String memberNo) {
+		return memberRepository.findMemberByMemberNo(Integer.valueOf(memberNo));
+	}
 }

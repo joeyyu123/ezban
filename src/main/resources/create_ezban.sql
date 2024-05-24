@@ -41,11 +41,12 @@ create table admin
     admin_no      int auto_increment
         primary key,
     admin_account varchar(20) not null,
-    admin_pwd     varchar(20) not null,
+    admin_pwd     varchar(60) not null,
     admin_name    varchar(50) null,
     admin_mail    varchar(50) null,
     admin_phone   varchar(15) null,
     admin_status  tinyint     null,
+    admin_login   DATETIME    NULL,
     constraint admin_uk_1
         unique (admin_account),
     constraint admin_uk_2
@@ -1664,7 +1665,8 @@ VALUES ('sarahchang456@gmail.com', 'a12345', '張雨琪', '2000-01-01', 1, 100, 
        ('jennywu111@gmail.com', 'g102938', '吳雅琴', '2001-07-01', 1, 100, '0903210987', '宜蘭縣宜蘭市舊城路一段80號','吳雅琴','0903210987','宜蘭縣宜蘭市舊城路一段80號', 1),
        ('christsai@gmail.com', 'h11111111', '蔡宗翰', '2002-08-01', 0, 100, '0965432109', '新竹縣竹北市中華路100號','蔡宗翰','0965432109','新竹縣竹北市中華路100號', 1),
        ('amyhsu222@gmail.com', 'i11112222', '許心如', '2001-09-01', 1, 100, '0921098765', '苗栗縣苗栗市中正路二段50號','許心如','0921098765','苗栗縣苗栗市中正路二段50號', 1),
-       ('jennycheng111@gmail.com', 'k12341234', '鄭子婷', '2002-10-01', 0, 100, '0943210987', '嘉義縣嘉義市民生北路三段150號','鄭子婷','0943210987', '嘉義縣嘉義市民生北路三段150號', 1);
+       ('jennycheng111@gmail.com', 'k12341234', '鄭子婷', '2002-10-01', 0, 100, '0943210987', '嘉義縣嘉義市民生北路三段150號','鄭子婷','0943210987', '嘉義縣嘉義市民生北路三段150號', 1),
+       ('ezbantest+11@gmail.com', 'ezbantest', '王大名', '2002-10-01', 0, 100, '0900000000', '嘉義縣嘉義市民生北路三段150號','鄭子婷','0943210987', '嘉義縣嘉義市民生北路三段150號', 1);
 
 create table birthday_coupon_holder
 (
@@ -2134,16 +2136,16 @@ create table product_report
 );
 
 insert into product_report (product_no, member_no, admin_no, report_reason, report_date, report_status)
-values (1,  1, null, '商品描述中含有不當字眼' , 	 now(), 0),
+values (1,  1, 2, '商品描述中含有不當字眼' , 	 now(), 0),
        (10, 6, 2, '價格太貴' ,          	     now(), 1),
        (5,  2, 2, '商品名稱用字不當' ,     	 now(), 2),
        (7,  3, 2, '不實用' ,             	 now(), 1),
-       (5,  3, null, '檢舉是不需要理由的' , 		 now(), 0),
-       (18, 2, null, '商品描述不清楚' ,     		 now(), 0),
+       (5,  3, 2, '檢舉是不需要理由的' , 		 now(), 0),
+       (18, 2, 2, '商品描述不清楚' ,     		 now(), 0),
        (11, 4, 2, '商品照片太模糊' ,        	 now(), 2),
        (15, 5, 2, '商品數量太少根本搶不到' ,  	 now(), 1),
-       (10, 8, null, '商品照片放太少,不夠我參考' ,  now(), 0),
-       (5,  7, null, '價格太便宜懷疑材質有問題' ,   now(), 0);
+       (10, 8, 2, '商品照片放太少,不夠我參考' ,  now(), 0),
+       (5,  7, 2, '價格太便宜懷疑材質有問題' ,   now(), 0);
 
 
 create table product_order

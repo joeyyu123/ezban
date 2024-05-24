@@ -176,7 +176,8 @@
                                     <th>支付金額</th>
                                     <th>訂單狀態</th>
                                     <th>查看明細</th>
-                                    <th>訂單取消</th>
+                                    <th>取消訂單</th>
+                                    <th>評星&評論</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -216,6 +217,11 @@
                                                     th:id="productProcessStatus+${productOrder.productOrderNo}"
                                                     th:onclick="cancelOrderButton([[${productOrder.productOrderNo}]])">
                                                 取消訂單
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button type="button" style="margin-top: 10px">
+                                                前往
                                             </button>
                                         </td>
                                     </tr>

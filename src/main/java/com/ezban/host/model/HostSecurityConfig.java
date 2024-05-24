@@ -24,17 +24,17 @@ public class HostSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService hostUserDetailsService;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-// 加密       return new BCryptPasswordEncoder();
-
-    	return NoOpPasswordEncoder.getInstance();
+    public PasswordEncoder hostPasswordEncoder() {
+        // 加密
+        // return new BCryptPasswordEncoder();
+        return NoOpPasswordEncoder.getInstance();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-            .userDetailsService(hostUserDetailsService); //增加加密;記得拿掉
-   //這是加密邏輯   .passwordEncoder(passwordEncoder());
+            .userDetailsService(hostUserDetailsService) // 增加加密
+            .passwordEncoder(hostPasswordEncoder());
     }
 
     @Override
@@ -74,10 +74,8 @@ public class HostSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationFailureHandler hostAuthenticationFailureHandler() {
         SimpleUrlAuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();
-        failureHandler.setDefaultFailureUrl("/hostlogin");  // Updated to remove the .html suffix
+        failureHandler.setDefaultFailureUrl("/hostlogin?error=true");
         failureHandler.setUseForward(false);
         return failureHandler;
     }
-
-
 }
