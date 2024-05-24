@@ -3,6 +3,7 @@ package com.ezban.member.model;
 import java.util.List;
 import java.util.Optional;
 
+import com.ezban.host.model.Host;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,6 +21,8 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 	Optional<Member> findByMemberPhone(String memberPhone);
 
 	List<Member> findByMemberStatus(Byte memberStatus);
+
+	Optional<Member> findMemberByMemberNo(Integer memberNo);
 
 	@Modifying
 	@Transactional

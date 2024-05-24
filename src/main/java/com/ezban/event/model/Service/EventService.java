@@ -302,4 +302,10 @@ public class EventService implements ServiceDemo<Event> {
 
         return !ticketType.isEmpty() && registrationForm != null;
     }
+
+    //host聊天室用的
+    public List<Integer> findEventNoByHostNo(Integer hostNo) {
+        return eventRepository.findEventNoByHostNo(hostNo);
+    }
+
 }
