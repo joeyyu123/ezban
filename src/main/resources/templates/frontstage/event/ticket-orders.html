@@ -252,7 +252,10 @@
                         </button>
                     </td>
                     <td>
-                        <button class="btn btn-danger cancel-order-btn" th:if="${order.ticketOrderStatus.value != 2}">
+                        <button class="btn btn-primary" th:if="${order.eventStatus.value == 3 }">
+                            評論
+                        </button>
+                        <button class="btn btn-danger cancel-order-btn" th:if="${order.ticketOrderStatus.value != 2 && order.eventStatus.value == 1}">
                             取消訂單
                         </button>
                     </td>
