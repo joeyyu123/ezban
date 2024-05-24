@@ -1,29 +1,26 @@
 package com.ezban.productcomment.model;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import com.ezban.member.model.Member;
 import com.ezban.product.model.Product;
+import com.ezban.productcommentreport.model.ProductCommentReport;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "product_comment")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class ProductComment {
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_comment_no", nullable = false)
     private Integer productCommentNo;
@@ -31,30 +28,55 @@ public class ProductComment {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_no", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonBackReference
     private Product product;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonBackReference
     private Member member;
+
+    @Column(name = "product_comment_content")
+    private String productCommentContent;
 
     @Min(1)
     @Column(name = "product_rate")
     private Integer productRate;
 
-    @Column(name = "product_comment_content")
-    private String productCommentContent;
-
-    @NotNull
     @Column(name = "product_comment_date", nullable = false)
     private LocalDateTime productCommentDate;
 
     @Column(name = "product_comment_status")
-    private Integer productCommentStatus;
+    private Byte productCommentStatus;
 
-    // Getters and Setters
+    @OneToMany(mappedBy = "productComment")
+    @JsonManagedReference
+    private Set<ProductCommentReport> productCommentReports = new LinkedHashSet<>();
+
+    public Set<ProductCommentReport> getProductCommentReports() {
+        return productCommentReports;
+    }
+
+    public void setProductCommentReports(Set<ProductCommentReport> productCommentReports) {
+        this.productCommentReports = productCommentReports;
+    }
+
+    public ProductComment() {
+        // 默认构造方法
+    }
+
+    public ProductComment(Integer productCommentNo, @NotNull Product product, @NotNull Member member,
+                          String productCommentContent, Integer productRate, LocalDateTime productCommentDate, Byte productCommentStatus) {
+        this.productCommentNo = productCommentNo;
+        this.product = product;
+        this.member = member;
+        this.productCommentContent = productCommentContent;
+        this.productRate = productRate;
+        this.productCommentDate = productCommentDate;
+        this.productCommentStatus = productCommentStatus;
+    }
+
     public Integer getProductCommentNo() {
         return productCommentNo;
     }
@@ -79,20 +101,20 @@ public class ProductComment {
         this.member = member;
     }
 
-    public Integer getProductRate() {
-        return productRate;
-    }
-
-    public void setProductRate(Integer productRate) {
-        this.productRate = productRate;
-    }
-
     public String getProductCommentContent() {
         return productCommentContent;
     }
 
     public void setProductCommentContent(String productCommentContent) {
         this.productCommentContent = productCommentContent;
+    }
+
+    public Integer getProductRate() {
+        return productRate;
+    }
+
+    public void setProductRate(Integer productRate) {
+        this.productRate = productRate;
     }
 
     public LocalDateTime getProductCommentDate() {
@@ -103,11 +125,18 @@ public class ProductComment {
         this.productCommentDate = productCommentDate;
     }
 
-    public Integer getProductCommentStatus() {
+    public Byte getProductCommentStatus() {
         return productCommentStatus;
     }
 
-    public void setProductCommentStatus(Integer productCommentStatus) {
+    public void setProductCommentStatus(Byte productCommentStatus) {
         this.productCommentStatus = productCommentStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductComment [productCommentNo=" + productCommentNo + ", product=" + product + ", member=" + member
+                + ", productCommentContent=" + productCommentContent + ", productRate=" + productRate
+                + ", productCommentDate=" + productCommentDate + ", productCommentStatus=" + productCommentStatus + "]";
     }
 }

@@ -43,6 +43,7 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                 .requestMatchers()
                 .antMatchers("/",
                         "/login",
+                        "/logout",
                         "/loginPage",
                         "/register",
                         "/forgotPassword",
@@ -52,6 +53,7 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/frontstage/memberchat/**",
                         "/frontstage/qrcodeticket/**",
                         "/cart/**",
+                        "/product/**",
                         "/productorder/**",
                         "/productreport/**",
                         "/saveproduct/**")
@@ -64,7 +66,8 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/forgotPassword",
                         "/auth/status",
                         "/cart/items",
-                        "/").permitAll()
+                        "/",
+                        "/product/**").permitAll()
                 .antMatchers("/events/orders/**",
                         "/events/order/**",
                         "/events/*/tickets",
@@ -85,6 +88,7 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout()
+                .logoutUrl("/logout") // 确保登出URL正确
                 .logoutSuccessUrl("/")
                 .permitAll()
                 .and()

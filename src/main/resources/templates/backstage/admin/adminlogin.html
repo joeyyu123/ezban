@@ -47,7 +47,7 @@
     <div class="login-container">
         <h2 class="text-center">管理員登入</h2>
 
-        <form action="/admin/login" method="post">
+        <form id="login-form">
             <div class="form-group">
                 <label for="username">使用者名稱：</label>
                 <input type="text" id="username" name="username" class="form-control" placeholder="請輸入使用者名稱">
@@ -74,13 +74,36 @@
     </div>
 
     <script>
-        const params = new URLSearchParams(window.location.search);
-        const errorElement = document.querySelector("#error-message");
+        document.getElementById('login-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
-        if (params.has("error")) {
-            errorElement.style.display = "block";
-        } else {
-            errorElement.style.display = "none";
+            try {
+                const response = await fetch('/admin/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({ username, password })
+                });
+
+                if (response.redirected) {
+                    const adminId = response.url.split('?')[0].split('/').pop();
+                    sessionStorage.setItem('adminId', adminId);
+                    window.location.href = response.url;
+                } else {
+                    document.getElementById('error-message').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('登入失敗:', error);
+                alert('登入失敗');
+            }
+        });
+
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('error')) {
+            document.getElementById('error-message').style.display = 'block';
         }
     </script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

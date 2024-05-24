@@ -266,7 +266,7 @@ public class ProductOrderService {
                 productOrder.setProductOrderAllocationStatus(updateProductOrderDTO.getProductOrderAllocationStatus());
                 productOrder.setProductProcessStatus(updateProductOrderDTO.getProductProcessStatus());
 
-                // 如果付款狀態改為 1 (已退款)，系統會進行計算於一分鐘後自動將訂單狀態更改為已結案 (4)
+                // 如果付款狀態改為 1 (已退款)，系統會進行計算於30秒後自動將訂單狀態更改為已結案 (4)
                 if (updateProductOrderDTO.getProductPaymentStatus() == 1) {
                     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
                     Runnable task = () -> {
@@ -280,7 +280,7 @@ public class ProductOrderService {
                             }
                         }
                     };
-                    scheduler.schedule(task, 1, TimeUnit.MINUTES);
+                    scheduler.schedule(task, 30, TimeUnit.SECONDS);
                 }
 
                 // 如果ProductProcessStatus 狀態改為 4(已結案)，則設置訂單結案時間為當前系統時間
