@@ -41,6 +41,18 @@
             color: red;
             display: none;
         }
+
+        .host-login {
+            margin-top: 550px;
+            margin-right: 50px;
+            color: lightgray;
+            text-decoration: none; /* 可選：去掉下劃線 */
+            transition: color 0.3s ease; /* 添加過渡效果 */
+        }
+
+        .host-login:hover {
+            color: #1515d9; /* 懸停時的顏色 */
+        }
     </style>
 </head>
 <body>
@@ -72,6 +84,9 @@
             <a href="/adminregister">前往註冊</a>
         </p>
     </div>
+
+    <a href="hostlogin" class="host-login">企業登入</a>
+
 
     <script>
         document.getElementById('login-form').addEventListener('submit', async function(event) {
