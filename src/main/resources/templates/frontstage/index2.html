@@ -9,7 +9,7 @@
     <!-- Basic Page Needs
     ================================================== -->
     <meta charset="utf-8">
-    <title>ezban</title>
+    <title>ezban-活動報名平台</title>
     <!-- Mobile Specific Metas
     ================================================== -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -170,12 +170,9 @@
             <!-- Navbar Links -->
             <div id="navbar" class="navbar-collapse collapse text-center">
                 <ul class="nav navbar-nav">
-                    <li class="dropdown ">
-                        <a href="#" style="padding: 15px;">聯絡我們</a>
-                    </li>
-                    <li class="dropdown ">
-                        <a th:href="@{/qa}" style="padding: 15px;">常見問題</a>
-                    </li>
+<!--                    <li class="dropdown ">-->
+<!--                        <a href="#" style="padding: 15px;">聯絡我們</a>-->
+<!--                    </li>-->
                     <!-- Products -->
                     <li class="dropdown dropdown-slide">
                         <a th:href="@{/product/shopall}" role="button" style="padding: 15px;">周邊商品</a>
@@ -185,6 +182,11 @@
                     <li class="dropdown dropdown-slide">
                         <a th:href="@{/events}" role="button" style="padding: 15px;">所有活動</a>
                     </li><!-- / Events -->
+
+                    <!-- QA -->
+                    <li class="dropdown ">
+                        <a th:href="@{/qa}" style="padding: 15px;">常見問題</a>
+                    </li><!-- / QA -->
                 </ul><!-- / .nav .navbar-nav -->
 
             </div>
@@ -193,7 +195,7 @@
     </nav>
 </section>
 
-<div class="event_carousel autoplay" style="margin-top: 30px;">
+<div class="event_carousel autoplay" style="margin-top: 40px;">
     <div th:each="event : ${events}"><a th:href="@{'/events/' + ${event.eventNo}}"><img th:src="'data:image/jpeg;base64, '+${event.eventImg}" alt="event-img"></a></div>
 </div>
 
@@ -209,7 +211,7 @@
                 <div class="product-item">
                     <div class="product-thumb">
                         <img class="img-responsive" th:src="'data:image/jpeg;base64, '+${event.eventImg}"
-                             alt="event-img"/>
+                             alt="event-img" style="height: 100%; object-fit: cover;"/>
                         <div class="preview-meta">
                             <ul>
                                 <li>
@@ -278,12 +280,12 @@ Start Call To Action
             <div class="col-md-12">
                 <div class="social-media">
                     <li>
-                        <a href="index2.html"><img th:src="@{/images/ez_logo.png}" alt="logo"
+                        <a th:href="@{/}"><img th:src="@{/images/ez_logo.png}" alt="logo"
                                                    style="width: 44.48px; height: 40px;"></a>
                     </li>
                 </div>
                 <p class="copyright-text" style="margin-top: 50px;">
-                    Copyright &copy; <a target="_blank" href="http://www.mobanwang.com/">ez辦 All
+                    Copyright &copy; <a target="_blank" href="#">ez辦 All
                     Rights Reserved.</a></p>
             </div>
         </div>

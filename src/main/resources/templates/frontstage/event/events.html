@@ -117,6 +117,10 @@
             margin: 1.5%;
             float: left;
         }
+        #event-img {
+            height: 100%;
+            object-fit: cover;
+        }
     </style>
 </head>
 
@@ -177,7 +181,7 @@
                 <div class="event-item" th:each="event : ${events}">
                     <div class="product-item">
                         <div class="product-thumb">
-                            <img class="img-responsive" th:src="'data:image/jpeg;base64, '+${event.eventImg}"
+                            <img id="event-img" class="img-responsive" th:src="'data:image/jpeg;base64, '+${event.eventImg}"
                                  alt="event-img"/>
                             <div class="preview-meta">
                                 <ul>
