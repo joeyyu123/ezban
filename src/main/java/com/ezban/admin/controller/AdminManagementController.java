@@ -47,8 +47,13 @@ public class AdminManagementController {
         adminService.enableAdmin(adminNo);
         return "redirect:/adminsManagement/";
     }
-
-
+    
+    @GetMapping("/search")
+    public String searchAdmins(@RequestParam("searchAccount") String searchAccount, Model model) {
+        List<Admin> searchedAdmins = adminService.searchAdminsByAccount(searchAccount);
+        model.addAttribute("admins", searchedAdmins);
+        return "/backstage/adminmanage/admin";
+    }
 
 
 }

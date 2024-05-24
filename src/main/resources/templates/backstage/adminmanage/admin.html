@@ -6,6 +6,11 @@
 </head>
 <body>
     <h1>平台員工列表</h1>
+    <form th:action="@{/adminsManagement/search}" method="get">
+        <label for="searchInput">搜尋帳號：</label>
+        <input type="text" id="searchInput" name="searchAccount" />
+        <button type="submit">查詢</button>
+    </form>
     <table border="1">
         <thead>
             <tr>

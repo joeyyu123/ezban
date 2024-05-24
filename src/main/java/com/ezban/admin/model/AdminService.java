@@ -166,5 +166,10 @@ public class AdminService {
             throw new RuntimeException("Admin with id " + id + " not found");
         }
     }
+    
+    public List<Admin> searchAdminsByAccount(String searchAccount) {
+        return adminRepository.findByAdminAccountContaining(searchAccount);
+    }
+
 
 }
