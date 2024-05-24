@@ -16,7 +16,7 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping("/backstage/productreport")
+@RequestMapping("/admin/productreport")
 public class BackstageProductReportController {
 
     @Autowired
