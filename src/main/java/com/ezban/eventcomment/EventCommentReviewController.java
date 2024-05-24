@@ -14,7 +14,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/eventCommentsReview")
-public class EventCommentController {
+public class EventCommentReviewController {
 
 	@Autowired
     private EventCommentReviewService eventCommentService;
