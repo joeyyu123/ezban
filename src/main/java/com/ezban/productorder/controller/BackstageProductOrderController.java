@@ -33,7 +33,7 @@ public class BackstageProductOrderController {
     }
 
     // 員工管理訂單的查詢首頁路徑
-    @GetMapping("/backstage/productorder/selectPage")
+    @GetMapping("/admin/productorder/selectPage")
     public String SelectPage() {
         return "backstage/productorder/selectPage";
     }
@@ -47,14 +47,14 @@ public class BackstageProductOrderController {
 
 
     // 顯示所有訂單路徑
-    @GetMapping("/backstage/productorder/listAllProductOrder")
+    @GetMapping("/admin/productorder/listAllProductOrder")
     public String listAllProductOrder(Model model) {
         return "backstage/productorder/listAllProductOrder";
     }
 
 
     // 選擇單筆訂單路徑
-    @GetMapping("/backstage/productorder/listOneProductOrder")
+    @GetMapping("/admin/productorder/listOneProductOrder")
     public String listOneProductOrder(Model model) {
         return "backstage/productorder/listOneProductOrder";
     }
@@ -110,7 +110,7 @@ public class BackstageProductOrderController {
 
 
     // 員工更新單筆訂單
-    @PostMapping("/backstage/productorder/getOneForUpdate")
+    @PostMapping("/admin/productorder/getOneForUpdate")
     public String getOneForUpdate(@RequestParam("productOrderNo") String productOrderNo, ModelMap model) {
 
         ProductOrder productOrder = productOrderSvc.getOneProductOrder(Integer.valueOf(productOrderNo));
@@ -119,7 +119,7 @@ public class BackstageProductOrderController {
 
     }
 
-    @PostMapping("/backstage/productorder/update")
+    @PostMapping("/admin/productorder/update")
     public String update(@Valid UpdateProductOrderDTO updateProductOrderDTO, BindingResult result, ModelMap model, @RequestParam(required = false) Byte productPaymentStatus) throws IOException, MessagingException {
 
         if (result.hasErrors()) {

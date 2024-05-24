@@ -219,7 +219,7 @@
                         </td>
                         <td style="padding: 5px 5px 5px 15px">
                             <form method="post"
-                                  th:action="@{'/backstage/productorderdetail/adminOrderDetail/' + ${productOrder.productOrderNo}}"
+                                  th:action="@{'/admin/productorderdetail/adminOrderDetail/' + ${productOrder.productOrderNo}}"
                                   style="margin-bottom: 0px;">
                                 <button type="submit" class="btn btn-link p-0"><img src="/images/detail.png"
                                                                                     class="oval-image" alt="明細圖案">
@@ -229,7 +229,7 @@
                             </form>
                         </td>
                         <td style="text-align: center">
-                            <form method="post" th:action="@{/backstage/productorder/getOneForUpdate}"
+                            <form method="post" th:action="@{/admin/productorder/getOneForUpdate}"
                                   style="margin-bottom: 0;">
 
                                 <!-- 訂單狀態為"4"，不可編輯 -->
