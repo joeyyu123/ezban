@@ -46,7 +46,7 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .authorizeRequests()
                 .antMatchers("/api/**","/qaback/**","/adminlogin", "/adminregister", "/adminpasswordreset","/admin/login").permitAll()
-                .antMatchers("/adminmanage/**","/productorder/selectPage","/productreport","/productorder/listAllProductOrder","/productorder/listOneProductOrder/**","/productorder/update/**").hasRole("ADMIN") // 仅允许管理员访问管理界面
+                .antMatchers("/adminmanage/**","/admin/productorder/selectPage","/admin/productreport","/admin/productorder/listAllProductOrder","/admin/productorder/listOneProductOrder/**","/admin/productorder/update/**").hasRole("ADMIN") // 仅允许管理员访问管理界面
                 .and()
             .formLogin()
                 .loginPage("/adminlogin")
