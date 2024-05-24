@@ -139,4 +139,19 @@ public class AdminService {
     public List<Admin> getAll() {
         return adminRepository.findAll();
     }
+    
+    public Optional<Admin> getAdminById(Integer id) {
+        return adminRepository.findById(id);
+    }
+    
+    public void disableAdmin(Integer id) {
+        Optional<Admin> optionalAdmin = adminRepository.findById(id);
+        if (optionalAdmin.isPresent()) {
+            Admin admin = optionalAdmin.get();
+            admin.setAdminStatus((byte) 0);
+            adminRepository.save(admin);
+        } else {
+            throw new RuntimeException("Admin with id " + id + " not found");
+        }
+    }
 }
