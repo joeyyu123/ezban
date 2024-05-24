@@ -40,11 +40,11 @@ public class HostSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.requestMatchers()
-                .antMatchers("/backstage/**", "/qaback**", "/hostlogin","/hostlogout", "/hostregister", "/passwordreset", "/host/login","/backstage/hostchat/**","/backstage/eventcoupon/**","/backstage/qrcodeticket/**")
+                .antMatchers("/backstage/**", "/hostlogin","/hostlogout", "/hostregister", "/passwordreset", "/host/login","/backstage/hostchat/**","/backstage/eventcoupon/**","/backstage/qrcodeticket/**")
                 .and()
             .authorizeRequests()
                 .antMatchers("/hostlogin", "/hostregister", "/passwordreset","/hostlogout").permitAll()
-                .antMatchers("/backstage/**", "/qaback**", "/backstage/hostchat/**",
+                .antMatchers("/backstage/**", "/backstage/hostchat/**",
                              "/backstage/eventcoupon/**", "/backstage/qrcodeticket/**").hasRole("HOST")
                 .and()
             .formLogin()
