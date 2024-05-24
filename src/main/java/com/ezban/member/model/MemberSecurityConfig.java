@@ -52,6 +52,7 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/frontstage/memberchat/**",
                         "/frontstage/qrcodeticket/**",
                         "/cart/**",
+                        "/product/**",
                         "/productorder/**",
                         "/productreport/**",
                         "/saveproduct/**")
@@ -64,7 +65,8 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/forgotPassword",
                         "/auth/status",
                         "/cart/items",
-                        "/").permitAll()
+                        "/",
+                        "/product/**").permitAll()
                 .antMatchers("/events/orders/**",
                         "/events/order/**",
                         "/events/*/tickets",
