@@ -140,6 +140,10 @@
                                 <a href="/saveproduct/findByMember"><span><i
                                         class="fa-solid fa-bookmark"></i> 我的商品追蹤</span></a>
                             </li>
+                            <li style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
+                                <a href="/logout"><span><i
+                                        class="fa-solid fa-bookmark"></i> 登出</span></a>
+                            </li>
                         </ul>
                     </li>
 
