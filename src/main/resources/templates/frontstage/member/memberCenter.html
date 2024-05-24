@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -74,47 +74,47 @@
     </style>
 </head>
 <body>
-    <div id="app">
-        <h1>會員資料管理</h1>
-        <div id="member-info">
-            <h2>會員基本信息</h2>
-            <p>會員帳號(電子郵件): <span id="memberMail"></span></p>
-            <p>姓名: <span id="memberName"></span></p>
-            <p>地址: <span id="address"></span></p>
-            <p>電話號碼: <span id="memberPhone"></span></p>
-            <p>生日: <span id="birthday"></span></p>
-            <p>性別: <span id="gender"></span></p>
-            <p>常用收件人姓名: <span id="commonRecipient"></span></p>
-            <p>常用收件人電話號碼: <span id="commonRecipientPhone"></span></p>
-            <p>常用收件人地址: <span id="commonRecipientAddress"></span></p>
-        </div>
-        <div id="edit-form">
-            <h2>編輯會員資料</h2>
-            <form id="memberForm">
-                <label for="memberMailInput">會員帳號(電子郵件):</label>
-                <input type="email" id="memberMailInput" name="memberMail" readonly><br>
-                <label for="memberNameInput">姓名:</label>
-                <input type="text" id="memberNameInput" name="memberName"><br>
-                <label for="addressInput">地址:</label>
-                <input type="text" id="addressInput" name="address"><br>
-                <label for="memberPhoneInput">電話號碼:</label>
-                <input type="text" id="memberPhoneInput" name="memberPhone"><br>
-                <label for="birthdayInput">生日:</label>
-                <input type="date" id="birthdayInput" name="birthday" readonly><br>
-                <label for="genderInput">性別:</label>
-                <input type="text" id="genderInput" name="gender" readonly><br>
-                <label for="commonRecipientInput">常用收件人姓名:</label>
-                <input type="text" id="commonRecipientInput" name="commonRecipient"><br>
-                <label for="commonRecipientPhoneInput">常用收件人電話號碼:</label>
-                <input type="text" id="commonRecipientPhoneInput" name="commonRecipientPhone"><br>
-                <label for="commonRecipientAddressInput">常用收件人地址:</label>
-                <input type="text" id="commonRecipientAddressInput" name="commonRecipientAddress"><br>
-                <button type="submit">更新資料</button>
-            </form>
-            <div id="message" class="message"></div>
-        </div>
+<div id="app">
+    <h1>會員資料管理</h1>
+    <div id="member-info">
+        <h2>會員基本信息</h2>
+        <p>會員帳號(電子郵件): <span id="memberMail"></span></p>
+        <p>姓名: <span id="memberName"></span></p>
+        <p>地址: <span id="address"></span></p>
+        <p>電話號碼: <span id="memberPhone"></span></p>
+        <p>生日: <span id="birthday"></span></p>
+        <p>性別: <span id="gender"></span></p>
+        <p>常用收件人姓名: <span id="commonRecipient"></span></p>
+        <p>常用收件人電話號碼: <span id="commonRecipientPhone"></span></p>
+        <p>常用收件人地址: <span id="commonRecipientAddress"></span></p>
     </div>
-    <script>
+    <div id="edit-form">
+        <h2>編輯會員資料</h2>
+        <form id="memberForm">
+            <label for="memberMailInput">會員帳號(電子郵件):</label>
+            <input type="email" id="memberMailInput" name="memberMail" readonly><br>
+            <label for="memberNameInput">姓名:</label>
+            <input type="text" id="memberNameInput" name="memberName"><br>
+            <label for="addressInput">地址:</label>
+            <input type="text" id="addressInput" name="address"><br>
+            <label for="memberPhoneInput">電話號碼:</label>
+            <input type="text" id="memberPhoneInput" name="memberPhone"><br>
+            <label for="birthdayInput">生日:</label>
+            <input type="date" id="birthdayInput" name="birthday" readonly><br>
+            <label for="genderInput">性別:</label>
+            <input type="text" id="genderInput" name="gender" readonly><br>
+            <label for="commonRecipientInput">常用收件人姓名:</label>
+            <input type="text" id="commonRecipientInput" name="commonRecipient"><br>
+            <label for="commonRecipientPhoneInput">常用收件人電話號碼:</label>
+            <input type="text" id="commonRecipientPhoneInput" name="commonRecipientPhone"><br>
+            <label for="commonRecipientAddressInput">常用收件人地址:</label>
+            <input type="text" id="commonRecipientAddressInput" name="commonRecipientAddress"><br>
+            <button type="submit">更新資料</button>
+        </form>
+        <div id="message" class="message"></div>
+    </div>
+</div>
+<script>
     document.addEventListener('DOMContentLoaded', function () {
         const memberForm = document.getElementById('memberForm');
         const messageDiv = document.getElementById('message');
@@ -158,7 +158,7 @@
                 commonRecipientPhone: formData.get('commonRecipientPhone'),
                 commonRecipientAddress: formData.get('commonRecipientAddress')
             };
-
+            
             fetch('/members/update/' + document.getElementById('memberMailInput').value, {
                 method: 'PUT',
                 headers: {
@@ -188,6 +188,6 @@
 
         loadMemberInfo();
     });
-    </script>
+</script>
 </body>
 </html>
