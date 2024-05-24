@@ -48,12 +48,12 @@
         display: inline-block;
         width: 8px;
         height: 8px;
-        margin-right: 5px; /* 设置小点与文字之间的间距 */
+        margin-right: 5px;
         border-radius: 50%;
         background-color: lightgray;
     }
 
-    /* 蓝色小點樣式 */
+    /* 藍色小點樣式 */
     .dot-blue::before {
         content: '';
         display: inline-block;
@@ -89,6 +89,12 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+
+                                    <!-- 判斷 saveProductListData 是否為空，若空則顯示 "收藏夾是空的，趕緊去收藏吧 !" -->
+                                    <tr th:if="${#lists.isEmpty(saveProductListData)}">
+                                        <td colspan="6px" style="text-align: center; font-size: 20px; padding-top: 15px;">收藏夾是空的，趕緊去收藏吧 !</td>
+                                    </tr>
+
                                     <th:block th:each="saveProduct : ${saveProductListData}">
                                         <tr>
                                             <td>

@@ -2136,16 +2136,16 @@ create table product_report
 );
 
 insert into product_report (product_no, member_no, admin_no, report_reason, report_date, report_status)
-values (1,  1, 2, '商品描述中含有不當字眼' , 	 now(), 0),
+values (1,  1, null, '商品描述中含有不當字眼' , 	 now(), 0),
        (10, 6, 2, '價格太貴' ,          	     now(), 1),
        (5,  2, 2, '商品名稱用字不當' ,     	 now(), 2),
        (7,  3, 2, '不實用' ,             	 now(), 1),
-       (5,  3, 2, '檢舉是不需要理由的' , 		 now(), 0),
-       (18, 2, 2, '商品描述不清楚' ,     		 now(), 0),
+       (5,  3, null, '檢舉是不需要理由的' , 		 now(), 0),
+       (18, 2, null, '商品描述不清楚' ,     		 now(), 0),
        (11, 4, 2, '商品照片太模糊' ,        	 now(), 2),
        (15, 5, 2, '商品數量太少根本搶不到' ,  	 now(), 1),
-       (10, 8, 2, '商品照片放太少,不夠我參考' ,  now(), 0),
-       (5,  7, 2, '價格太便宜懷疑材質有問題' ,   now(), 0);
+       (10, 8, null, '商品照片放太少,不夠我參考' ,  now(), 0),
+       (5,  7, null, '價格太便宜懷疑材質有問題' ,   now(), 0);
 
 
 create table product_order

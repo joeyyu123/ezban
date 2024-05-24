@@ -181,6 +181,12 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+
+                                <!-- 判斷 productOrderListData 是否為空，若空則顯示 "訂單是空的，趕緊去購買吧 !" -->
+                                <tr th:if="${#lists.isEmpty(productOrderListData)}">
+                                    <td colspan="8px" style="text-align: center; font-size: 20px; padding-top: 15px;">訂單是空的，趕緊去購買吧 !</td>
+                                </tr>
+
                                 <th:block th:each="productOrder : ${productOrderListData}">
                                     <tr>
                                         <td style="vertical-align: middle"
