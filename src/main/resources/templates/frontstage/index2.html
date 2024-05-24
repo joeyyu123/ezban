@@ -63,7 +63,7 @@
 
 </head>
 
-<body id="body">
+<body id="body" th:data-member-no="${memberNo}" onload="initFavorites()">
 
 <!-- Start Top Header Bar -->
 <section th:fragment="header" class="top-header">
@@ -217,7 +217,7 @@
                                             class="tf-ion-ios-search-strong"></i></a>
                                 </li>
                                 <li>
-                                    <a href="#!"><i class="tf-ion-ios-heart"></i></a>
+                                    <a href="#!" th:data-event-no="${event.eventNo}" onclick="toggleFavorite(this, event)"><i class="tf-ion-ios-heart"></i></a>
                                 </li>
                             </ul>
                         </div>
@@ -289,7 +289,7 @@ Start Call To Action
         </div>
     </div>
 </footer>
-
+<script th:src="@{/js/frontstage/saveevent/saveevent.js}"></script>
 <script th:src="@{/js/frontstage/index2.js}"></script>
 </body>
 </html>
