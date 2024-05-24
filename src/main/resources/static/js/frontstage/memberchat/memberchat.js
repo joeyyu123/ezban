@@ -134,4 +134,17 @@ $(document).ready(function() {
             $('#sendButton').click();
         }
     }
+
+    // 點擊close
+    // document.addEventListener('click', function (e) {
+    //      // (document.getElementById('closeButton').style.display = 'none');
+    //      if (e.target.id === 'closeButton') {
+    //          $('#chatContainer').hide();
+    //      }
+    // });
+
+
 });
+function closeButton() {
+    $('#chatContainer').hide();
+}

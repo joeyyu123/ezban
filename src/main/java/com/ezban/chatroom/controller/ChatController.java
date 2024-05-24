@@ -242,6 +242,7 @@ public class ChatController {
                     "<div id=\"inputContainer\">" +
                     "<input id=\"messageInput\" placeholder=\"輸入訊息...\" onkeypress=\"handleKeyPress(event)\">" +
                     "<button id=\"sendButton\" onclick=\"sendMessage()\">發送</button>" +
+                    "<button id=\"closeButton\" onclick=\"closeButton()\"><i class=\"bi bi-x-lg\" ></i></button>" +
                     "<input type=\"hidden\" name=\"memberName\" value=\"" + memberName + "\">" +
                     "<input type=\"hidden\" name=\"hostName\" value=\"" + hostName + "\">" +
                     "<input type=\"hidden\" name=\"eventNo\" value=\"" + eventNo + "\">" +

@@ -160,8 +160,8 @@
 
 <body style="background-color: #f4e9e6">
 <div id="wrapper">
-    <nav th:replace="backstage/index :: navbar"></nav>
-    <div th:insert="backstage/index :: hamburger-btn"></div>
+    <nav th:replace="backstage/adminmanage/index :: navbar"></nav>
+    <div th:insert="backstage/adminmanage/index :: hamburger-btn"></div>
     <div class="page-content-wrapper">
         <div class="content">
             <a class="navbar-brand" th:href="@{/backstage/productorder/selectPage}"
@@ -219,7 +219,7 @@
                         </td>
                         <td style="padding: 5px 5px 5px 15px">
                             <form method="post"
-                                  th:action="@{'/backstage/productorderdetail/adminOrderDetail/' + ${productOrder.productOrderNo}}"
+                                  th:action="@{'/admin/productorderdetail/adminOrderDetail/' + ${productOrder.productOrderNo}}"
                                   style="margin-bottom: 0px;">
                                 <button type="submit" class="btn btn-link p-0"><img src="/images/detail.png"
                                                                                     class="oval-image" alt="明細圖案">
@@ -229,7 +229,7 @@
                             </form>
                         </td>
                         <td style="text-align: center">
-                            <form method="post" th:action="@{/backstage/productorder/getOneForUpdate}"
+                            <form method="post" th:action="@{/admin/productorder/getOneForUpdate}"
                                   style="margin-bottom: 0;">
 
                                 <!-- 訂單狀態為"4"，不可編輯 -->
