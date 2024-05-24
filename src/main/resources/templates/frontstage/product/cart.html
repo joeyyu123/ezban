@@ -13,7 +13,7 @@
 
 
 <!-- Start breadcrumb -->
-<section class="page-header">
+<section class="page-header" style="background: none;">
     <div class="container" style="width: 75%; padding: 0;">
         <div class="row">
             <div class="col-md-12">
@@ -21,13 +21,15 @@
                     <h1 class="page-name">購物車</h1>
                     <ol class="breadcrumb">
                         <li><a th:href="@{/}">首頁</a></li>
+                        <li><a th:href="@{/product/shopall}">周邊商品</a></li>
                         <li class="active">購物車</li>
                     </ol>
                 </div>
             </div>
         </div>
     </div>
-</section> <!-- End breadcrumb -->
+</section>
+<!-- End breadcrumb -->
 
 <div class="page-wrapper" style="padding-top: 30px;">
     <div class="cart shopping">
@@ -148,7 +150,7 @@
     }
 
     function getCartDetailsAPIAndShowCartItems(cart) {
-        // 检查购物车是否为空
+        // 檢查購物車是否為空
         if (Object.keys(cart).length === 0) {
             showCartItems([]);
             return;

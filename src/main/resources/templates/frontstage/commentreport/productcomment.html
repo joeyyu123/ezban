@@ -1,136 +1,178 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>評星和評論系統</title>
-    <style>
-        #star-rating .star {
-            font-size: 30px;
-            cursor: pointer;
-            color: black;
-            display: inline-block;
-            width: 35px;
-            height: 35px;
-            line-height: 35px;
-            text-align: center;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>評星和評論系統</title>
+<style>
+#star-rating .star {
+	font-size: 30px;
+	cursor: pointer;
+	color: black;
+	display: inline-block;
+	width: 35px;
+	height: 35px;
+	line-height: 35px;
+	text-align: center;
+}
 
-        #star-rating .star.rated {
-            color: #FFD306;
-        }
+#star-rating .star.rated {
+	color: #FFD306;
+}
 
-        .average-rating {
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-        }
+.average-rating {
+	font-size: 20px;
+	display: flex;
+	align-items: center;
+}
 
-        .average-rating .stars {
-            margin-left: 10px;
-            color: #FFD306;
-        }
+.average-rating .stars {
+	margin-left: 10px;
+	color: #FFD306;
+}
 
-        .average-rating .count {
-            margin-left: 10px;
-        }
+.average-rating .count {
+	margin-left: 10px;
+}
 
-        textarea {
-            width: 100%;
-            height: 100px;
-            margin-top: 20px;
-            padding: 10px;
-            box-sizing: border-box;
-            resize: none;
-            max-width: 500px;
-            max-height: 100px;
-        }
+textarea {
+	width: 100%;
+	height: 100px;
+	margin-top: 20px;
+	padding: 10px;
+	box-sizing: border-box;
+	resize: none;
+	max-width: 500px;
+	max-height: 100px;
+}
 
-        button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+button {
+	margin-top: 10px;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+}
 
-        #comments-display {
-            margin-top: 20px;
-            border-top: 2px solid #ccc;
-            padding-top: 10px;
-        }
+#comments-display {
+	margin-top: 20px;
+	border-top: 2px solid #ccc;
+	padding-top: 10px;
+}
 
-        .comment-item {
-            margin-bottom: 20px;
-        }
+.comment-item {
+	margin-bottom: 20px;
+}
 
-        .comment-header {
-            display: flex;
-            align-items: center;
-        }
+.comment-header {
+	display: flex;
+	align-items: center;
+}
 
-        .comment-header .member-id {
-            margin-right: 10px;
-        }
+.comment-header .member-id {
+	margin-right: 10px;
+}
 
-        .comment-header .comment-rating {
-            color: #FFD306;
-        }
+.comment-header .comment-rating {
+	color: #FFD306;
+}
 
-        .comment-content-wrapper {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 5px;
-        }
+.comment-content-wrapper {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 5px;
+}
 
-        .comment-content {
-            flex-grow: 1;
-        }
+.comment-content {
+	flex-grow: 1;
+}
 
-        .report-button {
-            background-color: red;
-            color: white;
-            border: none;
-            cursor: pointer;
-            padding: 5px 10px;
-            margin-left: 10px;
-        }
+.report-button {
+	background-color: red;
+	color: white;
+	border: none;
+	cursor: pointer;
+	padding: 5px 10px;
+	margin-left: 10px;
+}
 
-        .inactive-comment {
-            opacity: 0.5;
-            font-style: italic;
-        }
-    </style>
+.inactive-comment {
+	opacity: 0.5;
+	font-style: italic;
+}
+
+.pagination {
+	display: flex;
+	justify-content: center;
+	margin-top: 20px;
+}
+
+.pagination button {
+	margin: 0 5px;
+	padding: 5px 10px;
+	cursor: pointer;
+}
+
+.pagination .page-number {
+    cursor: pointer;
+    margin: 0 2px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.pagination .page-number.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination .page-number.disabled {
+    cursor: not-allowed;
+    color: #ccc;
+}
+</style>
 </head>
 <body>
-    <h1>產品評分和評論</h1>
+	<h1>產品評分和評論</h1>
 
-    <div id="product-info">
-        <div class="average-rating">
-            <span id="average-rating-value">0.0</span>
-            <div class="stars" id="average-rating-stars"></div>
-            <span class="count" id="rating-count">(0)</span>
-        </div>
-    </div>
+	<div id="product-info">
+		<div class="average-rating">
+			<span id="average-rating-value">0.0</span>
+			<div class="stars" id="average-rating-stars"></div>
+			<span class="count" id="rating-count">(0)</span>
+		</div>
+	</div>
 
-    <div id="comments-display">
-        <!-- 評論將會顯示在這裡 -->
-    </div>
+	<div id="comments-display">
+		<!-- 評論將會顯示在這裡 -->
+	</div>
 
-    <div id="star-rating">
-        <span class="star" onclick="setRating(1)">&#9733;</span>
-        <span class="star" onclick="setRating(2)">&#9733;</span>
-        <span class="star" onclick="setRating(3)">&#9733;</span>
-        <span class="star" onclick="setRating(4)">&#9733;</span>
-        <span class="star" onclick="setRating(5)">&#9733;</span>
-    </div>
+	<div class="pagination" id="pagination">
+		<button onclick="goToPage('first')">最前頁</button>
+		<button onclick="goToPage('previous')">上一頁</button>
+		<!-- 動態生成的頁碼按鈕 -->
+		<button onclick="goToPage('next')">下一頁</button>
+		<button onclick="goToPage('last')">最後頁</button>
+	</div>
 
-    <textarea id="commentContent" placeholder="寫下你的評論..."></textarea>
-    <button onclick="submitComment()">提交評論</button>
+	<div id="star-rating">
+		<span class="star" onclick="setRating(1)">&#9733;</span> <span
+			class="star" onclick="setRating(2)">&#9733;</span> <span class="star"
+			onclick="setRating(3)">&#9733;</span> <span class="star"
+			onclick="setRating(4)">&#9733;</span> <span class="star"
+			onclick="setRating(5)">&#9733;</span>
+	</div>
 
-    <script>
+	<textarea id="commentContent" placeholder="寫下你的評論..."></textarea>
+	<button onclick="submitComment()">提交評論</button>
+
+	<script>
         var currentRating = 0;
         var productNo = 1; // 假設的產品編號
+        var currentPage = 1;
+        var totalPages = 1;
+        const commentsPerPage = 10;
 
         function setRating(rating) {
             currentRating = rating;
@@ -155,16 +197,21 @@
                 return;
             }
 
+            const memberNumber = parseInt(getCurrentMemberNo(), 10); 
+            if (isNaN(memberNumber)) {
+                alert("會員編號必須是一個有效的數字！");
+                return;
+            }
+
             const data = {
-                product: { productNo: productNo },
-                member: { memberNo: getCurrentMemberNo() },
-                productCommentContent: commentContent,
+                productCommentNo: null,
+                memberNo: memberNumber,
+                productNo: productNo,
+                commentContent: commentContent,
                 productRate: currentRating,
                 productCommentDate: new Date().toISOString(),
                 productCommentStatus: 0
             };
-
-            console.log("提交的評論數據:", data);
 
             fetch('/api/product/comment', {
                 method: 'POST',
@@ -173,10 +220,16 @@
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(comment => {
                 alert("評論已提交！");
-                loadComments(productNo);
+                document.getElementById('commentContent').value = ''; // 清空文字框
+                loadComments(productNo, currentPage);
                 loadCommentStats(productNo);
             })
             .catch(error => {
@@ -185,17 +238,26 @@
             });
         }
 
-        function loadComments(productNo) {
+        // 加載評論
+        function loadComments(productNo, page) {
             fetch(`/api/product/comment/${productNo}`)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(comments => {
-                console.log("評論數據:", comments);
                 if (!Array.isArray(comments)) {
                     throw new TypeError('期望得到評論的數組，但實際得到:', comments);
                 }
                 const commentsDisplay = document.getElementById('comments-display');
                 commentsDisplay.innerHTML = '';
-                comments.forEach(comment => {
+                const start = (page - 1) * commentsPerPage;
+                const end = start + commentsPerPage;
+                const paginatedComments = comments.slice(start, end);
+
+                paginatedComments.forEach(comment => {
                     const stars = '★'.repeat(comment.productRate) + '☆'.repeat(5 - comment.productRate);
                     const commentClass = comment.productCommentStatus === -1 ? 'inactive-comment' : '';
                     const commentContent = comment.productCommentStatus === -1 ? '此評論為不當言論' : comment.commentContent;
@@ -210,9 +272,11 @@
                             ${reportButton}
                         </div>
                     </div>`;
-                    console.log("生成的 HTML:", commentItem); // 新增的日誌
                     commentsDisplay.innerHTML += commentItem;
                 });
+
+                totalPages = Math.ceil(comments.length / commentsPerPage);
+                updatePagination(page, totalPages);
             })
             .catch(error => {
                 console.error('加載評論出錯:', error);
@@ -220,51 +284,29 @@
         }
 
         function loadCommentStats(productNo) {
-            fetch(`/api/product/comment/${productNo}`)
-            .then(response => response.json())
-<<<<<<<< HEAD:src/main/resources/templates/frontstage/product/productcomment.html
-            .then(comments => {
-                console.log("加载的评论数据:", comments);
-                if (!Array.isArray(comments)) {
-                    throw new TypeError('期望得到评论的数组，但实际得到:', comments);
+            fetch(`/api/product/comment/stats/${productNo}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                // 过滤掉状态为 -1 的评论
-                const validComments = comments.filter(comment => comment.productCommentStatus !== -1);
-                if (validComments.length > 0) {
-                    const totalRating = validComments.reduce((sum, comment) => sum + comment.productRate, 0);
-                    const averageRating = totalRating / validComments.length;
-                    const averageRatingValue = document.getElementById('average-rating-value');
-                    const averageRatingStars = document.getElementById('average-rating-stars');
-                    const ratingCount = document.getElementById('rating-count');
-========
+                return response.json();
+            })
             .then(stats => {
-                console.log("評論統計數據:", stats);
                 const averageRatingValue = document.getElementById('average-rating-value');
                 const averageRatingStars = document.getElementById('average-rating-stars');
                 const ratingCount = document.getElementById('rating-count');
->>>>>>>> parent of 3eeb4c9 (Revert "Merge pull request #92 from joeyyu123/eric"):src/main/resources/templates/frontstage/commentreport/productcomment.html
 
-                    averageRatingValue.textContent = averageRating.toFixed(1);
-                    averageRatingStars.innerHTML = '★'.repeat(Math.round(averageRating)) + '☆'.repeat(5 - Math.round(averageRating));
-                    ratingCount.textContent = `(${validComments.length})`;
-                } else {
-                    document.getElementById('average-rating-value').textContent = '0.0';
-                    document.getElementById('average-rating-stars').innerHTML = '☆☆☆☆☆';
-                    document.getElementById('rating-count').textContent = '(0)';
-                }
+                averageRatingValue.textContent = stats.averageRating.toFixed(1);
+                averageRatingStars.innerHTML = '★'.repeat(Math.floor(stats.averageRating)) + '☆'.repeat(5 - Math.floor(stats.averageRating));
+                ratingCount.textContent = `(${stats.ratingCount})`;
             })
             .catch(error => {
                 console.error('加载评分统计出错:', error);
             });
         }
 
-<<<<<<<< HEAD:src/main/resources/templates/frontstage/product/productcomment.html
-
-========
->>>>>>>> parent of 3eeb4c9 (Revert "Merge pull request #92 from joeyyu123/eric"):src/main/resources/templates/frontstage/commentreport/productcomment.html
         function reportComment(commentElement) {
             const commentId = commentElement.getAttribute('data-comment-id');
-            console.log("檢舉評論ID:", commentId); // 日誌
             const reportReason = prompt("請輸入檢舉理由：");
             if (!reportReason) {
                 alert("檢舉理由不能為空！");
@@ -279,8 +321,6 @@
                 reportStatus: 0
             };
 
-            console.log("提交的檢舉數據:", data);
-
             fetch('/api/product/comment/report', {
                 method: 'POST',
                 headers: {
@@ -288,10 +328,15 @@
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(result => {
                 alert("檢舉已提交！");
-                loadComments(productNo);
+                loadComments(productNo, currentPage);
             })
             .catch(error => {
                 console.error('檢舉出錯:', error);
@@ -299,10 +344,45 @@
             });
         }
 
+        function goToPage(action) {
+            switch(action) {
+                case 'first':
+                    currentPage = 1;
+                    break;
+                case 'previous':
+                    if (currentPage > 1) currentPage--;
+                    break;
+                case 'next':
+                    if (currentPage < totalPages) currentPage++;
+                    break;
+                case 'last':
+                    currentPage = totalPages;
+                    break;
+                default:
+                    currentPage = parseInt(action);
+            }
+            loadComments(productNo, currentPage);
+        }
+
+        function updatePagination(currentPage, totalPages) {
+            const pagination = document.getElementById('pagination');
+            const pageNumbers = Array.from(pagination.querySelectorAll('.page-number'));
+            pageNumbers.forEach(button => button.remove());
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.classList.add('page-number');
+                if (i === currentPage) pageButton.classList.add('active');
+                pageButton.textContent = i;
+                pageButton.onclick = () => goToPage(i);
+                pagination.insertBefore(pageButton, pagination.children[pagination.children.length - 2]);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            loadComments(productNo);
+            loadComments(productNo, currentPage);
             loadCommentStats(productNo);
         });
+
     </script>
 </body>
 </html>

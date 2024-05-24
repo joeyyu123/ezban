@@ -127,7 +127,7 @@
         background-color: lightgray; /* 按鈕背景顏色 */
         color: white; /* 文字顏色 */
         text-align: center;
-        border-radius: 20px; /* 圓角半徑 */
+        border-radius: 50px; /* 圓角半徑 */
         padding: 5px 8px; /* 內邊距，影響按鈕大小 */
         border: none; /* 移除邊框 */
         transition: background-color 0.3s; /* 背景顏色過渡效果 */
@@ -140,13 +140,35 @@
         transform: scale(1.2);
         font-weight: bold;
     }
+
+    #comment_button:hover {
+        background-color: blue; /* 滑鼠懸停時的背景顏色 */
+        opacity: 1; /* 滑鼠懸停時的透明度 */
+        transform: scale(1.2);
+        font-weight: bold;
+    }
 </style>
 
+<!-- Start breadcrumb -->
 <body id="body">
 <div th:replace="frontstage/index2 :: header"></div>
 <h1 class="page-name" ,
     style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; margin-left: 80px; margin-top: 50px;">
     <i class="fa-brands fa-shopify"></i> &nbsp;&nbsp;我 的 商 品 訂 單 </h1>
+<section class="single-product" style="padding: 20px 0 40px 10px;">
+    <div class="container" style="width: 75%; margin-left: 55px;">
+        <div class="row">
+            <div class="col-md-6">
+                <ol class="breadcrumb" style="padding: 0;">
+                    <li><a th:href="@{/}">首頁</a></li>
+                    <li class=" productOrder active">我的商品訂單</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End breadcrumb -->
+
 <section class="user-dashboard page-wrapper">
     <div class="container">
         <div class="row">
@@ -181,6 +203,14 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+
+                                <!-- 判斷 productOrderListData 是否為空，若空則顯示 "訂單是空的，趕緊去購買吧 !" -->
+                                <tr th:if="${#lists.isEmpty(productOrderListData)}">
+                                    <td colspan="8px" style="text-align: center; font-size: 20px; padding-top: 15px;">
+                                        訂單是空的，趕緊去購買吧 !
+                                    </td>
+                                </tr>
+
                                 <th:block th:each="productOrder : ${productOrderListData}">
                                     <tr>
                                         <td style="vertical-align: middle"
@@ -220,7 +250,7 @@
                                             </button>
                                         </td>
                                         <td>
-                                            <button type="button" style="margin-top: 10px">
+                                            <button type="button" id="comment_button" style="margin-top: 5px">
                                                 前往
                                             </button>
                                         </td>

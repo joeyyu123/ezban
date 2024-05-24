@@ -58,11 +58,18 @@ public class TicketOrderController {
         Member member = memberService.getMemberByMemberNo(principal.getName());
 
         if (orderStatus == null) {
-            model.addAttribute("ticketOrders", ticketOrderService.findByMember(member));
+            List<TicketOrder> ticketOrders = ticketOrderService.findByMember(member);
+            ticketOrders.forEach(ticketOrder -> {
+                ticketOrder.setEventStatus(ticketOrder.getTicketOrderDetails().iterator().next().getTicketType().getEvent().getEventStatus());
+            });
+            model.addAttribute("ticketOrders", ticketOrders);
         } else {
             TicketOrderStatus ticketOrderStatus = TicketOrderStatus.values()[orderStatus];
-
-            model.addAttribute("ticketOrders", ticketOrderService.findByMemberNoAndStatus(member, ticketOrderStatus));
+            List<TicketOrder> ticketOrders = ticketOrderService.findByMemberNoAndStatus(member, ticketOrderStatus);
+            ticketOrders.forEach(ticketOrder -> {
+                ticketOrder.setEventStatus(ticketOrder.getTicketOrderDetails().iterator().next().getTicketType().getEvent().getEventStatus());
+            });
+            model.addAttribute("ticketOrders", ticketOrders);
             model.addAttribute("orderStatus", orderStatus);
         }
         return "/frontstage/event/ticket-orders";
@@ -70,7 +77,7 @@ public class TicketOrderController {
 
     @DeleteMapping("/events/orders/{ticketOrderNo}")
     @ResponseBody
-    public ResponseEntity<String> cancelOrder(@PathVariable("ticketOrderNo") Integer ticketOrderNo,Principal principal) {
+    public ResponseEntity<String> cancelOrder(@PathVariable("ticketOrderNo") Integer ticketOrderNo, Principal principal) {
         Member member = memberService.getMemberByMemberNo(principal.getName());
 
 
@@ -88,7 +95,7 @@ public class TicketOrderController {
 
     @PostMapping("/events/order")
     @ResponseBody
-    public ResponseEntity<String> buyTicket(Model model, @RequestBody List<TicketOrderRegistrationForm> ticketOrders,Principal principal) throws InsufficientTicketQuantityException {
+    public ResponseEntity<String> buyTicket(Model model, @RequestBody List<TicketOrderRegistrationForm> ticketOrders, Principal principal) throws InsufficientTicketQuantityException {
         Gson gson = new Gson();
 
         // 之後改成從session 取得 memberNo

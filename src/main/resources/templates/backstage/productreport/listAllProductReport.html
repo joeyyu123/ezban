@@ -105,7 +105,7 @@
                     <th>商品名稱 [編號]</th>
                     <th>檢舉者 [編號]</th>
                     <th>檢舉日期</th>
-                    <th>檢舉原因</th>
+                    <th style="width: 180px;">檢舉原因</th>
                     <th>處理情形</th>
                     <th>審核</th>
                     <th>員工 [編號]</th>
@@ -118,7 +118,7 @@
                         <td th:text="${productReport.product.productName}+ ' [' + ${productReport.product.productNo} + ']'"></td>
                         <td th:text="${productReport.member?.memberName} + ' [' + ${productReport.member?.memberNo} + ']'"></td>
                         <td th:text="${#dates.format(productReport.reportDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                        <td th:text="${productReport.reportReason}"></td>
+                        <td th:text="${productReport.reportReason}" style="width: 180px; word-break: break-all; overflow-wrap: break-word;"></td>
                         <td th:if="${productReport.reportStatus == 0}"><span class="dot-gray"></span>尚未處理</td>
                         <td th:if="${productReport.reportStatus == 1}"><span class="dot-blue"></span>正常顯示</td>
                         <td th:if="${productReport.reportStatus == 2}"><span class="dot-red"></span>下架商品</td>
@@ -134,7 +134,8 @@
                                 <i class="fas fa-save"></i> 送出
                             </button>
                         </td>
-                        <td th:text="${productReport.admin?.adminName} + ' [' + ${productReport.admin?.adminNo} + ']'"></td>
+                        <td th:if="${productReport.admin != null}" th:text="${productReport.admin?.adminName} + ' [' + ${productReport.admin?.adminNo} + ']'"></td>
+                        <td th:if="${productReport.admin == null}">-</td>
                     </tr>
                 </th:block>
                 </tbody>

@@ -3,7 +3,6 @@ package com.ezban.productcomment.model;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,28 +24,30 @@ public class ProductCommentService {
     @Transactional(readOnly = true)
     public List<ProductCommentDTO> findAllComments() {
         List<ProductComment> comments = commentRepository.findAll();
-        comments.forEach(comment -> Hibernate.initialize(comment.getMember())); // 初始化延遲加載的Member
         return comments.stream()
                        .map(comment -> new ProductCommentDTO(
                                comment.getProductCommentNo(),
                                comment.getMember().getMemberNo(),
+                               comment.getProduct().getProductNo(), // 添加 productNo 字段
                                comment.getProductCommentContent(),
                                comment.getProductRate(),
-                               comment.getProductCommentStatus())) // 包含status字段
+                               comment.getProductCommentStatus(),
+                               comment.getProductCommentDate())) // 添加 productCommentDate 字段
                        .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public List<ProductCommentDTO> findCommentsByProductNo(Integer productNo) {
         List<ProductComment> comments = commentRepository.findByProduct_ProductNo(productNo);
-        comments.forEach(comment -> Hibernate.initialize(comment.getMember())); // 初始化延遲加載的Member
         return comments.stream()
                        .map(comment -> new ProductCommentDTO(
                                comment.getProductCommentNo(),
                                comment.getMember().getMemberNo(),
+                               comment.getProduct().getProductNo(), // 添加 productNo 字段
                                comment.getProductCommentContent(),
                                comment.getProductRate(),
-                               comment.getProductCommentStatus())) // 包含status字段
+                               comment.getProductCommentStatus(),
+                               comment.getProductCommentDate())) // 添加 productCommentDate 字段
                        .collect(Collectors.toList());
     }
 

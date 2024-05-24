@@ -78,7 +78,7 @@ public class PageController {
 	
 	@GetMapping("/adminmanage")
 	public String showadminmanage() {
-		return "backstage/adminmanage/adminmanage";
+		return "backstage/adminmanage/index";
 	}
 	@GetMapping("/eventreportback")
 	public String showeventreportback() {

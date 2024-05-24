@@ -1,5 +1,6 @@
 package com.ezban.ticketorder.model;
 
+import com.ezban.event.model.EventStatus;
 import com.ezban.eventcoupon.model.EventCoupon;
 import com.ezban.member.model.Member;
 import com.ezban.ticketorderdetail.model.TicketOrderDetail;
@@ -70,8 +71,19 @@ public class TicketOrder implements java.io.Serializable{
     @Column(name = "ticket_order_allocation_status")
     private TicketOrderAllocationStatus ticketOrderAllocationStatus;
 
+    @Transient
+    private EventStatus eventStatus;
+
     @OneToMany(mappedBy = "ticketOrder")
     private Set<TicketOrderDetail> ticketOrderDetails = new LinkedHashSet<>();
+
+    public EventStatus getEventStatus() {
+        return eventStatus;
+    }
+
+    public void setEventStatus(EventStatus eventStatus) {
+        this.eventStatus = eventStatus;
+    }
 
     public Integer getTicketOrderNo() {
         return ticketOrderNo;
