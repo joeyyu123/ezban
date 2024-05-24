@@ -1,15 +1,20 @@
 package com.ezban.productcomment;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
+import com.ezban.eventcomment.model.EventCommentReviewService;
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberService;
 import com.ezban.productcomment.model.ProductComment;
@@ -21,9 +26,20 @@ public class ProductCommentReviewController {
 
     @Autowired
     private ProductCommentReviewService productCommentService;
+    
+    @Autowired
+    private EventCommentReviewService eventCommentService;
 
     @Autowired
     private MemberService memService;
+    
+//    @GetMapping("/currentLogin")
+//    @ResponseBody
+//    public Member getCurrentMember(@AuthenticationPrincipal UserDetails userDetails) {
+//    	System.out.println("User Name ================ " + userDetails.getUsername());
+//        Optional<Member> member = memService.findMemberByMemberNo(userDetails.getUsername());
+//        return member.orElse(null); // 返回 JSON 数据
+//    }
 
     @GetMapping("/member/{memberNo}")
     @ResponseBody
@@ -35,4 +51,19 @@ public class ProductCommentReviewController {
         List<ProductComment> comments = productCommentService.getCommentsByMember(member);
         return ResponseEntity.ok(comments);
     }
+
+    @GetMapping("/commentReviewPage")
+    public String getCommentReviewPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        Optional<Member> currentMember = memService.findMemberByMemberNo(userDetails.getUsername());
+        if (currentMember.isPresent()) {
+            Member member = currentMember.get();
+            model.addAttribute("eventComments", eventCommentService.getCommentsByMember(member));
+            model.addAttribute("productComments", productCommentService.getCommentsByMember(member));
+            return "frontstage/commentreview/commentReview";
+        } else {
+            model.addAttribute("errorMessage", "未找到該成員");
+            return "errorPage";
+        }
+    }
+
 }
