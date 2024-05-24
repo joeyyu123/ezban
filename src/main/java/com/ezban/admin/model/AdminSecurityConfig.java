@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 @Configuration
 @EnableWebSecurity
-@Order(3)
+@Order(2)
 public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -41,10 +41,12 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+        http.requestMatchers()
+                .antMatchers( "/api/admin/**","/adminlogin","/admin/login","/adminlogout", "/adminregister", "/adminpasswordreset","/adminmanage/**","/backstage/productorder/**","/backstage/productreport")
+                .and()
             .authorizeRequests()
-                .antMatchers("/adminlogin", "/adminregister", "/adminpasswordreset").permitAll()
-                .antMatchers("/adminmanage/**").hasRole("ADMIN") // 仅允许管理员访问管理界面
+                .antMatchers("/api/admin/**","/adminlogin", "/adminregister", "/adminpasswordreset","/admin/login").permitAll()
+                .antMatchers("/adminmanage/**","/backstage/productorder/**","/backstage/productreport").hasRole("ADMIN") // 仅允许管理员访问管理界面
                 .and()
             .formLogin()
                 .loginPage("/adminlogin")
