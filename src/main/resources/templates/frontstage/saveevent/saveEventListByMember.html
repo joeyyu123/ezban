@@ -67,10 +67,24 @@
     <h1 class="page-name" style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; text-align: center;">
         <i class="fa-regular fa-bookmark"></i> &nbsp;&nbsp;我的活動收藏
     </h1>
+    <!-- Start breadcrumb -->
+    <section class="single-product" style="padding: 20px 0 40px 10px;">
+        <div class="container" style="width: 75%; margin-left: 55px;">
+            <div class="row">
+                <div class="col-md-6">
+                    <ol class="breadcrumb" style="padding: 0;">
+                        <li><a th:href="@{/}">首頁</a></li>
+                        <li class=" saveEvent active">我的活動收藏夾</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End breadcrumb -->
     <section class="user-dashboard">
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-12" style="margin-bottom: 100px;">
                     <div class="container">
                         <div class="dashboard-wrapper user-dashboard">
                             <div class="table-responsive">

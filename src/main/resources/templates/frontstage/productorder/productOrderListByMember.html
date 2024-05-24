@@ -142,11 +142,26 @@
     }
 </style>
 
+<!-- Start breadcrumb -->
 <body id="body">
 <div th:replace="frontstage/index2 :: header"></div>
 <h1 class="page-name" ,
     style="color: #333; font-family: 'Arial', sans-serif; font-size: 35px; font-weight: bold; margin-left: 80px; margin-top: 50px;">
     <i class="fa-brands fa-shopify"></i> &nbsp;&nbsp;我 的 商 品 訂 單 </h1>
+<section class="single-product" style="padding: 20px 0 40px 10px;">
+    <div class="container" style="width: 75%; margin-left: 55px;">
+        <div class="row">
+            <div class="col-md-6">
+                <ol class="breadcrumb" style="padding: 0;">
+                    <li><a th:href="@{/}">首頁</a></li>
+                    <li class=" productOrder active">我的商品訂單</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End breadcrumb -->
+
 <section class="user-dashboard page-wrapper">
     <div class="container">
         <div class="row">
@@ -184,7 +199,9 @@
 
                                 <!-- 判斷 productOrderListData 是否為空，若空則顯示 "訂單是空的，趕緊去購買吧 !" -->
                                 <tr th:if="${#lists.isEmpty(productOrderListData)}">
-                                    <td colspan="8px" style="text-align: center; font-size: 20px; padding-top: 15px;">訂單是空的，趕緊去購買吧 !</td>
+                                    <td colspan="8px" style="text-align: center; font-size: 20px; padding-top: 15px;">
+                                        訂單是空的，趕緊去購買吧 !
+                                    </td>
                                 </tr>
 
                                 <th:block th:each="productOrder : ${productOrderListData}">
