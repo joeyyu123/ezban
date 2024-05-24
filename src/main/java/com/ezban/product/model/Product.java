@@ -14,10 +14,8 @@ import javax.persistence.Table;
 
 import com.ezban.host.model.Host;
 import com.ezban.productcategory.model.ProductCategory;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 
 @Entity
 @Table(name = "product")
@@ -69,8 +67,13 @@ public class Product implements java.io.Serializable {
     @Column(name = "product_rating_count")
     private Integer productRatingCount;
 
-
+    // Default constructor
     public Product() {
+    }
+
+    // Constructor with productNo
+    public Product(Integer productNo) {
+        this.productNo = productNo;
     }
 
     public Integer getProductNo() {

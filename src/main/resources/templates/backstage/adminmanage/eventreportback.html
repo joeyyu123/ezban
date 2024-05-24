@@ -29,6 +29,7 @@
 </head>
 <body>
     <h1>活動管理員檢視和處理檢舉</h1>
+    <div id="admin-info"></div>
     <table>
         <thead>
             <tr>
@@ -48,6 +49,17 @@
     </table>
 
     <script>
+        // 获取并显示管理员信息
+        function displayAdminInfo() {
+            const adminId = sessionStorage.getItem('adminId');
+            if (!adminId) {
+                alert('獲取管理員信息失敗，請重新登錄');
+                window.location.href = '/adminlogin';
+                return;
+            }
+            document.getElementById('admin-info').innerText = `管理員ID: ${adminId}`;
+        }
+
         // 加載檢舉數據並顯示在表格中
         async function loadReports() {
             const adminId = sessionStorage.getItem('adminId');
@@ -82,8 +94,8 @@
                         <td>${report.formattedReportDate}</td>
                         <td>${report.reportStatus}</td>
                         <td>
-                            <button class="action-button" onclick="confirmHandleReport(${report.eventCommentReportNo}, true, ${adminId})">正常發言</button>
-                            <button class="action-button" onclick="confirmHandleReport(${report.eventCommentReportNo}, false, ${adminId})">封鎖評論</button>
+                            <button class="action-button" onclick="confirmHandleReport(${report.eventCommentReportNo}, true, '${adminId}')">正常發言</button>
+                            <button class="action-button" onclick="confirmHandleReport(${report.eventCommentReportNo}, false, '${adminId}')">封鎖評論</button>
                         </td>
                     `;
                     reportsDisplay.appendChild(reportRow);
@@ -105,7 +117,7 @@
         async function handleReport(reportId, approve, adminId) {
             const data = {
                 reportStatus: approve ? 1 : 2,
-                adminNo: adminId
+                adminNo: parseInt(adminId, 10)  // 确保adminNo是整数
             };
 
             console.log("處理的檢舉數據:", data);
@@ -118,6 +130,12 @@
                     },
                     body: JSON.stringify(data)
                 });
+
+                // 检查响应是否为 JSON 格式
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.statusText}`);
+                }
+
                 const result = await response.json();
                 alert(`檢舉已${approve ? '拒絕' : '同意'}！`);
                 loadReports();
@@ -127,8 +145,9 @@
             }
         }
 
-        // 當文檔載入完畢後，開始加載檢舉數據
+        // 當文檔載入完畢後，開始加載檢舉數據並顯示管理員信息
         document.addEventListener('DOMContentLoaded', () => {
+            displayAdminInfo();
             loadReports();
         });
     </script>

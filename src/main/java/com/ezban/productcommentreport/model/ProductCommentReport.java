@@ -1,5 +1,6 @@
 package com.ezban.productcommentreport.model;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 import javax.persistence.Column;
@@ -9,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -17,11 +19,10 @@ import javax.validation.constraints.Size;
 import com.ezban.admin.model.Admin;
 import com.ezban.member.model.Member;
 import com.ezban.productcomment.model.ProductComment;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "product_comment_report", schema = "ezban")
-public class ProductCommentReport {
+public class ProductCommentReport implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,21 +32,19 @@ public class ProductCommentReport {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_comment_no", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private ProductComment productComment;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "member_no", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_no")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Admin admin;
 
     @Size(max = 100)
+    @Lob
     @NotNull
     @Column(name = "report_reason", nullable = false, length = 100)
     private String reportReason;
