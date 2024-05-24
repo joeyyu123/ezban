@@ -23,17 +23,19 @@ import org.slf4j.LoggerFactory;
 public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private AdminUserDetailsService adminUserDetailsService;
+    private UserDetailsService adminUserDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        // 加密
+        // return new BCryptPasswordEncoder();
         return NoOpPasswordEncoder.getInstance();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-            .userDetailsService(adminUserDetailsService)
+            .userDetailsService(adminUserDetailsService) // 使用管理员的用户详情服务
             .passwordEncoder(passwordEncoder());
     }
 
@@ -41,20 +43,25 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/adminlogin", "/adminregister", "/adminpasswordreset").permitAll() // 确保登录页面路径正确
-                .antMatchers("/backstage", "/adminmanage/*").authenticated()
+                .antMatchers("/adminlogin", "/adminregister", "/adminpasswordreset").permitAll()
+                .antMatchers("/adminmanage/**").hasRole("ADMIN") // 仅允许管理员访问管理界面
                 .and()
             .formLogin()
-                .loginPage("/adminlogin") // 自定义登录页面
-                .loginProcessingUrl("/adminlogin") // 表单提交的URL
+                .loginPage("/adminlogin")
+                .loginProcessingUrl("/admin/login")
                 .successHandler(adminAuthenticationSuccessHandler())
                 .failureHandler(adminAuthenticationFailureHandler())
                 .permitAll()
                 .and()
             .logout()
-                .logoutUrl("/logout")
+                .logoutUrl("/adminlogout") // 确保登出URL正确
                 .logoutSuccessUrl("/adminlogin")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
                 .permitAll()
+                .and()
+            .exceptionHandling()
+                .accessDeniedPage("/adminlogin")
                 .and()
             .csrf().disable();
     }
@@ -62,23 +69,14 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationSuccessHandler adminAuthenticationSuccessHandler() {
         return (request, response, authentication) -> {
-            Logger logger = LoggerFactory.getLogger(AdminSecurityConfig.class);
-            logger.info("登录成功: 用户名=" + authentication.getName());
-            response.sendRedirect("/adminmanage"); // 登录成功后重定向到/adminmanage
+            response.sendRedirect("/adminmanage"); // 重定向到管理员管理界面
         };
     }
 
     @Bean
     public AuthenticationFailureHandler adminAuthenticationFailureHandler() {
         SimpleUrlAuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();
-        failureHandler.setDefaultFailureUrl("/adminlogin.html?error=true");
-        failureHandler.setUseForward(false);
-
-        return (request, response, exception) -> {
-            Logger logger = LoggerFactory.getLogger(AdminSecurityConfig.class);
-            logger.error("登录失败: " + exception.getMessage());
-            failureHandler.onAuthenticationFailure(request, response, exception);
-        };
+        failureHandler.setDefaultFailureUrl("/adminlogin?error=true");
+        return failureHandler;
     }
 }
-

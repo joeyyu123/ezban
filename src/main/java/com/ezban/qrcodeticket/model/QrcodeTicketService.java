@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -65,9 +66,12 @@ public class QrcodeTicketService {
     }
 
     /*******************************用在QR Code插入Logo*************************************/
-    public BufferedImage generateQRCodeLogo(String data, int width, int height) throws WriterException, IOException {
-        System.out.println("QR Code 內容: " + data);
+    public BufferedImage generateQRCodeLogo(String ticketNo, int width, int height) throws WriterException, IOException {
+        System.out.println("QR Code 內容: " + ticketNo);
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
+
+        String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+        String fullUrl = baseUrl + "/backstage/qrcodeticket/coupon/redeem?ticketNo=" + ticketNo;
 
         //設定QR Code編碼格式
         Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
@@ -76,7 +80,7 @@ public class QrcodeTicketService {
         hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
 
         //產生QR Code
-        BitMatrix bitMatrix = qrCodeWriter.encode(data, BarcodeFormat.QR_CODE, width, height, hints);
+        BitMatrix bitMatrix = qrCodeWriter.encode(fullUrl, BarcodeFormat.QR_CODE, width, height, hints);
         BufferedImage qrImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
 
         //Logo路徑
