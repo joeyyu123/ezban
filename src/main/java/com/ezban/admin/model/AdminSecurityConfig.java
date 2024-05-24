@@ -42,7 +42,7 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.requestMatchers()
-                .antMatchers( "/api/**","/qaback/**","/adminlogin","/admin/login","/adminlogout", "/adminregister", "/adminpasswordreset","/adminmanage/**","/productorder/selectPage","/productreport","/productorder/listAllProductOrder/**","/productorder/listOneProductOrder/**","/productorder/update/**")
+                .antMatchers( "/api/**","/qaback/**","/adminlogin","/admin/login","/adminlogout", "/adminregister", "/adminpasswordreset","/adminmanage/**","/admin/**")
                 .and()
             .authorizeRequests()
                 .antMatchers("/api/**","/qaback/**","/adminlogin", "/adminregister", "/adminpasswordreset","/admin/login").permitAll()
