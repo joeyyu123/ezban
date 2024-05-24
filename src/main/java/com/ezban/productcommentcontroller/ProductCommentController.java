@@ -32,46 +32,58 @@ public class ProductCommentController {
     }
 
     @PostMapping(consumes = "application/json;charset=UTF-8")
-    public ResponseEntity<?> addComment(@RequestBody ProductCommentDTO commentDTO, Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        Integer memberNo = Integer.parseInt(userDetails.getUsername());
-
+    public ResponseEntity<?> addComment(@RequestBody ProductCommentDTO commentDTO) {
+        System.out.println("Received POST request to add comment");
         try {
+            // 將DTO轉換為實體
             ProductComment comment = new ProductComment();
             comment.setProductCommentContent(commentDTO.getCommentContent());
             comment.setProductRate(commentDTO.getProductRate());
             comment.setProductCommentStatus(commentDTO.getProductCommentStatus());
             comment.setProductCommentDate(commentDTO.getProductCommentDate());
-            comment.setMember(new Member(memberNo));
-            comment.setProduct(new Product(commentDTO.getProductNo()));
+            comment.setMember(new Member(commentDTO.getMemberNo())); // 使用新的構造函數
+            comment.setProduct(new Product(commentDTO.getProductNo())); // 使用新的構造函數
 
             ProductComment savedComment = commentService.save(comment);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedComment);
+            // 返回DTO對象
+            ProductCommentDTO savedCommentDTO = new ProductCommentDTO(
+                savedComment.getProductCommentNo(),
+                savedComment.getMember().getMemberNo(),
+                savedComment.getProduct().getProductNo(),
+                savedComment.getProductCommentContent(),
+                savedComment.getProductRate(),
+                savedComment.getProductCommentStatus(),
+                savedComment.getProductCommentDate() // 添加 productCommentDate 字段
+            );
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedCommentDTO);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving comment: " + e.getMessage());
         }
     }
 
     @GetMapping("/{productNo}")
     public ResponseEntity<List<ProductCommentDTO>> getCommentsByProductNo(@PathVariable Integer productNo) {
+        System.out.println("Fetching comments for product number: " + productNo);
         try {
             List<ProductCommentDTO> comments = commentService.findCommentsByProductNo(productNo);
+            System.out.println("Comments fetched: " + comments);
             return ResponseEntity.ok(comments);
         } catch (Exception e) {
+            System.out.println("Error fetching comments: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @GetMapping("/stats/{productNo}")
     public ResponseEntity<ProductCommentDTO.CommentStatsDTO> getCommentStats(@PathVariable Integer productNo) {
+        System.out.println("Fetching comment stats for product number: " + productNo);
         try {
             ProductCommentDTO.CommentStatsDTO stats = commentService.getCommentStats(productNo);
+            System.out.println("Comment stats fetched: " + stats);
             return ResponseEntity.ok(stats);
         } catch (Exception e) {
+            System.out.println("Error fetching comment stats: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
