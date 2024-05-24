@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 
 @Configuration
 @EnableWebSecurity
-@Order(2)
+@Order(3)
 public class HostSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -39,9 +39,11 @@ public class HostSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+        http.requestMatchers()
+                .antMatchers("/backstage/**", "/qaback**", "/hostlogin","/hostlogout", "/hostregister", "/passwordreset", "/host/login","/backstage/hostchat/**","/backstage/eventcoupon/**","/backstage/qrcodeticket/**")
+                .and()
             .authorizeRequests()
-                .antMatchers("/hostlogin", "/hostregister", "/passwordreset").permitAll()
+                .antMatchers("/hostlogin", "/hostregister", "/passwordreset","/hostlogout").permitAll()
                 .antMatchers("/backstage/**", "/qaback**", "/backstage/hostchat/**",
                              "/backstage/eventcoupon/**", "/backstage/qrcodeticket/**").hasRole("HOST")
                 .and()
