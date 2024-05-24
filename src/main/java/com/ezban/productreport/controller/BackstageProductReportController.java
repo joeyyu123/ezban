@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 import java.util.List;
 
 
@@ -38,14 +40,16 @@ public class BackstageProductReportController {
 
     // 更新商品被檢舉的狀態
     @PostMapping("/update")
-    public ResponseEntity<?> updateProductReportStatus(@RequestBody UpdateProductReportDTO updateProductReportDTO) {
+    public ResponseEntity<?> updateProductReportStatus(@RequestBody UpdateProductReportDTO updateProductReportDTO,
+                                                       Principal principal) {
 
         try {
 
             //拿员工的資料(暫定先寫死)
-            Integer adminNo = 2;
+//            Integer adminNo = 2;
+            Integer adminNo = Integer.parseInt(principal.getName());
             // 執行更新操作並將管理員資訊回傳
-            productReportSvc.updateProductReport(updateProductReportDTO,adminNo);
+            productReportSvc.updateProductReport(updateProductReportDTO, adminNo);
             // 更新成功，返回 HTTP 200 OK 狀態碼
             return ResponseEntity.ok().build();
         } catch (Exception e) {
