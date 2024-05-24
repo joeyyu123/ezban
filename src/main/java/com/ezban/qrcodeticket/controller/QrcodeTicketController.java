@@ -172,10 +172,9 @@ public class QrcodeTicketController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("您沒有權限生成此票券的QR Code");
             }
 
-            String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-            String fullUrl = baseUrl + "/backstage/qrcodeticket/coupon/redeem?ticketNo=" + ticketNo;
 
-            BufferedImage qrCode = qrcodeTicketSvc.generateQRCodeLogo(fullUrl, 6000, 6000);
+
+            BufferedImage qrCode = qrcodeTicketSvc.generateQRCodeLogo(String.valueOf(ticketNo), 6000, 6000);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ImageIO.write(qrCode, "PNG", byteArrayOutputStream);
             byte[] imageData = byteArrayOutputStream.toByteArray();
