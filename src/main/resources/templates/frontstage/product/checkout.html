@@ -429,10 +429,11 @@
                 console.error('訂單不成立', error);
                 Swal.fire({
                     title: '錯誤!',
-                    text: '訂單建立失敗。',
+                    text: '商品庫存不足，請確認。',
                     icon: 'error',
                     showConfirmButton: false,
-                    allowOutsideClick: false
+                    allowOutsideClick: false,
+                    footer: '<a href="/cart/items">回購物車</a>'
                 });
             });
     }
