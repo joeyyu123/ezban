@@ -1,19 +1,30 @@
 package com.ezban.eventcommentreport.model;
 
+import java.io.Serializable;
+import java.time.Instant;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import com.ezban.admin.model.Admin;
 import com.ezban.eventcomment.model.EventComment;
 import com.ezban.member.model.Member;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.time.Instant;
-
 @Entity
 @Table(name = "event_comment_report")
 public class EventCommentReport implements Serializable {
-    @Id
+ 
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_comment_report_no", nullable = false)
     private Integer eventCommentReportNo;

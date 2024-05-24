@@ -94,12 +94,12 @@ public class ProductCommentReportController {
 
                 if (reportStatus == 2) {
                     ProductComment comment = report.getProductComment();
-                    comment.setProductCommentStatus(-1);
+                    comment.setProductCommentStatus((byte)-1);
                     reportService.saveComment(comment);  // 假設在服務中有保存方法
                     reportService.updateAllReportsWithCommentNo(comment.getProductCommentNo(), reportStatus.byteValue());  // 更新所有報告狀態
                 } else if (reportStatus == 1) {
                     ProductComment comment = report.getProductComment();
-                    comment.setProductCommentStatus(0);
+                    comment.setProductCommentStatus((byte)0);
                     reportService.saveComment(comment);  // 假設在服務中有保存方法
                     reportService.updateAllReportsWithCommentNo(comment.getProductCommentNo(), reportStatus.byteValue());  // 更新所有報告狀態
                 }

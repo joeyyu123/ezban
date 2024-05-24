@@ -1,18 +1,28 @@
 package com.ezban.productcomment.model;
 
+import java.time.LocalDateTime;
+
 public class ProductCommentDTO {
+
     private Integer productCommentNo;
     private Integer memberNo;
+    private Integer productNo;
     private String commentContent;
     private Integer productRate;
-    private Integer productCommentStatus;
+    private Byte productCommentStatus;
+    private LocalDateTime productCommentDate; // 新增的字段
 
-    public ProductCommentDTO(Integer productCommentNo, Integer memberNo, String commentContent, Integer productRate, Integer productCommentStatus) {
+    public ProductCommentDTO() {}
+
+    // 添加新的構造函數
+    public ProductCommentDTO(Integer productCommentNo, Integer memberNo, Integer productNo, String commentContent, Integer productRate, Byte productCommentStatus, LocalDateTime productCommentDate) {
         this.productCommentNo = productCommentNo;
         this.memberNo = memberNo;
+        this.productNo = productNo;
         this.commentContent = commentContent;
         this.productRate = productRate;
         this.productCommentStatus = productCommentStatus;
+        this.productCommentDate = productCommentDate;
     }
 
     public Integer getProductCommentNo() {
@@ -31,6 +41,14 @@ public class ProductCommentDTO {
         this.memberNo = memberNo;
     }
 
+    public Integer getProductNo() {
+        return productNo;
+    }
+
+    public void setProductNo(Integer productNo) {
+        this.productNo = productNo;
+    }
+
     public String getCommentContent() {
         return commentContent;
     }
@@ -47,17 +65,28 @@ public class ProductCommentDTO {
         this.productRate = productRate;
     }
 
-    public Integer getProductCommentStatus() {
+    public Byte getProductCommentStatus() {
         return productCommentStatus;
     }
 
-    public void setProductCommentStatus(Integer productCommentStatus) {
+    public void setProductCommentStatus(Byte productCommentStatus) {
         this.productCommentStatus = productCommentStatus;
     }
 
+    public LocalDateTime getProductCommentDate() {
+        return productCommentDate;
+    }
+
+    public void setProductCommentDate(LocalDateTime productCommentDate) {
+        this.productCommentDate = productCommentDate;
+    }
+
     public static class CommentStatsDTO {
+
         private double averageRating;
         private long ratingCount;
+
+        public CommentStatsDTO() {}
 
         public CommentStatsDTO(double averageRating, long ratingCount) {
             this.averageRating = averageRating;
