@@ -89,9 +89,12 @@
                 });
 
                 if (response.redirected) {
-                    const adminId = response.url.split('?')[0].split('/').pop();
+                    const url = new URL(response.url);
+                    const adminId = url.searchParams.get('adminId');
+                    console.log('Received adminId:', adminId); // 调试信息
                     sessionStorage.setItem('adminId', adminId);
-                    window.location.href = response.url;
+                    console.log('Stored adminId in sessionStorage:', sessionStorage.getItem('adminId')); // 调试信息
+                    window.location.href = url.pathname;
                 } else {
                     document.getElementById('error-message').style.display = 'block';
                 }

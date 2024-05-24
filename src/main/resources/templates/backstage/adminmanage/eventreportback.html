@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>商品管理員檢視和處理檢舉</title>
+    <link th:include="backstage/index :: head">
     <style>
         table {
             width: 100%;
@@ -20,136 +21,247 @@
             text-align: center;
         }
         .action-button {
-            margin-right: 10px;
+            margin: 5px; /* 加入按鈕間距 */
+            background-color: #4F4F4F; /* 按鈕顏色 */
+            color: white;
+            padding: 5px 10px; /* 縮小按鈕 */
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            transition-duration: 0.4s;
+            cursor: pointer;
+            border-radius: 12px; /* 圓角 */
+        }
+        .action-button:hover {
+            background-color: #3A3A3A; /* 深灰色背景 */
         }
         .comment-item.inappropriate {
             opacity: 0.5;
         }
+        .pagination {
+            margin-top: 20px;
+            text-align: center; /* 居中顯示 */
+            display: flex;
+            justify-content: center; /* 確保按鈕在畫面中間 */
+        }
+        .pagination button {
+            margin: 0 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4em; /* 圓角 */
+            background-color: #4F4F4F; /* 按鈕顏色 */
+            color: white;
+        }
+        .pagination .active {
+            font-weight: bold;
+            background-color: blue;
+            color: white;
+        }
     </style>
 </head>
 <body>
-    <h1>活動管理員檢視和處理檢舉</h1>
-    <div id="admin-info"></div>
-    <table>
-        <thead>
-            <tr>
-                <th>檢舉編號</th>
-                <th>評論編號</th>
-                <th>評論內容</th>
-                <th>檢舉人會員編號</th>
-                <th>檢舉原因</th>
-                <th>檢舉日期</th>
-                <th>檢舉狀態</th>
-                <th>是否通過檢舉</th>
-            </tr>
-        </thead>
-        <tbody id="reports-display">
-            <!-- 檢舉將會顯示在這裡 -->
-        </tbody>
-    </table>
+    <div id="wrapper">
+        <nav th:replace="backstage/index :: navbar"></nav>
+        <div class="page-content-wrapper">
+            <!-- 頁面內容都放在 content 裡面 -->
+            <div class="content">
+                <!-- 這裡可以放置你想呈現的內容 -->
+                <h1>活動管理員檢視和處理檢舉</h1>
+                <div id="admin-info"></div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>檢舉編號</th>
+                            <th>評論編號</th>
+                            <th>評論內容</th>
+                            <th>檢舉人會員編號</th>
+                            <th>檢舉原因</th>
+                            <th>檢舉日期</th>
+                            <th>檢舉狀態</th>
+                            <th>是否通過檢舉</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reports-display">
+                        <!-- 檢舉將會顯示在這裡 -->
+                </tbody>
+            </table>
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+</div>
 
-    <script>
-        // 获取并显示管理员信息
-        function displayAdminInfo() {
-            const adminId = sessionStorage.getItem('adminId');
-            if (!adminId) {
-                alert('獲取管理員信息失敗，請重新登錄');
-                window.location.href = '/adminlogin';
-                return;
-            }
-            document.getElementById('admin-info').innerText = `管理員ID: ${adminId}`;
+<script>
+    let currentPage = 1;
+    const itemsPerPage = 10;
+    let allReports = [];
+
+    // 獲取並顯示管理員信息
+    function displayAdminInfo() {
+        const adminId = sessionStorage.getItem('adminId');
+        if (!adminId) {
+            alert('獲取管理員信息失敗，請重新登錄');
+            window.location.href = '/adminlogin';
+            return;
         }
+    }
 
-        // 加載檢舉數據並顯示在表格中
-        async function loadReports() {
-            const adminId = sessionStorage.getItem('adminId');
-            if (!adminId) {
-                alert('獲取管理員信息失敗，請重新登錄');
-                window.location.href = '/adminlogin';
-                return;
+    // 加載檢舉數據並顯示在表格中
+    async function loadReports() {
+        try {
+            const response = await fetch('/api/event/comment/report');
+            allReports = await response.json();
+
+            if (response.ok) {
+                displayReports(currentPage);
+                setupPagination();
+            } else {
+                alert(`加載檢舉數據出錯: ${allReports.message}`);
             }
-
-            try {
-                const response = await fetch('/api/event/comment/report');
-                const reports = await response.json();
-                console.log("檢舉數據:", reports);
-
-                // 按報告狀態排序
-                reports.sort((a, b) => a.reportStatus - b.reportStatus);
-
-                const reportsDisplay = document.getElementById('reports-display');
-                reportsDisplay.innerHTML = '';
-
-                reports.forEach(report => {
-                    const reportClass = report.reportStatus !== 0 ? 'inappropriate' : '';
-                    const reportRow = document.createElement('tr');
-                    reportRow.className = `comment-item ${reportClass}`;
-                    reportRow.dataset.reportId = report.eventCommentReportNo;
-                    reportRow.innerHTML = `
-                        <td>${report.eventCommentReportNo}</td>
-                        <td>${report.eventCommentNo}</td>
-                        <td>${report.eventCommentContent}</td>
-                        <td>${report.memberNo}</td>
-                        <td>${report.reportReason}</td>
-                        <td>${report.formattedReportDate}</td>
-                        <td>${report.reportStatus}</td>
-                        <td>
-                            <button class="action-button" onclick="confirmHandleReport(${report.eventCommentReportNo}, true, '${adminId}')">正常發言</button>
-                            <button class="action-button" onclick="confirmHandleReport(${report.eventCommentReportNo}, false, '${adminId}')">封鎖評論</button>
-                        </td>
-                    `;
-                    reportsDisplay.appendChild(reportRow);
-                });
-            } catch (error) {
-                console.error('加載檢舉出錯:', error);
-            }
+        } catch (error) {
+            console.error('加載檢舉數據出錯:', error);
         }
+    }
 
-        // 確認處理檢舉
-        function confirmHandleReport(reportId, approve, adminId) {
-            const action = approve ? '正常發言' : '封鎖評論';
-            if (confirm(`確定要將此評論設置為"${action}"嗎？`)) {
-                handleReport(reportId, approve, adminId);
-            }
-        }
+    // 顯示指定頁碼的報告
+    function displayReports(page) {
+        const start = (page - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedReports = allReports.slice(start, end);
 
-        // 處理檢舉
-        async function handleReport(reportId, approve, adminId) {
-            const data = {
-                reportStatus: approve ? 1 : 2,
-                adminNo: parseInt(adminId, 10)  // 确保adminNo是整数
-            };
+        const reportsDisplay = document.getElementById('reports-display');
+        reportsDisplay.innerHTML = '';
 
-            console.log("處理的檢舉數據:", data);
-
-            try {
-                const response = await fetch(`/api/event/comment/report/${reportId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                // 检查响应是否为 JSON 格式
-                if (!response.ok) {
-                    throw new Error(`Server error: ${response.statusText}`);
-                }
-
-                const result = await response.json();
-                alert(`檢舉已${approve ? '拒絕' : '同意'}！`);
-                loadReports();
-            } catch (error) {
-                console.error('處理檢舉出錯:', error);
-                alert('處理檢舉失敗');
-            }
-        }
-
-        // 當文檔載入完畢後，開始加載檢舉數據並顯示管理員信息
-        document.addEventListener('DOMContentLoaded', () => {
-            displayAdminInfo();
-            loadReports();
+        paginatedReports.forEach(report => {
+            const reportClass = report.reportStatus !== 0 ? 'inappropriate' : '';
+            const reportRow = document.createElement('tr');
+            reportRow.className = `comment-item ${reportClass}`;
+            reportRow.dataset.reportId = report.eventCommentReportNo;
+            reportRow.innerHTML = `
+                <td>${report.eventCommentReportNo}</td>
+                <td>${report.eventCommentNo}</td>
+                <td>${report.eventCommentContent}</td>
+                <td>${report.memberNo}</td>
+                <td>${report.reportReason}</td>
+                <td>${report.formattedReportDate}</td>
+                <td>${report.reportStatus}</td>
+                <td>
+                    <button class="btn action-button" onclick="confirmHandleReport(${report.eventCommentReportNo}, true)">正常發言</button>
+                    <button class="btn action-button" onclick="confirmHandleReport(${report.eventCommentReportNo}, false)">封鎖評論</button>
+                </td>
+            `;
+            reportsDisplay.appendChild(reportRow);
         });
-    </script>
+    }
+
+    // 設置分頁按鈕
+    function setupPagination() {
+        const pageCount = Math.ceil(allReports.length / itemsPerPage);
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+
+        const firstButton = document.createElement('button');
+        firstButton.innerText = '最前頁';
+        firstButton.classList.add('btn');
+        firstButton.onclick = () => {
+            currentPage = 1;
+            displayReports(currentPage);
+            setupPagination();
+        };
+        pagination.appendChild(firstButton);
+
+        const prevButton = document.createElement('button');
+        prevButton.innerText = '上一頁';
+        prevButton.classList.add('btn');
+        prevButton.onclick = () => {
+            if (currentPage > 1) {
+                currentPage--;
+                displayReports(currentPage);
+                setupPagination();
+            }
+        };
+        pagination.appendChild(prevButton);
+
+        for (let i = 1; i <= pageCount; i++) {
+            const button = document.createElement('button');
+            button.innerText = i;
+            button.classList.add('btn');
+            button.onclick = () => {
+                currentPage = i;
+                displayReports(currentPage);
+                setupPagination();
+            };
+            if (i === currentPage) {
+                button.classList.add('active');
+            }
+            pagination.appendChild(button);
+        }
+
+        const nextButton = document.createElement('button');
+        nextButton.innerText = '下一頁';
+        nextButton.classList.add('btn');
+        nextButton.onclick = () => {
+            if (currentPage < pageCount) {
+                currentPage++;
+                displayReports(currentPage);
+                setupPagination();
+            }
+        };
+        pagination.appendChild(nextButton);
+
+        const lastButton = document.createElement('button');
+        lastButton.innerText = '最後頁';
+        lastButton.classList.add('btn');
+        lastButton.onclick = () => {
+            currentPage = pageCount;
+            displayReports(currentPage);
+            setupPagination();
+        };
+        pagination.appendChild(lastButton);
+    }
+
+    // 確認處理檢舉
+    function confirmHandleReport(reportId, approve) {
+        const action = approve ? '正常發言' : '封鎖評論';
+        if (confirm(`確定要將此評論設置為"${action}"嗎？`)) {
+            handleReport(reportId, approve);
+        }
+    }
+
+    // 處理檢舉
+    async function handleReport(reportId, approve) {
+        const data = {
+            reportStatus: approve ? 1 : 2,
+            adminNo: sessionStorage.getItem('adminId') // 從 sessionStorage 獲取 adminNo
+        };
+
+        try {
+            const response = await fetch(`/api/event/comment/report/${reportId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            alert(`檢舉已${approve ? '拒絕' : '同意'}！`);
+            loadReports();
+        } catch (error) {
+            console.error('處理檢舉出錯:', error);
+            alert('處理檢舉失敗');
+        }
+    }
+
+    // 當文檔加載完畢後，開始加載檢舉數據並顯示管理員信息
+    document.addEventListener('DOMContentLoaded', () => {
+        displayAdminInfo();
+        loadReports();
+    });
+</script>
 </body>
 </html>
