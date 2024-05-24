@@ -1,5 +1,6 @@
 package com.ezban.event.model;
 
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -41,6 +42,18 @@ public interface EventRepository extends JpaRepository<Event, Integer>, JpaSpeci
     List<String> findDistinctEventCity();
 
     List<Event> findByEventCityAndEventCategoryEventCategoryNoAndEventStatus(String city, Integer categoryNo, EventStatus eventStatus, Pageable pageable);
+
+    @Query("SELECT e FROM Event e WHERE e.eventStatus = :status AND " +
+            "(e.eventCity IN :cities OR :cities IS NULL) AND " +
+            "(e.eventCategory.eventCategoryNo IN :categoryNos OR :categoryNos IS NULL)")
+    List<Event> findByEventCityAndEventCategory(@Param("status") EventStatus status,
+                                                @Param("cities") List<String> cities,
+                                                @Param("categoryNos") List<Integer> categoryNos,
+                                                Pageable pageable);
+
+    //host聊天室用的
+    @Query("SELECT e.eventNo FROM Event e WHERE e.host.hostNo = :hostNo")
+    List<Integer> findEventNoByHostNo(@Param("hostNo") Integer hostNo);
 
 
     @Query("SELECT e FROM Event e JOIN FETCH e.eventCategory JOIN FETCH e.host")
