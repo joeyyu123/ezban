@@ -249,13 +249,12 @@
                                                 取消訂單
                                             </button>
                                         </td>
-                                       <td>
-									    <a href="/productcomment">
-									        <button type="button" id="comment_button" style="margin-top: 5px">
-									            前往
-									        </button>
-									    </a>
-									</td>
+                                       
+									    <td>
+									   <button type="button" id="comment_button" data-order-no="[[${order.productOrderNo}]]" onclick="goToProductComment(this)" style="margin-top: 5px">
+										    前往
+										</button>
+									</td>								   	
                                     </tr>
                                 </th:block>
                                 </tbody>
@@ -332,7 +331,35 @@
                 Swal.fire('取消失敗，如有疑問，請洽客服人員協助，感謝您!');
             }
         });
+        
     }
 </script>
+ <script>
+        function goToProductComment(button) {
+            const orderNo = button.getAttribute('data-order-no');
+
+            fetch('/api/product/comment/order/' + orderNo, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const productNo = data.productNo;
+                const memberNo = data.memberNo;
+                window.location.href = '/productComment?productNo=' + productNo + '&memberNo=' + memberNo;
+            })
+            .catch(error => {
+                console.error('Error fetching product and member info:', error);
+            });
+        }
+    </script>
+
 
 </html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>評星和評論系統</title>
+<title>商品評星和評論系統</title>
 <style>
 #star-rating .star {
 	font-size: 30px;
@@ -134,42 +134,41 @@ button {
 </style>
 </head>
 <body>
-	<h1>產品評分和評論</h1>
+    <h1>產品評分和評論</h1>
 
-	<div id="product-info">
-		<div class="average-rating">
-			<span id="average-rating-value">0.0</span>
-			<div class="stars" id="average-rating-stars"></div>
-			<span class="count" id="rating-count">(0)</span>
-		</div>
-	</div>
+    <div id="product-info">
+        <div class="average-rating">
+            <span id="average-rating-value">0.0</span>
+            <div class="stars" id="average-rating-stars"></div>
+            <span class="count" id="rating-count">(0)</span>
+        </div>
+    </div>
 
-	<div id="comments-display">
-		<!-- 評論將會顯示在這裡 -->
-	</div>
+    <div id="comments-display">
+        <!-- 評論將會顯示在這裡 -->
+    </div>
 
-	<div class="pagination" id="pagination">
-		<button onclick="goToPage('first')">最前頁</button>
-		<button onclick="goToPage('previous')">上一頁</button>
-		<!-- 動態生成的頁碼按鈕 -->
-		<button onclick="goToPage('next')">下一頁</button>
-		<button onclick="goToPage('last')">最後頁</button>
-	</div>
+    <div class="pagination" id="pagination">
+        <button onclick="goToPage('first')">最前頁</button>
+        <button onclick="goToPage('previous')">上一頁</button>
+        <!-- 動態生成的頁碼按鈕 -->
+        <button onclick="goToPage('next')">下一頁</button>
+        <button onclick="goToPage('last')">最後頁</button>
+    </div>
 
-	<div id="star-rating">
-		<span class="star" onclick="setRating(1)">&#9733;</span> <span
-			class="star" onclick="setRating(2)">&#9733;</span> <span class="star"
-			onclick="setRating(3)">&#9733;</span> <span class="star"
-			onclick="setRating(4)">&#9733;</span> <span class="star"
-			onclick="setRating(5)">&#9733;</span>
-	</div>
+    <div id="star-rating">
+        <span class="star" onclick="setRating(1)">&#9733;</span> 
+        <span class="star" onclick="setRating(2)">&#9733;</span> 
+        <span class="star" onclick="setRating(3)">&#9733;</span> 
+        <span class="star" onclick="setRating(4)">&#9733;</span> 
+        <span class="star" onclick="setRating(5)">&#9733;</span>
+    </div>
 
-	<textarea id="commentContent" placeholder="寫下你的評論..."></textarea>
-	<button onclick="submitComment()">提交評論</button>
+    <textarea id="commentContent" placeholder="寫下你的評論..."></textarea>
+    <button onclick="submitComment()">提交評論</button>
 
-	<script>
+    <script>
         var currentRating = 0;
-        var productNo = 1; // 假設的產品編號
         var currentPage = 1;
         var totalPages = 1;
         const commentsPerPage = 10;
@@ -187,26 +186,42 @@ button {
         }
 
         function getCurrentMemberNo() {
-            return "2"; // 假設的會員編號
+            const memberNo = sessionStorage.getItem('memberNo');
+            if (!memberNo) {
+                alert('獲取會員信息失敗，請重新登錄');
+                window.location.href = '/login';
+                return null;
+            }
+            return memberNo;
+        }
+
+        function getProductNo() {
+            const productNo = sessionStorage.getItem('productNo');
+            if (!productNo) {
+                alert('獲取產品信息失敗');
+                return null;
+            }
+            return productNo;
         }
 
         function submitComment() {
             const commentContent = document.getElementById('commentContent').value;
+            const memberNo = getCurrentMemberNo();
+            const productNo = getProductNo();
+            
+            if (!memberNo || !productNo) {
+                return;
+            }
+
             if (!currentRating || !commentContent.trim()) {
                 alert("請填寫評分和評論內容！");
                 return;
             }
 
-            const memberNumber = parseInt(getCurrentMemberNo(), 10); 
-            if (isNaN(memberNumber)) {
-                alert("會員編號必須是一個有效的數字！");
-                return;
-            }
-
             const data = {
                 productCommentNo: null,
-                memberNo: memberNumber,
-                productNo: productNo,
+                memberNo: parseInt(memberNo),
+                productNo: parseInt(productNo),
                 commentContent: commentContent,
                 productRate: currentRating,
                 productCommentDate: new Date().toISOString(),
@@ -238,7 +253,6 @@ button {
             });
         }
 
-        // 加載評論
         function loadComments(productNo, page) {
             fetch(`/api/product/comment/${productNo}`)
             .then(response => {
@@ -336,7 +350,7 @@ button {
             })
             .then(result => {
                 alert("檢舉已提交！");
-                loadComments(productNo, currentPage);
+                loadComments(getProductNo(), currentPage);
             })
             .catch(error => {
                 console.error('檢舉出錯:', error);
@@ -361,7 +375,7 @@ button {
                 default:
                     currentPage = parseInt(action);
             }
-            loadComments(productNo, currentPage);
+            loadComments(getProductNo(), currentPage);
         }
 
         function updatePagination(currentPage, totalPages) {
@@ -379,10 +393,34 @@ button {
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            loadComments(productNo, currentPage);
-            loadCommentStats(productNo);
+            loadComments(getProductNo(), currentPage);
+            loadCommentStats(getProductNo());
         });
 
+        function goToProductComment(button) {
+            const orderNo = button.getAttribute('data-order-no');
+
+            fetch('/api/product/comment/order/' + orderNo, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const productNo = data.productNo;
+                const memberNo = data.memberNo;
+                window.location.href = '/productComment?productNo=' + productNo + '&memberNo=' + memberNo;
+            })
+            .catch(error => {
+                console.error('Error fetching product and member info:', error);
+            });
+        }
     </script>
 </body>
 </html>

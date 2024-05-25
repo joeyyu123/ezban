@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ezban.admin.model.Admin;
 import com.ezban.admin.model.AdminRepository;
 import com.ezban.member.model.Member;
+import com.ezban.product.model.Product;
 import com.ezban.productcomment.model.ProductComment;
 import com.ezban.productcomment.model.ProductCommentRepository;
 import com.ezban.productcommentreport.model.ProductCommentReport;
@@ -67,6 +68,9 @@ public class ProductCommentReportController {
 
             ProductComment productComment = commentRepository.findById(productCommentNo)
                     .orElseThrow(() -> new RuntimeException("ProductComment not found"));
+
+            Integer productNo = productComment.getProduct().getProductNo(); // 獲取商品編號
+            System.out.println("Product No: " + productNo);
 
             Member member = new Member();
             member.setMemberNo(memberNo);

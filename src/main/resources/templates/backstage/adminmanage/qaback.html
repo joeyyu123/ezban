@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>後台常見問題管理</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+     <link th:include="backstage/index :: head">
+   
     <style>
     #title, #content {
         width: 100%; 
@@ -30,8 +31,12 @@
 </style>
 </head>
 <body>
-    <div class="container mt-5">
+    <div id="wrapper">
+    <nav th:replace="backstage/index :: navbar"></nav>
+    <div class="page-content-wrapper">
+       
         <h1>常見問題管理</h1>
+        <div class="content">
         <div class="mb-3">
             <label for="title" class="form-label">標題</label>
             <input type="text" class="form-control" id="title">

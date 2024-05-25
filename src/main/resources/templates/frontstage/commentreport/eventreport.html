@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>事件評分和評論</title>
+    <title>活動評分和評論</title>
+    
     <style>
+        body {
+            background-color: #F5E8E4; /* 根據右側背景顏色設置 */
+        }
+
         #star-rating .star {
             font-size: 30px;
             cursor: pointer;
@@ -103,7 +108,7 @@
     </style>
 </head>
 <body>
-    <h1>事件評分和評論</h1>
+    <h1>活動評分和評論</h1>
 
     <div id="event-info">
         <div class="average-rating">
@@ -249,7 +254,6 @@
                 console.error('加载评分统计出错:', error);
             });
         }
-
 
         function reportComment(commentElement) {
             const commentId = commentElement.getAttribute('data-comment-id');
