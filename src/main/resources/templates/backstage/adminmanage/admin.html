@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>平台員工管理</title>
+</head>
+<body>
+    <h1>平台員工列表</h1>
+    <form th:action="@{/adminsManagement/search}" method="get">
+        <label for="searchInput">搜尋帳號：</label>
+        <input type="text" id="searchInput" name="searchAccount" />
+        <button type="submit">查詢</button>
+    </form>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>編號</th>
+                <th>帳號</th>
+                <th>名稱</th>
+                <th>郵件</th>
+                <th>電話</th>
+                <th>狀態</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="admin : ${admins}">
+                <td th:text="${admin.adminNo}"></td>
+                <td th:text="${admin.adminAccount}"></td>
+                <td th:text="${admin.adminName}"></td>
+                <td th:text="${admin.adminMail}"></td>
+                <td th:text="${admin.adminPhone}"></td>
+                <td th:text="${admin.adminStatus == 1 ? '啟用' : '停用'}"></td>
+                <td>
+                    <form th:action="@{/adminsManagement/disable}" method="post">
+                        <input type="hidden" name="adminNo" th:value="${admin.adminNo}" />
+                        <button type="submit">停用</button>
+                    </form>
+                    <form th:action="@{/adminsManagement/enable}" method="post">
+                        <input type="hidden" name="adminNo" th:value="${admin.adminNo}" />
+                        <button type="submit">啟用</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

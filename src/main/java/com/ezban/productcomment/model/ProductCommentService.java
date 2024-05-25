@@ -72,3 +72,4 @@ public class ProductCommentService {
         return new ProductCommentDTO.CommentStatsDTO(averageRating, ratingCount);
     }
 }
+

@@ -1,30 +1,30 @@
 let indexProducts = [];
 /* 取商品資訊 */
 function getIndexProducts() {
-    let url = "/product/getAllProducts";
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            indexProducts = data
-                .slice(0, 8)  // 取前8個商品
-                .map(product => ({
-                product_no: product.productNo,
-                product_name: product.productName,
-                product_url: `/product/shopdetail?productNo=${product.productNo}`,
-                product_img: `/product/getFirstImage/${product.productNo}`,
-                price: product.productPrice
-            }));
-            showIndexProducts(indexProducts);
-        })
-        .catch(error => console.error("取得商品失敗:", error));
+	let url = "/product/getAllProducts";
+	fetch(url)
+		.then(response => response.json())
+		.then(data => {
+			indexProducts = data
+				.slice(0, 8)  // 取前8個商品
+				.map(product => ({
+					product_no: product.productNo,
+					product_name: product.productName,
+					product_url: `/product/shopdetail?productNo=${product.productNo}`,
+					product_img: `/product/getFirstImage/${product.productNo}`,
+					price: product.productPrice
+				}));
+			showIndexProducts(indexProducts);
+		})
+		.catch(error => console.error("取得商品失敗:", error));
 }
 
 function showIndexProducts(products) {
-    let container = document.getElementById('index_products');
-    container.innerHTML = '';
-    products.forEach(product => {
-        // console.log(product.product_no)
-        let card = `
+	let container = document.getElementById('index_products');
+	container.innerHTML = '';
+	products.forEach(product => {
+		// console.log(product.product_no)
+		let card = `
             <div class="col-md-3">
                 <div class="product-item">
                     <div class="product-thumb">
@@ -37,10 +37,10 @@ function showIndexProducts(products) {
                 </div>
             </div>
         `;
-        container.innerHTML += card;
-    });
+		container.innerHTML += card;
+	});
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    getIndexProducts();
+	getIndexProducts();
 });
