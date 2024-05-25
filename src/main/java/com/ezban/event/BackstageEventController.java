@@ -2,13 +2,12 @@ package com.ezban.event;
 
 import com.ezban.event.model.Event;
 import com.ezban.event.model.EventDto;
-import com.ezban.event.model.Service.EventService;
 import com.ezban.event.model.EventStatus;
+import com.ezban.event.model.Service.EventService;
 import com.ezban.eventcategory.model.EventCategory;
 import com.ezban.eventcategory.model.EventCategoryService;
 import com.ezban.host.model.Host;
 import com.ezban.host.model.HostService;
-import com.ezban.registrationform.model.RegistrationForm;
 import com.ezban.registrationform.model.RegistrationFormService;
 import com.ezban.ticketorder.model.Service.TicketOrderStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -30,15 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/backstage")
@@ -66,7 +57,7 @@ public class BackstageEventController {
     public String event(Model model) {
         List<EventCategory> eventCategories = eventCategoryService.findAll();
         model.addAttribute("categories", eventCategories);
-        return "/backstage/event/event";
+        return "backstage/event/event";
     }
 
     /**
@@ -123,7 +114,7 @@ public class BackstageEventController {
             eventsDto.add(eventService.convertToDto(event));
         }
         model.addAttribute("events", eventsDto);
-        return "/backstage/event/events";
+        return "backstage/event/events";
     }
 
     @GetMapping("/events/{eventNo}/overview")
@@ -133,7 +124,7 @@ public class BackstageEventController {
         Event event = eventService.findById(eventNo);
         if (!Objects.equals(event.getHost().getHostNo(), hostNo)) {
             model.addAttribute("message", "你無權查看該活動");
-            return "/backstage/event/warning";
+            return "backstage/event/warning";
         }
 
         // 放入活動票券總販售數量、已販售數量、剩餘數量
@@ -146,7 +137,7 @@ public class BackstageEventController {
         model.addAttribute("ticketInfo", ticketInfo);
         model.addAttribute("registrationInfo", registrationInfo);
         model.addAttribute("event", eventService.findById(eventNo));
-        return "/backstage/event/event-overview";
+        return "backstage/event/event-overview";
     }
 
     /**
@@ -190,7 +181,7 @@ public class BackstageEventController {
         model.addAttribute("event", eventService.findById(eventNo));
         model.addAttribute("eventNo", eventNo);
         model.addAttribute("categories", eventCategoryService.findAll());
-        return "/backstage/event/event";
+        return "backstage/event/event";
     }
 
 
@@ -230,10 +221,10 @@ public class BackstageEventController {
         Event event = eventService.findById(eventNo);
         if (!eventService.isAuthenticated(principal, event)) {
             model.addAttribute("message", "You are not authorized to access this page.");
-            return "/backstage/event/warning";
+            return "backstage/event/warning";
         }
         model.addAttribute("event", eventService.findById(eventNo));
-        return "/backstage/event/event-desc";
+        return "backstage/event/event-desc";
     }
 
     /**

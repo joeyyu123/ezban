@@ -86,7 +86,7 @@ public class EventController {
         model.addAttribute("events", dtoList);
         model.addAttribute("eventCategories", eventCategories);
         model.addAttribute("eventCities", eventCities);
-        return "/frontstage/event/events";
+        return "frontstage/event/events";
     }
 
     @GetMapping("/page/{page}")

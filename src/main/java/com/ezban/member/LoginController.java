@@ -1,24 +1,23 @@
 package com.ezban.member;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.HashMap;
-import java.util.UUID;
-
-import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberAuthenticate;
 import com.ezban.member.model.MemberMailService;
 import com.ezban.member.model.MemberRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 public class LoginController {
@@ -87,7 +86,8 @@ public class LoginController {
 			mem.setResetToken(resetToken);
 			memRepository.save(mem);
 
-			String resetUrl = "http://localhost:8080/changePassword?resetToken=" + resetToken;
+			String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+			String resetUrl = baseUrl + "/changePassword?resetToken=" + resetToken;
 
 			String emailBody = "您好，請點擊以下網址來修改您的密碼：" + resetUrl;
 			emailService.sendEmail(memberMail, "重设密码", emailBody);

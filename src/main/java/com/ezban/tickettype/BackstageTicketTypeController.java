@@ -1,6 +1,5 @@
 package com.ezban.tickettype;
 
-import com.ezban.event.BackstageEventController;
 import com.ezban.event.model.Event;
 import com.ezban.event.model.Service.EventService;
 import com.ezban.tickettype.model.TicketType;
@@ -41,7 +40,7 @@ public class BackstageTicketTypeController {
         model.addAttribute("eventNo", eventNo);
         model.addAttribute("event", eventService.findById(eventNo));
 
-        return "/backstage/event/ticket-type";
+        return "backstage/event/ticket-type";
     }
 
     @PostMapping("")

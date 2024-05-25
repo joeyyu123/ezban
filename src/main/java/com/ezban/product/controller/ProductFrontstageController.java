@@ -42,13 +42,13 @@ public class ProductFrontstageController {
 
     @GetMapping("/shopall")
     public String shopall() {
-        return "/frontstage/product/shopall";
+        return "frontstage/product/shopall";
     }
 
     @GetMapping("/shopdetail")
     public String shopdetail(@RequestParam(name = "productNo", required = true) String productNo, Model model) {
         model.addAttribute("productNo", productNo);
-        return "/frontstage/product/shopdetail";
+        return "frontstage/product/shopdetail";
     }
 
     @GetMapping("/getAllProducts")
