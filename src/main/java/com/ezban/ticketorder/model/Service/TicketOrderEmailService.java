@@ -92,6 +92,7 @@ public class TicketOrderEmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED);
 
         // 設定郵件內容
+        helper.setFrom("ezbantest@gmail.com");
         helper.setTo(ticketOrder.getMember().getMemberMail());
         helper.setSubject(event.getEventName() + " - 報名取消通知");
         helper.setText("很抱歉通知您，因主辦廠商取消本次活動，故將取消您的報名並進行退款。");
@@ -159,6 +160,7 @@ public class TicketOrderEmailService {
                 .append(ticketType.getEvent().getEventName()).append(" 活動頁面進行購買。");
 
         // 設定郵件內容
+        helper.setFrom("ezbantest@gmail.com");
         helper.setTo(member.getMemberMail());
         helper.setSubject(ticketType.getEvent().getEventName() + " - 票券釋出通知");
         helper.setText(sb.toString());
