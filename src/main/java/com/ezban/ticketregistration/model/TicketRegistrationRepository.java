@@ -8,4 +8,6 @@ public interface TicketRegistrationRepository extends MongoRepository<TicketRegi
 
     List<TicketRegistration> findAllByEventNo(String eventNo);
 
+    void deleteByTicketOrderNo(String ticketOrderNo);
+
 }

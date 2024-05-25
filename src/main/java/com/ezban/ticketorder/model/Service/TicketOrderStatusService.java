@@ -6,6 +6,7 @@ import com.ezban.ticketorder.model.TicketOrderPaymentStatus;
 import com.ezban.ticketorder.model.TicketOrderRepository;
 import com.ezban.ticketorder.model.TicketOrderStatus;
 import com.ezban.ticketorderdetail.model.TicketOrderDetail;
+import com.ezban.ticketregistration.model.TicketRegistrationService;
 import com.ezban.tickettype.model.TicketType;
 import com.ezban.tickettype.model.TicketTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class TicketOrderStatusService {
     TicketOrderEmailService ticketOrderEmailService;
 
     @Autowired
+    TicketRegistrationService ticketRegistrationService;
+
+    @Autowired
     RedisTemplate<String, Object> redisTemplate;
 
 
@@ -52,6 +56,8 @@ public class TicketOrderStatusService {
         if (currentTime.after(new Timestamp(startTime.getTime() - 3 * 24 * 60 * 60 * 1000))) { //活動開始前三天內取消訂單不退款
             ticketOrder.setTicketOrderStatus(TicketOrderStatus.CANCELED);
             addReamingTicketTypeBack(ticketOrder);
+            // 刪除mongoDb中的報名資料
+            ticketRegistrationService.deleteByTicketOrderNo(String.valueOf(ticketOrder.getTicketOrderNo()));
 
             try {
                 ticketOrderEmailService.sendEmailToSubscribers(ticketOrder);
@@ -66,6 +72,8 @@ public class TicketOrderStatusService {
             ticketOrder.setTicketOrderStatus(TicketOrderStatus.CANCELED);
             ticketOrder.setTicketOrderPaymentStatus(TicketOrderPaymentStatus.REFUNDED);
             addReamingTicketTypeBack(ticketOrder);
+            ticketRegistrationService.deleteByTicketOrderNo(String.valueOf(ticketOrder.getTicketOrderNo()));
+
 
             try {
                 ticketOrderEmailService.sendEmailToSubscribers(ticketOrder);
