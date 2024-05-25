@@ -167,14 +167,12 @@ public class QrcodeTicketController {
         try {
             Integer hostNo = qrcodeTicketSvc.getHostNoByTicketNo(ticketNo);
 
-            // 確認當前登入的主辦方是否是這張票券所屬的主辦方
+            // 確認當前登入的host是否是這張票券所屬的host
             if (!principal.getName().equals(hostNo.toString())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("您沒有權限生成此票券的QR Code");
             }
 
-
-
-            BufferedImage qrCode = qrcodeTicketSvc.generateQRCodeLogo(String.valueOf(ticketNo), 6000, 6000);
+            BufferedImage qrCode = qrcodeTicketSvc.generateQRCodeLogo(String.valueOf(ticketNo), 600, 600);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             ImageIO.write(qrCode, "PNG", byteArrayOutputStream);
             byte[] imageData = byteArrayOutputStream.toByteArray();
@@ -189,19 +187,22 @@ public class QrcodeTicketController {
 
     /*******************************QR Code兌換*********************************************/
     @GetMapping("/coupon/redeem")
-    public ResponseEntity<String> redeemCoupon(@RequestParam Long ticketNo) {
+    public ResponseEntity<String> redeemCoupon(@RequestParam Long ticketNo, Principal principal) {
         try {
-            boolean success = qrcodeTicketSvc.redeemTicket(ticketNo);
+            boolean success = qrcodeTicketSvc.redeemTicket(ticketNo, principal);
             if (success) {
                 return ResponseEntity.ok("編號:" + ticketNo + "的QR Code已成功兌換");
             } else {
                 return ResponseEntity.badRequest().body("兌換QR Code失敗，QR Code可能已被使用或不存在");
             }
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("發生錯誤:" + e.getMessage());
         }
     }
+
 
     @ModelAttribute("memberListData")
     protected List<Member> referenceListData() {
