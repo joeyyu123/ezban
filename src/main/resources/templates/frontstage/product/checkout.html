@@ -175,7 +175,7 @@
     var checkoutProductsString = /*[[${products}]]*/ 'default';
     /*]]>*/
     let checkoutProducts = JSON.parse(checkoutProductsString);
-    console.log(checkoutProducts, "checkoutProducts")
+    // console.log(checkoutProducts, "checkoutProducts")
 
 
     getCheckoutItemsFromLocal(checkoutProducts);
@@ -188,7 +188,7 @@
     /* 從localStorage取要結帳的商品 */
     // input is {Key: productNo, Value: quantity, ...}
     function getCheckoutItemsFromLocal(checkoutProducts) {
-        console.log(checkoutProducts, "getCheckoutItemsFromLocal")
+        // console.log(checkoutProducts, "getCheckoutItemsFromLocal")
         let allItems = [];
         for (const [productNo, quantity] of Object.entries(checkoutProducts)) {
             let url = `/product/getProductDetail?productNo=${productNo}`;
@@ -406,7 +406,7 @@
             productOrderDetail: collectItems()
         };
 
-        console.log('訂單資料:', checkoutData);
+        // console.log('訂單資料:', checkoutData);
 
         // 傳送訂單資料到後端
         fetch('/productorder/insert', {
@@ -417,7 +417,19 @@
             body: JSON.stringify(checkoutData)
         })
             .then(response => {
+                // console.log(response, "response")
                 if (response.status === 403) {
+                    Swal.fire({
+                        title: '錯誤',
+                        text: '請重新至購物車購買',
+                        icon: 'error',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        footer: '<a href="/cart/items">回購物車</a>'
+                    });
+                    throw new Error('請重新登入');
+                }
+                if (response.redirected) {
                     Swal.fire({
                         title: '錯誤',
                         text: '請重新登入',
@@ -427,14 +439,15 @@
                         footer: '<a href="/loginPage">前往登入</a>'
                     });
                     throw new Error('請重新登入');
-                }if (response.status === 409) {
+                }
+                if (response.status === 409) {
                     lackProductNamesList = JSON.parse(response.headers.get('productNo'));
                     lackProductNames = '';
                     for (let i = 0; i < lackProductNamesList.length; i++) {
                         lackProductNames += productDetails[lackProductNamesList[i]].productName + '<br>';
                     }
                     text = `${lackProductNames} <br> 庫存不足，請確認。`;
-                    console.log(text, "text");
+                    // console.log(text, "text");
                     Swal.fire({
                         title: '錯誤',
                         html: text,
@@ -448,7 +461,7 @@
                 return response.json()
             })
             .then(data => {
-                console.log('訂單成立', data);
+                // console.log('訂單成立', data);
                 Swal.fire({
                     title: '付款成功',
                     text: '訂單已成功建立。',

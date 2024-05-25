@@ -37,9 +37,16 @@ public class CartService {
                 Integer productNo = Integer.parseInt(((String) k).split(":")[1]);
                 Integer quantity = (Integer) v;
                 Product product = productRepository.findById(productNo).orElse(null);
-                if (product != null && quantity != null) {
-                    cartItems.add(new CartItems(product, quantity));
+                if (product == null) {
+                    return;
                 }
+                Integer inventoryQuantity = product.getRemainingQty();
+                // 如果實際庫存量小於購物車數量，更新購物車數量
+                if (inventoryQuantity < quantity) {
+                    updateCartQty(memberNo, productNo, inventoryQuantity);
+                    quantity = inventoryQuantity;
+                }
+                cartItems.add(new CartItems(product, quantity));
             } catch (NumberFormatException ex) {
                 System.err.println("Error parsing product number: " + k);
             }
@@ -84,12 +91,24 @@ public class CartService {
         return cartItems.size();
     }
 
-    public  Map<String, Object> getCartItems(Integer memberNo) {
+    public Map<String, Object> getCartItems(Integer memberNo) {
         String cartKey = KEY_PREFIX + memberNo;
         Map<String, Object> cartItems = hashOperations.entries(cartKey);
         Map<String, Object> processedCartItems = new HashMap<>();
         cartItems.forEach((key, value) -> {
-                processedCartItems.put(key.substring(PRODUCTKEY_PREFIX.length()), value);
+            Integer productNo = Integer.parseInt(key.substring(PRODUCTKEY_PREFIX.length()));
+            Product product = productRepository.findById(productNo).orElse(null);
+            if (product == null) {
+                return;
+            }
+            Integer quantity = (Integer) value;
+            Integer inventoryQuantity = product.getRemainingQty();
+            // 如果實際庫存量小於購物車數量，更新購物車數量
+            if (inventoryQuantity < quantity) {
+                updateCartQty(memberNo, productNo, inventoryQuantity);
+                quantity = inventoryQuantity;
+            }
+            processedCartItems.put( String.valueOf(productNo), quantity);
         });
         return processedCartItems;
     }
