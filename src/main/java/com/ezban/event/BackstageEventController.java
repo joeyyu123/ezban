@@ -73,7 +73,7 @@ public class BackstageEventController {
             host = hostService.findHostByHostNo(principal.getName()).orElseThrow();
         } catch (Exception e) {
             model.addAttribute("message", "你不是主辦單位，無權新增活動");
-            return "/backstage/event/warning";
+            return "backstage/event/warning";
         }
         Event event = new Event();
         EventCategory category = eventCategoryService.findById(Integer.parseInt(allParams.get("eventCategory")));
@@ -106,7 +106,7 @@ public class BackstageEventController {
             }
             model.addAttribute("eventStatus", eventStatus);
             model.addAttribute("events", eventsDto);
-            return "/backstage/event/events";
+            return "backstage/event/events";
         }
         List<Event> events = eventService.findByHostNo(host.getHostNo());
         List<EventDto> eventsDto = new ArrayList<>();
@@ -176,7 +176,7 @@ public class BackstageEventController {
         Event event = eventService.findById(eventNo);
         if (!eventService.isAuthenticated(principal, event)) {
             model.addAttribute("message", "You are not authorized to access this page.");
-            return "/backstage/event/warning";
+            return "backstage/event/warning";
         }
         model.addAttribute("event", eventService.findById(eventNo));
         model.addAttribute("eventNo", eventNo);
@@ -197,7 +197,7 @@ public class BackstageEventController {
         Event event = eventService.findById(eventNo);
         if (!eventService.isAuthenticated(principal, event)) {
             model.addAttribute("message", "You are not authorized to access this page.");
-            return "/backstage/event/warning";
+            return "backstage/event/warning";
         }
         EventCategory category = eventCategoryService.findById(Integer.parseInt(allParams.get("eventCategory")));
         setEventInfo(allParams, event, category);

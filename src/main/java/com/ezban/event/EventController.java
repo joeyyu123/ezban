@@ -131,7 +131,7 @@ public class EventController {
         EventDto dto = eventService.getEventDetails(eventNo);
         if (dto != null) {
             model.addAttribute("event", dto);
-            return "/frontstage/event/event";
+            return "frontstage/event/event";
         }
         return "redirect:/events";
     }

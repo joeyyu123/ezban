@@ -32,7 +32,7 @@ public class BackstageTicketTypeController {
         Event event = eventService.findById(eventNo);
         if (!eventService.isAuthenticated(principal, event)){
             model.addAttribute("message", "You are not authorized to access this page.");
-            return "/backstage/event/warning";
+            return "backstage/event/warning";
         }
 
         List<TicketType> ticketTypes = ticketTypeService.findByEventNo(eventNo);
