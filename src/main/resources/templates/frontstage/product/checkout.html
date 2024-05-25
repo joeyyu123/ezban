@@ -429,7 +429,7 @@
                     });
                     throw new Error('請重新登入');
                 }
-                if (response.redirected) {
+                if (response.redirected && response.url.endsWith('loginPage')) {
                     Swal.fire({
                         title: '錯誤',
                         text: '請重新登入',
@@ -467,7 +467,7 @@
                     text: '訂單已成功建立。',
                     icon: 'success',
                     showConfirmButton: false,
-                    footer: '<a href="/">回首頁</a>',
+                    footer: '<a href="/productorder/findByMember">查看訂單</a>',
                     allowOutsideClick: false
                 });
             });
