@@ -148,7 +148,7 @@
     <div class="container event-container">
 
         <div class="row">
-            <div class="filter-column">
+            <div class="col-md-3">
 
                 <div class="widget product-category">
                     <h4 class="widget-title" style="font-size: 16px;">篩選活動</h4>
@@ -177,8 +177,8 @@
                     </form>
                 </div>
             </div>
-            <div class="events-column" id="event-container">
-                <div class="event-item" th:each="event : ${events}">
+            <div class="col-md-9" id="event-container">
+                <div class=" col-md-4" th:each="event : ${events}">
                     <div class="product-item">
                         <div class="product-thumb">
                             <img id="event-img" class="img-responsive" th:src="'data:image/jpeg;base64, '+${event.eventImg}"
@@ -345,7 +345,7 @@
                         hour12: false
                     }).replace(/\//g, '-').replace(',', '');
                     const eventHtml = `
-                        <div class="event-item">
+                        <div class="col-md-4">
                             <div class="product-item">
                                 <div class="product-thumb">
                                     <img id="event-img" class="img-responsive" src="data:image/jpeg;base64, ${event.eventImg}" alt="event-img"/>
@@ -383,6 +383,8 @@
                 });
             });
     }
+    document.getElementById('start').min = new Date().toISOString().split("T")[0];
+    document.getElementById('end').min = new Date().toISOString().split("T")[0];
 
     $("#clear-filter").click(function (e) {
         window.location.href = '/events';
