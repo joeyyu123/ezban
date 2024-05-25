@@ -5,8 +5,21 @@
     <title>ezban | save_product</title>
 </head>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
 <style>
+    .dashboard-menu li a {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 999px; /* 將數值設置為一個足夠大的值，使按鈕呈現橢圓形 */
+        transition: background-color 0.5s; /* 背景顏色過渡效果 */
+        text-decoration: none; /* 移除超連結的下劃線 */
+    }
+
+    .dashboard-menu li a:hover {
+        background-color: blue; /* 滑鼠懸停時的背景顏色 */
+        transform: scale(1.2);
+        font-weight: bold;
+    }
+
     .btn-icon {
         color: lightgray;
         font-size: 30px;
@@ -63,6 +76,27 @@
         border-radius: 50%;
         background-color: blue;
     }
+
+    /* 圖片容器，設置為內聯區塊並相對定位 */
+    .img-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* 圖片初始狀態，設定寬度和過渡效果，並設定初始的圓角矩形 */
+    .img-container img {
+        width: 100px;
+        transition: transform 0.3s ease, z-index 0.3s ease, border-radius 0.3s ease;
+        /*border-radius: 10px; !* 初始的圓角矩形 *!*/
+    }
+
+    /* 當滑鼠懸停時，圖片放大且提升堆疊順序，同時使圖片變為圓角 */
+    .img-container:hover img {
+        transform: scale(1.5); /* 整體放大圖片 */
+        z-index: 10; /* 提升放大圖片的堆疊順序 */
+        position: relative; /* 確保z-index生效 */
+        border-radius: 15px; /* 放大後更圓的矩形 */
+    }
 </style>
 <body id="body">
 <div th:replace="frontstage/index2 :: header"></div>
@@ -91,6 +125,12 @@
             <div class="row">
                 <div class="col-md-12" style=" margin-bottom: 100px;">
                     <div class="container">
+                        <ul class="list-inline dashboard-menu text-center">
+                            <li><a id="button0" href="javascript:void(0)" onclick="showContent(1)" data-status="1"
+                                   class="active">目前收藏</a></li>
+                            <li><a id="button1" href="javascript:void(0)" onclick="showContent(0)"
+                                   data-status="0">歷史收藏</a></li>
+                        </ul>
                         <div class="dashboard-wrapper user-dashboard">
                             <div class="table-responsive">
                                 <table id="example" class="table">
@@ -116,8 +156,10 @@
                                     <th:block th:each="saveProduct : ${saveProductListData}">
                                         <tr>
                                             <td>
-                                                <img th:src="@{/saveproduct/DBGifReader(productNo=${saveProduct.product.productNo})}"
-                                                     width="100px">
+                                                <div class="img-container">
+                                                    <img th:src="@{/saveproduct/DBGifReader(productNo=${saveProduct.product.productNo})}"
+                                                         alt="Product Image">
+                                                </div>
                                             </td>
                                             <td style="vertical-align: middle"
                                                 th:text="${saveProduct.product.productName} + ' [' + ${saveProduct.product.productNo} + ']'"></td>
@@ -153,5 +195,44 @@
     <div th:replace="frontstage/index2 :: footer"></div>
 </div>
 </body>
+
+<script>
+    $(document).ready(function () {
+        // 初始設定，只顯示"目前收藏"
+        filterSaves(1);
+
+        // 點擊事件處理
+        $('.dashboard-menu li a').click(function () {
+            var status = $(this).data('status');
+            filterSaves(status);
+
+            // 添加/移除按钮的 active class
+            $('.dashboard-menu li a').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        function filterSaves(status) {
+            // 隱藏所有內容
+            $('.table tbody tr').hide();
+
+            // 顯示所有符合狀態的內容
+            $('.table tbody tr').each(function () {
+                var saveStatus = $(this).find('td[data-status]').data('status');
+                if (saveStatus == status) {
+                    $(this).show();
+                }
+            });
+        }
+
+        //在按鈕外部調用過濾函數,來定義全局showContent 函数
+        window.showContent = function (status) {
+            filterSaves(status);
+
+            // 更新按钮的 active class
+            $('.dashboard-menu li a').removeClass('active');
+            $('.dashboard-menu li a[data-status="' + status + '"]').addClass('active');
+        };
+    });
+</script>
 
 </html>

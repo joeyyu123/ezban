@@ -147,6 +147,19 @@
         transform: scale(1.2);
         font-weight: bold;
     }
+
+    /* 禁用按鈕樣式 */
+    button:disabled {
+        background-color: #ddd; /* 灰色 */
+        color: white;
+        cursor: not-allowed;
+    }
+
+    /* 禁用按鈕 hover 效果 */
+    button:disabled:hover {
+        background-color: #ddd; /* 保持灰色 */
+        transform: none; /* 取消放大效果 */
+    }
 </style>
 
 <!-- Start breadcrumb -->
@@ -195,7 +208,6 @@
                                 <tr>
                                     <th>訂單編號</th>
                                     <th>訂單成立日期</th>
-                                    <th>支付金額</th>
                                     <th>訂單狀態</th>
                                     <th>查看明細</th>
                                     <th>取消訂單</th>
@@ -217,8 +229,6 @@
                                             th:text="${'#'+ productOrder.productOrderNo}"></td>
                                         <td style="vertical-align: middle"
                                             th:text="${#dates.format(productOrder.productOrderdate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-                                        <td style="vertical-align: middle"
-                                            th:text="${'NT$ ' + productOrder.productCheckoutAmount}"></td>
                                         <td style="vertical-align: middle"
                                             th:data-status="${productOrder.productProcessStatus}">
                                             <span th:if="${productOrder.productProcessStatus == 0}"><span
@@ -245,12 +255,13 @@
                                         <td>
                                             <button type="button" style="margin-top: 10px"
                                                     th:id="productProcessStatus+${productOrder.productOrderNo}"
-                                                    th:onclick="cancelOrderButton([[${productOrder.productOrderNo}]])">
+                                                    th:onclick="cancelOrderButton([[${productOrder.productOrderNo}]])"
+                                                    th:disabled="${productOrder.productProcessStatus != 0}">
                                                 取消訂單
                                             </button>
                                         </td>
                                         <td>
-                                            <button type="button" id="comment_button" style="margin-top: 5px">
+                                            <button type="button" id="comment_button" style="margin-top:10px">
                                                 前往
                                             </button>
                                         </td>

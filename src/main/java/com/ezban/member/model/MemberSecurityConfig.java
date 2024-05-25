@@ -58,6 +58,7 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/cart/**",
                         "/product/**",
                         "/productorder/**",
+                        "/productorderdetail/**",
                         "/productreport/**",
                         "/saveproduct/**")
                 .and()
@@ -70,12 +71,17 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/auth/status",
                         "/cart/items",
                         "/",
-                        "/product/**").permitAll()
+                        "/product/**",
+                        "/productorder/**",
+                        "/productorderdetail/**",
+                        "/productreport/**",
+                        "/saveproduct/**").permitAll()
                 .antMatchers("/events/orders/**",
                         "/events/order/**",
                         "/events/*/tickets",
                         "/cart/**",
                         "/productorder/**",
+                        "/productorderdetail/**",
                         "/productreport/**",
                         "/saveproduct/**",
                         "/saveevent/**",
