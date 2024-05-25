@@ -208,7 +208,6 @@
                                 <tr>
                                     <th>訂單編號</th>
                                     <th>訂單成立日期</th>
-<!--                                    <th>支付金額</th>-->
                                     <th>訂單狀態</th>
                                     <th>查看明細</th>
                                     <th>取消訂單</th>
@@ -230,8 +229,6 @@
                                             th:text="${'#'+ productOrder.productOrderNo}"></td>
                                         <td style="vertical-align: middle"
                                             th:text="${#dates.format(productOrder.productOrderdate, 'yyyy-MM-dd HH:mm:ss')}"></td>
-<!--                                        <td style="vertical-align: middle"-->
-<!--                                            th:text="${'NT$ ' + productOrder.productCheckoutAmount}"></td>-->
                                         <td style="vertical-align: middle"
                                             th:data-status="${productOrder.productProcessStatus}">
                                             <span th:if="${productOrder.productProcessStatus == 0}"><span
