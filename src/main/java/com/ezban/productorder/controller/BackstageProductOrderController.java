@@ -168,7 +168,6 @@ public class BackstageProductOrderController {
 
 
     // 廠商更新單筆訂單
-    @PreAuthorize("hasRole('host')")
     @PostMapping("/backstage/productorder/getOneForUpdateByHost")
     public String getOneForUpdateByHost(@RequestParam("productOrderNo") String productOrderNo, ModelMap model) {
 
@@ -177,7 +176,6 @@ public class BackstageProductOrderController {
         return "backstage/productorder/updateProductOrderInputByHost";
 
     }
-    @PreAuthorize("hasRole('host')")
     @PostMapping("/backstage/productorder/updateByHost")
     public String updateByHost(@Valid UpdateProductOrderByHostDTO updateProductOrderByHostDTO, BindingResult result, ModelMap model) throws IOException {
 
