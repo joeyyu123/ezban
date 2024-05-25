@@ -93,3 +93,7 @@ ul.categories {
 .swal2-icon.swal2-success .swal2-success-line-long {
     animation: none !important;
 }
+/* 收藏後的愛心變色效果 */
+ .favorited {
+     color: red !important;
+ }
