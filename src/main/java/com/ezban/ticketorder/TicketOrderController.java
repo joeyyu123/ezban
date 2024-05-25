@@ -168,17 +168,17 @@ public class TicketOrderController {
             model.addAttribute("message", "付款成功，請至我的票券查看");
 
             // TODO 修改訂單狀態 以下這段在正式上線後應註解掉，由EcpayController中更新訂單狀態
-            TicketOrder ticketOrder = ticketOrderService.findById(Integer.valueOf(merchantTradeNo.substring(14)));
-            ticketOrder = ticketOrderService.finishOrder(ticketOrder, paymentDate);
-
-            // 儲存QRCode票券到資料庫
-            ticketOrderService.createQrcodeTickets(ticketOrder);
-
-            try {
-                ticketOrderEmailService.sendOrderEmail(ticketOrder);
-            } catch (MessagingException | IOException | WriterException e) {
-                System.out.println(e.getMessage());
-            }
+//            TicketOrder ticketOrder = ticketOrderService.findById(Integer.valueOf(merchantTradeNo.substring(14)));
+//            ticketOrder = ticketOrderService.finishOrder(ticketOrder, paymentDate);
+//
+//            // 儲存QRCode票券到資料庫
+//            ticketOrderService.createQrcodeTickets(ticketOrder);
+//
+//            try {
+//                ticketOrderEmailService.sendOrderEmail(ticketOrder);
+//            } catch (MessagingException | IOException | WriterException e) {
+//                System.out.println(e.getMessage());
+//            }
 
             // =================================================================================
 
