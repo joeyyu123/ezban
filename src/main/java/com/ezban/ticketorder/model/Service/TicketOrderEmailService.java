@@ -50,6 +50,7 @@ public class TicketOrderEmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_RELATED);
 
         // 設定郵件內容
+        helper.setFrom("ezbantest@gmail.com");
         helper.setTo(ticketOrder.getMember().getMemberMail());
         helper.setSubject(event.getEventName() + " - 報名成功通知");
         helper.setText(generateEmailContent(ticketOrder, event), true);
