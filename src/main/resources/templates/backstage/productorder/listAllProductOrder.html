@@ -28,7 +28,7 @@
             </div>
             <div class="modal-body">
                 <!-- 表單 -->
-                <form id="shippingInformation" method="get" action="/backstage/productorder/listAllProductOrder">
+                <form id="shippingInformation" method="get" action="/admin/productorder/listAllProductOrder">
                     <div class="mb-3"><label for="recipient" class="col-form-label">收件人:</label>
                         <input type="text" class="form-control" id="recipient" readonly></div>
                     <div class="mb-3"><label for="recipientPhone" class="col-form-label">收件人電話:</label>
@@ -43,7 +43,7 @@
             <div class="modal-footer">
                 <br>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-                        onclick="window.location.href='/backstage/productorder/listAllProductOrder'">返回第一頁
+                        onclick="window.location.href='/admin/productorder/listAllProductOrder'">返回第一頁
                 </button>
             </div>
         </div>
@@ -164,7 +164,7 @@
     <div th:insert="backstage/adminmanage/index :: hamburger-btn"></div>
     <div class="page-content-wrapper">
         <div class="content">
-            <a class="navbar-brand" th:href="@{/backstage/productorder/selectPage}"
+            <a class="navbar-brand" th:href="@{/admin/productorder/selectPage}"
                style="display: inline-block; float: right; color: darkgray; font-size: 20px; font-weight: bold; text-decoration: none;">
                 <span style="transition: color 0.3s;"><i
                         class="fa-solid fa-square-caret-left"></i> 回查詢首頁</span></a>
