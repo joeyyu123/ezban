@@ -59,8 +59,8 @@
 
 <body>
 <div id="wrapper">
-    <nav th:replace="backstage/index :: navbar"></nav>
-    <div th:insert="backstage/index :: hamburger-btn"></div>
+    <nav th:replace="backstage/adminmanage/index :: navbar"></nav>
+    <div th:insert="backstage/adminmanage/index :: hamburger-btn"></div>
     <div class="page-content-wrapper">
         <div class="content">
             <br>
@@ -82,14 +82,14 @@
                     <br>
                 </h5></li>
                 <li>
-                    <form method="post" th:action="@{/backstage/productorder/getOneForDisplay}">
+                    <form method="post" th:action="@{/admin/productorder/getOneForDisplay}">
                         輸入訂單編號: <input type="text" name="productOrderNo" th:value="${param.productOrderNo}">
                         <input type="submit" value="送出"> (請輸入訂單編號)
                     </form>
                     <br>
                 </li>
                 <li>
-                    <form method="post" th:action="@{/backstage/productorder/getOneForDisplay}">
+                    <form method="post" th:action="@{/admin/productorder/getOneForDisplay}">
                         選擇訂單編號: <select name="productOrderNo">
                         <option th:each="productOrder : ${productOrderListData}"
                                 th:value="${productOrder.productOrderNo}"

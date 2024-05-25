@@ -14,7 +14,7 @@ public class ProductCommentDTO {
 
     public ProductCommentDTO() {}
 
-    // 添加新的构造函数
+    // 添加新的構造函數
     public ProductCommentDTO(Integer productCommentNo, Integer memberNo, Integer productNo, String commentContent, Integer productRate, Byte productCommentStatus, LocalDateTime productCommentDate) {
         this.productCommentNo = productCommentNo;
         this.memberNo = memberNo;

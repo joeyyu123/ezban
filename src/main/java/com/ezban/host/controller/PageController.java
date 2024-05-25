@@ -2,11 +2,13 @@ package com.ezban.host.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class PageController {
 
-	@GetMapping("/hostlogin")
+	@RequestMapping(value="/hostlogin", method = {RequestMethod.GET, RequestMethod.POST})
 	public String showhostlogin() {
 		return "backstage/HostLogin/hostlogin";
 	}
@@ -46,7 +48,7 @@ public class PageController {
 		return "backstage/admin/adminregister";
 	}
 
-	@GetMapping("/adminlogin")
+	@RequestMapping(value="/adminlogin", method = {RequestMethod.GET, RequestMethod.POST})
 	public String showadminlogin() {
 		return "backstage/admin/adminlogin";
 	}
@@ -66,9 +68,9 @@ public class PageController {
 		return "backstage/adminmanage/productreportback";
 	}
 
-	@GetMapping("/permissionsback")
-	public String showpermissionsback() {
-		return "backstage/adminmanage/permissionsback";
+	@GetMapping("/admin")
+	public String showadmin() {
+		return "backstage/adminmanage/admin";
 	}
 
 	@GetMapping("/birthdayback")

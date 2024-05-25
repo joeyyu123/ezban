@@ -1,81 +1,65 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>管理員管理系統</title>
-<link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<style>
-body {
-	background-color: #f8f9fa;
-	padding-top: 20px;
-}
-
-.admin-container {
-	background-color: #fff;
-	padding: 2rem;
-	border-radius: 0.5rem;
-	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-	max-width: 800px;
-	margin: auto;
-}
-
-.admin-buttons button {
-	margin-bottom: 1rem;
-	width: 100%;
-	display: block;
-}
-</style>
-</head>
-<body>
-	<div class="container">
-		<div class="admin-container">
-			<h1 class="text-center">管理員管理系統</h1>
-			<div class="admin-buttons">
-				<button class="btn btn-primary"
-					onclick="window.location.href='birthdayback'">生日禮券管理</button>
-				<button class="btn btn-primary"
-					onclick="window.location.href='permissionsback'">用戶權限管理</button>
-				<button class="btn btn-primary"
-					onclick="window.location.href='qaback'">常見問題管理</button>
-				<button class="btn btn-primary"
-					onclick="window.location.href='productreportback'">商品評論檢舉管理</button>
-				<button class="btn btn-primary"
-					onclick="window.location.href='eventreportback'">活動評論檢舉管理</button>
-				<form action="/adminlogout" method="post">
-					<button type="submit" class="btn btn-danger">登出</button>
-				</form>
-			</div>
-		</div>
-	</div>
-
-	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-	<script
-		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-	<script>
-        // 獲取當前登錄的管理員信息並存儲在會話存儲中
-        async function getCurrentAdmin() {
-            try {
-                const response = await fetch('/api/admin/current', {
-                    credentials: 'include' // 確保請求包括憑證
-                });
-                if (!response.ok) {
-                    throw new Error(`Network response was not ok: ${response.statusText}`);
-                }
-                const data = await response.json();
-                sessionStorage.setItem('adminId', data.adminId);
-                console.log('Current Admin ID:', data.adminId);
-            } catch (error) {
-                console.error('Failed to get current admin:', error);
-                alert('獲取管理員信息失敗，請重新登錄');
-                window.location.href = '/adminlogin';
-            }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理員管理系統</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 20px;
         }
 
-        // 當文檔載入完畢後，獲取當前登錄的管理員信息
+        .admin-container {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .admin-buttons button {
+            margin-bottom: 1rem;
+            width: 100%;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="admin-container">
+            <h1 class="text-center">管理員管理系統</h1>
+            <div class="admin-buttons">
+                <button id="birthdayButton" class="btn btn-primary">生日禮券管理</button>
+                <button id="adminManagementButton" class="btn btn-primary">平台員工管理</button>
+                <button id="qaButton" class="btn btn-primary">常見問題管理</button>
+                <button id="productReportButton" class="btn btn-primary">商品評論檢舉管理</button>
+                <button id="eventReportButton" class="btn btn-primary">活動評論檢舉管理</button>
+                <form action="/adminlogout" method="post">
+                    <button type="submit" class="btn btn-danger">登出</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // getCurrentAdmin();
+            const adminId = sessionStorage.getItem('adminId');
+            if (!adminId) {
+                alert('獲取管理員信息失敗，請重新登錄');
+                window.location.href = '/adminlogin';
+                return;
+            }
+
+            document.getElementById('birthdayButton').onclick = () => window.location.href = `birthdayback?adminId=${adminId}`;
+            document.getElementById('adminManagementButton').onclick = () => window.location.href = `admin?adminId=${adminId}`;
+            document.getElementById('qaButton').onclick = () => window.location.href = `qaback?adminId=${adminId}`;
+            document.getElementById('productReportButton').onclick = () => window.location.href = `productreportback?adminId=${adminId}`;
+            document.getElementById('eventReportButton').onclick = () => window.location.href = `eventreportback?adminId=${adminId}`;
         });
     </script>
 </body>

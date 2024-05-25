@@ -197,3 +197,7 @@ document.querySelector('form').addEventListener('submit', function (event) {
     }
 });
 
+document.getElementById('eventAddTime').min = new Date().toISOString().slice(0, 16);
+document.getElementById('eventStartTime').min = new Date().toISOString().slice(0, 16);
+document.getElementById('eventEndTime').min = new Date().toISOString().slice(0, 16);
+document.getElementById('eventRemoveTime').min = new Date().toISOString().slice(0, 16);

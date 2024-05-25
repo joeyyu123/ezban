@@ -42,11 +42,11 @@ public class AdminSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.requestMatchers()
-                .antMatchers( "/api/**","/qaback/**","/adminlogin","/admin/login","/adminlogout", "/adminregister", "/adminpasswordreset","/adminmanage/**","/backstage/productorder/**","/backstage/productreport")
+                .antMatchers( "/api/**","/qaback/**","/adminlogin","/admin/login","/adminlogout", "/adminregister", "/adminpasswordreset","/adminmanage/**","/admin/**")
                 .and()
             .authorizeRequests()
-                .antMatchers("/api/**","/adminlogin", "/adminregister", "/adminpasswordreset","/admin/login").permitAll()
-                .antMatchers("/adminmanage/**","/backstage/productorder/**","/backstage/productreport","/qaback/**").hasRole("ADMIN") // 仅允许管理员访问管理界面
+                .antMatchers("/api/**","/qaback/**","/adminlogin", "/adminregister", "/adminpasswordreset","/admin/login").permitAll()
+                .antMatchers("/adminmanage/**","/admin/productorder/selectPage","/admin/productreport","/admin/productorder/listAllProductOrder","/admin/productorder/listOneProductOrder/**","/admin/productorder/update/**").hasRole("ADMIN") // 仅允许管理员访问管理界面
                 .and()
             .formLogin()
                 .loginPage("/adminlogin")

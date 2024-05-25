@@ -51,8 +51,8 @@
 
 <body>
 <div id="wrapper">
-    <nav th:replace="backstage/index :: navbar"></nav>
-    <div th:insert="backstage/index :: hamburger-btn"></div>
+    <nav th:replace="backstage/adminmanage/index :: navbar"></nav>
+    <div th:insert="backstage/adminmanage/index :: hamburger-btn"></div>
     <div class="page-content-wrapper">
         <div class="content">
             <nav class="navbar navbar-expand-md navbar-dark bg-transparent justify-content-center">
@@ -120,7 +120,7 @@
                         <div></div>
                         <div style="display: flex; justify-content: space-between;">
                             <button type="button"
-                                    onclick="window.location.href='/backstage/productorder/listAllProductOrder'"> 取 消
+                                    onclick="window.location.href='/admin/productorder/listAllProductOrder'"> 取 消
                                 更 新
                             </button>
                             <button type="submit" id="submit"> 送 出 更 新</button>

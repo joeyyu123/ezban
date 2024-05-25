@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>查看我的評論</title>
+<style>
+body {
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	background-color: #f4f4f4;
+}
+
+.container {
+	width: 80%;
+	margin: 20px auto;
+	background-color: #fff;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+	text-align: center;
+	margin-bottom: 20px;
+}
+
+ul {
+	list-style-type: none;
+	padding: 0;
+}
+
+li {
+	margin-bottom: 10px;
+	padding: 10px;
+	background-color: #f9f9f9;
+	border-radius: 5px;
+}
+</style>
+</head>
+<body>
+	<div class="container">
+		<h1>查看我的評論</h1>
+		<h2>產品評論</h2>
+		<ul id="productCommentList">
+			<li th:each="comment : ${productComments}"
+				th:text="${comment.productCommentContent}"></li>
+		</ul>
+		<h2>活動評論</h2>
+		<ul id="eventCommentList">
+			<th:block th:each="comment : ${eventComments}">
+				<li th:text="${comment.eventCommentContent}"></li>
+			</th:block>
+		</ul>
+	</div>
+</body>
+</html>

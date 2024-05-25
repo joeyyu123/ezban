@@ -1,80 +1,62 @@
 package com.ezban.member;
 
-import com.ezban.member.model.Member;
-import com.ezban.member.model.MemberService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import java.util.Optional;
 
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ezban.member.model.Member;
+import com.ezban.member.model.MemberRepository;
+import com.ezban.member.model.MemberService;
 
 @Controller
 @RequestMapping("/members")
 public class MemberController {
+    
+    @Autowired
+    private MemberService memService;
+    
+    @Autowired
+    private MemberRepository memberRepository;
 
-	@Autowired
-	private MemberService memservice;
+    @GetMapping("/currentLogin")
+    @ResponseBody
+    public Member getCurrentMember(@AuthenticationPrincipal UserDetails userDetails) {
+    	System.out.println("User Name ================ " + userDetails.getUsername());
+        Optional<Member> member = memService.findMemberByMemberNo(userDetails.getUsername());
+        return member.orElse(null); // 返回 JSON 数据
+    }
 
-	@GetMapping
-	@ResponseBody
-	public List<Member> getAllMembers() {
-
-		return memservice.getAllMembers();
+    @PutMapping("/update/{memberMail}")
+    @ResponseBody
+    public String updateMember(@PathVariable String memberMail, @RequestBody Member member) {
+        Optional<Member> existingMemberOptional = memberRepository.findByMemberMail(memberMail);
+        if (existingMemberOptional.isPresent()) {
+            Member existingMember = existingMemberOptional.get();
+            existingMember.setMemberName(member.getMemberName());
+            existingMember.setAddress(member.getAddress());
+            existingMember.setMemberPhone(member.getMemberPhone());
+            existingMember.setCommonRecipient(member.getCommonRecipient());
+            existingMember.setCommonRecipientPhone(member.getCommonRecipientPhone());
+            existingMember.setCommonRecipientAddress(member.getCommonRecipientAddress());
+            memberRepository.save(existingMember);
+            return "會員資料更新成功";
+        } else {
+            return "找不到相應的會員資料";
+        }
+    }
+    
+    @GetMapping("/memberCenterPage")
+	public String getMemberCenterPage() {
+		return "frontstage/member/memberCenter";
 	}
-	
-	@GetMapping("/{memberNo}")
-	@ResponseBody
-	public Member getMemberById(@PathVariable Integer memberNo) {
-		
-	    return memservice.getMemberById(memberNo);
-	}
-
-
-	@GetMapping("/mail/{memberMail}")
-	@ResponseBody
-	public Member getMemberByMemberMail(@PathVariable String memberMail) {
-
-		return memservice.getMemberByMemberMail(memberMail);
-	}
-
-	@GetMapping("/name/{memberName}")
-	@ResponseBody
-	public Member getMemberByMemberName(@PathVariable String memberName) {
-
-		return memservice.getMemberByMemberName(memberName);
-	}
-
-	@GetMapping("/phone/{memberPhone}")
-	@ResponseBody
-	public Member getMemberByMemberPhone(@PathVariable String memberPhone) {
-
-		return memservice.getMemberByMemberPhone(memberPhone);
-	}
-	
-	@GetMapping("/getstatus/{memberStatus}")
-	@ResponseBody
-	public List<Member> getMembersByStatus(@PathVariable Byte memberStatus) {
-		
-		return memservice.getMembersByStatus(memberStatus);
-	}
-
-	@PutMapping("/status/{memberMail}")
-	@ResponseBody
-	public void updateMemberStatus(@RequestParam Byte memberStatus, @PathVariable String memberMail) {
-
-		memservice.updateMemberStatus(memberStatus, memberMail);
-	}
-
-	@PutMapping("/points/{memberMail}")
-	@ResponseBody
-	public void updateMemberPoints(@RequestParam Integer memberPoints, @PathVariable String memberMail) {
-
-		memservice.updateMemberPoints(memberPoints, memberMail);
-	}
-	
-	@GetMapping("/memberPage")
-	public String getMemberPage() {
-		return "frontstage/member/member";
-	}
-
 }

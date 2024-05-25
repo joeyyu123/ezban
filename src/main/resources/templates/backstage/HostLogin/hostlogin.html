@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>企業登入</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- font-awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         body {
             background-color: #f8f9fa;
@@ -41,6 +43,18 @@
             color: red;
             display: none;
         }
+
+        .admin-login {
+            margin-top: 550px;
+            margin-right: 50px;
+            color: lightgray;
+            text-decoration: none; /* 可選：去掉下劃線 */
+            transition: color 0.3s ease; /* 添加過渡效果 */
+        }
+
+        .admin-login:hover {
+            color: #1515d9; /* 懸停時的顏色 */
+        }
     </style>
 </head>
 <body>
@@ -72,6 +86,8 @@
             <a href="/hostregister">前往註冊</a>
         </p>
     </div>
+
+    <a href="adminlogin" class="admin-login"><i class="fa-solid fa-user"></i> 管理員登入</a>
 
     <script>
         // Show error message only when the error parameter exists

@@ -193,6 +193,7 @@
                         <input type="hidden" name="eventNo" th:value="${event.eventNo}">
                         <input type="hidden" name="ticketTypeNo" th:value="${ticketType.ticketTypeNo}">
                         <input type="hidden" name="ticketTypeQty" value="0">
+                        <input type="hidden" id="ticketTypeRemainingQty" th:value="${ticketType.remainingTicketQty}">
                         <input type="hidden" id="ticketTypePrice" th:value="${ticketType.ticketTypePrice}">
                         <input type="hidden" id="ticketTypeLimitQty" th:value="${ticketType.purchaseQuantityLimit}">
                         <div class="col-8">

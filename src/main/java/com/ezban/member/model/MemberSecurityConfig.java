@@ -16,10 +16,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.security.Principal;
 
 @Configuration
@@ -29,6 +29,9 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private MemberUserDetailsService memberUserDetailsService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -43,6 +46,7 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                 .requestMatchers()
                 .antMatchers("/",
                         "/login",
+                        "/logout",
                         "/loginPage",
                         "/register",
                         "/forgotPassword",
@@ -87,6 +91,7 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout()
+                .logoutUrl("/logout") // 确保登出URL正确
                 .logoutSuccessUrl("/")
                 .permitAll()
                 .and()
@@ -117,7 +122,6 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
         return failureHandler;
     }
 
-
     // 用於驗證Ajax中"商品收藏"與"商品檢舉"的會員登入狀態判斷
     @RestController
     @RequestMapping("/auth")
@@ -129,3 +133,4 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 }
+

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EZBAN會員中心</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        #app {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .message {
+            display: none;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <h1>會員資料管理</h1>
+    <div id="member-info">
+        <h2>會員基本信息</h2>
+        <p>會員帳號(電子郵件): <span id="memberMail"></span></p>
+        <p>姓名: <span id="memberName"></span></p>
+        <p>地址: <span id="address"></span></p>
+        <p>電話號碼: <span id="memberPhone"></span></p>
+        <p>生日: <span id="birthday"></span></p>
+        <p>性別: <span id="genderText"></span></p>
+        <p>常用收件人姓名: <span id="commonRecipient"></span></p>
+        <p>常用收件人電話號碼: <span id="commonRecipientPhone"></span></p>
+        <p>常用收件人地址: <span id="commonRecipientAddress"></span></p>
+    </div>
+    <div id="edit-form">
+        <h2>編輯會員資料</h2>
+        <form id="memberForm">
+            <label for="memberMailInput">會員帳號(電子郵件):</label>
+            <input type="email" id="memberMailInput" name="memberMail" readonly><br>
+            <label for="memberNameInput">姓名:</label>
+            <input type="text" id="memberNameInput" name="memberName"><br>
+            <label for="addressInput">地址:</label>
+            <input type="text" id="addressInput" name="address"><br>
+            <label for="memberPhoneInput">電話號碼:</label>
+            <input type="text" id="memberPhoneInput" name="memberPhone"><br>
+            <label for="birthdayInput">生日:</label>
+            <input type="date" id="birthdayInput" name="birthday" readonly><br>
+            <label for="genderInput">性別:</label>
+            <input type="text" id="genderInput" name="gender" readonly><br>
+            <label for="commonRecipientInput">常用收件人姓名:</label>
+            <input type="text" id="commonRecipientInput" name="commonRecipient"><br>
+            <label for="commonRecipientPhoneInput">常用收件人電話號碼:</label>
+            <input type="text" id="commonRecipientPhoneInput" name="commonRecipientPhone"><br>
+            <label for="commonRecipientAddressInput">常用收件人地址:</label>
+            <input type="text" id="commonRecipientAddressInput" name="commonRecipientAddress"><br>
+            <button type="submit">更新資料</button>
+        </form>
+        <div id="message" class="message"></div>
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+	// 加载会员信息
+    loadMemberInfo();
+    const memberForm = document.getElementById('memberForm');
+    const messageDiv = document.getElementById('message');
+    let memberMail = ''; // 存储会员邮箱地址
+
+    // 加載會員基本信息
+    function loadMemberInfo() {
+        fetch('/members/currentLogin')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('網路請求失敗');
+                }
+                if (response.status === 204) {
+                    console.log('響應體為空');
+                    return {}; // 返回一个空对象，或者可以根据需要返回其他默认值
+                }
+                if (response.ok) {
+                	return response.json(); // 否则，解析 JSON 响应体
+                }
+            })
+            .then(data => {
+                updateMemberInfo(data); // 调用更新会员信息的函数
+            });
+    }
+
+    // 更新會員資料
+    function updateMemberData(data) {
+        fetch('/members/update/' + memberMail, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            console.log(response);
+            if (response.ok) {
+                return response.text();
+            } else {
+                throw new Error('會員資料更新失敗');
+            }
+        })
+        .then(message => {
+            messageDiv.textContent = message;
+            messageDiv.className = 'message success';
+            messageDiv.style.display = 'block';
+            loadMemberInfo(); // 更新完数据后重新加载会员信息
+        })
+        .catch(error => {
+            console.error(error);
+            messageDiv.textContent = error.message;
+            messageDiv.className = 'message error';
+            messageDiv.style.display = 'block';
+        });
+    }
+
+    // 更新会员信息
+    function updateMemberInfo(data) {
+        document.getElementById('memberMail').textContent = data.memberMail;
+        document.getElementById('memberName').textContent = data.memberName;
+        document.getElementById('address').textContent = data.address;
+        document.getElementById('memberPhone').textContent = data.memberPhone;
+        document.getElementById('birthday').textContent = data.birthday;
+        
+        // 将 data.gender 转换为数字并显示对应的文本
+        console.log('Gender value from server:', data.gender);
+        let genderText = '';
+        switch (Number(data.gender)) {
+            case 0:
+                genderText = '不便透漏';
+                break;
+            case 1:
+                genderText = '男';
+                break;
+            case 2:
+                genderText = '女';
+                break;
+            default:
+                genderText = '未知';
+        }
+        document.getElementById('genderText').textContent = genderText;
+
+        document.getElementById('genderText').textContent = genderText;
+        document.getElementById('commonRecipient').textContent = data.commonRecipient;
+        document.getElementById('commonRecipientPhone').textContent = data.commonRecipientPhone;
+        document.getElementById('commonRecipientAddress').textContent = data.commonRecipientAddress;
+
+        document.getElementById('memberMailInput').value = data.memberMail;
+        document.getElementById('memberNameInput').value = data.memberName;
+        document.getElementById('addressInput').value = data.address;
+        document.getElementById('memberPhoneInput').value = data.memberPhone;
+        document.getElementById('birthdayInput').value = data.birthday;
+        document.getElementById('genderInput').value = data.gender;
+        document.getElementById('commonRecipientInput').value = data.commonRecipient;
+        document.getElementById('commonRecipientPhoneInput').value = data.commonRecipientPhone;
+        document.getElementById('commonRecipientAddressInput').value = data.commonRecipientAddress;
+
+        // 存储会员邮箱地址
+        memberMail = data.memberMail;
+
+        console.log(data);
+    }
+
+    // 监听表单提交事件
+    memberForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formData = new FormData(memberForm);
+        const data = {
+            memberName: formData.get('memberName'),
+            address: formData.get('address'),
+            memberPhone: formData.get('memberPhone'),
+            commonRecipient: formData.get('commonRecipient'),
+            commonRecipientPhone: formData.get('commonRecipientPhone'),
+            commonRecipientAddress: formData.get('commonRecipientAddress')
+        };
+
+        updateMemberData(data); // 调用更新会员数据的函数
+    });
+
+    
+});
+</script>
+
+</body>
+</html>
