@@ -7,7 +7,6 @@ import com.ezban.host.model.Host;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +35,6 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 
 	// 生日優惠券排程用
 	@Query("SELECT m FROM Member m WHERE FUNCTION('MONTH', m.birthday) = :month AND m.memberStatus = :status")
-    List<Member> findMembersByBirthdayMonthAndStatus(int month, byte status);
+	List<Member> findMembersByBirthdayMonthAndStatus(int month, byte status);
 
 }

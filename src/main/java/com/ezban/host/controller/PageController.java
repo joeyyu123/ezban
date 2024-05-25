@@ -68,9 +68,9 @@ public class PageController {
 		return "backstage/adminmanage/productreportback";
 	}
 
-	@GetMapping("/permissionsback")
-	public String showpermissionsback() {
-		return "backstage/adminmanage/permissionsback";
+	@GetMapping("/admin")
+	public String showadmin() {
+		return "backstage/adminmanage/admin";
 	}
 
 	@GetMapping("/birthdayback")

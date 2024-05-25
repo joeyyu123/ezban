@@ -77,7 +77,6 @@ public class FrontstageProductOrderController {
 
 
     // 會員取消訂單
-    @PreAuthorize("hasRole('member')")
     @PostMapping("/productorder/cancelProductOrder")
     public ResponseEntity<?> cancelProductOrder(@RequestBody CancelProductOrderDTO cancelProductOrderDTO) {
 

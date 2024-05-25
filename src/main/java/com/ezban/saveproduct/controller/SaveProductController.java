@@ -45,7 +45,6 @@ public class SaveProductController {
 
 
     // 新增收藏商品
-    @PreAuthorize("hasRole('member')")
     @PostMapping("/saveproduct/insert")
     public ResponseEntity<?> submitSaveProduct(@RequestBody AddSaveProductDTO addSaveProductDTO, Principal principal) {
 

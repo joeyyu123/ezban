@@ -26,8 +26,12 @@ $(document).ready(function () {
         let ticketType = $(this).closest(".ticket-type");
         $(ticketType).find(".quantity-info").removeClass("hidden");
         let limitQty = parseInt($(ticketType).find("#ticketTypeLimitQty").val());
-        // let remainQty = parseInt($(ticketType).find("input[name='remainingTicketQty']").val());
+        let remainQty = parseInt($(ticketType).find("#ticketTypeRemainingQty").val());
         let qty = parseInt($(ticketType).find("input[name='ticketTypeQty']").val())
+        if (qty >= remainQty){
+            alert("票券庫存不足")
+            return;
+        }
         if (qty >= limitQty) {
             return;
         }
@@ -228,6 +232,7 @@ $(document).ready(function () {
             error: function (error) {
                 // 處理錯誤的回應
                 alert(error.responseText)
+                window.redirect(window.location.href);
             }
         });
     });

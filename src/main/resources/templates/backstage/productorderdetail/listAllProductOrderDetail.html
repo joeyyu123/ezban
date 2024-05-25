@@ -68,6 +68,27 @@
     .navbar-brand:hover span {
         color: black;
     }
+
+    /* 圖片容器，設置為內聯區塊並相對定位 */
+    .img-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    /* 圖片初始狀態，設定寬度和過渡效果，並設定初始的圓角矩形 */
+    .img-container img {
+        width: 100px;
+        transition: transform 0.3s ease, z-index 0.3s ease, border-radius 0.3s ease;
+        /*border-radius: 10px; !* 初始的圓角矩形 *!*/
+    }
+
+    /* 當滑鼠懸停時，圖片放大且提升堆疊順序，同時使圖片變為圓角 */
+    .img-container:hover img {
+        transform: scale(1.5); /* 整體放大圖片 */
+        z-index: 10; /* 提升放大圖片的堆疊順序 */
+        position: relative; /* 確保z-index生效 */
+        border-radius: 15px; /* 放大後更圓的矩形 */
+    }
 </style>
 
 <body>
@@ -101,8 +122,10 @@
                         <tr>
                             <td th:text="${'#'+ productOrderDetail.productOrder.productOrderNo}"></td>
                             <td>
+                                <div class="img-container">
                                 <img th:src="@{/admin/productorderdetail/DBGifReader(productNo=${productOrderDetail.product.productNo})}"
                                      width="100px">
+                                </div>
                             </td>
                             <td th:text="${productOrderDetail.product.productName}"></td>
                             <td th:text="${productOrderDetail.product.productPrice}"></td>

@@ -11,52 +11,59 @@ import java.util.Optional;
 @Service
 public class MemberService {
 
-	@Autowired
-	private MemberRepository memrepository;
+    @Autowired
+    private MemberRepository memberRepository;
 
-	public List<Member> getAllMembers() {
-		return memrepository.findAll();
-	}
-
-	public Member getMemberById(Integer memberNo) {
-		return memrepository.getById(memberNo);
-	}
-	public Member getMemberByMemberNo(String memberNo) {
-		return memrepository.getReferenceById(Integer.valueOf(memberNo));
-	}
-
-	public Member getMemberByMemberMail(String memberMail) {
-		Optional<Member> optionalMember = memrepository.findByMemberMail(memberMail);
-		return optionalMember.orElse(null);
-	}
-
-	public Member getMemberByMemberName(String memberName) {
-		Optional<Member> optionalMember = memrepository.findByMemberName(memberName);
-		return optionalMember.orElse(null);
-	}
-
-	public Member getMemberByMemberPhone(String memberPhone) {
-		Optional<Member> optionalMember = memrepository.findByMemberPhone(memberPhone);
-		return optionalMember.orElse(null);
-	}
-	
-	public List<Member> getMembersByStatus(Byte memberStatus) {
-        return memrepository.findByMemberStatus(memberStatus);
+    public List<Member> getAllMembers() {
+        return memberRepository.findAll();
     }
 
-	public void updateMemberStatus(Byte memberStatus, String memberMail) {
-		memrepository.updateMemberStatus(memberStatus, memberMail);
-	}
+    public Member getMemberById(Integer memberNo) {
+        return memberRepository.findById(memberNo).orElse(null);
+    }
 
-	public void updateMemberPoints(Integer memberPoints, String memberMail) {
-		memrepository.updateMemberPoints(memberPoints, memberMail);
-	}
+    public Optional<Member> findMemberByEmail(String memberMail) {
+        return memberRepository.findByMemberMail(memberMail);
+    }
 
-	// 聊天室用,透過memberNo取得memberName
-	public Member findMemberByIdChat(Integer memberNo) {
-		return memrepository.findById(memberNo)
-				.orElseThrow(() -> new RuntimeException("Member not found"));
-	}
+    public Member getMemberByMemberNo(String memberNo) {
+        try {
+            Optional<Member> member = memberRepository.findById(Integer.valueOf(memberNo));
+            return member.orElse(null);
+        } catch (NumberFormatException e) {
+            // Log the error message
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void updateMember(String memberMail, Member member) {
+        Optional<Member> existingMemberOptional = memberRepository.findByMemberMail(memberMail);
+        if (existingMemberOptional.isPresent()) {
+            Member existingMember = existingMemberOptional.get();
+            existingMember.setMemberName(member.getMemberName());
+            existingMember.setAddress(member.getAddress());
+            existingMember.setMemberPhone(member.getMemberPhone());
+            existingMember.setCommonRecipient(member.getCommonRecipient());
+            existingMember.setCommonRecipientPhone(member.getCommonRecipientPhone());
+            existingMember.setCommonRecipientAddress(member.getCommonRecipientAddress());
+            memberRepository.save(existingMember);
+        }
+    }
+
+    public Member getMemberByMemberMail(String memberMail) {
+        Optional<Member> optionalMember = memberRepository.findByMemberMail(memberMail);
+        return optionalMember.orElse(null);
+    }
+
+    public void updateMemberPoints(Integer memberPoints, String memberMail) {
+        memberRepository.updateMemberPoints(memberPoints, memberMail);
+    }
+
+    // 聊天室用, 透過 memberNo 取得 memberName
+    public Member findMemberByIdChat(Integer memberNo) {
+        return memberRepository.findById(memberNo).orElseThrow(() -> new RuntimeException("Member not found"));
+    }
 
 	public String getMemberNameByMemberNoChat(Integer memberNo) {
 		Member member = findMemberByIdChat(memberNo);
@@ -64,6 +71,6 @@ public class MemberService {
 	}
 
 	public Optional<Member> findMemberByMemberNo(String memberNo) {
-		return memrepository.findMemberByMemberNo(Integer.valueOf(memberNo));
+		return memberRepository.findMemberByMemberNo(Integer.valueOf(memberNo));
 	}
 }
