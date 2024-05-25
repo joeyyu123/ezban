@@ -98,6 +98,7 @@
             padding: 10px;
             background-color: #fff;
             word-wrap: break-word;
+            width: 100%;
         }
 
         #inputArea {
@@ -123,15 +124,11 @@
             font-size: 0.9em;
             border: none;
             border-radius: 5px;
-            background-color: #007bff;
-            color: white;
+            background-color: #f4e9e6;
+            color: black;
             cursor: pointer;
             height: 40px;
             align-self: center;
-        }
-
-        #sendButton:hover {
-            background-color: #0056b3;
         }
 
         .message {
@@ -141,11 +138,13 @@
             display: inline-block;
             max-width: calc(100% - 270px);
             word-wrap: break-word;
+            white-space: pre-wrap;
+            word-break: break-word;
         }
 
         .mine {
-            background-color: #007bff;
-            color: white;
+            background-color: #f4e9e6;
+            color: black;
             text-align: right;
             float: right;
             clear: both;
@@ -165,6 +164,42 @@
             font-family: Arial, sans-serif;
             text-align: right;
             margin-top: 2px;
+        }
+
+        @media (max-width: 768px) {
+            #contactList {
+                max-width: calc(100% - 50px)
+            }
+
+            .message {
+                max-width: calc(100% - 30px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            #contactList {
+                width: 150px;
+            }
+
+            .message {
+                max-width: calc(100% - 170px);
+            }
+        }
+
+        .unread-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .unreadCount {
+            position: absolute;
+            top: -30px;
+            background: red;
+            color: white;
+            border-radius: 12px;
+            padding: 2px 7px;
+            font-size: 0.5em;
+            display: none;
         }
     </style>
 </head>
@@ -189,6 +224,7 @@
             </div>
         </div>
     </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
@@ -201,6 +237,8 @@
     var memberName = /*[[${memberName}]]*/ '[[${memberName}]]';
     var hostName = /*[[${hostName}]]*/ '[[${hostName}]]';
     var eventNo = /*[[${eventNo}]]*/ '[[${eventNo}]]';
+    var loadedMessages = new Set();
+    var unreadCount = 0;
 
     console.log("hostName: ", hostName);
 
@@ -208,12 +246,22 @@
         var memberName = $('#memberName').val();
         var hostName = $('#hostName').val();
         var eventNo = $('#eventNo').val();
-        connect();  // 建立WebSocket连接
+        connect();  // 建立WebSocket連線
         loadContacts();
         // 確保只有在變數存在的情況下才加載聊天歷史
         if (memberName && hostName && eventNo) {
             loadChatHistory(memberName, hostName, eventNo);
         }
+    });
+
+    $('#contactNames').on('click', '.contact', function() {
+        var contactId = this.id.replace('contact_', '');
+        console.log('Contact clicked: ' + contactId);
+        clearUnreadCount(contactId);
+        selectedUser = contactId;
+        $('#chatHistory').html('');
+        $('#inputArea').show();
+        fetchHistory(contactId);
     });
 
     function connect() {
@@ -227,10 +275,21 @@
         stompClient.connect({}, function (frame) {
             connected = true;
             console.log('已連接: ' + frame);
+            stompClient.unsubscribe(`/message/event/${eventNo}`);
             stompClient.subscribe(`/message/event/${eventNo}`, function (messageOutput) {
                 var message = JSON.parse(messageOutput.body);
                 console.log('Received message: ', message);
                 showMessage(message, hostName, true);
+
+                // 如果消息不是當前選中用戶的，更新未讀訊息計數器
+                // if (selectedUser !== message.sender && selectedUser !== message.receiver) {
+                //     var contact = message.sender === hostName ? message.receiver : message.sender;
+                //     var unreadCountElement = $('#unreadCount_' + contact);
+                //     var unreadCount = parseInt(unreadCountElement.text()) || 0;
+                //     unreadCount++;
+                //     unreadCountElement.text(unreadCount);
+                //     unreadCountElement.show();
+                // }
             });
         }, function (error) {
             console.error('WebSocket 錯誤: ' + error);
@@ -250,49 +309,41 @@
                         console.log('Members:', contacts);
                         var contactList = document.getElementById('contactNames');
                         contactList.innerHTML = '';
+                        var unreadCounts = JSON.parse(localStorage.getItem('unreadCounts')) || {};
+
+                        // 將member按最新消息時間排序
+                        contacts.sort((a, b) => {
+                            let lastMessageA = lastMessages[a] ? new Date(lastMessages[a].timestamp) : new Date(0);
+                            let lastMessageB = lastMessages[b] ? new Date(lastMessages[b].timestamp) : new Date(0);
+                            return lastMessageB - lastMessageA;
+                        });
+
                         contacts.forEach(contact => {
                             var lastMessage = lastMessages[contact];
-                            if (lastMessage) {
-                                var contactElement = document.createElement('div');
-                                contactElement.classList.add('contact');
-                                contactElement.id = `contact_${contact}`;
-                                contactElement.onclick = function(event) {
-                                    selectedUser = contact;
-                                    document.getElementById('chatHistory').innerHTML = '';
-                                    document.getElementById('inputArea').style.display = 'flex';
-                                    fetchHistory(contact);
-                                    event.stopPropagation();
-                                };
-                                contactElement.innerHTML = `
-                                <img src="https://via.placeholder.com/40" alt="${contact}">
-                                <div class="contact-info">
-                                    <span class="name">${contact}</span>
-                                    <p id="lastMessage_${contact}">${truncateMessage(lastMessage.message, 20)}</p>
-                                </div>
-                                <span class="time" id="lastTime_${contact}">${lastMessage.timestamp ? new Date(lastMessage.timestamp).toLocaleString() : ''}</span>
-                            `;
-                                contactList.appendChild(contactElement);
-                            } else {
-                                var contactElement = document.createElement('div');
-                                contactElement.classList.add('contact');
-                                contactElement.id = `contact_${contact}`;
-                                contactElement.onclick = function(event) {
-                                    selectedUser = contact;
-                                    document.getElementById('chatHistory').innerHTML = '';
-                                    document.getElementById('inputArea').style.display = 'flex';
-                                    fetchHistory(contact);
-                                    event.stopPropagation();
-                                };
-                                contactElement.innerHTML = `
-                                <img src="https://via.placeholder.com/40" alt="${contact}">
-                                <div class="contact-info">
-                                    <span class="name">${contact}</span>
-                                    <p id="lastMessage_${contact}">No messages</p>
-                                </div>
-                                <span class="time" id="lastTime_${contact}"></span>
-                            `;
-                                contactList.appendChild(contactElement);
-                            }
+                            var unreadCount = unreadCounts[contact] || 0;
+                            var contactElement = document.createElement('div');
+                            contactElement.classList.add('contact');
+                            contactElement.id = `contact_${contact}`;
+                            contactElement.onclick = function(event) {
+                                selectedUser = contact;
+                                clearUnreadCount(contact);
+                                document.getElementById('chatHistory').innerHTML = '';
+                                document.getElementById('inputArea').style.display = 'flex';
+                                fetchHistory(contact);
+                                event.stopPropagation();
+                            };
+                            contactElement.innerHTML = `
+                        <img src="https://ui-avatars.com/api/?name=${contact}&background=random" alt="${contact}">
+                        <div class="contact-info">
+                            <span class="name">${contact}</span>
+                            <p id="lastMessage_${contact}">${lastMessage ? truncateMessage(lastMessage.message, 20) : 'No messages'}</p>
+                        </div>
+                        <span class="time" id="lastTime_${contact}">${lastMessage && lastMessage.timestamp ? new Date(lastMessage.timestamp).toLocaleString() : ''}</span>
+                        <div class="unread-container">
+                            <span class="unreadCount" id="unreadCount_${contact}" style="display: ${unreadCount > 0 ? 'inline-block' : 'none'};">${unreadCount > 0 ? unreadCount : ''}</span>
+                        </div>
+                    `;
+                            contactList.appendChild(contactElement);
                         });
                     })
                     .catch(error => {
@@ -327,11 +378,39 @@
     function showMessage(message, sender, isNewMessage = true) {
         console.log('Displaying message: ', message);
 
-        // 檢查是否選中對應的聯繫人
+        // 檢查訊息是否已經顯示過
+        var messageKey = message.timestamp + message.sender + message.receiver;
+        console.log('Message Key:', messageKey);
+        if (loadedMessages.has(messageKey)) {
+            console.log('Message already loaded, skipping.');
+            return;
+        }
+
+        // 添加到已顯示訊息的集合中
+        loadedMessages.add(messageKey);
+
+        var contact = message.sender === sender ? message.receiver : message.sender;
+
+        // 檢查是否選中對應的member
         if (selectedUser !== message.sender && selectedUser !== message.receiver) {
-            // 不顯示訊息，但仍然更新聯繫人列表
+            console.log('Message not for selected user, updating contact list if new.');
+            // 不顯示訊息，但仍然更新member列表
             if (isNewMessage) {
                 updateContactList(message);
+
+                // 更新未讀訊息計數器
+                var unreadCountElement = $('#unreadCount_' + contact);
+                var unreadCount = parseInt(unreadCountElement.text()) || 0;
+                unreadCount++;
+                unreadCountElement.text(unreadCount);
+                unreadCountElement.show();
+
+                // 更新本地local storage中的未讀計數
+                updateLocalStorageUnreadCount(contact, unreadCount);
+                console.log('Unread count for ' + contact + ' updated to ' + unreadCount);
+
+                // 更新所有未讀計數器到UI
+                updateUnreadCount();
             }
             return;
         }
@@ -350,12 +429,62 @@
         chatHistory.append(messageElement);
         chatHistory.scrollTop(chatHistory[0].scrollHeight); // 滾動到最新訊息
 
-        // 只有在新消息到来时，才更新左侧列表
+        // 有新訊息時更新列表
         if (isNewMessage) {
             updateContactList(message);
+
+            // 更新未讀訊息計數器
+            if (selectedUser !== message.sender && selectedUser !== message.receiver) {
+                var unreadCountElement = $('#unreadCount_' + contact);
+                var unreadCount = parseInt(unreadCountElement.text()) || 0;
+                unreadCount++;
+                unreadCountElement.text(unreadCount);
+                unreadCountElement.show();
+                updateLocalStorageUnreadCount(contact, unreadCount);
+            }
         }
     }
 
+    function updateLocalStorageUnreadCount(contact, count) {
+        var unreadCounts = JSON.parse(localStorage.getItem('unreadCounts')) || {};
+        unreadCounts[contact] = count;
+        console.log('Updating localStorage:', unreadCounts);
+        localStorage.setItem('unreadCounts', JSON.stringify(unreadCounts));
+    }
+
+
+    // 清除未讀訊息計數器
+    function clearUnreadCount(contact) {
+        var unreadCountElement = $('#unreadCount_' + contact);
+        unreadCountElement.hide();
+        unreadCountElement.text('');
+
+        // 清除本地local storage中的未讀計數
+        var unreadCounts = JSON.parse(localStorage.getItem('unreadCounts')) || {};
+        delete unreadCounts[contact];
+        console.log('Clearing localStorage for contact:', contact);
+        localStorage.setItem('unreadCounts', JSON.stringify(unreadCounts));
+
+        updateUnreadCount();
+    }
+
+    // 更新未讀訊息計數器
+    function updateUnreadCount() {
+        var unreadCounts = JSON.parse(localStorage.getItem('unreadCounts')) || {};
+        for (var contact in unreadCounts) {
+            var unreadCountElement = $('#unreadCount_' + contact);
+            var unreadCount = unreadCounts[contact];
+            if (unreadCount > 0) {
+                unreadCountElement.text(unreadCount);
+                unreadCountElement.show();
+                console.log(`Showing unread count ${unreadCount} for ${contact}`); // 增加調試輸出
+            } else {
+                unreadCountElement.hide();
+                console.log(`Hiding unread count for ${contact}`); // 增加調試輸出
+            }
+        }
+        console.log('Updated unread counts on UI:', unreadCounts); // 增加調試輸出
+    }
 
     function updateContactList(message) {
         var contactList = document.getElementById('contactNames');
@@ -385,7 +514,7 @@
                 event.stopPropagation();
             };
             newContactElement.innerHTML = `
-            <img src="https://via.placeholder.com/40" alt="${contact}">
+            <img src="https://ui-avatars.com/api/?name=${contact}&background=random" alt="${contact}">
             <div class="contact-info">
                 <span class="name">${contact}</span>
                 <p id="lastMessage_${contact}">${truncateMessage(message.message, 20)}</p>
