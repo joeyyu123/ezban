@@ -39,8 +39,7 @@
                             <a class="nav-link" th:href="@{'/backstage/events'(eventStatus=3)}" th:classappend="${eventStatus == 3}? 'active'">已結束</a>
                         </li>
                     </ul>
-                    <div class="mb3 alert alert-warning" th:if="${events.size() == 0}" th:text="'目前沒有任何活動！'">
-                    </div>
+
 
                     <table class="table table-striped">
                         <thead>
@@ -70,6 +69,8 @@
                         </tr>
 
                     </table>
+                    <div class="mb3 alert alert-warning" th:if="${events.size() == 0}" th:text="'目前沒有任何活動！'">
+                    </div>
 
                 </div>
 
