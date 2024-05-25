@@ -61,7 +61,7 @@ public class BackstageProductOrderController {
 
 
     // 顯示單筆訂單
-    @PostMapping("/backstage/productorder/getOneForDisplay")
+    @PostMapping("/admin/productorder/getOneForDisplay")
     public String getOneForDisplay(@RequestParam("productOrderNo") String productOrderNo, ModelMap model) {
 
         Integer no = validProductNo(productOrderNo, model);
