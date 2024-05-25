@@ -84,6 +84,15 @@ public class EventComment {
         this.eventCommentTime = eventCommentTime;
         this.eventCommentStatus = eventCommentStatus;
     }
+    
+    public EventComment(EventCommentDTO commentDTO, Member member, Event event) {
+        this.event = event;
+        this.member = member;
+        this.eventCommentContent = commentDTO.getEventCommentContent();
+        this.eventCommentRate = commentDTO.getEventCommentRate();
+        this.eventCommentStatus = commentDTO.getEventCommentStatus();
+        this.eventCommentTime = LocalDateTime.now(); 
+    }
 
     public Integer getEventCommentNo() {
         return eventCommentNo;

@@ -115,6 +115,10 @@ public class Event implements java.io.Serializable {
     private Set<TicketType> ticketTypes = new LinkedHashSet<>();
 
 
+    public Event(Integer eventNo) {
+        this.eventNo = eventNo;
+    }
+
 
     public String getEventImgBase64() {
         if (eventImg == null || eventImg.length == 0) {
