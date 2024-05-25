@@ -16,7 +16,6 @@ import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/cart")
@@ -81,12 +80,12 @@ public class CartController {
         return "frontstage/product/checkout";
     }
 
-//    @GetMapping("/getMemberInfo")
-//    public ResponseEntity<?> getMemberInfo(Principal principal) {
-//        Integer memberNo = Integer.parseInt(principal.getName());
-//        Optional<Member> member = memberService.getMemberById(memberNo);
-//        return ResponseEntity.ok().body(member);
-//    }
+    @GetMapping("/getMemberInfo")
+    public ResponseEntity<?> getMemberInfo(Principal principal) {
+        Integer memberNo = Integer.parseInt(principal.getName());
+        Member member = memberService.getMemberById(memberNo);
+        return ResponseEntity.ok().body(member);
+    }
 
     @GetMapping("/getCartItems")
     public ResponseEntity<GetCartItemsResponse> getCartItems(Principal principal) {
