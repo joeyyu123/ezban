@@ -14,7 +14,6 @@ import com.ezban.productreport.model.ProductReportService;
 import java.security.Principal;
 
 @Controller
-//@RequestMapping("/productreport")
 public class FrontstageProductReportController {
 
     @Autowired
@@ -29,7 +28,6 @@ public class FrontstageProductReportController {
      * @param principal 當前登入的用戶信息
      * @return 訂單列表頁面
      */
-    @PreAuthorize("hasRole('member')")
     @PostMapping("/productreport/insert")
     public ResponseEntity<?> submitProductReport(@RequestBody AddProductReportDTO addProductReportDTO, Principal principal) {
 
