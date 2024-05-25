@@ -6,6 +6,7 @@ import ecpay.payment.integration.AllInOne;
 import ecpay.payment.integration.domain.AioCheckOutALL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -26,6 +27,8 @@ public class EcpayService {
         String merchantTradeDate = dateTime.format(formatter1);
         String test = dateTime.format(formatter2);
 
+        String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+
         AllInOne all = new AllInOne("");
         AioCheckOutALL obj = new AioCheckOutALL();
         obj.setMerchantTradeNo(test + ticketOrder.getTicketOrderNo());
@@ -33,8 +36,8 @@ public class EcpayService {
         obj.setTotalAmount(String.valueOf(ticketOrder.getTicketCheckoutAmount()));
         obj.setTradeDesc("test Description");
         obj.setItemName("票券");
-        obj.setReturnURL("http://homeyu.asuscomm.com:443/ecpay/return");
-        obj.setOrderResultURL("http://localhost:8080/events/order-result");
+        obj.setReturnURL(baseUrl + "/ecpay/return");
+        obj.setOrderResultURL(baseUrl + "/events/order-result");
         obj.setNeedExtraPaidInfo("N");
         String form = all.aioCheckOut(obj, null);
         return form;
