@@ -7,34 +7,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>活動優惠券明細</title>
 
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
-        table {
-            width: 90%;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .table-wrapper {
             margin: 20px auto;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
+            max-width: 800px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            padding: 20px;
         }
 
-        @media (min-width: 768px) {
-            table {
-                width: 50%;
-            }
+        .table thead th {
+            background-color: #4CAF50;
+            color: white;
         }
 
-        @media (max-width: 480px) {
-            th, td {
-                padding: 4px;
-                font-size: 12px;
-            }
+        /* Custom heading style with high specificity */
+        h1.custom-heading {
+            font-size: 1.5rem !important;
         }
     </style>
 
@@ -46,59 +46,69 @@
     <div class="page-content-wrapper">
         <div th:insert="backstage/index :: hamburger-btn"></div>
         <div align="center" th:fragment="listOneEventCoupon-div">
-            <h1>活動優惠券明細</h1>
-            <table th:if="${eventCoupon}">
-                <tr>
-                    <th>優惠券編號</th>
-                    <td th:text="${eventCoupon.eventCouponNo}"></td>
-                </tr>
-                <tr>
-                    <th>廠商編號</th>
-                    <td th:text="${eventCoupon.host.hostNo} + ' - [' + ${eventCoupon.host.hostName} + ']'"></td>
-                </tr>
-                <tr>
-                    <th>優惠券名稱</th>
-                    <td th:text="${eventCoupon.eventCouponName}"></td>
-                </tr>
-                <tr>
-                    <th>優惠券代碼</th>
-                    <td th:text="${eventCoupon.couponCode}"></td>
-                </tr>
-                <tr>
-                    <th>使用次數限制</th>
-                    <td th:text="${eventCoupon.usageLimit}"></td>
-                </tr>
-                <tr>
-                    <th>剩餘次數</th>
-                    <td th:text="${eventCoupon.remainingTimes}"></td>
-                </tr>
-                <tr>
-                    <th>應達消費金額</th>
-                    <td th:text="${eventCoupon.minSpend}"></td>
-                </tr>
-                <tr>
-                    <th>折扣金額</th>
-                    <td th:text="${eventCoupon.eventCouponDiscount}"></td>
-                </tr>
-                <tr>
-                    <th>起始使用時間</th>
-                    <td th:text="${eventCoupon.startTime}"></td>
-                </tr>
-                <tr>
-                    <th>結束使用時間</th>
-                    <td th:text="${eventCoupon.endTime}"></td>
-                </tr>
-                <tr>
-                    <th>優惠券狀態</th>
-                    <td th:text="${eventCoupon.eventCouponStatus}"></td>
-                </tr>
-                <tr>
-                    <th>優惠券描述</th>
-                    <td th:text="${eventCoupon.couponDesc}"></td>
-                </tr>
-            </table>
+            <h5 class="custom-heading">活動優惠券明細</h5>
+            <div class="table-wrapper">
+                <table class="table table-striped table-bordered" th:if="${eventCoupon}">
+                    <thead>
+                    <tr>
+                        <th>優惠券編號</th>
+                        <td th:text="${eventCoupon.eventCouponNo}"></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th>廠商編號</th>
+                        <td th:text="${eventCoupon.host.hostNo} + ' - [' + ${eventCoupon.host.hostName} + ']'"></td>
+                    </tr>
+                    <tr>
+                        <th>優惠券名稱</th>
+                        <td th:text="${eventCoupon.eventCouponName}"></td>
+                    </tr>
+                    <tr>
+                        <th>優惠券代碼</th>
+                        <td th:text="${eventCoupon.couponCode}"></td>
+                    </tr>
+                    <tr>
+                        <th>使用次數限制</th>
+                        <td th:text="${eventCoupon.usageLimit}"></td>
+                    </tr>
+                    <tr>
+                        <th>剩餘次數</th>
+                        <td th:text="${eventCoupon.remainingTimes}"></td>
+                    </tr>
+                    <tr>
+                        <th>應達消費金額</th>
+                        <td th:text="${eventCoupon.minSpend}"></td>
+                    </tr>
+                    <tr>
+                        <th>折扣金額</th>
+                        <td th:text="${eventCoupon.eventCouponDiscount}"></td>
+                    </tr>
+                    <tr>
+                        <th>起始使用時間</th>
+                        <td th:text="${eventCoupon.startTime}"></td>
+                    </tr>
+                    <tr>
+                        <th>結束使用時間</th>
+                        <td th:text="${eventCoupon.endTime}"></td>
+                    </tr>
+                    <tr>
+                        <th>優惠券狀態</th>
+                        <td th:text="${eventCoupon.eventCouponStatus}"></td>
+                    </tr>
+                    <tr>
+                        <th>優惠券描述</th>
+                        <td th:text="${eventCoupon.couponDesc}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
