@@ -23,6 +23,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.Key;
+import java.security.Principal;
 import java.util.*;
 import java.util.List;
 
@@ -123,10 +124,17 @@ public class QrcodeTicketService {
 //    }
 
     /*******************************判斷QR Code狀態*****************************************/
-    public boolean redeemTicket(Long ticketNo) {
+    public boolean redeemTicket(Long ticketNo, Principal principal) {
         Optional<QrcodeTicket> optional = qrcodeTicketrepository.findById(ticketNo);
         if (optional.isPresent()) {
             QrcodeTicket qrcodeTicket = optional.get();
+            Integer hostNo = getHostNoByTicketNo(ticketNo);
+
+            // 確認當前登入的主辦方是否是這張票券所屬的主辦方
+            if (!principal.getName().equals(hostNo.toString())) {
+                throw new SecurityException("您沒有權限兌換此票券");
+            }
+
             if (qrcodeTicket.getTicketUsageStatus() == QrcodeTicket.TicketUsageStatus.UNUSED) {
                 qrcodeTicket.setTicketUsageStatus(QrcodeTicket.TicketUsageStatus.USED);
                 qrcodeTicketrepository.save(qrcodeTicket);
@@ -137,6 +145,7 @@ public class QrcodeTicketService {
         }
         return false;
     }
+
 
 
     public List<QrcodeTicket> findByOrderDetailNo(Integer ticketOrderDetailNo) {
