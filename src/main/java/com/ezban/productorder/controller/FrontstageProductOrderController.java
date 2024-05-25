@@ -2,6 +2,7 @@ package com.ezban.productorder.controller;
 
 import java.security.Principal;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import com.ezban.member.model.MemberService;
@@ -27,7 +28,7 @@ public class FrontstageProductOrderController {
 
     // 新增訂單
     @PostMapping("/productorder/insert")
-    public String insert(@Valid @RequestBody AddProductOrderDTO addProductOrderDTO, BindingResult result, ModelMap model) {
+    public String insert(@Valid @RequestBody AddProductOrderDTO addProductOrderDTO, BindingResult result, ModelMap model, HttpServletResponse response) {
 
         if (result.hasErrors()) {
             // 如果有驗證到錯誤，返回到結帳畫面
@@ -36,6 +37,11 @@ public class FrontstageProductOrderController {
         }
         try {
             productOrderSvc.addProductOrder(addProductOrderDTO);
+        } catch (IllegalStateException ie) {
+            // 設定 HTTP 狀態碼為 409 Conflict
+            response.setStatus(HttpServletResponse.SC_CONFLICT);
+            response.setHeader("productNo", ie.getMessage());
+            return "frontstage/product/checkout";
         } catch (Exception e) {
             // 如果有錯誤，返回到結帳畫面
             model.addAttribute("errorMessage", e.getMessage());

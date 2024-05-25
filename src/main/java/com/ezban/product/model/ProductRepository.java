@@ -11,6 +11,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     List<Product> findByHost(Host host);
 
+    @Query(value = "SELECT * FROM product WHERE product_category_no=?1 AND product_status = 1 AND NOW() BETWEEN product_add_time AND product_remove_time;", nativeQuery = true)
     List<Product> findByProductCategoryProductCategoryNo(Integer productCategoryNo);
 
     Optional<Product> findByProductNo(Integer productNo);
@@ -19,5 +20,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     List<Product> findByHostNoandProductCategoryNp(Integer hostNo, Integer productCategoryNo, Integer productNo);
 
     @Query(value = "SELECT * FROM product WHERE product_status = 1 AND NOW() BETWEEN product_add_time AND product_remove_time;", nativeQuery = true)
-    List<Product> findAll();
+    List<Product> findLaunched();
 }

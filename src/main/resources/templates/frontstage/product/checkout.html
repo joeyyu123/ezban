@@ -7,7 +7,7 @@
 
 <body id="body">
 <div th:replace="frontstage/index2 :: header"></div>
-<section class="page-header">
+<section class="page-header" style="background: none;">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -168,6 +168,8 @@
     let initialTotal = 0;
     let discountAmount = 0;
     let pointsUsedAmount = 0;
+    // key: productNo, value: productDetail
+    let productDetails = {};
 
     /*<![CDATA[*/
     var checkoutProductsString = /*[[${products}]]*/ 'default';
@@ -193,6 +195,7 @@
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
+                    productDetails[data.productNo] = data;
                     let item = {
                         product_no: data.productNo,
                         product_name: data.productName,
@@ -413,7 +416,37 @@
             },
             body: JSON.stringify(checkoutData)
         })
-            .then(response => response.json())
+            .then(response => {
+                if (response.status === 403) {
+                    Swal.fire({
+                        title: '錯誤',
+                        text: '請重新登入',
+                        icon: 'error',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        footer: '<a href="/loginPage">前往登入</a>'
+                    });
+                    throw new Error('請重新登入');
+                }if (response.status === 409) {
+                    lackProductNamesList = JSON.parse(response.headers.get('productNo'));
+                    lackProductNames = '';
+                    for (let i = 0; i < lackProductNamesList.length; i++) {
+                        lackProductNames += productDetails[lackProductNamesList[i]].productName + '<br>';
+                    }
+                    text = `${lackProductNames} <br> 庫存不足，請確認。`;
+                    console.log(text, "text");
+                    Swal.fire({
+                        title: '錯誤',
+                        html: text,
+                        icon: 'error',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        footer: '<a href="/cart/items">回購物車</a>'
+                    });
+                    throw new Error('商品庫存不足，請確認。');
+                }
+                return response.json()
+            })
             .then(data => {
                 console.log('訂單成立', data);
                 Swal.fire({
@@ -423,17 +456,6 @@
                     showConfirmButton: false,
                     footer: '<a href="/">回首頁</a>',
                     allowOutsideClick: false
-                });
-            })
-            .catch(error => {
-                console.error('訂單不成立', error);
-                Swal.fire({
-                    title: '錯誤!',
-                    text: '商品庫存不足，請確認。',
-                    icon: 'error',
-                    showConfirmButton: false,
-                    allowOutsideClick: false,
-                    footer: '<a href="/cart/items">回購物車</a>'
                 });
             });
     }
