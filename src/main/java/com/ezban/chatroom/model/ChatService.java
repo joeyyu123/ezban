@@ -82,12 +82,14 @@ public class ChatService {
 //        System.out.println("找到主持人名稱: " + hostName);
 
         Set<String> keys = redisTemplate.keys("chat:*");
-//        System.out.println("所有鍵: " + keys);
+        if (keys == null || keys.isEmpty()) {
+            return new ArrayList<>();
+        }
         Set<String> members = new HashSet<>();
 
         for (String key : keys) {
             String[] parts = key.split(":");
-            if (parts.length == 3) {
+            if (parts.length == 4) {
 //                System.out.println("檢查鍵: " + key);
                 if (parts[1].equals(hostName)) {
                     members.add(parts[2]);

@@ -1,3 +1,4 @@
+var loadedMessages = new Set();
 $(document).ready(function() {
     var stompClient = null;
     var connected = false;
@@ -113,6 +114,16 @@ $(document).ready(function() {
     }
 
     function showMessage(message, memberName) {
+
+        // 檢查訊息是否已經顯示過
+        var messageKey = message.timestamp + message.sender + message.receiver;
+        if (loadedMessages.has(messageKey)) {
+            return;
+        }
+
+        // 添加到已顯示訊息的集合中
+        loadedMessages.add(messageKey);
+
         var chatHistory = $('#chatHistory');
         var messageElement = $('<div>').addClass('message').text(message.message);
 
@@ -134,4 +145,17 @@ $(document).ready(function() {
             $('#sendButton').click();
         }
     }
+
+    // 點擊close
+    // document.addEventListener('click', function (e) {
+    //      // (document.getElementById('closeButton').style.display = 'none');
+    //      if (e.target.id === 'closeButton') {
+    //          $('#chatContainer').hide();
+    //      }
+    // });
+
+
 });
+function closeButton() {
+    $('#chatContainer').hide();
+}

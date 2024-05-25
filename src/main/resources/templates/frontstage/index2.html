@@ -118,10 +118,10 @@
                             <span class="top-menu-text">會員</span></a>
                         <ul class="dropdown-menu">
                             <li sec:authorize="!hasRole('ROLE_Member')" style="display: flex; justify-content: center; align-items: center;">
-                                <a href="/loginPage"><span>登入</span></a>
+                                <a href="/registerPage"><span><i class="fa-solid fa-user"></i> 加入會員</span></a>
                             </li>
                             <li sec:authorize="!hasRole('ROLE_Member')" style="display: flex; justify-content: center; align-items: center;">
-                                <a href="/registerPage"><span>加入會員</span></a>
+                                <a href="/loginPage"><span><i class="fa-solid fa-right-to-bracket"></i>  登入 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></a>
                             </li>
                             <li  style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
                                 <a href="/productorder/findByMember"><span><i
@@ -142,13 +142,13 @@
                             </li>
                             <li style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
                                 <a href="/logout"><span><i
-                                        class="fa-solid fa-bookmark"></i> 登出</span></a>
+                                        class="fa-solid fa-right-from-bracket"></i> 登出</span></a>
                             </li>
                         </ul>
                     </li>
 
                     <li>
-                        <a th:href="@{/backstage/event}" class="btn btn-primary custom-btn" role="button">辦活動</a>
+                        <a th:href="@{/backstage/event}" class="btn btn-primary custom-btn" role="button"><i class="fa-solid fa-handshake"></i> 辦活動</a>
                     </li>
                 </ul><!-- / .nav .navbar-nav .navbar-right -->
             </div>
