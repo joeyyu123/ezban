@@ -1,6 +1,7 @@
 package com.ezban.ticketorderdetail.model;
 
 import com.ezban.event.model.ServiceDemo;
+import com.ezban.member.model.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +47,10 @@ public class TicketOrderDetailService implements ServiceDemo<TicketOrderDetail> 
         dto.setTicketTypeName(ticketOrderDetail.getTicketType().getTicketTypeName());
         dto.setTicketTypePrice(ticketOrderDetail.getTicketTypePrice());
         dto.setTicketTypeQty(ticketOrderDetail.getTicketTypeQty());
+
+        dto.setMemberName(ticketOrderDetail.getTicketOrder().getMember().getMemberName());
+        dto.setMemberEmail(ticketOrderDetail.getTicketOrder().getMember().getMemberMail());
+        dto.setMemberPhone(ticketOrderDetail.getTicketOrder().getMember().getMemberPhone());
         return dto;
     }
 
