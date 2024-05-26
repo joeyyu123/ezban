@@ -387,17 +387,17 @@
                     contentType: 'application/json',
                     data: JSON.stringify(formData),
                     success: function (response) {
-                        alert(response);
+                        Swal.fire('操作成功', response.message, 'success');
                     },
                     error: function (xhr, status, error) {
                         console.error('AJAX error response:', status, error);
-                        Swal.fire('提交失敗', '請恰客服人員協助。', 'error');
+                        Swal.fire('提交失败', '請聯繫客服人員協助。', 'error');
                     }
                 });
             },
             error: function (xhr, status, error) {
                 console.error('Error checking auth status:', status, error);
-                Swal.fire('錯誤', '檢查登錄狀態時發生錯誤。', 'error');
+                Swal.fire('錯誤', '檢查登入狀態時發生錯誤。', 'error');
             }
         });
     }
