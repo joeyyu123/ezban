@@ -100,7 +100,8 @@
                 <div class="product-quantity">
                     <span>數量:</span>
                     <div class="product-quantity-slider">
-                        <input id="product-quantity" type="text" value="1" name="product-quantity">
+                        <input id="product-quantity" type="text" value="1" name="product-quantity"
+                               onchange="checkInputValue(this)">
                     </div>
                 </div>
                 <div class="product-category">
@@ -109,12 +110,15 @@
                         <li class="product_category" style="margin: 0;"><a th:href="@{/product/shopall}"></a></li>
                     </ul>
                 </div>
-                <div class="buttons">
-                    <a href="#" id="add_to_cart" class="btn btn-main mt-20"
+                <div class="product-stock" style="margin-top: 15px;">
+                    <div class="product_stock" style="color: red; font-weight: 700; font-size: 14px;"></div>
+                </div>
+                <div class="buttons" style="margin-top: 20px;">
+                    <a href="#" id="add_to_cart" class="btn btn-main"
                        style="margin-right: 5px; padding: 11px 12px; font-size: 14px; width: 170px;">加入購物車</a>
                     <button type="button" id="productReport" class="btn btn-primary btn-lg" data-toggle="modal"
                             data-target="#staticBackdrop"
-                            style="margin-top: 20px; height: 45px; border-radius: 0; background-color: #000; font-size: 14px; padding: 11px 12px; width: 170px;">
+                            style="margin-top: 0; height: 45px; border-radius: 0; background-color: #000; font-size: 14px; padding: 11px 12px; width: 170px;">
                         <i class="tf-ion-alert"></i>&nbsp;&nbsp;我要檢舉
                     </button>
                 </div>
@@ -188,7 +192,7 @@
         fullStars = Math.floor(averageRate);
         halfStar = averageRate % 1 >= 0.5 ? 1 : 0;
         emptyStars = 5 - fullStars - halfStar;
-        console.log('averageRate', averageRate, 'fullStars:', fullStars, 'halfStar:', halfStar, 'emptyStars:', emptyStars);
+        // console.log('averageRate', averageRate, 'fullStars:', fullStars, 'halfStar:', halfStar, 'emptyStars:', emptyStars);
         node.innerHTML += '<i class="fa fa-star"></i>'.repeat(fullStars) +
             (halfStar ? '<i class="fa fa-star-half-alt"></i>' : '') +
             '<i class="far fa-star"></i>'.repeat(emptyStars);
@@ -261,13 +265,18 @@
         return account + '@' + domain;
     }
 
+    function checkInputValue(input) {
+        let max = input.getAttribute('max');  // 獲取設定的最大值
+        if (parseInt(input.value) > parseInt(max)) {
+            input.value = max;  // 如果輸入值超過最大值，則將其設定為最大值
+        }
+    }
+
 </script>
 
 <script th:inline="javascript">
 
-    /*<![CDATA[*/
-    var productNo = /*[[${productNo}]]*/ 'default';
-    /*]]>*/
+    var productNo = [[${productNo}]];
 
     // 商品評論
     autoGetCommentsDetailByProductNoAPI(productNo)
@@ -319,7 +328,9 @@
         })
         document.querySelector('.product_price').innerText = `NT $${product.productPrice}`;
         document.querySelector('.product_category').innerText = product.productCategory.productCategoryName;
+        document.querySelector('.product_stock').innerText = `庫存數量剩 ${product.remainingQty} 件`;
         document.querySelector('.product_desc').innerText = product.productDesc;
+        document.querySelector('#product-quantity').setAttribute('max', product.remainingQty);
 
         // 相關商品
         hostNo = product.host.hostNo;

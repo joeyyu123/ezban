@@ -120,7 +120,9 @@
                     </td>
                     <td class="product-quantity">
                         <div class="quantity">
-                            <input type="text" value="${item.quantity}" class="form-control input-sm" name="cart-quantity" data-product-no="${item.product_no}" onchange="inputQtyChange(this)">
+                            <input type="text" value="${item.quantity}" max="${item.maxQuantity}" class="form-control input-sm" name="cart-quantity" data-product-no="${item.product_no}" onchange="inputQtyChange(this, '${item.product_no}_alert')">
+                        </div>
+                        <p id="${item.product_no}_alert" style="margin-bottom: 0; margin-top: 5px; display: none; font-size: 12px;">已達庫存上限</p>
                     </td>
                     <td class="product-subtotal" style="padding: 20px;">
                         <span class="amount">$${item.subtotal}</span>
@@ -169,6 +171,7 @@
                         product_img: `/product/getFirstImage/${data.productNo}`,
                         price: data.productPrice,
                         quantity: cart[productNo],
+                        maxQuantity: data.remainingQty,
                         subtotal: data.productPrice * cart[productNo]
                     };
                     allItems.push(item);

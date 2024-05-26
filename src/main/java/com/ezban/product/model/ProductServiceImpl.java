@@ -118,7 +118,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public List<Product> getAll() {
-        return productRepository.findAll();
+        return productRepository.findLaunched();
     }
 
     public List<Product> getProductsByHostandCategory(Integer hostNo, Integer productCategoryNo, Integer productNo) {
