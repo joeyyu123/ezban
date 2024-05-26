@@ -63,7 +63,7 @@ public class BackstageTicketRegistrationController {
     }
 
     /**
-     * 下載報名資料的CSV檔案
+     * 下載報名資料的檔案
      */
     @GetMapping("/backstage/events/{eventNo}/ticket-registrations/download")
     @ResponseBody
@@ -75,46 +75,6 @@ public class BackstageTicketRegistrationController {
             return ResponseEntity.status(403).body(null);
         }
 
-        List<TicketRegistration> ticketRegistrations = ticketRegistrationService.findAllByEventNo(eventNo);
-        List<FieldExample> questions = registrationFormService.findByEventNo(eventNo).getQuestions();
-
-        // 創建Excel文件
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet("Ticket Registrations");
-
-        // 創建標題行
-        Row headerRow = sheet.createRow(0);
-        for (int i = 0; i < questions.size(); i++) {
-            Cell cell = headerRow.createCell(i);
-            cell.setCellValue(questions.get(i).getLabel());
-        }
-
-        // 填充數據
-        int rowNum = 1;
-        for (TicketRegistration registration : ticketRegistrations) {
-            List<Person> persons = registration.getPersons();
-            for (Person person : persons) {
-                Row row = sheet.createRow(rowNum++);
-
-                List<Response> responses = person.getResponses();
-                for (int i = 0; i < responses.size(); i++) {
-                    row.createCell(i).setCellValue(responses.get(i).parseResponse());
-                }
-            }
-        }
-
-        // 將Excel文件寫入ByteArrayOutputStream
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
-            workbook.write(bos);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        workbook.close();
-
-        // 準備ResponseEntity
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=ticket_registrations.xlsx");
-        return ResponseEntity.ok().headers(headers).body(bos.toByteArray());
+        return ticketRegistrationService.downloadTicketRegistrations(eventNo);
     }
 }
