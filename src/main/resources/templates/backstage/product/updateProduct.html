@@ -195,7 +195,6 @@
                     <div class="form-group">
                         <label for="product_status">商品狀態:</label>
                         <select id="product_status" th:field="*{productStatus}" required>
-                            <option value="0">未上架</option>
                             <option value="1">上架中</option>
                             <option value="2">已下架</option>
                         </select>
@@ -262,12 +261,15 @@
         now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
         now.setSeconds(0);
         now.setMilliseconds(0);
-        // slice(0, 16) 擷取到分鐘
-        // $('#product_add_time').attr('min', now.toISOString().slice(0, 16));
 
         $('#product_add_time').change(function() {
             var addTime = $(this).val();
+            var removeTime = $('#product_remove_time').val();
             $('#product_remove_time').attr('min', addTime);
+            if (removeTime && addTime && removeTime < addTime) {
+                alert("商品下架時間必須晚於上架時間！");
+                $('#product_remove_time').val('');
+            }
         });
 
         $('#product_remove_time').change(function() {
@@ -279,27 +281,7 @@
             }
         });
     });
-    /* 設定商品狀態 */
-    $(document).ready(function () {
-        updateProductStatus();
-    });
 
-    function updateProductStatus() {
-        var addTime = new Date($('#product_add_time').val());
-        var now = new Date();
-        now.setSeconds(0);
-        now.setMilliseconds(0);
-
-        if (addTime > now) {
-            // 若上架時間在系統時間之後，狀態改為0(未上架)
-            $('#product_status').val(0);
-        } else if (addTime.getTime() === now.getTime()) {
-            // 若上架時間等於系統時間，狀態為1(上架中)
-            $('#product_status').val(1);
-        } else {
-            // alert("上架時間不應該早於當下時間，請重新輸入");
-        }
-    }
     /* 修改圖片預覽 */
     function updatePreview() {
         var $preview = $('#new_image_preview');

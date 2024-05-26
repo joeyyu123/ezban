@@ -155,7 +155,17 @@ function initializeTouchSpin() {
 }
 
 /* input 標籤數量改變時更新資料 */
-function inputQtyChange(input) {
+function inputQtyChange(input, alertId) {
+    console.log(alertId, "alertId");
+    value = parseInt(input.value, 10);
+    maxValue = parseInt(input.max, 10);
+    console.log(value, maxValue);
+    alertNode = document.getElementById(alertId);
+    alertNode.style.display  = "none";
+    if (value >= maxValue) {
+        input.value = input.max;
+        alertNode.style.display = "block";
+    }
     let productNo = parseInt(input.getAttribute('data-product-no'), 10);
     let quantity = parseInt(input.value, 10);
 

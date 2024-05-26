@@ -1,7 +1,9 @@
 package com.ezban.saveproduct.controller;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.ezban.member.model.MemberService;
 import com.ezban.saveproduct.model.AddSaveProductDTO;
@@ -57,15 +59,20 @@ public class SaveProductController {
             SaveProduct saveProduct = saveProductSvc.toggleSaveStatus(addSaveProductDTO);
 
             // 更新成功，返回 HTTP 200 OK 狀態碼
+            Map<String, Object> response = new HashMap<>();
+            response.put("saveStatus", saveProduct.getSaveStatus());
             if (saveProduct.getSaveStatus() == 0) {
-                return ResponseEntity.ok("您已成功將商品取消收藏！");
+                response.put("message", "您已成功將商品取消收藏！");
             } else {
-                return ResponseEntity.ok("您已成功將商品加入收藏！");
+                response.put("message", "您已成功將商品加入收藏！");
             }
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
+
             // 處理可能的錯誤，例如點擊時發生異常
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("抱歉，您並未成功將商品加入收藏！" );
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", "抱歉，您並未成功將商品加入收藏！");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
 
     }

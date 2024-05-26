@@ -56,7 +56,11 @@ public class ProductOrderService {
     // 新增訂單
     @Transactional
     public void addProductOrder(@Valid AddProductOrderDTO addProductOrderDTO) {
-
+        // 檢查購物車中的商品是否有缺貨
+        List<Integer> outOfStockProductNos = getOutOfStockProductNos(addProductOrderDTO);
+        if (!outOfStockProductNos.isEmpty()) {
+            throw new IllegalStateException(outOfStockProductNos.toString());
+        }
         // 獲取購買的商品明細列表
         List<AddProductOrderDetailDTO> productOrderDetailList = addProductOrderDTO.getProductOrderDetail();
         // 創建一個Map，用於將商品明細按照廠商分類
@@ -220,9 +224,27 @@ public class ProductOrderService {
         }
 
         return orderDetails;
-
     }
 
+    private List<Integer> getOutOfStockProductNos(AddProductOrderDTO addProductOrderDTO) {
+
+        List<Integer> outOfStockProductNos = new ArrayList<>();
+        List<AddProductOrderDetailDTO> productOrderDetail = addProductOrderDTO.getProductOrderDetail();
+        for (AddProductOrderDetailDTO orderDetailDTO : productOrderDetail) {
+            Integer productNo = Integer.valueOf(orderDetailDTO.getProductNo());
+            Integer productQty = orderDetailDTO.getProductQty();
+            Optional<Product> productOptional = productRepository.findByProductNo(productNo);
+            if (productOptional.isPresent()) {
+                Product product = productOptional.get();
+                int remainingQty = product.getRemainingQty();
+                if (remainingQty < productQty) {
+                    outOfStockProductNos.add(productNo);
+                }
+            }
+        }
+
+        return outOfStockProductNos;
+    }
 
     /*
     訂單狀態別:

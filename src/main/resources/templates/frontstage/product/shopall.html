@@ -236,11 +236,6 @@
     async function addToFavorites(e) {
         let productNo = e.getAttribute('data-product-no');
 
-        // 構建要發送的數據
-        let formData = {
-            productNo: productNo
-        };
-
         // 先檢查用戶是否已經登錄
         $.ajax({
             type: 'GET',
@@ -250,29 +245,38 @@
                     Swal.fire('請先登入', '很抱歉，需要先登入才能進行收藏', 'warning');
                     return;
                 }
-
-                // 用戶已登錄，繼續執行收藏操作，構建要發送的數據
-                let formData = {
-                    productNo: productNo
-                };
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/saveproduct/insert',
-                    contentType: 'application/json',
-                    data: JSON.stringify(formData),
-                    success: function (response) {
-                        alert(response);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('AJAX error response:', status, error);
-                        Swal.fire('提交失敗', '請恰客服人員協助。', 'error');
-                    }
-                });
+                toggleFavorite(e, productNo);
             },
             error: function (xhr, status, error) {
                 console.error('Error checking auth status:', status, error);
-                Swal.fire('錯誤', '檢查登錄狀態時發生錯誤。', 'error');
+                Swal.fire('錯誤', '檢查登入狀態時發生錯誤。', 'error');
+            }
+        });
+    }
+
+    function toggleFavorite(e, productNo) {
+
+        // 建構要發送的數據
+        let formData = {
+            productNo: productNo
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/saveproduct/insert',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                // 使用 saveStatus 来表示收藏狀態，1 表示已收藏，0 表示已取消
+                if (response.saveStatus === 1) {
+                    e.classList.add('favorited');  // 增加红色的 class
+                } else {
+                    e.classList.remove('favorited');  // 移除红色的 class
+                }
+                Swal.fire('操作成功', response.message, 'success');
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX error response:', status, error);
+                Swal.fire('提交失败', '請聯繫客服人員協助。', 'error');
             }
         });
     }
