@@ -3,14 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <title>註冊新主機</title>
-     <link th:include="backstage/index :: head">
-    <style>
+  
+      <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+            max-width: 600px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            width: 100%;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
         .error {
             color: red;
         }
-
         .success {
             color: green;
+        }
+        #verificationSection {
+            display: none;
+        }
+        #checkMailButton {
+            margin-top: 10px;
         }
     </style>
     <script>
@@ -32,7 +61,7 @@
                     checkedAccount = false;
                     return;
                 }
-                fetch(`http://localhost:8080/api/host/checkAccount/${hostAccount}`)
+                fetch(`/api/host/checkAccount/${hostAccount}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.exists) {
@@ -63,7 +92,7 @@
                     checkedName = false;
                     return;
                 }
-                fetch(`http://localhost:8080/api/host/checkName/${hostName}`)
+                fetch(`/api/host/checkName/${hostName}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.exists) {
@@ -98,7 +127,7 @@
                     return;
                 }
 
-                fetch(`http://localhost:8080/api/host/checkMail/${hostMail}`)
+                fetch(`/api/host/checkMail/${hostMail}`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -139,7 +168,7 @@
                     verificationCodeError.className = 'success';
                     checkedVerificationCode = true;
 
-                    // 在2秒後移除驗證碼區塊並確保它不會被提交
+                    // 在1秒後移除驗證碼區塊並確保它不會被提交
                     setTimeout(function() {
                         document.getElementById('verificationSection').remove(); // 移除驗證碼整個區塊
                         document.getElementById('mailError').textContent = '驗證成功';
@@ -166,7 +195,7 @@
                     checkedPhone = false;
                     return;
                 }
-                fetch(`http://localhost:8080/api/host/checkPhone/${hostPhone}`)
+                fetch(`/api/host/checkPhone/${hostPhone}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.exists) {
@@ -212,7 +241,7 @@
                 console.log("Sending JSON Data:", jsonData);
 
                 // 發送表單資料
-                fetch('http://localhost:8080/api/host/hostregister', {
+                fetch('/api/host/hostregister', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
