@@ -37,4 +37,5 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 	@Query("SELECT m FROM Member m WHERE FUNCTION('MONTH', m.birthday) = :month AND m.memberStatus = :status")
 	List<Member> findMembersByBirthdayMonthAndStatus(int month, byte status);
 
+	
 }

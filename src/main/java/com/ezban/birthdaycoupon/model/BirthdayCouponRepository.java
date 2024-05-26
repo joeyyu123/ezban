@@ -11,4 +11,5 @@ public interface BirthdayCouponRepository extends JpaRepository<BirthdayCoupon, 
     default List<BirthdayCoupon> findAllValidCoupons() {
         return findByBirthdayCouponStatus((byte) 1);
     }
+    
 }

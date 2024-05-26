@@ -39,5 +39,4 @@ public interface BirthdayCouponHolderRepository extends JpaRepository<BirthdayCo
 
     // 產生訂單要更改狀態使用
     Optional<BirthdayCouponHolder> findByBirthdayCoupon(BirthdayCoupon birthdayCoupon);
-
 }
