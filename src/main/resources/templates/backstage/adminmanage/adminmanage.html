@@ -1,66 +1,82 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管理員管理系統</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            padding-top: 20px;
-        }
+<html th:fragment="html" lang="zh-hant" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-        .admin-container {
-            background-color: #fff;
-            padding: 2rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            margin: auto;
-        }
+<head th:fragment="head">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ezban</title>
 
-        .admin-buttons button {
-            margin-bottom: 1rem;
-            width: 100%;
-            display: block;
-        }
-    </style>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.4/css/tether.min.css" />
+    <link rel="stylesheet" th:href="@{/css/backstage/index.css}" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.4/js/tether.min.js"></script>
+    <script th:src="@{/js/backstage/index.js}"></script>
+
 </head>
+
 <body>
-    <div class="container">
-        <div class="admin-container">
-            <h1 class="text-center">管理員管理系統</h1>
-            <div class="admin-buttons">
-                <button id="birthdayButton" class="btn btn-primary">生日禮券管理</button>
-                <button id="adminManagementButton" class="btn btn-primary">平台員工管理</button>
-                <button id="qaButton" class="btn btn-primary">常見問題管理</button>
-                <button id="productReportButton" class="btn btn-primary">商品評論檢舉管理</button>
-                <button id="eventReportButton" class="btn btn-primary">活動評論檢舉管理</button>
-                <form action="/adminlogout" method="post">
-                    <button type="submit" class="btn btn-danger">登出</button>
-                </form>
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <nav th:fragment="navbar" class="navbar navbar-inverse fixed-top" id="sidebar-wrapper" role="navigation">
+            <ul class="nav sidebar-nav">
+                <li class="sidebar-header">
+                    <div class="sidebar-brand">
+                        <a th:href="@{/adminmanage}">ezban</a>
+                    </div>
+                </li>
+                
+                <li>
+                    <a th:href="@{/admin}"><i class="fa-solid fa-user-gear"></i> 員工管理</a>
+                </li>
+                <li>
+                    <a th:href="@{/birthdayback}"><i class="fa-solid fa-cake-candles"></i> 生日禮券管理</a>
+                </li>
+               
+                <li>
+                    <a th:href="@{/qaback}"><i class="fa-solid fa-circle-question"></i> 常見問題管理</a>
+                </li>
+                <li>
+                    <a th:href="@{/productreportback}"><i class="fa-solid fa-comments"></i> 商品評論檢舉管理</a>
+                </li>
+                <li>
+                    <a th:href="@{/eventreportback}"><i class="fa-solid fa-comments"></i> 活動評論檢舉管理</a>
+                </li>
+                <li>
+                    <a th:href="@{/adminlogout}"><i class="fa-solid fa-right-from-bracket"></i> 登出</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div th:fragment="hamburger-btn">
+            <button type="button" class="hamburger animated fadeInLeft is-closed" data-toggle="offcanvas">
+                <span class="hamb-top"></span>
+                <span class="hamb-middle"></span>
+                <span class="hamb-bottom"></span>
+            </button>
+        </div>
+        <div class="page-content-wrapper">
+            <div class="index centered">
+                <h1>歡迎來到 ezban 後台管理系統</h1>
+                <h3>在 ezban 建立活動</h3>
+                <p>最多主辦方使用的功能，就是在 ezban 上建立活動！<br>只需要進入 ezban 首頁，登入 / 註冊帳號，並點選首頁右上方的「辦活動」，按照系統的指示填寫欄位，即可輕鬆建立你的活動頁！<br>
+                    登入後即可在左側的導覽列快速的建立活動，並且可以看到自己的活動列表，可以看到所有活動的狀態，以及活動的報名人數！<br>
+
+                    活動頁除了呈現你的活動資訊，還能夠讓消費者報名活動，所有資料都可以透過後台輕鬆查看！<br>有了 ezban 一站式的服務，主辦方在辦活動時，只要專注在活動內容的策畫即可！其他事情都可以放心交給 ezban！
+
+                    趕快來建立你的活動吧！</p>
             </div>
         </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const adminId = sessionStorage.getItem('adminId');
-            if (!adminId) {
-                alert('獲取管理員信息失敗，請重新登錄');
-                window.location.href = '/adminlogin';
-                return;
-            }
-
-            document.getElementById('birthdayButton').onclick = () => window.location.href = `birthdayback?adminId=${adminId}`;
-            document.getElementById('adminManagementButton').onclick = () => window.location.href = `admin?adminId=${adminId}`;
-            document.getElementById('qaButton').onclick = () => window.location.href = `qaback?adminId=${adminId}`;
-            document.getElementById('productReportButton').onclick = () => window.location.href = `productreportback?adminId=${adminId}`;
-            document.getElementById('eventReportButton').onclick = () => window.location.href = `eventreportback?adminId=${adminId}`;
-        });
-    </script>
 </body>
+
 </html>

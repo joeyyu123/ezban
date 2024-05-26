@@ -90,4 +90,5 @@ public class PageController {
 	public String showeventreport() {
 		return "frontstage/commentreport/eventreport";
 	}
+	
 }

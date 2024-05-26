@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>管理員登入</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- font-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         body {
@@ -48,12 +47,12 @@
             margin-top: 550px;
             margin-right: 50px;
             color: lightgray;
-            text-decoration: none; /* 可選：去掉下劃線 */
-            transition: color 0.3s ease; /* 添加過渡效果 */
+            text-decoration: none;
+            transition: color 0.3s ease;
         }
 
         .host-login:hover {
-            color: #1515d9; /* 懸停時的顏色 */
+            color: #1515d9;
         }
     </style>
 </head>
@@ -77,7 +76,7 @@
         </form>
 
         <p class="text-center">
-            <a href="/passwordreset">忘記密碼？</a>
+            <a href="/adminpasswordreset">忘記密碼？</a>
         </p>
         <p class="text-center">
             <a href="/adminpassrevise">修改密碼</a>
@@ -88,7 +87,6 @@
     </div>
 
     <a href="hostlogin" class="host-login"><i class="fa-solid fa-user"></i> 企業登入</a>
-
 
     <script>
         document.getElementById('login-form').addEventListener('submit', async function(event) {
@@ -108,9 +106,9 @@
                 if (response.redirected) {
                     const url = new URL(response.url);
                     const adminId = url.searchParams.get('adminId');
-                    console.log('Received adminId:', adminId); // 调试信息
+                    console.log('Received adminId:', adminId); // 調試信息
                     sessionStorage.setItem('adminId', adminId);
-                    console.log('Stored adminId in sessionStorage:', sessionStorage.getItem('adminId')); // 调试信息
+                    console.log('Stored adminId in sessionStorage:', sessionStorage.getItem('adminId')); // 調試信息
                     window.location.href = url.pathname;
                 } else {
                     document.getElementById('error-message').style.display = 'block';
