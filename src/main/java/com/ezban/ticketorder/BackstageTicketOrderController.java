@@ -48,7 +48,7 @@ public class BackstageTicketOrderController {
         Event event = eventService.findById(eventNo);
         if (!eventService.isAuthenticated(principal, event)) {
             model.addAttribute("message", "You are not authorized to access this page.");
-            return "/backstage/event/warning";
+            return "backstage/event/warning";
         }
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("ticketOrderTime").descending());
@@ -66,7 +66,7 @@ public class BackstageTicketOrderController {
                 ticketOrdersPage = ticketOrderService.findByEventAndStatus(event, status, pageable);
             } catch (ArrayIndexOutOfBoundsException e) {
                 model.addAttribute("message", "Invalid order status.");
-                return "/backstage/event/warning";
+                return "backstage/event/warning";
             }
         } else {
             ticketOrdersPage = ticketOrderService.findByEvent(event, pageable);
@@ -75,7 +75,7 @@ public class BackstageTicketOrderController {
         model.addAttribute("ticketOrdersPage", ticketOrdersPage);
         model.addAttribute("orderStatus", orderStatus);
         model.addAttribute("event", event);
-        return "/backstage/event/ticket-orders";
+        return "backstage/event/ticket-orders";
     }
 
     @DeleteMapping("/orders/{ticketOrderNo}")

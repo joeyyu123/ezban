@@ -86,7 +86,7 @@ public class EventController {
         model.addAttribute("events", dtoList);
         model.addAttribute("eventCategories", eventCategories);
         model.addAttribute("eventCities", eventCities);
-        return "/frontstage/event/events";
+        return "frontstage/event/events";
     }
 
     @GetMapping("/page/{page}")
@@ -131,7 +131,7 @@ public class EventController {
         EventDto dto = eventService.getEventDetails(eventNo);
         if (dto != null) {
             model.addAttribute("event", dto);
-            return "/frontstage/event/event";
+            return "frontstage/event/event";
         }
         return "redirect:/events";
     }

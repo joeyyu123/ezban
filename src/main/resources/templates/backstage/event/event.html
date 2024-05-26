@@ -18,7 +18,7 @@
                 </div>
             </li>
             <li><a th:href="@{/backstage/events}">返回活動列表</a></li>
-            <li><a th:href="@{'/backstage/events/'+${eventNo}+'/overview'}">總覽</a></li>
+            <li th:if="${event!= null}"><a th:href="@{'/backstage/events/'+${eventNo}+'/overview'}">總覽</a></li>
 
             <li class="dropdown" th:if="${event!= null && event.eventStatus.name() == 'DRAFT'}">
 
@@ -33,7 +33,7 @@
             </li>
             <li th:if="${event!= null && event.eventStatus.name() != 'DRAFT'}"><a th:href="@{'/backstage/events/'+${eventNo}+'/orders'}">訂單管理</a></li>
             <li th:if="${event!= null && event.eventStatus.name() != 'DRAFT'}"><a th:href="@{'/backstage/events/'+${eventNo}+'/ticket-registrations'}">查看活動報名紀錄</a></li>
-            <li><a href="#">登出</a></li>
+            <li><a th:href="@{/hostlogout}">登出</a></li>
 
 
         </ul>

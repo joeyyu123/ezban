@@ -16,15 +16,12 @@ import com.ezban.ticketorder.model.dto.Dto;
 import com.ezban.ticketorder.model.dto.TicketOrderRegistrationForm;
 import com.ezban.ticketorderdetail.model.TicketOrderDetail;
 import com.google.gson.Gson;
-import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
-import java.io.IOException;
 import java.security.Principal;
 import java.util.*;
 
@@ -72,7 +69,7 @@ public class TicketOrderController {
             model.addAttribute("ticketOrders", ticketOrders);
             model.addAttribute("orderStatus", orderStatus);
         }
-        return "/frontstage/event/ticket-orders";
+        return "frontstage/event/ticket-orders";
     }
 
     @DeleteMapping("/events/orders/{ticketOrderNo}")
@@ -168,24 +165,24 @@ public class TicketOrderController {
             model.addAttribute("message", "付款成功，請至我的票券查看");
 
             // TODO 修改訂單狀態 以下這段在正式上線後應註解掉，由EcpayController中更新訂單狀態
-            TicketOrder ticketOrder = ticketOrderService.findById(Integer.valueOf(merchantTradeNo.substring(14)));
-            ticketOrder = ticketOrderService.finishOrder(ticketOrder, paymentDate);
-
-            // 儲存QRCode票券到資料庫
-            ticketOrderService.createQrcodeTickets(ticketOrder);
-
-            try {
-                ticketOrderEmailService.sendOrderEmail(ticketOrder);
-            } catch (MessagingException | IOException | WriterException e) {
-                System.out.println(e.getMessage());
-            }
+//            TicketOrder ticketOrder = ticketOrderService.findById(Integer.valueOf(merchantTradeNo.substring(14)));
+//            ticketOrder = ticketOrderService.finishOrder(ticketOrder, paymentDate);
+//
+//            // 儲存QRCode票券到資料庫
+//            ticketOrderService.createQrcodeTickets(ticketOrder);
+//
+//            try {
+//                ticketOrderEmailService.sendOrderEmail(ticketOrder);
+//            } catch (MessagingException | IOException | WriterException e) {
+//                System.out.println(e.getMessage());
+//            }
 
             // =================================================================================
 
         } else {
             model.addAttribute("message", "付款失敗");
         }
-        return "/frontstage/event/order-result";
+        return "frontstage/event/order-result";
     }
 
     private List<Map<String, Integer>> getOrderDetailList(List<TicketOrderRegistrationForm> ticketOrders) {

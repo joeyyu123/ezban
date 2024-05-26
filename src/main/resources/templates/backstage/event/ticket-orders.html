@@ -186,7 +186,7 @@
                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">訂單明細</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -263,6 +263,22 @@
                 success: function (data) {
                     let modalBody = $('#exampleModal .modal-body');
                     modalBody.empty();
+                    let member_table = `<table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>會員名稱</th>
+                                        <th>電子信箱</th>
+                                        <th>會員電話</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>${data[0].memberName}</td>
+                                        <td>${data[0].memberEmail}</td>
+                                        <td>${data[0].memberPhone}</td>
+                                    </tr>
+                                </tbody>
+                            </table>`
                     let table = `<table class="table">
                                     <thead>
                                         <tr>
@@ -282,6 +298,7 @@
                                   </tr>`;
                     });
                     table += `</tbody></table>`;
+                    modalBody.append(member_table);
                     modalBody.append(table);
                 }
             });

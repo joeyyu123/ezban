@@ -6,6 +6,7 @@ import com.ezban.event.model.EventStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class EventStatusService {
      * 每分鐘執行一次，檢查有沒有要設為上架狀態的活動
      */
     @Scheduled(fixedRate = 1,timeUnit = java.util.concurrent.TimeUnit.MINUTES) //每分鐘執行一次
+    @Transactional
     public void launchEvents() {
         // 取得所有草稿狀態且上架時間小於等於現在時間的活動
         List<Event> events = eventRepository.findByEventStatusAndEventAddTimeBefore(EventStatus.DRAFT, new Timestamp(System.currentTimeMillis()));

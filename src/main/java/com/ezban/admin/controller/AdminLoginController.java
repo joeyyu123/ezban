@@ -1,11 +1,7 @@
 package com.ezban.admin.controller;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-import javax.servlet.http.HttpSession;
-import javax.transaction.Transactional;
-
+import com.ezban.admin.model.Admin;
+import com.ezban.admin.model.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
-import com.ezban.admin.model.Admin;
-import com.ezban.admin.model.AdminRepository;
+import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @RestController
 public class AdminLoginController {
@@ -38,6 +36,6 @@ public class AdminLoginController {
                 return new RedirectView("/adminmanage?adminId=" + admin.getAdminNo()); // 重定向到管理頁面并传递 adminId
             }
         }
-        return new RedirectView("/adminlogin.html?error=true"); // 登入失敗時重定向到登入頁面並顯示錯誤訊息
+        return new RedirectView("adminlogin.html?error=true"); // 登入失敗時重定向到登入頁面並顯示錯誤訊息
     }
 }

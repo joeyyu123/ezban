@@ -75,7 +75,7 @@ public class EventService implements ServiceDemo<Event> {
         }
 
         Event event = findById(eventNo);
-        if (event != null) {
+        if (event != null && event.getEventStatus() == EventStatus.PUBLISHED) {
             dto = convertToDto(event);
             incrementEventVisitCount(eventNo);
             redisTemplate.opsForValue().set("event:" + eventNo, dto, 1, TimeUnit.HOURS);
