@@ -18,7 +18,7 @@
                 </div>
             </li>
             <li><a th:href="@{/backstage/events}">返回活動列表</a></li>
-            <li><a th:href="@{'/backstage/events/'+${eventNo}+'/overview'}">總覽</a></li>
+            <li th:if="${event!= null}"><a th:href="@{'/backstage/events/'+${eventNo}+'/overview'}">總覽</a></li>
 
             <li class="dropdown" th:if="${event!= null && event.eventStatus.name() == 'DRAFT'}">
 
