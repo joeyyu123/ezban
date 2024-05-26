@@ -1558,7 +1558,7 @@ VALUES ('Skyline Film 屋頂電影院', 7, 1,
        ('台北新藝術博覽會', 4, 5,
         '<p>台北新藝術博覽會&nbsp;<a href="https://www.arts.org.tw/">https://www.arts.org.tw/</a>&nbsp;是亞洲國際藝術展會的新引領者，由「社團法人台灣國際當代藝術家協會」舉辦。每年，這場盛會吸引來自世界七十多個國家的近五百位藝術家參與。它不同於其他全球藝術博覽會，不再以畫廊為主，勇於嘗試創新，率先提出「以藝術家為核心」的策展理念。2024年的盛會將於4月26至28日在台北世貿一館盛大舉行！</p><p style="text-align:center"><img alt="" src="https://static.accupass.com/eventintro/2402220904361970801827.jpg" style="height:178px; width:400px"></p><p>2024年的台北新藝術博覽會由藝術總監李善單教授精心挑選作品，並細心策劃九大展區，包括大會策展區、國際當代藝術、紐約當代藝術基金、國際藝術家沙龍大展、中國當代藝術、台灣當代藝術、國際藝術家大獎賽、文創藝術與藝出慈悲。這些區域將呈現各種媒材、蘊含不同文化內涵的國際名家作品。</p><p style="text-align:center"><img alt="" src="https://static.accupass.com/eventintro/2402220906252057679264.jpg" style="height:197px; width:350px"></p><p style="text-align:center"><img alt="" src="https://static.accupass.com/eventintro/2402220907251713743248.jpg" style="height:233px; width:350px"></p><p style="text-align:center"><img alt="" src="https://static.accupass.com/eventintro/2402220905451796126273.jpg" style="height:233px; width:350px"></p><p>其中，「藝出慈悲‧百大名人」義賣活動是一項融合藝術和慈善的重要舉措，吸引數百位名人無償貢獻作品，帶動大眾參與支援社會弱勢群體。同時，這也是培養大眾對藝術品收藏興趣的一個重要途徑，這個活動具有深遠的意義，歷屆都受到廣泛關注，所有作品都被搶購一空！</p><p style="text-align:center"><img alt="" src="https://static.accupass.com/eventintro/2402220908244495111150.jpg" style="height:210px; width:350px"></p><p>台北新藝術博覽會不再套用全球藝博會以畫廊為主的模式，而是首創以「藝術家為核心」的全新概念。在藝術總監李善單的巧妙規劃下，展場設計完全以藝術家為中心，每個展位都像是一位藝術家的獨立展覽。這種細膩打造的特色不僅贏得業界好評，更讓台北新藝術博覽會成為「具有溫度」的國際藝術盛事。經過十年的辛勤努力，台北新藝術博覽會已成為亞洲最具代表性和規模性的藝術展會。</p><p style="text-align:center"><img alt="" src="https://static.accupass.com/eventintro/2402220909295133012790.jpg" style="height:233px; width:350px"></p><p>&nbsp;</p><p><iframe allow=";" allowfullscreen="" frameborder="0" height="360" src="https://www.youtube.com/embed/japVv2vTWi8?start=7" width="640"></iframe></p>',
         '台中市', '西區台灣大道二段2號', '2024-4-5 00:00:00',
-        '2024-9-20 12:00:00', '2024-9-19 06:00:00', '2024-9-20 12:00:00', 1,
+        '2024-9-19 12:00:00', '2024-9-19 06:00:00', '2024-9-19 12:00:00', 1,
         5, 1, 0,40),
        ('台北新藝術博覽會', 4, 5,
         '<p>台北新藝術博覽會&nbsp;<a href="https://www.arts.org.tw/">https://www.arts.org.tw/</a>&nbsp;是亞洲國際藝術展會的新引領者，由「社團法人台灣國際當代藝術家協會」舉辦。每年，這場盛會吸引來自世界七十多個國家的近五百位藝術家參與。它不同於其他全球藝術博覽會，不再以畫廊為主，勇於嘗試創新，率先提出「以藝術家為核心」的策展理念。2024年的盛會將於4月26至28日在台北世貿一館盛大舉行！</p><p style="text-align:center"><img alt="" src="https://static.accupass.com/eventintro/2402220904361970801827.jpg" style="height:178px; width:400px"></p><p>2024年的台北新藝術博覽會由藝術總監李善單教授精心挑選作品，並細心策劃九大展區，包括大會策展區、國際當代藝術、紐約當代藝術基金、國際藝術家沙龍大展、中國當代藝術、台灣當代藝術、國際藝術家大獎賽、文創藝術與藝出慈悲。這些區域將呈現各種媒材、蘊含不同文化內涵的國際名家作品。</p><p style="text-align:center"><img alt="" src="https://static.accupass.com/eventintro/2402220906252057679264.jpg" style="height:197px; width:350px"></p><p style="text-align:center"><img alt="" src="https://static.accupass.com/eventintro/2402220907251713743248.jpg" style="height:233px; width:350px"></p><p style="text-align:center"><img alt="" src="https://static.accupass.com/eventintro/2402220905451796126273.jpg" style="height:233px; width:350px"></p><p>其中，「藝出慈悲‧百大名人」義賣活動是一項融合藝術和慈善的重要舉措，吸引數百位名人無償貢獻作品，帶動大眾參與支援社會弱勢群體。同時，這也是培養大眾對藝術品收藏興趣的一個重要途徑，這個活動具有深遠的意義，歷屆都受到廣泛關注，所有作品都被搶購一空！</p><p style="text-align:center"><img alt="" src="https://static.accupass.com/eventintro/2402220908244495111150.jpg" style="height:210px; width:350px"></p><p>台北新藝術博覽會不再套用全球藝博會以畫廊為主的模式，而是首創以「藝術家為核心」的全新概念。在藝術總監李善單的巧妙規劃下，展場設計完全以藝術家為中心，每個展位都像是一位藝術家的獨立展覽。這種細膩打造的特色不僅贏得業界好評，更讓台北新藝術博覽會成為「具有溫度」的國際藝術盛事。經過十年的辛勤努力，台北新藝術博覽會已成為亞洲最具代表性和規模性的藝術展會。</p><p style="text-align:center"><img alt="" src="https://static.accupass.com/eventintro/2402220909295133012790.jpg" style="height:233px; width:350px"></p><p>&nbsp;</p><p><iframe allow=";" allowfullscreen="" frameborder="0" height="360" src="https://www.youtube.com/embed/japVv2vTWi8?start=7" width="640"></iframe></p>',
@@ -1860,7 +1860,7 @@ create table ticket_order
 
 INSERT INTO ticket_order (member_no, event_coupon_no, ticket_order_amount, event_coupon_discount,
                           ticket_checkout_amount, ticket_order_time, ticket_order_pay_time, ticket_order_payment_status, ticket_order_status)
-VALUES (1, 1, 285, 10, 275, NOW(), NOW() + INTERVAL 30 MINUTE, 3, 1),
+VALUES (1, 1, 635, 10, 625, NOW(), NOW() + INTERVAL 30 MINUTE, 3, 1),
        (1, 1, 285, 10, 275, NOW(), NOW() + INTERVAL 30 MINUTE, 3, 1),
        (2, 1, 285, 10, 275, NOW(), NOW() + INTERVAL 30 MINUTE, 3, 1),
        (2, 1, 285, 10, 275, NOW(), NOW() + INTERVAL 30 MINUTE, 3, 1),
@@ -1894,7 +1894,7 @@ INSERT INTO ticket_type (event_no, ticket_type_name, included_tickets, purchase_
                          ticket_type_price, ticket_type_qty, remaining_ticket_qty, Purchase_quantity_limit)
 VALUES (1, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 10, 9, 5),
        (1, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 10, 9, 5),
-       (1, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 10, 10, 5),
+       (1, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 1, 0, 1),
        (2, '單人票', 1, NOW(), '2024-6-30 00:00:00', 100, 10, 9, 5),
        (2, '雙人票', 2, NOW(), '2024-6-30 00:00:00', 185, 10, 9, 5),
        (2, '四人套票', 4, NOW(), '2024-6-30 00:00:00', 350, 10, 10, 5),
@@ -1950,6 +1950,7 @@ INSERT INTO ticket_order_detail (ticket_type_no, ticket_order_no, ticket_type_pr
                                  included_ticket_qty)
 VALUES (1, 1, 100, 1, 1),
        (2, 1, 185, 1, 2),
+       (3, 1, 350, 1, 4),
        (4, 2, 100, 1, 1),
        (5, 2, 185, 1, 2),
        (7, 3, 100, 1, 1),

@@ -14,13 +14,13 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.http.HttpHeaders;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -45,13 +45,13 @@ public class BackstageTicketRegistrationController {
         Event event = eventService.findById(Integer.valueOf(eventNo));
         if (!eventService.isAuthenticated(principal, event)){
             model.addAttribute("message", "You are not authorized to access this page.");
-            return "/backstage/event/warning";
+            return "backstage/event/warning";
         }
 
         List<TicketRegistration> ticketRegistrations = ticketRegistrationService.findAllByEventNo(eventNo);
         if(registrationFormService.findByEventNo(eventNo) == null){
             model.addAttribute("message", "該活動並沒有建立報名表單，無法查看報名資料。");
-            return "/backstage/event/warning";
+            return "backstage/event/warning";
         }
         List<FieldExample> questions = registrationFormService.findByEventNo(eventNo).getQuestions();
 
@@ -59,7 +59,7 @@ public class BackstageTicketRegistrationController {
         model.addAttribute("ticketRegistrations", ticketRegistrations);
         model.addAttribute("event", event);
 
-        return "/backstage/event/ticket-registrations";
+        return "backstage/event/ticket-registrations";
     }
 
     /**

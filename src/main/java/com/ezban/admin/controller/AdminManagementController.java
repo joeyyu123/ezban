@@ -1,17 +1,16 @@
 package com.ezban.admin.controller;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.ezban.admin.model.Admin;
 import com.ezban.admin.model.AdminService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/adminsManagement")
@@ -27,7 +26,7 @@ public class AdminManagementController {
         List<Admin> admins = adminService.getAllAdmins();
         logger.info("Admins: {}", admins);
         model.addAttribute("admins", admins);
-        return "/backstage/adminmanage/admin";
+        return "backstage/adminmanage/admin";
     }
 
     @GetMapping("/{id}")
@@ -52,7 +51,7 @@ public class AdminManagementController {
     public String searchAdmins(@RequestParam("searchAccount") String searchAccount, Model model) {
         List<Admin> searchedAdmins = adminService.searchAdminsByAccount(searchAccount);
         model.addAttribute("admins", searchedAdmins);
-        return "/backstage/adminmanage/admin";
+        return "backstage/adminmanage/admin";
     }
 
 

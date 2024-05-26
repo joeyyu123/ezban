@@ -14,7 +14,7 @@
 	<groupId>com.ezban</groupId>
 	<artifactId>ezban</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<name>ezban Maven Webapp</name>
 	<!-- FIXME change it to the project's website -->
@@ -265,11 +265,6 @@
 			<scope>provided</scope> <!-- ※provided只提供編譯，jar檔不匯出 -->
 		</dependency>
 
-		<!-- Spring Boot Starter Data JPA -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
 
 
 		<!--

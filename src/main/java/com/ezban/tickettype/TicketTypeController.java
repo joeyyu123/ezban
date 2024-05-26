@@ -37,12 +37,10 @@ public class TicketTypeController {
         model.addAttribute("event", event);
         model.addAttribute("ticketTypes", ticketTypes);
         model.addAttribute("now", new Timestamp(System.currentTimeMillis()));
-        return "/frontstage/event/ticket-type";
+        return "frontstage/event/ticket-type";
     }
 
-    /**
-     * TODO 會員點擊候補，有票券釋出時會收到通知，資料儲存至redis
-     */
+
     @PostMapping("/reserve")
     @ResponseBody
     public ResponseEntity<?> reserveTicket(Principal principal, @RequestBody Map<String, String>requestBody)  {

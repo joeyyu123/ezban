@@ -18,12 +18,12 @@ public class FrontstageController {
     public String index(Model model) {
         List<EventDto> trendingEvents = eventService.findTrendingEvents();
         model.addAttribute("events", trendingEvents);
-        return "/frontstage/index2";
+        return "frontstage/index2";
     }
 
     @GetMapping("/template")
     public String template() {
-        return "/frontstage/template2";
+        return "frontstage/template2";
     }
 
 }

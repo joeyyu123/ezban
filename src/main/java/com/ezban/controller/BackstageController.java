@@ -10,12 +10,12 @@ public class BackstageController {
 
     @GetMapping("")
     public String index() {
-        return "/backstage/index";
+        return "backstage/index";
     }
 
     @GetMapping("/template")
     public String template() {
-        return "/backstage/template";
+        return "backstage/template";
     }
 
 

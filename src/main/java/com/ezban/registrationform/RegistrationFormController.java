@@ -38,11 +38,11 @@ public class RegistrationFormController {
         Event event = eventService.findById(Integer.valueOf(eventNo));
         if (!eventService.isAuthenticated(principal, event)) {
             model.addAttribute("message", "You are not authorized to access this page.");
-            return "/backstage/event/warning";
+            return "backstage/event/warning";
         }
         model.addAttribute("registrationForm", registrationFormService.findByEventNo(eventNo));
         model.addAttribute("fieldExamples", fieldExampleService.findAllSortByIdNumber());
-        return "/backstage/event/registration-form";
+        return "backstage/event/registration-form";
     }
 
     @PostMapping("{eventNo}/form")
