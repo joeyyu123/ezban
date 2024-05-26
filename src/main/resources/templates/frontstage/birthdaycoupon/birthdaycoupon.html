@@ -39,7 +39,7 @@
         });
 
         function fetchCoupons() {
-            fetch('http://localhost:8080/api/birthdaycoupon')  // 更改为你的API地址
+            fetch('/api/birthdaycoupon')  
                 .then(response => response.json())
                 .then(data => displayCoupons(data))
                 .catch(error => console.error('Error fetching data: ', error));
@@ -47,7 +47,7 @@
 
         function displayCoupons(coupons) {
             const container = document.getElementById('coupons-container');
-            container.innerHTML = ''; // 清空容器
+            container.innerHTML = ''; 
 
             coupons.forEach(coupon => {
                 const couponDiv = document.createElement('div');

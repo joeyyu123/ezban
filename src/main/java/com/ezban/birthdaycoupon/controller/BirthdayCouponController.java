@@ -1,5 +1,6 @@
 package com.ezban.birthdaycoupon.controller;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Comparator;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,6 +32,21 @@ public class BirthdayCouponController {
             .sorted(Comparator.comparing(BirthdayCouponHolderDTO::isBirthdayMonth).reversed())
             .collect(Collectors.toList());
         return couponList;
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<String> checkMemberCoupons(Principal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(401).body("請先登入");
+        }
+
+        Integer memberNo = Integer.parseInt(principal.getName());
+        List<BirthdayCouponHolder> validCoupons = couponHolderRepository.findValidCouponsForMember(memberNo);
+        if (validCoupons.isEmpty()) {
+            return ResponseEntity.ok("您現在沒有優惠券但有超讚的商品跟活動在等您");
+        } else {
+            return ResponseEntity.ok("您現在有一張超讚的生日優惠券還不趕快去使用");
+        }
     }
 }
 

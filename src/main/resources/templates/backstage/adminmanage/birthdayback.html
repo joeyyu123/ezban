@@ -4,52 +4,94 @@
 <head>
     <meta charset="UTF-8">
     <title>生日禮券管理</title>
-    
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         body {
             display: flex;
-            flex-direction: row;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
         }
+
         .left-pane {
-            flex: 1;
+            flex: 3;
             padding: 20px;
-            background-color: #f6f1f1; /* 右邊部分的背景顏色 */
+            background-color: #ffffff;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            border-radius: 0.5rem;
+            margin: 20px;
         }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
-        table, th, td {
-            border: 1px solid black;
+
+        table thead {
+            background-color: #007bff;
+            color: white;
         }
+
+        table, th, td {
+            border: 1px solid #dee2e6;
+        }
+
         th, td {
-            padding: 10px;
+            padding: 12px;
             text-align: left;
         }
+
+        th {
+            font-weight: bold;
+        }
+
         .status-available {
             color: green;
+            font-weight: bold;
         }
+
         .status-expired {
             color: red;
+            font-weight: bold;
         }
+
         .status-used {
             color: orange;
+            font-weight: bold;
         }
+
         .status-not-birthday {
             color: gray;
+            font-weight: bold;
         }
+
         .usage-unused {
             color: blue;
+            font-weight: bold;
         }
+
         .usage-used {
             color: gray;
+            font-weight: bold;
         }
+
+      
     </style>
 </head>
+
 <body>
     <div class="left-pane">
         <h1>生日禮券管理</h1>
-        <table>
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>會員名稱</th>
@@ -65,9 +107,7 @@
             </tbody>
         </table>
     </div>
-    <div class="right-pane">
-        <!-- 您的右邊部分內容 -->
-    </div>
+  
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -128,4 +168,5 @@
         });
     </script>
 </body>
+
 </html>
