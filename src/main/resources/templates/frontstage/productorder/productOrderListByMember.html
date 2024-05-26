@@ -261,7 +261,8 @@
                                             </button>
                                         </td>
                                         <td>
-                                            <button type="button" id="comment_button" style="margin-top:10px">
+                                            <button type="button" id="comment_button" style="margin-top:10px"
+                                                    th:disabled="${productOrder.productProcessStatus == 0}">
                                                 前往
                                             </button>
                                         </td>
