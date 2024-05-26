@@ -1,6 +1,5 @@
 package com.ezban.admin.controller;
 
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -171,3 +170,4 @@ public class AdminController {
         return ResponseEntity.ok(response);
     }
 }
+
