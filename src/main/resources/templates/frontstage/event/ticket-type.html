@@ -210,11 +210,13 @@
                                 <span class="quantity-info hidden" id="ticketTypeQtyLabel">0</span>
                             </div>
                         </div>
-                        <div th:if="${ticketType.remainingTicketQty > 0 && ticketType.purchaseEndTime > now}" class="col-4 btn-container">
+                        <div th:if="${ticketType.remainingTicketQty > 0 && ticketType.purchaseEndTime > now && ticketType.purchaseStartTime <= now}" class="col-4 btn-container">
                             <button type="button" class="btn btn-circle btn-plus">+</button>
                             <button type="button" class="btn btn-circle btn-minus">-</button>
                         </div>
 
+
+                        <div class="sold-out" th:if="${ticketType.purchaseStartTime > now}" th:text="還沒到售票開始時間"></div>
                         <div class="sold-out" th:if="${ticketType.purchaseEndTime <= now}" th:text="售票時間已結束"></div>
 
 
