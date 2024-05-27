@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ezban.member.model.Member;
+import com.ezban.member.model.MemberRepository;
 import com.ezban.productcomment.model.ProductComment;
 import com.ezban.productcomment.model.ProductCommentRepository;
 
@@ -15,14 +17,21 @@ public class ProductCommentReportService {
 
     private final ProductCommentReportRepository reportRepository;
     private final ProductCommentRepository commentRepository;
+    private final MemberRepository memberRepository;
 
     @Autowired
-    public ProductCommentReportService(ProductCommentReportRepository reportRepository, ProductCommentRepository commentRepository) {
+    public ProductCommentReportService(ProductCommentReportRepository reportRepository, ProductCommentRepository commentRepository, MemberRepository memberRepository) {
         this.reportRepository = reportRepository;
         this.commentRepository = commentRepository;
+        this.memberRepository = memberRepository;
     }
 
     public ProductCommentReport save(ProductCommentReport report) {
+        Member member = report.getMember();
+        if (member.getMemberNo() == null) {
+            member = memberRepository.save(member);
+        }
+        report.setMember(member);
         return reportRepository.save(report);
     }
 
@@ -48,4 +57,3 @@ public class ProductCommentReportService {
         reportRepository.saveAll(reports);
     }
 }
-	

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
-<head>
+	<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>商品評星和評論系統</title>
@@ -131,7 +131,7 @@ button {
     cursor: not-allowed;
     color: #ccc;
 }
-</style>
+ </style>
 </head>
 <body>
     <h1>產品評分和評論</h1>
@@ -193,6 +193,16 @@ button {
                 return null;
             }
             return productNo;
+        }
+
+        function getMemberNo() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const memberNo = urlParams.get('memberNo');
+            if (!memberNo) {
+                alert('獲取會員信息失敗');
+                return null;
+            }
+            return memberNo;
         }
 
         function submitComment() {
@@ -315,8 +325,17 @@ button {
                 return;
             }
 
+            const productNo = getProductNo();
+            const memberNo = getMemberNo();
+
+            if (!productNo || !memberNo) {
+                return;
+            }
+
             const data = {
                 productCommentNo: parseInt(commentId),
+                productNo: parseInt(productNo),
+                memberNo: parseInt(memberNo),
                 reportReason: reportReason,
                 reportDate: new Date().toISOString(),
                 reportStatus: 0
