@@ -10,8 +10,10 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberMailService;
 import com.ezban.member.model.MemberRepository;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Controller("memberRegisterController")
 public class RegisterController {
@@ -43,7 +48,10 @@ public class RegisterController {
     @PostMapping("/register")
     @ResponseBody
     public ResponseEntity<String> registerMember(@RequestBody Member member) {
+        Logger logger = LoggerFactory.getLogger(this.getClass());
+        
         try {
+            // 檢查是否已經存在相同電子郵件的會員
             Optional<Member> existingMember = memberRepository.findByMemberMail(member.getMemberMail());
             if (existingMember.isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("該電子郵件已被使用");
@@ -58,14 +66,24 @@ public class RegisterController {
             member.setVerificationCode(verificationCode);
             member.setVerificationCodeExpiry(LocalDateTime.now().plusHours(1)); // 設置驗證碼到期時間為1小時
 
+            // 保存會員信息
             memberRepository.save(member);
 
-            // 寄出驗證碼
+            // 寄出驗證碼郵件
             emailService.sendRegisterVerificationEmail(member.getMemberMail(), verificationCode);
 
             return ResponseEntity.ok("註冊成功，請檢查您的電子郵件以驗證您的帳戶");
+        } catch (DataIntegrityViolationException e) {
+            // 處理資料完整性違反異常
+            logger.error("資料完整性違反異常", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("註冊資料不合法：" + e.getMessage());
+        } catch (MailException e) {
+            // 處理郵件發送異常
+            logger.error("郵件發送異常", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("寄送驗證郵件時發生錯誤：" + e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace(); // 打印異常堆棧以便調試
+            // 處理其他所有異常
+            logger.error("註冊過程中發生未預期的錯誤", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("註冊時發生內部錯誤：" + e.getMessage());
         }
     }

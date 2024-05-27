@@ -123,6 +123,14 @@
                             <li sec:authorize="!hasRole('ROLE_Member')" style="display: flex; justify-content: center; align-items: center;">
                                 <a href="/loginPage"><span><i class="fa-solid fa-right-to-bracket"></i>  登入 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></a>
                             </li>
+                             <li  style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
+                                <a href="/members/memberCenterPage"><span><i
+                                        class="fa-brands fa-shopify"></i> 會員中心</span></a>
+                            </li >
+                            <li  style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
+                                <a href="/eventCommentsReview/commentReviewPage"><span><i
+                                        class="fa-brands fa-shopify"></i> 我的評論</span></a>
+                            </li >
                             <li  style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
                                 <a href="/productorder/findByMember"><span><i
                                         class="fa-brands fa-shopify"></i> 我的商品訂單</span></a>
