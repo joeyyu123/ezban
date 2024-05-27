@@ -1,5 +1,6 @@
 package com.ezban.productcomment;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,19 +33,11 @@ public class ProductCommentReviewController {
 
     @Autowired
     private MemberService memService;
-    
-//    @GetMapping("/currentLogin")
-//    @ResponseBody
-//    public Member getCurrentMember(@AuthenticationPrincipal UserDetails userDetails) {
-//    	System.out.println("User Name ================ " + userDetails.getUsername());
-//        Optional<Member> member = memService.findMemberByMemberNo(userDetails.getUsername());
-//        return member.orElse(null); // 返回 JSON 数据
-//    }
 
     @GetMapping("/member/{memberNo}")
     @ResponseBody
-    public ResponseEntity<List<ProductComment>> getCommentsByMember(@PathVariable Integer memberNo) {
-        Member member = memService.getMemberById(memberNo);
+    public ResponseEntity<List<ProductComment>> getCommentsByMember(@PathVariable("memberNo") Integer memberNo,Principal principal) {
+    	Member member = memService.getMemberById(Integer.parseInt(principal.getName()));
         if (member == null) {
             return ResponseEntity.notFound().build();
         }
@@ -53,8 +46,8 @@ public class ProductCommentReviewController {
     }
 
     @GetMapping("/commentReviewPage")
-    public String getCommentReviewPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        Optional<Member> currentMember = memService.findMemberByMemberNo(userDetails.getUsername());
+    public String getCommentReviewPage(Model model, Principal principal) {
+        Optional<Member> currentMember = memService.findMemberByMemberNo(principal.getName());
         if (currentMember.isPresent()) {
             Member member = currentMember.get();
             model.addAttribute("eventComments", eventCommentService.getCommentsByMember(member));
