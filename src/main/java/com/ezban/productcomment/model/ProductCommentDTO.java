@@ -25,6 +25,17 @@ public class ProductCommentDTO {
         this.productCommentDate = productCommentDate;
     }
 
+    // 从 ProductComment 实例初始化的构造函数
+    public ProductCommentDTO(ProductComment comment) {
+        this.productCommentNo = comment.getProductCommentNo();
+        this.memberNo = comment.getMember().getMemberNo();
+        this.productNo = comment.getProduct().getProductNo();
+        this.commentContent = comment.getProductCommentContent();
+        this.productRate = comment.getProductRate();
+        this.productCommentStatus = comment.getProductCommentStatus();
+        this.productCommentDate = comment.getProductCommentDate();
+    }
+
     public Integer getProductCommentNo() {
         return productCommentNo;
     }
@@ -107,6 +118,33 @@ public class ProductCommentDTO {
 
         public void setRatingCount(long ratingCount) {
             this.ratingCount = ratingCount;
+        }
+    }
+
+    // 确保 ProductAndMemberDTO 是静态的
+    public static class ProductAndMemberDTO {
+        private Integer productNo;
+        private Integer memberNo;
+
+        public ProductAndMemberDTO(Integer productNo, Integer memberNo) {
+            this.productNo = productNo;
+            this.memberNo = memberNo;
+        }
+
+        public Integer getProductNo() {
+            return productNo;
+        }
+
+        public void setProductNo(Integer productNo) {
+            this.productNo = productNo;
+        }
+
+        public Integer getMemberNo() {
+            return memberNo;
+        }
+
+        public void setMemberNo(Integer memberNo) {
+            this.memberNo = memberNo;
         }
     }
 }

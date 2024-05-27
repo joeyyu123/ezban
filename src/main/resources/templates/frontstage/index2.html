@@ -148,6 +148,10 @@
                                 <a href="/saveproduct/findByMember"><span><i
                                         class="fa-solid fa-bookmark"></i> 我的商品追蹤</span></a>
                             </li>
+                            <!-- birthdaycoupon/check -->
+                            <li style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
+                                <a href="#" id="check-coupons-btn" data-toggle="modal" data-target="#myModal" ><span>生日禮券</span></a>
+                            </li>
                             <li style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
                                 <a href="/logout"><span><i
                                         class="fa-solid fa-right-from-bracket"></i> 登出</span></a>
@@ -198,8 +202,21 @@
                     <!-- QA -->
                     <li class="dropdown ">
                         <a th:href="@{/qa}" style="padding: 15px;">常見問題</a>
-                    </li><!-- / QA -->
+                    </li>
+
                 </ul><!-- / .nav .navbar-nav -->
+                <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <p id="message-content"></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
             <!--/.navbar-collapse -->
@@ -305,5 +322,32 @@ Start Call To Action
 </footer>
 <script th:src="@{/js/frontstage/saveevent/saveevent.js}"></script>
 <script th:src="@{/js/frontstage/index2.js}"></script>
+
+<script>
+// 獲取模態框元素
+var modal = document.getElementById("myModal");
+
+
+// 綁定按鈕事件
+document.getElementById('check-coupons-btn').addEventListener('click', function(event) {
+    event.preventDefault();
+    checkCoupons();
+});
+
+function checkCoupons() {
+    fetch('/api/birthdaycoupon/check')
+        .then(response => response.text())
+        .then(data => {
+            showModal(data);
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+function showModal(message) {
+    document.getElementById('message-content').innerText = message;
+}
+
+
+</script>
 </body>
 </html>

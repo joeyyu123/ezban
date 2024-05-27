@@ -1,10 +1,104 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="BIG5">
-<title>Insert title here</title>
-</head>
-<body>
+<html lang="zh-Hant">
 
+<head>
+    <meta charset="UTF-8">
+    <title>生日禮券管理</title>
+
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.4/css/tether.min.css" />
+    <link rel="stylesheet" th:href="@{/css/backstage/index.css}" />
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.4/js/tether.min.js"></script>
+    <script th:src="@{/js/backstage/index.js}"></script>
+    </style>
+</head>
+
+<body>
+    <div class="left-pane">
+        <h1>生日禮券管理</h1>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>會員名稱</th>
+                    <th>生日月份</th>
+                    <th>禮券金額</th>
+                    <th>禮券狀態</th>
+                    <th>使用狀態</th>
+                    <th>到期天數</th>
+                </tr>
+            </thead>
+            <tbody id="couponTableBody">
+                <!-- 資料將會被JavaScript插入到這裡 -->
+            </tbody>
+        </table>
+    </div>
+  
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/birthdaycoupon')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (!Array.isArray(data)) {
+                        throw new TypeError('Expected an array');
+                    }
+                    const tableBody = document.getElementById('couponTableBody');
+                    const currentMonth = new Date().getMonth() + 1;
+                    const previousMonth = (currentMonth === 1) ? 12 : currentMonth - 1;
+                    const twoMonthsAgo = (previousMonth === 1) ? 12 : previousMonth - 1;
+
+                    const validMonths = [currentMonth, previousMonth, twoMonthsAgo];
+
+                    data.filter(coupon => validMonths.includes(coupon.birthdayMonth))
+                        .forEach(coupon => {
+                            const row = document.createElement('tr');
+
+                            const memberNameCell = document.createElement('td');
+                            memberNameCell.textContent = coupon.memberName || '無名';
+                            row.appendChild(memberNameCell);
+
+                            const birthdayMonthCell = document.createElement('td');
+                            birthdayMonthCell.textContent = coupon.birthdayMonth || '未知';
+                            row.appendChild(birthdayMonthCell);
+
+                            const couponDiscountCell = document.createElement('td');
+                            couponDiscountCell.textContent = coupon.birthdayCouponDiscount;
+                            row.appendChild(couponDiscountCell);
+
+                            const couponStatusCell = document.createElement('td');
+                            couponStatusCell.textContent = coupon.birthdayCouponStatus;
+                            couponStatusCell.className = coupon.birthdayCouponStatus === "可使用" ? 'status-available' :
+                                                         coupon.birthdayCouponStatus === "已過期" ? 'status-expired' :
+                                                         coupon.birthdayCouponStatus === "已經使用過了" ? 'status-used' : 'status-not-birthday';
+                            row.appendChild(couponStatusCell);
+
+                            const usageStatusCell = document.createElement('td');
+                            usageStatusCell.textContent = coupon.couponUsageStatus;
+                            usageStatusCell.className = coupon.couponUsageStatus === "未使用" ? 'usage-unused' : 'usage-used';
+                            row.appendChild(usageStatusCell);
+
+                            const validDaysCell = document.createElement('td');
+                            validDaysCell.textContent = coupon.validDays;
+                            row.appendChild(validDaysCell);
+
+                            tableBody.appendChild(row);
+                        });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+    </script>
 </body>
+
 </html>

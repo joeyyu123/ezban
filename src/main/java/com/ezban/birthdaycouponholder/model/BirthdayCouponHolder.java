@@ -1,16 +1,7 @@
 package com.ezban.birthdaycouponholder.model;
 
 import java.time.LocalDate;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.ezban.birthdaycoupon.model.BirthdayCoupon;
 import com.ezban.member.model.Member;
@@ -28,7 +19,6 @@ public class BirthdayCouponHolder {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_no")
-//    @JsonManagedReference
     @JsonBackReference
     private Member member;
     
@@ -59,6 +49,13 @@ public class BirthdayCouponHolder {
         this.member = member;
     }
 
+    public BirthdayCoupon getBirthdayCoupon() {
+        return birthdayCoupon;
+    }
+
+    public void setBirthdayCoupon(BirthdayCoupon birthdayCoupon) {
+        this.birthdayCoupon = birthdayCoupon;
+    }
 
     public Byte getCouponUsageStatus() {
         return couponUsageStatus;
@@ -75,14 +72,4 @@ public class BirthdayCouponHolder {
     public void setValidityDate(LocalDate validityDate) {
         this.validityDate = validityDate;
     }
-
-	public BirthdayCoupon getBirthdayCoupon() {
-		return birthdayCoupon;
-	}
-
-	public void setBirthdayCoupon(BirthdayCoupon birthdayCoupon) {
-		this.birthdayCoupon = birthdayCoupon;
-	}
-    
-    
 }

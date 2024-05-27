@@ -77,6 +77,17 @@ public class ProductComment {
         this.productCommentStatus = productCommentStatus;
     }
 
+    // 新增的构造函数
+    public ProductComment(ProductCommentDTO dto, Member member, Product product) {
+        this.productCommentNo = dto.getProductCommentNo();
+        this.member = member;
+        this.product = product;
+        this.productCommentContent = dto.getCommentContent();
+        this.productRate = dto.getProductRate();
+        this.productCommentDate = dto.getProductCommentDate();
+        this.productCommentStatus = dto.getProductCommentStatus();
+    }
+
     public Integer getProductCommentNo() {
         return productCommentNo;
     }

@@ -39,5 +39,7 @@ public interface BirthdayCouponHolderRepository extends JpaRepository<BirthdayCo
 
     // 產生訂單要更改狀態使用
     Optional<BirthdayCouponHolder> findByBirthdayCoupon(BirthdayCoupon birthdayCoupon);
-
+    
+    @Query("SELECT bch FROM BirthdayCouponHolder bch WHERE bch.member.memberNo = :memberNo AND bch.couponUsageStatus = 0 AND bch.validityDate <> 0")
+    List<BirthdayCouponHolder> findValidCouponsForMember(@Param("memberNo") Integer memberNo);
 }

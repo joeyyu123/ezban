@@ -80,7 +80,7 @@ public class PageController {
 	
 	@GetMapping("/adminmanage")
 	public String showadminmanage() {
-		return "backstage/adminmanage/index";
+		return "backstage/adminmanage/adminmanage";
 	}
 	@GetMapping("/eventreportback")
 	public String showeventreportback() {
@@ -90,4 +90,5 @@ public class PageController {
 	public String showeventreport() {
 		return "frontstage/commentreport/eventreport";
 	}
+	
 }

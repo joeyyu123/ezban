@@ -62,7 +62,8 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/productreport/**",
                         "/saveproduct/**",
                         "/eventCommentsReview/**",
-                        "/members/**")
+                        "/members/**",
+                        "/qa")
                 .and()
 
                 .authorizeRequests()

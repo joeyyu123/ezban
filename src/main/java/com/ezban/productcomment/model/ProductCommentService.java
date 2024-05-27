@@ -1,20 +1,26 @@
 package com.ezban.productcomment.model;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ezban.product.model.Product;
+import com.ezban.product.model.ProductRepository;
+
 @Service
 public class ProductCommentService {
 
     private final ProductCommentRepository commentRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
-    public ProductCommentService(ProductCommentRepository commentRepository) {
+    public ProductCommentService(ProductCommentRepository commentRepository, ProductRepository productRepository) {
         this.commentRepository = commentRepository;
+        this.productRepository = productRepository;
     }
 
     public ProductComment save(ProductComment comment) {
@@ -28,11 +34,11 @@ public class ProductCommentService {
                        .map(comment -> new ProductCommentDTO(
                                comment.getProductCommentNo(),
                                comment.getMember().getMemberNo(),
-                               comment.getProduct().getProductNo(), // 添加 productNo 字段
+                               comment.getProduct().getProductNo(),
                                comment.getProductCommentContent(),
                                comment.getProductRate(),
                                comment.getProductCommentStatus(),
-                               comment.getProductCommentDate())) // 添加 productCommentDate 字段
+                               comment.getProductCommentDate()))
                        .collect(Collectors.toList());
     }
 
@@ -43,11 +49,11 @@ public class ProductCommentService {
                        .map(comment -> new ProductCommentDTO(
                                comment.getProductCommentNo(),
                                comment.getMember().getMemberNo(),
-                               comment.getProduct().getProductNo(), // 添加 productNo 字段
+                               comment.getProduct().getProductNo(),
                                comment.getProductCommentContent(),
                                comment.getProductRate(),
                                comment.getProductCommentStatus(),
-                               comment.getProductCommentDate())) // 添加 productCommentDate 字段
+                               comment.getProductCommentDate()))
                        .collect(Collectors.toList());
     }
 
@@ -70,6 +76,12 @@ public class ProductCommentService {
         double averageRating = getAverageRating(productNo);
         long ratingCount = getRatingCount(productNo);
         return new ProductCommentDTO.CommentStatsDTO(averageRating, ratingCount);
+    }	
+
+    @Transactional(readOnly = true)
+    public Product findProductById(Integer productId) {
+        Optional<Product> product = productRepository.findById(productId);
+        return product.orElse(null);
     }
 }
 

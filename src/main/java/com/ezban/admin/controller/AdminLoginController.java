@@ -29,13 +29,11 @@ public class AdminLoginController {
         Optional<Admin> optionalAdmin = adminRepository.findByAdminAccount(username);
         if (optionalAdmin.isPresent()) {
             Admin admin = optionalAdmin.get();
-            // 加密邏輯
-            // if (passwordEncoder.matches(password, admin.getAdminPwd())) {
             if (password.equals(admin.getAdminPwd())) { // 直接比較未加密的密碼
                 admin.setAdminLogin(LocalDateTime.now());
                 adminRepository.save(admin);
                 session.setAttribute("adminId", admin.getAdminNo()); // 保存管理員 ID 到會話中
-                return new RedirectView("/adminmanage"); // 重定向到管理頁面
+                return new RedirectView("/adminmanage?adminId=" + admin.getAdminNo()); // 重定向到管理頁面并传递 adminId
             }
         }
         return new RedirectView("adminlogin.html?error=true"); // 登入失敗時重定向到登入頁面並顯示錯誤訊息

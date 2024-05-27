@@ -1,5 +1,6 @@
 package com.ezban.eventcommentreportcontroller;
 
+import java.security.Principal;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ezban.admin.model.Admin;
+import com.ezban.admin.model.AdminRepository;
 import com.ezban.member.model.Member;
 import com.ezban.eventcomment.model.EventComment;
 import com.ezban.eventcomment.model.EventCommentRepository;
@@ -30,28 +32,33 @@ public class EventCommentReportController {
 
     private final EventCommentReportService reportService;
     private final EventCommentRepository commentRepository;
+    private final AdminRepository adminRepository;
 
     @Autowired
-    public EventCommentReportController(EventCommentReportService reportService, EventCommentRepository commentRepository) {
+    public EventCommentReportController(EventCommentReportService reportService, EventCommentRepository commentRepository, AdminRepository adminRepository) {
         this.reportService = reportService;
         this.commentRepository = commentRepository;
+        this.adminRepository = adminRepository;
     }
 
     @GetMapping
-    public ResponseEntity<List<EventCommentReportDTO>> getAllReports() {
+    public ResponseEntity<?> getAllReports(Principal principal) {
         try {
+            Integer adminNo = Integer.parseInt(principal.getName());
+            Admin admin = adminRepository.findById(adminNo)
+                    .orElseThrow(() -> new RuntimeException("Admin not found: " + adminNo));
             List<EventCommentReportDTO> reports = reportService.findAll().stream()
                     .map(EventCommentReport::toDTO)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(reports);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Internal Server Error", "message", e.getMessage()));
         }
     }
 
     @PostMapping
-    public ResponseEntity<EventCommentReportDTO> reportComment(@RequestBody Map<String, Object> request) {
+    public ResponseEntity<?> reportComment(@RequestBody Map<String, Object> request) {
         try {
             Integer eventCommentNo = (Integer) request.get("eventCommentNo");
             Integer memberNo = (Integer) request.get("memberNo");
@@ -76,18 +83,17 @@ public class EventCommentReportController {
             return ResponseEntity.status(HttpStatus.CREATED).body(savedReport.toDTO());
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Internal Server Error", "message", e.getMessage()));
         }
     }
 
     @PutMapping("/{reportId}")
-    public ResponseEntity<EventCommentReportDTO> updateReportStatus(@PathVariable Integer reportId, @RequestBody Map<String, Object> request) {
+    public ResponseEntity<?> updateReportStatus(@PathVariable Integer reportId, @RequestBody Map<String, Object> request, Principal principal) {
         try {
             EventCommentReport report = reportService.findById(reportId)
                     .orElseThrow(() -> new RuntimeException("Report not found"));
 
             Integer reportStatus = (Integer) request.get("reportStatus");
-            Integer adminNo = (Integer) request.get("adminNo");
 
             if (reportStatus != null) {
                 report.setReportStatus(reportStatus.byteValue());
@@ -95,27 +101,26 @@ public class EventCommentReportController {
                 if (reportStatus == 2) {
                     EventComment comment = report.getEventComment();
                     comment.setEventCommentStatus((byte) -1);
-                    reportService.saveComment(comment);  // 假设在服务中有保存方法
-                    reportService.updateAllReportsWithCommentNo(comment.getEventCommentNo(), reportStatus.byteValue());  // 更新所有报告状态
+                    reportService.saveComment(comment);
+                    reportService.updateAllReportsWithCommentNo(comment.getEventCommentNo(), reportStatus.byteValue());
                 } else if (reportStatus == 1) {
                     EventComment comment = report.getEventComment();
                     comment.setEventCommentStatus((byte) 0);
-                    reportService.saveComment(comment);  // 假设在服务中有保存方法
-                    reportService.updateAllReportsWithCommentNo(comment.getEventCommentNo(), reportStatus.byteValue());  // 更新所有报告状态
+                    reportService.saveComment(comment);
+                    reportService.updateAllReportsWithCommentNo(comment.getEventCommentNo(), reportStatus.byteValue());
                 }
             }
 
-            if (adminNo != null) {
-                Admin admin = new Admin();
-                admin.setAdminNo(adminNo);
-                report.setAdmin(admin);
-            }
+            Integer adminNo = Integer.parseInt(principal.getName());
+            Admin admin = adminRepository.findById(adminNo)
+                    .orElseThrow(() -> new RuntimeException("Admin not found: " + adminNo));
+            report.setAdmin(admin);
 
             EventCommentReport updatedReport = reportService.save(report);
             return ResponseEntity.ok(updatedReport.toDTO());
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Internal Server Error", "message", e.getMessage()));
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.ezban.eventcomment.model;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.hibernate.Hibernate;
@@ -8,14 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ezban.event.model.Event;
+import com.ezban.event.model.EventRepository;
+
 @Service
 public class EventCommentService {
 
     private final EventCommentRepository commentRepository;
-
+    private final EventRepository eventRepository;
+    
     @Autowired
-    public EventCommentService(EventCommentRepository commentRepository) {
+    public EventCommentService(EventCommentRepository commentRepository, EventRepository eventRepository) {
         this.commentRepository = commentRepository;
+        this.eventRepository = eventRepository;
     }
 
     public EventComment save(EventComment comment) {
@@ -30,6 +36,7 @@ public class EventCommentService {
                        .map(comment -> new EventCommentDTO(
                                comment.getEventCommentNo(),
                                comment.getMember().getMemberNo(),
+                               comment.getEvent().getEventNo(),
                                comment.getEventCommentContent(),
                                comment.getEventCommentRate(),
                                comment.getEventCommentStatus())) // 包含status字段
@@ -44,6 +51,7 @@ public class EventCommentService {
                        .map(comment -> new EventCommentDTO(
                                comment.getEventCommentNo(),
                                comment.getMember().getMemberNo(),
+                               comment.getEvent().getEventNo(),
                                comment.getEventCommentContent(),
                                comment.getEventCommentRate(),
                                comment.getEventCommentStatus())) // 包含status字段
@@ -69,5 +77,10 @@ public class EventCommentService {
         double averageRating = getAverageRating(eventNo);
         long ratingCount = getRatingCount(eventNo);
         return new EventCommentDTO.CommentStatsDTO(averageRating, ratingCount);
+    }
+    @Transactional(readOnly = true)
+    public Event findEventById(Integer eventId) {
+        Optional<Event> event = eventRepository.findById(eventId);
+        return event.orElse(null);
     }
 }

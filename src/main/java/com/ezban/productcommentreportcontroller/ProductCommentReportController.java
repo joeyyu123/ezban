@@ -1,5 +1,6 @@
 package com.ezban.productcommentreportcontroller;
 
+import java.security.Principal;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ezban.admin.model.Admin;
+import com.ezban.admin.model.AdminRepository;
 import com.ezban.member.model.Member;
+import com.ezban.product.model.Product;
 import com.ezban.productcomment.model.ProductComment;
 import com.ezban.productcomment.model.ProductCommentRepository;
 import com.ezban.productcommentreport.model.ProductCommentReport;
@@ -30,28 +33,32 @@ public class ProductCommentReportController {
 
     private final ProductCommentReportService reportService;
     private final ProductCommentRepository commentRepository;
+    private final AdminRepository adminRepository;
 
     @Autowired
-    public ProductCommentReportController(ProductCommentReportService reportService, ProductCommentRepository commentRepository) {
+    public ProductCommentReportController(ProductCommentReportService reportService, ProductCommentRepository commentRepository, AdminRepository adminRepository) {
         this.reportService = reportService;
         this.commentRepository = commentRepository;
+        this.adminRepository = adminRepository;
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductCommentReportDTO>> getAllReports() {
+    public ResponseEntity<?> getAllReports(Principal principal) {
         try {
+            Integer adminNo = Integer.parseInt(principal.getName());
+            Admin admin = adminRepository.findById(adminNo)
+                    .orElseThrow(() -> new RuntimeException("Admin not found: " + adminNo));
             List<ProductCommentReportDTO> reports = reportService.findAll().stream()
                     .map(ProductCommentReport::toDTO)
                     .collect(Collectors.toList());
             return ResponseEntity.ok(reports);
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Internal Server Error", "message", e.getMessage()));
         }
     }
 
     @PostMapping
-    public ResponseEntity<ProductCommentReportDTO> reportComment(@RequestBody Map<String, Object> request) {
+    public ResponseEntity<?> reportComment(@RequestBody Map<String, Object> request) {
         try {
             Integer productCommentNo = (Integer) request.get("productCommentNo");
             Integer memberNo = (Integer) request.get("memberNo");
@@ -61,6 +68,9 @@ public class ProductCommentReportController {
 
             ProductComment productComment = commentRepository.findById(productCommentNo)
                     .orElseThrow(() -> new RuntimeException("ProductComment not found"));
+
+            Integer productNo = productComment.getProduct().getProductNo(); // 獲取商品編號
+            System.out.println("Product No: " + productNo);
 
             Member member = new Member();
             member.setMemberNo(memberNo);
@@ -75,47 +85,40 @@ public class ProductCommentReportController {
             ProductCommentReport savedReport = reportService.save(report);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedReport.toDTO());
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Internal Server Error", "message", e.getMessage()));
         }
     }
 
     @PutMapping("/{reportId}")
-    public ResponseEntity<ProductCommentReportDTO> updateReportStatus(@PathVariable Integer reportId, @RequestBody Map<String, Object> request) {
+    public ResponseEntity<?> updateReportStatus(@PathVariable Integer reportId, @RequestBody Map<String, Object> request, Principal principal) {
         try {
             ProductCommentReport report = reportService.findById(reportId)
                     .orElseThrow(() -> new RuntimeException("Report not found"));
 
             Integer reportStatus = (Integer) request.get("reportStatus");
-            Integer adminNo = (Integer) request.get("adminNo");
 
             if (reportStatus != null) {
                 report.setReportStatus(reportStatus.byteValue());
 
+                ProductComment comment = report.getProductComment();
                 if (reportStatus == 2) {
-                    ProductComment comment = report.getProductComment();
-                    comment.setProductCommentStatus((byte)-1);
-                    reportService.saveComment(comment);  // 假設在服務中有保存方法
-                    reportService.updateAllReportsWithCommentNo(comment.getProductCommentNo(), reportStatus.byteValue());  // 更新所有報告狀態
+                    comment.setProductCommentStatus((byte) -1);
                 } else if (reportStatus == 1) {
-                    ProductComment comment = report.getProductComment();
-                    comment.setProductCommentStatus((byte)0);
-                    reportService.saveComment(comment);  // 假設在服務中有保存方法
-                    reportService.updateAllReportsWithCommentNo(comment.getProductCommentNo(), reportStatus.byteValue());  // 更新所有報告狀態
+                    comment.setProductCommentStatus((byte) 0);
                 }
+                reportService.saveComment(comment);
+                reportService.updateAllReportsWithCommentNo(comment.getProductCommentNo(), reportStatus.byteValue());
             }
 
-            if (adminNo != null) {
-                Admin admin = new Admin();
-                admin.setAdminNo(adminNo);
-                report.setAdmin(admin);
-            }
+            Integer adminNo = Integer.parseInt(principal.getName());
+            Admin admin = adminRepository.findById(adminNo)
+                    .orElseThrow(() -> new RuntimeException("Admin not found: " + adminNo));
+            report.setAdmin(admin);
 
             ProductCommentReport updatedReport = reportService.save(report);
             return ResponseEntity.ok(updatedReport.toDTO());
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Internal Server Error", "message", e.getMessage()));
         }
     }
 }

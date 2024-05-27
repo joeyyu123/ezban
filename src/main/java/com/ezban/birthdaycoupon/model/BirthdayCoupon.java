@@ -4,16 +4,12 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.ezban.member.model.Member;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -36,11 +32,6 @@ public class BirthdayCoupon implements Serializable {
     @NotNull
     @Column(name = "valid_days", nullable = false)
     private Integer validDays;
-
-    // Optional: Relationship with Member (if each coupon is directly linked to a Member)
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "member_no")
-//    private Member member;
 
     // Getters and Setters
     public Integer getBirthdayCouponNo() {
@@ -74,12 +65,4 @@ public class BirthdayCoupon implements Serializable {
     public void setValidDays(Integer validDays) {
         this.validDays = validDays;
     }
-
-//    public Member getMember() {
-//        return member;
-//    }
-//
-//    public void setMember(Member member) {
-//        this.member = member;
-//    }
 }

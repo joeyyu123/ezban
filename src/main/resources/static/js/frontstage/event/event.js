@@ -41,6 +41,15 @@ function showComments() {
         type: 'GET',
         dataType: 'json',
         success: function (data) {
+            if (data.length === 0) {
+                $('#comments').append(`
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">目前沒有評論</h5>
+                    </div>
+                </div>  
+                `)
+            }
             data.forEach(function (comment) {
                 let stars = '';
                 for (let i = 0; i < comment.eventCommentRate; i++) {

@@ -260,13 +260,11 @@
                                                 取消訂單
                                             </button>
                                         </td>
-                                        <td>
-                                            <button type="button" id="comment_button" style="margin-top:10px"
-                                                    th:disabled="${productOrder.productProcessStatus == 0}">
-                                                前往
-                                            </button>
-                                        </td>
-                                    </tr>
+									    <td>
+									   <button type="button" id="comment_button" data-order-no="[[${order.productOrderNo}]]" style="margin-top:10px">
+										    前往
+									   </button>
+									</td>	 	
                                 </th:block>
                                 </tbody>
                             </table>
@@ -342,7 +340,64 @@
                 Swal.fire('取消失敗，如有疑問，請洽客服人員協助，感謝您!');
             }
         });
+        
     }
 </script>
+ <script>
+
+     $(document).ready(function () {
+        $('#comment_button').click(function (){
+            let orderNo = $(this).closest('tr').find('td:first-child').text(); // #1001
+            orderNo = orderNo.replace('#', '');
+            fetch('/api/product/comment/order/' + orderNo, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const productNo = data.productNo;
+                    const memberNo = data.memberNo;
+                    window.location.href = '/productcomment?productNo=' + productNo + '&memberNo=' + memberNo;
+                })
+                .catch(error => {
+                    console.error('Error fetching product and member info:', error);
+                });
+
+        });
+     });
+        function goToProductComment(button) {
+            const orderNo = button.getAttribute('data-order-no');
+            console.log(orderNo)
+
+            fetch('/api/product/comment/order/' + orderNo, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const productNo = data.productNo;
+                const memberNo = data.memberNo;
+                window.location.href = '/productComment?productNo=' + productNo + '&memberNo=' + memberNo;
+            })
+            .catch(error => {
+                console.error('Error fetching product and member info:', error);
+            });
+        }
+    </script>
+
 
 </html>

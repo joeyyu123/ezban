@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>事件評分和評論</title>
+    <title>活動評分和評論</title>
+    
     <style>
+        body {
+            background-color: #F5E8E4; /* 根據右側背景顏色設置 */
+        }
+
         #star-rating .star {
             font-size: 30px;
             cursor: pointer;
@@ -103,7 +108,7 @@
     </style>
 </head>
 <body>
-    <h1>事件評分和評論</h1>
+    <h1>活動評分和評論</h1>
 
     <div id="event-info">
         <div class="average-rating">
@@ -129,8 +134,10 @@
     <button onclick="submitComment()">提交評論</button>
 
     <script>
-        var currentRating = 0;
-        var eventNo = 1; // 假設的事件編號
+	    var currentRating = 0;
+	    var currentPage = 1;
+	    var totalPages = 1;
+	    const commentsPerPage = 10;
 
         function setRating(rating) {
             currentRating = rating;
@@ -144,12 +151,24 @@
             }
         }
 
-        function getCurrentMemberNo() {
-            return "2"; // 假設的會員編號
-        }
+        function getEventNo() {
+        	 const urlParams = new URLSearchParams(window.location.search);
+             const eventNo = urlParams.get('eventNo');
+             if (!eventNo) {
+                 alert('獲取產品信息失敗');
+                 return null;
+             }
+             return eventNo;
+         }
 
         function submitComment() {
             const commentContent = document.getElementById('commentContent').value;
+            const eventNo = getEventNo();
+           
+            if (!eventNo){
+            	return;
+            }
+            
             if (!currentRating || !commentContent.trim()) {
                 alert("請填寫評分和評論內容！");
                 return;
@@ -163,9 +182,7 @@
                 eventCommentTime: new Date().toISOString(),
                 eventCommentStatus: 0
             };
-
-            console.log("提交的評論數據:", data);
-
+          
             fetch('/api/event/comment', {
                 method: 'POST',
                 headers: {
@@ -173,10 +190,16 @@
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => response.json())
+            .then(response => {
+            	if (!response.ok) {
+            		throw new Error(`HTTP error! status: ${response.status}`);
+                }
+            	return response.json();
+            	})
             .then(comment => {
                 alert("評論已提交！");
-                loadComments(eventNo);
+                document.getElementById('commentContent').value = ''; // 清空文字框
+                loadComments(eventNo, currentPage);
                 loadCommentStats(eventNo);
             })
             .catch(error => {
@@ -249,7 +272,6 @@
                 console.error('加载评分统计出错:', error);
             });
         }
-
 
         function reportComment(commentElement) {
             const commentId = commentElement.getAttribute('data-comment-id');

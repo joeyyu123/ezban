@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-hant" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>評星和評論系統</title>
+<title>商品評星和評論系統</title>
 <style>
 #star-rating .star {
 	font-size: 30px;
@@ -134,42 +134,41 @@ button {
 </style>
 </head>
 <body>
-	<h1>產品評分和評論</h1>
+    <h1>產品評分和評論</h1>
 
-	<div id="product-info">
-		<div class="average-rating">
-			<span id="average-rating-value">0.0</span>
-			<div class="stars" id="average-rating-stars"></div>
-			<span class="count" id="rating-count">(0)</span>
-		</div>
-	</div>
+    <div id="product-info">
+        <div class="average-rating">
+            <span id="average-rating-value">0.0</span>
+            <div class="stars" id="average-rating-stars"></div>
+            <span class="count" id="rating-count">(0)</span>
+        </div>
+    </div>
 
-	<div id="comments-display">
-		<!-- 評論將會顯示在這裡 -->
-	</div>
+    <div id="comments-display">
+        <!-- 評論將會顯示在這裡 -->
+    </div>
 
-	<div class="pagination" id="pagination">
-		<button onclick="goToPage('first')">最前頁</button>
-		<button onclick="goToPage('previous')">上一頁</button>
-		<!-- 動態生成的頁碼按鈕 -->
-		<button onclick="goToPage('next')">下一頁</button>
-		<button onclick="goToPage('last')">最後頁</button>
-	</div>
+    <div class="pagination" id="pagination">
+        <button onclick="goToPage('first')">最前頁</button>
+        <button onclick="goToPage('previous')">上一頁</button>
+        <!-- 動態生成的頁碼按鈕 -->
+        <button onclick="goToPage('next')">下一頁</button>
+        <button onclick="goToPage('last')">最後頁</button>
+    </div>
 
-	<div id="star-rating">
-		<span class="star" onclick="setRating(1)">&#9733;</span> <span
-			class="star" onclick="setRating(2)">&#9733;</span> <span class="star"
-			onclick="setRating(3)">&#9733;</span> <span class="star"
-			onclick="setRating(4)">&#9733;</span> <span class="star"
-			onclick="setRating(5)">&#9733;</span>
-	</div>
+    <div id="star-rating">
+        <span class="star" onclick="setRating(1)">&#9733;</span>
+        <span class="star" onclick="setRating(2)">&#9733;</span>
+        <span class="star" onclick="setRating(3)">&#9733;</span>
+        <span class="star" onclick="setRating(4)">&#9733;</span>
+        <span class="star" onclick="setRating(5)">&#9733;</span>
+    </div>
 
-	<textarea id="commentContent" placeholder="寫下你的評論..."></textarea>
-	<button onclick="submitComment()">提交評論</button>
+    <textarea id="commentContent" placeholder="寫下你的評論..."></textarea>
+    <button onclick="submitComment()">提交評論</button>
 
-	<script>
+    <script>
         var currentRating = 0;
-        var productNo = 1; // 假設的產品編號
         var currentPage = 1;
         var totalPages = 1;
         const commentsPerPage = 10;
@@ -186,27 +185,32 @@ button {
             }
         }
 
-        function getCurrentMemberNo() {
-            return "2"; // 假設的會員編號
+        function getProductNo() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productNo = urlParams.get('productNo');
+            if (!productNo) {
+                alert('獲取產品信息失敗');
+                return null;
+            }
+            return productNo;
         }
 
         function submitComment() {
             const commentContent = document.getElementById('commentContent').value;
+            const productNo = getProductNo();
+
+            if (!productNo) {
+                return;
+            }
+
             if (!currentRating || !commentContent.trim()) {
                 alert("請填寫評分和評論內容！");
                 return;
             }
 
-            const memberNumber = parseInt(getCurrentMemberNo(), 10); 
-            if (isNaN(memberNumber)) {
-                alert("會員編號必須是一個有效的數字！");
-                return;
-            }
-
             const data = {
                 productCommentNo: null,
-                memberNo: memberNumber,
-                productNo: productNo,
+                productNo: parseInt(productNo),
                 commentContent: commentContent,
                 productRate: currentRating,
                 productCommentDate: new Date().toISOString(),
@@ -220,34 +224,32 @@ button {
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(comment => {
-                alert("評論已提交！");
-                document.getElementById('commentContent').value = ''; // 清空文字框
-                loadComments(productNo, currentPage);
-                loadCommentStats(productNo);
-            })
-            .catch(error => {
-                console.error('提交評論出錯:', error);
-                alert('提交評論失敗');
-            });
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(comment => {
+                    alert("評論已提交！");
+                    document.getElementById('commentContent').value = ''; // 清空文字框
+                    loadComments(productNo, currentPage);
+                    loadCommentStats(productNo);
+                })
+                .catch(error => {
+                    console.error('提交評論出錯:', error);
+                    alert('提交評論失敗');
+                });
         }
 
-        // 加載評論
         function loadComments(productNo, page) {
             fetch(`/api/product/comment/${productNo}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(comments => {
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                }).then(comments => {
                 if (!Array.isArray(comments)) {
                     throw new TypeError('期望得到評論的數組，但實際得到:', comments);
                 }
@@ -263,46 +265,46 @@ button {
                     const commentContent = comment.productCommentStatus === -1 ? '此評論為不當言論' : comment.commentContent;
                     const reportButton = comment.productCommentStatus === -1 ? '' : `<button class="report-button" onclick="reportComment(this.parentElement.parentElement)">檢舉</button>`;
                     const commentItem = `<div class="comment-item ${commentClass}" data-comment-id="${comment.productCommentNo}">
-                        <div class="comment-header">
-                            <span class="member-id">會員編號: ${comment.memberNo}</span>
-                            <div class="comment-rating">${stars}</div>
-                        </div>
-                        <div class="comment-content-wrapper">
-                            <div class="comment-content">${commentContent}</div>
-                            ${reportButton}
-                        </div>
-                    </div>`;
+                    <div class="comment-header">
+                              <span class="member-id">會員編號: ${comment.memberNo}</span>
+      <div class="comment-rating">${stars}</div>
+    </div>
+    <div class="comment-content-wrapper">
+      <div class="comment-content">${commentContent}</div>
+      ${reportButton}
+    </div>
+  </div>`;
                     commentsDisplay.innerHTML += commentItem;
                 });
 
                 totalPages = Math.ceil(comments.length / commentsPerPage);
                 updatePagination(page, totalPages);
             })
-            .catch(error => {
-                console.error('加載評論出錯:', error);
-            });
+                .catch(error => {
+                    console.error('加載評論出錯:', error);
+                });
         }
 
         function loadCommentStats(productNo) {
             fetch(`/api/product/comment/stats/${productNo}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(stats => {
-                const averageRatingValue = document.getElementById('average-rating-value');
-                const averageRatingStars = document.getElementById('average-rating-stars');
-                const ratingCount = document.getElementById('rating-count');
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(stats => {
+                    const averageRatingValue = document.getElementById('average-rating-value');
+                    const averageRatingStars = document.getElementById('average-rating-stars');
+                    const ratingCount = document.getElementById('rating-count');
 
-                averageRatingValue.textContent = stats.averageRating.toFixed(1);
-                averageRatingStars.innerHTML = '★'.repeat(Math.floor(stats.averageRating)) + '☆'.repeat(5 - Math.floor(stats.averageRating));
-                ratingCount.textContent = `(${stats.ratingCount})`;
-            })
-            .catch(error => {
-                console.error('加载评分统计出错:', error);
-            });
+                    averageRatingValue.textContent = stats.averageRating.toFixed(1);
+                    averageRatingStars.innerHTML = '★'.repeat(Math.floor(stats.averageRating)) + '☆'.repeat(5 - Math.floor(stats.averageRating));
+                    ratingCount.textContent = `(${stats.ratingCount})`;
+                })
+                .catch(error => {
+                    console.error('加载评分统计出错:', error);
+                });
         }
 
         function reportComment(commentElement) {
@@ -315,7 +317,6 @@ button {
 
             const data = {
                 productCommentNo: parseInt(commentId),
-                memberNo: parseInt(getCurrentMemberNo()),
                 reportReason: reportReason,
                 reportDate: new Date().toISOString(),
                 reportStatus: 0
@@ -328,20 +329,20 @@ button {
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(result => {
-                alert("檢舉已提交！");
-                loadComments(productNo, currentPage);
-            })
-            .catch(error => {
-                console.error('檢舉出錯:', error);
-                alert('檢舉失敗');
-            });
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    alert("檢舉已提交！");
+                    loadComments(getProductNo(), currentPage);
+                })
+                .catch(error => {
+                    console.error('檢舉出錯:', error);
+                    alert('檢舉失敗');
+                });
         }
 
         function goToPage(action) {
@@ -361,7 +362,7 @@ button {
                 default:
                     currentPage = parseInt(action);
             }
-            loadComments(productNo, currentPage);
+            loadComments(getProductNo(), currentPage);
         }
 
         function updatePagination(currentPage, totalPages) {
@@ -379,10 +380,34 @@ button {
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            loadComments(productNo, currentPage);
-            loadCommentStats(productNo);
+            loadComments(getProductNo(), currentPage);
+            loadCommentStats(getProductNo());
         });
 
+        function goToProductComment(button) {
+            const orderNo = button.getAttribute('data-order-no');
+
+            fetch('/api/product/comment/order/' + orderNo, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const productNo = data.productNo;
+                    const memberNo = data.memberNo;
+                    window.location.href = '/productComment?productNo=' + productNo + '&memberNo=' + memberNo;
+                })
+                .catch(error => {
+                    console.error('Error fetching product and member info:', error);
+                });
+        }
     </script>
 </body>
 </html>
