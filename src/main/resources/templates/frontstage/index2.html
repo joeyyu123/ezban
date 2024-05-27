@@ -60,50 +60,6 @@
     <!-- font-awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script th:src="@{/js/frontstage/product/cartqty.js}"></script>
-     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0,0.4);
-            padding-top: 20px;
-        }
-        .modal-content {
-            background-color: #fff;
-            margin: 15% auto;
-            padding: 10px;
-            border: 1px solid #888;
-            width: 50%;
-            max-width: 300px;
-            border-radius: 5px;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-    </style>
 
 </head>
 
@@ -234,20 +190,24 @@
                     <!-- QA -->
                     <li class="dropdown ">
                         <a th:href="@{/qa}" style="padding: 15px;">常見問題</a>
-                    </li><!-- / QA -->
-                    
+                    </li>
                     <!-- birthdaycoupon/check -->
-                    <a href="#" id="check-coupons-btn" style="padding: 15px;">生日禮券</a>
-
-				    <!-- 模態框 -->
-				    <div id="myModal" class="modal">
-				        <div class="modal-content">
-				            <span class="close">&times;</span>
-				            <p id="message-content"></p>
-				        </div>
-				    </div><!-- / birthdaycoupon/check -->
-                                        
+                    <li class="dropdown ">
+                        <a href="#" id="check-coupons-btn" data-toggle="modal" data-target="#myModal" style="padding: 15px;">生日禮券</a>
+                    </li>
                 </ul><!-- / .nav .navbar-nav -->
+                <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <p id="message-content"></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
             <!--/.navbar-collapse -->
@@ -358,8 +318,6 @@ Start Call To Action
 // 獲取模態框元素
 var modal = document.getElementById("myModal");
 
-// 獲取關閉按鈕
-var span = document.getElementsByClassName("close")[0];
 
 // 綁定按鈕事件
 document.getElementById('check-coupons-btn').addEventListener('click', function(event) {
@@ -378,20 +336,9 @@ function checkCoupons() {
 
 function showModal(message) {
     document.getElementById('message-content').innerText = message;
-    modal.style.display = "block";
 }
 
-// 當用戶點擊關閉按鈕時，關閉模態框
-span.onclick = function() {
-    modal.style.display = "none";
-}
 
-// 當用戶點擊模態框外部時，關閉模態框
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
 </script>
 </body>
 </html>
