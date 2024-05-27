@@ -30,19 +30,12 @@ public class EventCommentReviewController {
 
     @Autowired
     private MemberService memService;
-    
-//    @GetMapping("/currentLogin")
-//    @ResponseBody
-//    public Member getCurrentMember(@AuthenticationPrincipal UserDetails userDetails) {
-//    	System.out.println("User Name ================ " + userDetails.getUsername());
-//        Optional<Member> member = memService.findMemberByMemberNo(userDetails.getUsername());
-//        return member.orElse(null); // 返回 JSON 数据
-//    }
+   
 
     @GetMapping("/member/{memberNo}")
     @ResponseBody
-    public ResponseEntity<List<EventComment>> getCommentsByMember(@PathVariable("memberNo") Integer memberNo) {
-        Member member = memService.getMemberById(memberNo);
+    public ResponseEntity<List<EventComment>> getCommentsByMember(@PathVariable("memberNo") Integer memberNo,Principal principal) {
+        Member member = memService.getMemberById(Integer.parseInt(principal.getName()));
         if (member == null) {
             return ResponseEntity.notFound().build();
         }

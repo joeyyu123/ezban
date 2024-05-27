@@ -21,7 +21,7 @@ public class AdminManagementController {
 
     private static final Logger logger = LoggerFactory.getLogger(AdminManagementController.class);
 
-    @GetMapping("/")
+    @GetMapping("")
     public String getAllAdmins(Model model) {
         List<Admin> admins = adminService.getAllAdmins();
         logger.info("Admins: {}", admins);

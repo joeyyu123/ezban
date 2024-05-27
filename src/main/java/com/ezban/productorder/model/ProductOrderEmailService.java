@@ -26,7 +26,8 @@ public class ProductOrderEmailService {
         stringBuilder.append("<h2>總退款金額是: NT$ ").append(productOrder.getProductCheckoutAmount()).append(" 。</h2>");
         stringBuilder.append("<p>若有任何疑問，歡迎來電聯絡我們，將有專人協助您確認。</p>");
         stringBuilder.append("</body></html>");
-        // 收件人| 主旨| 內容(html)
+        // 寄件人| 收件人| 主旨| 內容(html)
+        helper.setFrom("ezbantest@gmail.com");
         helper.setTo(productOrder.getMember().getMemberMail());
         helper.setSubject(" ezban-退款成功通知信!");
         helper.setText(stringBuilder.toString(), true);

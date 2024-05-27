@@ -1,5 +1,6 @@
 package com.ezban.member;
 
+import java.security.Principal;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +31,23 @@ public class MemberController {
 
     @GetMapping("/currentLogin")
     @ResponseBody
-    public Member getCurrentMember(@AuthenticationPrincipal UserDetails userDetails) {
-    	System.out.println("User Name ================ " + userDetails.getUsername());
-        Optional<Member> member = memService.findMemberByMemberNo(userDetails.getUsername());
-        return member.orElse(null); // 返回 JSON 数据
+    public Member getCurrentMember(Principal principal) {
+        if (principal == null) {
+            // 處理使用者未登入的情況
+            System.out.println("目前沒有使用者登入。");
+            return null; // 或者返回一個適當的錯誤響應
+        }
+
+        // 從 Principal 中獲取使用者名稱
+        String username = principal.getName();
+        System.out.println("User Name ================ " + username);
+
+        // 使用使用者名稱查找 Member
+        Optional<Member> member = memService.findMemberByMemberNo(username);
+        return member.orElse(null); // 返回 JSON 數據
     }
+
+
 
     @PutMapping("/update/{memberMail}")
     @ResponseBody
