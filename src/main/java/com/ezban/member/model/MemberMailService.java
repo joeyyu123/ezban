@@ -27,7 +27,7 @@ public class MemberMailService {
 	        helper.setFrom(new InternetAddress("ezbantest@gmail.com"));
 	        helper.setTo(to);
 	        helper.setSubject(subject);
-	        helper.setText(content, true); // 如果内容是 HTML，则设置为 'true'，如果是纯文本，则设置为 false
+	        helper.setText(content, false); // 如果内容是 HTML，则设置为 'true'，如果是纯文本，则设置为 false
 
 	        mailSender.send(mimeMessage);
 	        System.out.println("成功發送電子郵件至：" + to);
