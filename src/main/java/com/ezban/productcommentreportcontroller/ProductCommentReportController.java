@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ezban.admin.model.Admin;
 import com.ezban.admin.model.AdminRepository;
 import com.ezban.member.model.Member;
-import com.ezban.product.model.Product;
+import com.ezban.member.model.MemberRepository;
 import com.ezban.productcomment.model.ProductComment;
 import com.ezban.productcomment.model.ProductCommentRepository;
 import com.ezban.productcommentreport.model.ProductCommentReport;
@@ -34,12 +34,14 @@ public class ProductCommentReportController {
     private final ProductCommentReportService reportService;
     private final ProductCommentRepository commentRepository;
     private final AdminRepository adminRepository;
+    private final MemberRepository memberRepository;
 
     @Autowired
-    public ProductCommentReportController(ProductCommentReportService reportService, ProductCommentRepository commentRepository, AdminRepository adminRepository) {
+    public ProductCommentReportController(ProductCommentReportService reportService, ProductCommentRepository commentRepository, AdminRepository adminRepository, MemberRepository memberRepository) {
         this.reportService = reportService;
         this.commentRepository = commentRepository;
         this.adminRepository = adminRepository;
+        this.memberRepository = memberRepository;
     }
 
     @GetMapping
@@ -60,20 +62,25 @@ public class ProductCommentReportController {
     @PostMapping
     public ResponseEntity<?> reportComment(@RequestBody Map<String, Object> request) {
         try {
+            // 確保從請求中正確獲取數據
             Integer productCommentNo = (Integer) request.get("productCommentNo");
             Integer memberNo = (Integer) request.get("memberNo");
             String reportReason = (String) request.get("reportReason");
             Instant reportDate = Instant.parse((String) request.get("reportDate"));
             Byte reportStatus = ((Number) request.get("reportStatus")).byteValue();
 
+            // 檢查 ID 是否為 null
+            if (productCommentNo == null || memberNo == null) {
+                throw new IllegalArgumentException("ProductCommentNo and MemberNo must not be null");
+            }
+
+            // 確保從數據庫中查找 ProductComment
             ProductComment productComment = commentRepository.findById(productCommentNo)
                     .orElseThrow(() -> new RuntimeException("ProductComment not found"));
 
-            Integer productNo = productComment.getProduct().getProductNo(); // 獲取商品編號
-            System.out.println("Product No: " + productNo);
-
-            Member member = new Member();
-            member.setMemberNo(memberNo);
+            // 確保從數據庫中查找 Member
+            Member member = memberRepository.findById(memberNo)
+                    .orElseThrow(() -> new RuntimeException("Member not found"));
 
             ProductCommentReport report = new ProductCommentReport();
             report.setProductComment(productComment);
@@ -85,9 +92,11 @@ public class ProductCommentReportController {
             ProductCommentReport savedReport = reportService.save(report);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedReport.toDTO());
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Internal Server Error", "message", e.getMessage()));
         }
     }
+
 
     @PutMapping("/{reportId}")
     public ResponseEntity<?> updateReportStatus(@PathVariable Integer reportId, @RequestBody Map<String, Object> request, Principal principal) {
@@ -118,6 +127,7 @@ public class ProductCommentReportController {
             ProductCommentReport updatedReport = reportService.save(report);
             return ResponseEntity.ok(updatedReport.toDTO());
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Internal Server Error", "message", e.getMessage()));
         }
     }

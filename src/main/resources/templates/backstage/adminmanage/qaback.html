@@ -142,8 +142,8 @@
             fetch(`/api/faqs/${id}`)
                 .then(response => response.json())
                 .then(faq => {
-                    const newTitle = prompt("请输入新的标题", faq.qaTitle);
-                    const newContent = prompt("请输入新的内容", faq.qaContent);
+                    const newTitle = prompt("請輸入新的標題", faq.qaTitle);
+                    const newContent = prompt("請輸入新的內容", faq.qaContent);
                     if (newTitle !== null && newContent !== null) {
                         fetch(`/api/faqs/${id}`, {
                             method: 'PUT',
@@ -157,7 +157,7 @@
         }
 
         function deleteFaq(id) {
-            if (confirm("确定要删除此问题吗？")) {
+            if (confirm("確定要刪除此問題嗎？")) {
                 fetch(`/api/faqs/${id}`, {
                     method: 'DELETE'
                 }).then(() => fetchFaqs());

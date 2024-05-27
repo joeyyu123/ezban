@@ -21,36 +21,36 @@
             text-align: center;
         }
         .action-button {
-            margin: 5px; /* 加入按鈕間距 */
-            background-color: #4F4F4F; /* 按鈕顏色 */
+            margin: 5px;
+            background-color: #4F4F4F;
             color: white;
-            padding: 5px 10px; /* 縮小按鈕 */
+            padding: 5px 10px;
             text-align: center;
             text-decoration: none;
             display: inline-block;
             font-size: 14px;
             transition-duration: 0.4s;
             cursor: pointer;
-            border-radius: 12px; /* 圓角 */
+            border-radius: 12px;
         }
         .action-button:hover {
-            background-color: #3A3A3A; /* 深灰色背景 */
+            background-color: #3A3A3A;
         }
         .comment-item.inappropriate {
             opacity: 0.5;
         }
         .pagination {
             margin-top: 20px;
-            text-align: center; /* 居中顯示 */
+            text-align: center;
             display: flex;
-            justify-content: center; /* 確保按鈕在畫面中間 */
+            justify-content: center;
         }
         .pagination button {
             margin: 0 5px;
             padding: 5px 10px;
             cursor: pointer;
-            border-radius: 4em; /* 圓角 */
-            background-color: #4F4F4F; /* 按鈕顏色 */
+            border-radius: 4em;
+            background-color: #4F4F4F;
             color: white;
         }
         .pagination .active {
@@ -59,7 +59,7 @@
             color: white;
         }
         .back-button {
-            background-color: #4F4F4F; /* 按鈕顏色 */
+            background-color: #4F4F4F;
             color: white;
             padding: 5px 10px;
             text-align: center;
@@ -68,11 +68,11 @@
             font-size: 14px;
             transition-duration: 0.4s;
             cursor: pointer;
-            border-radius: 12px; /* 圓角 */
+            border-radius: 12px;
             margin-bottom: 20px;
         }
         .back-button:hover {
-            background-color: #3A3A3A; /* 深灰色背景 */
+            background-color: #3A3A3A;
         }
     </style>
 </head>
@@ -80,9 +80,7 @@
     <div id="wrapper">
         <nav th:replace="backstage/index :: navbar"></nav>
         <div class="page-content-wrapper">
-            <!-- 頁面內容都放在 content 裡面 -->
             <div class="content">
-                <!-- 這裡可以放置你想呈現的內容 -->
                 <h1>商品管理員檢視和處理檢舉</h1>
                 <a href="/adminmanage" class="back-button">回上一頁</a>
                 <div id="admin-info"></div>
@@ -100,7 +98,6 @@
                         </tr>
                     </thead>
                     <tbody id="reports-display">
-                        <!-- 檢舉將會顯示在這裡 -->
                     </tbody>
                 </table>
                 <div class="pagination" id="pagination"></div>
@@ -113,7 +110,11 @@
         const itemsPerPage = 10;
         let allReports = [];
 
-        // 獲取並顯示管理員信息
+        document.addEventListener('DOMContentLoaded', () => {
+            displayAdminInfo();
+            loadReports();
+        });
+
         function displayAdminInfo() {
             const adminId = sessionStorage.getItem('adminId');
             if (!adminId) {
@@ -121,38 +122,42 @@
                 window.location.href = '/adminlogin';
                 return;
             }
+            // 顯示管理員信息的代碼
         }
 
-        // 加載檢舉數據並顯示在表格中
         async function loadReports() {
             try {
                 const response = await fetch('/api/product/comment/report', {
                     method: 'GET'
                 });
-                allReports = await response.json();
+                const data = await response.json();
 
                 if (response.ok) {
+                    allReports = data;
                     displayReports(currentPage);
                     setupPagination();
                 } else {
-                    alert(`加載檢舉數據出錯: ${allReports.message}`);
+                    alert(`加載檢舉數據出錯: ${data.message}`);
                 }
             } catch (error) {
                 console.error('加載檢舉數據出錯:', error);
             }
         }
 
-        // 顯示指定頁碼的報告
         function displayReports(page) {
             const start = (page - 1) * itemsPerPage;
             const end = start + itemsPerPage;
-            const paginatedReports = allReports.slice(start, end);
+
+            // 對報告進行排序，將「尚未處理」的放在最前面
+            const sortedReports = allReports.sort((a, b) => a.reportStatus - b.reportStatus);
+            const paginatedReports = sortedReports.slice(start, end);
 
             const reportsDisplay = document.getElementById('reports-display');
             reportsDisplay.innerHTML = '';
 
             paginatedReports.forEach(report => {
                 const reportClass = report.reportStatus !== 0 ? 'inappropriate' : '';
+                const reportStatusText = getReportStatusText(report.reportStatus);
                 const reportRow = document.createElement('tr');
                 reportRow.className = `comment-item ${reportClass}`;
                 reportRow.dataset.reportId = report.productCommentReportNo;
@@ -163,7 +168,7 @@
                     <td>${report.memberNo}</td>
                     <td>${report.reportReason}</td>
                     <td>${report.formattedReportDate}</td>
-                    <td>${report.reportStatus}</td>
+                    <td>${reportStatusText}</td>
                     <td>
                         <button class="btn action-button" onclick="confirmHandleReport(${report.productCommentReportNo}, true)">正常發言</button>
                         <button class="btn action-button" onclick="confirmHandleReport(${report.productCommentReportNo}, false)">封鎖評論</button>
@@ -173,7 +178,19 @@
             });
         }
 
-        // 設置分頁按鈕
+        function getReportStatusText(status) {
+            switch (status) {
+                case 0:
+                    return '尚未處理';
+                case 1:
+                    return '正常發言';
+                case 2:
+                    return '已封鎖';
+                default:
+                    return '未知狀態';
+            }
+        }
+
         function setupPagination() {
             const pageCount = Math.ceil(allReports.length / itemsPerPage);
             const pagination = document.getElementById('pagination');
@@ -239,7 +256,6 @@
             pagination.appendChild(lastButton);
         }
 
-        // 確認處理檢舉
         function confirmHandleReport(reportId, approve) {
             const action = approve ? '正常發言' : '封鎖評論';
             if (confirm(`確定要將此評論設置為"${action}"嗎？`)) {
@@ -247,11 +263,10 @@
             }
         }
 
-        // 處理檢舉
         async function handleReport(reportId, approve) {
             const data = {
                 reportStatus: approve ? 1 : 2,
-                adminNo: sessionStorage.getItem('adminId') // 從 sessionStorage 獲取 adminNo
+                adminNo: sessionStorage.getItem('adminId')
             };
 
             try {
@@ -275,12 +290,6 @@
                 alert('處理檢舉失敗');
             }
         }
-
-        // 當文檔加載完畢後，開始加載檢舉數據並顯示管理員信息
-        document.addEventListener('DOMContentLoaded', () => {
-            displayAdminInfo();
-            loadReports();
-        });
     </script>
 </body>
 </html>
