@@ -42,6 +42,7 @@ public class MemberMailService {
 
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            helper.setFrom(new InternetAddress("ezbantest@gmail.com"));
             helper.setTo(to);
             helper.setSubject("Verification Code");
             helper.setText("Your verification code is: " + verificationCode);
@@ -60,6 +61,7 @@ public class MemberMailService {
 
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+            helper.setFrom(new InternetAddress("ezbantest@gmail.com"));
             helper.setTo(to);
             helper.setSubject("您的驗證碼");
             helper.setText("您的驗證碼是：" + code);
