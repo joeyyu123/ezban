@@ -140,6 +140,10 @@
                                 <a href="/saveproduct/findByMember"><span><i
                                         class="fa-solid fa-bookmark"></i> 我的商品追蹤</span></a>
                             </li>
+                            <!-- birthdaycoupon/check -->
+                            <li style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
+                                <a href="#" id="check-coupons-btn" data-toggle="modal" data-target="#myModal" ><span>生日禮券</span></a>
+                            </li>
                             <li style="display: flex; justify-content: center; align-items: center;" sec:authorize="hasRole('ROLE_Member')">
                                 <a href="/logout"><span><i
                                         class="fa-solid fa-right-from-bracket"></i> 登出</span></a>
@@ -191,10 +195,7 @@
                     <li class="dropdown ">
                         <a th:href="@{/qa}" style="padding: 15px;">常見問題</a>
                     </li>
-                    <!-- birthdaycoupon/check -->
-                    <li class="dropdown ">
-                        <a href="#" id="check-coupons-btn" data-toggle="modal" data-target="#myModal" style="padding: 15px;">生日禮券</a>
-                    </li>
+
                 </ul><!-- / .nav .navbar-nav -->
                 <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
                     <div class="modal-dialog modal-sm" role="document">
