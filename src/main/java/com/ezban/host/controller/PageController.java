@@ -35,7 +35,7 @@ public class PageController {
 
 	@GetMapping("/qa")
 	public String showqa() {
-		return "frontstage/qa/qa";
+		return "frontstage/Qa/qa";
 	}
 
 	@GetMapping("/productcomment")
