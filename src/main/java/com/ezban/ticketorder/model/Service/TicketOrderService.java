@@ -85,10 +85,12 @@ public class TicketOrderService implements ServiceDemo<TicketOrder> {
         for (Map<String, Integer> orderDetail : orderDetailList) {
             TicketType ticketType = ticketTypeService.findById(orderDetail.get("ticketTypeNo"));
 
-            if (ticketType.getRemainingTicketQty() < orderDetail.get("ticketTypeQty")){
-                throw new InsufficientTicketQuantityException(ticketType.getTicketTypeName() + "剩餘票數不足");
+            synchronized (ticketType) {
+                if (ticketType.getRemainingTicketQty() < orderDetail.get("ticketTypeQty")) {
+                    throw new InsufficientTicketQuantityException(ticketType.getTicketTypeName() + "剩餘票數不足");
+                }
+                ticketType.setRemainingTicketQty(ticketType.getRemainingTicketQty() - orderDetail.get("ticketTypeQty"));
             }
-            ticketType.setRemainingTicketQty(ticketType.getRemainingTicketQty() - orderDetail.get("ticketTypeQty"));
 
             TicketOrderDetail ticketOrderDetail = new TicketOrderDetail();
             ticketOrderDetail.setTicketType(ticketType);
