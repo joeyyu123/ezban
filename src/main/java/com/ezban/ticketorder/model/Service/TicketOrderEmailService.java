@@ -6,7 +6,6 @@ import com.ezban.member.model.MemberService;
 import com.ezban.qrcodeticket.model.QrcodeTicket;
 import com.ezban.qrcodeticket.model.QrcodeTicketService;
 import com.ezban.ticketorder.model.TicketOrder;
-
 import com.ezban.ticketorderdetail.model.TicketOrderDetail;
 import com.ezban.tickettype.model.TicketType;
 import com.google.zxing.WriterException;
@@ -15,6 +14,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -43,6 +43,7 @@ public class TicketOrderEmailService {
     /**
      * 寄送報名成功通知郵件
      */
+    @Async
     public void sendOrderEmail(TicketOrder ticketOrder) throws MessagingException, IOException, WriterException {
         Event event = ticketOrder.getTicketOrderDetails().iterator().next().getTicketType().getEvent();
 
@@ -87,6 +88,7 @@ public class TicketOrderEmailService {
      * @param event
      * @return
      */
+    @Async
     public void sendCancelEmail(TicketOrder ticketOrder, Event event) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED);
@@ -150,8 +152,8 @@ public class TicketOrderEmailService {
             sendEmail(member, ticketType);
         }
     }
-
-    private void sendEmail(Member member, TicketType ticketType) throws MessagingException {
+    @Async
+    protected void sendEmail(Member member, TicketType ticketType) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, MimeMessageHelper.MULTIPART_MODE_MIXED);
 
