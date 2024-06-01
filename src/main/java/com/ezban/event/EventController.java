@@ -6,13 +6,9 @@ import com.ezban.event.model.EventStatus;
 import com.ezban.event.model.Service.EventService;
 import com.ezban.eventcategory.model.EventCategory;
 import com.ezban.eventcategory.model.EventCategoryService;
-import com.ezban.host.model.HostService;
-import com.ezban.tickettype.model.TicketTypeService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,21 +24,10 @@ import java.util.List;
 @RequestMapping("/events")
 public class EventController {
     @Autowired
-    private HostService hostService;
-
-    @Autowired
     private EventService eventService;
 
     @Autowired
     private EventCategoryService eventCategoryService;
-
-    @Autowired
-    private TicketTypeService ticketTypeService;
-
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
-    @Autowired
-    private ObjectMapper mapper;
 
     private final int PAGE_SIZE = 6; // 每頁顯示的活動數量
 
@@ -139,8 +124,6 @@ public class EventController {
 
     /**
      * 取得熱門活動
-     *
-     * @return
      */
     @GetMapping("/trending")
     @ResponseBody
