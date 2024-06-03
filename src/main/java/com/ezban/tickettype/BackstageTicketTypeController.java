@@ -22,10 +22,13 @@ import static java.net.URI.create;
 @RequestMapping("/backstage/events/{eventNo}/ticketTypes")
 public class BackstageTicketTypeController {
 
+    private final TicketTypeService ticketTypeService;
+    private final EventService eventService;
     @Autowired
-    private TicketTypeService ticketTypeService;
-    @Autowired
-    private EventService eventService;
+    public BackstageTicketTypeController(TicketTypeService ticketTypeService, EventService eventService) {
+        this.ticketTypeService = ticketTypeService;
+        this.eventService = eventService;
+    }
 
     @GetMapping("")
     public String ticketTypes(Model model, Principal principal, @PathVariable Integer eventNo) {

@@ -10,8 +10,11 @@ import java.util.Map;
 @Service
 public class TicketTypeService implements ServiceDemo<TicketType> {
 
+    private final TicketTypeRepository repository;
     @Autowired
-    private TicketTypeRepository repository;
+    public TicketTypeService(TicketTypeRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public TicketType add(TicketType vo) {

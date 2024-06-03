@@ -22,12 +22,16 @@ import static java.net.URI.create;
 @Controller
 @RequestMapping("/backstage/events")
 public class RegistrationFormController {
+    private final EventService eventService;
+    private final RegistrationFormService registrationFormService;
+    private final FieldExampleService fieldExampleService;
+
     @Autowired
-    private EventService eventService;
-    @Autowired
-    private RegistrationFormService registrationFormService;
-    @Autowired
-    private FieldExampleService fieldExampleService;
+    public RegistrationFormController(EventService eventService, RegistrationFormService registrationFormService, FieldExampleService fieldExampleService) {
+        this.eventService = eventService;
+        this.registrationFormService = registrationFormService;
+        this.fieldExampleService = fieldExampleService;
+    }
 
     /**
      * 查看報名表設定頁面

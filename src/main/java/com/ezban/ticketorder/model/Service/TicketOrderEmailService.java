@@ -28,17 +28,20 @@ import java.util.Set;
 
 @Service
 public class TicketOrderEmailService {
-    @Autowired
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
-    @Autowired
-    private QrcodeTicketService qrcodeTicketService;
+    private final QrcodeTicketService qrcodeTicketService;
 
-    @Autowired
-    private MemberService memberService;
+    private final MemberService memberService;
 
+    private final RedisTemplate<String, Object> redisTemplate;
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    public TicketOrderEmailService(JavaMailSender mailSender, QrcodeTicketService qrcodeTicketService, MemberService memberService, RedisTemplate<String, Object> redisTemplate) {
+        this.mailSender = mailSender;
+        this.qrcodeTicketService = qrcodeTicketService;
+        this.memberService = memberService;
+        this.redisTemplate = redisTemplate;
+    }
 
     /**
      * 寄送報名成功通知郵件

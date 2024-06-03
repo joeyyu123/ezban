@@ -10,8 +10,11 @@ import java.util.Map;
 @Service
 public class EventCategoryService implements ServiceDemo<EventCategory> {
 
+    private final EventCategoryRepository repository;
     @Autowired
-    EventCategoryRepository repository;
+    public EventCategoryService(EventCategoryRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public EventCategory add(EventCategory vo) {

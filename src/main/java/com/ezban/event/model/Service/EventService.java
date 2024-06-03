@@ -26,23 +26,22 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class EventService implements ServiceDemo<Event> {
-    @Autowired
-    HostService hostService;
+    private final HostService hostService;
+    private final EventCategoryService eventCategoryService;
+    private final EventRepository eventRepository;
+    private final QrcodeTicketService qrcodeTicketService;
+    private final RegistrationFormService registrationFormService;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
-    EventCategoryService eventCategoryService;
-
-    @Autowired
-    EventRepository eventRepository;
-
-    @Autowired
-    QrcodeTicketService qrcodeTicketService;
-
-    @Autowired
-    RegistrationFormService registrationFormService;
-
-    @Autowired
-    RedisTemplate<String, Object> redisTemplate;
+    public EventService(HostService hostService, EventCategoryService eventCategoryService, EventRepository eventRepository, QrcodeTicketService qrcodeTicketService, RegistrationFormService registrationFormService, RedisTemplate<String, Object> redisTemplate) {
+        this.hostService = hostService;
+        this.eventCategoryService = eventCategoryService;
+        this.eventRepository = eventRepository;
+        this.qrcodeTicketService = qrcodeTicketService;
+        this.registrationFormService = registrationFormService;
+        this.redisTemplate = redisTemplate;
+    }
 
     @Override
     public Event add(Event event) {

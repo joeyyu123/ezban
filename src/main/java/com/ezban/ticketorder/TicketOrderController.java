@@ -26,28 +26,22 @@ import java.security.Principal;
 import java.util.*;
 
 @Controller
-//@RequestMapping("/events/order")
 public class TicketOrderController {
+    private final TicketOrderService ticketOrderService;
+    private final RegistrationFormService registrationFormService;
+    private final MemberService memberService;
+    private final TicketOrderStatusService ticketOrderStatusService;
+    private final EcpayService ecpayService;
+    private final EventCouponService eventCouponService;
     @Autowired
-    private TicketOrderService ticketOrderService;
-
-    @Autowired
-    private RegistrationFormService registrationFormService;
-
-    @Autowired
-    private MemberService memberService;
-
-    @Autowired
-    private TicketOrderStatusService ticketOrderStatusService;
-
-    @Autowired
-    private EcpayService ecpayService;
-
-    @Autowired
-    private TicketOrderEmailService ticketOrderEmailService;
-
-    @Autowired
-    private EventCouponService eventCouponService;
+    public TicketOrderController(TicketOrderService ticketOrderService, RegistrationFormService registrationFormService, MemberService memberService, TicketOrderStatusService ticketOrderStatusService, EcpayService ecpayService, EventCouponService eventCouponService) {
+        this.ticketOrderService = ticketOrderService;
+        this.registrationFormService = registrationFormService;
+        this.memberService = memberService;
+        this.ticketOrderStatusService = ticketOrderStatusService;
+        this.ecpayService = ecpayService;
+        this.eventCouponService = eventCouponService;
+    }
 
     @GetMapping("/events/orders")
     public String orderPage(Model model, @RequestParam(value = "orderStatus", required = false) Integer orderStatus, Principal principal) {

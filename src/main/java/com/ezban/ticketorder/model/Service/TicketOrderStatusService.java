@@ -24,23 +24,19 @@ import java.util.Set;
 @Service
 public class TicketOrderStatusService {
 
+    private final TicketOrderRepository ticketOrderRepository;
+    private final TicketOrderService ticketOrderService;
+    private final TicketTypeRepository ticketTypeRepository;
+    private final TicketOrderEmailService ticketOrderEmailService;
+    private final TicketRegistrationService ticketRegistrationService;
     @Autowired
-    TicketOrderRepository ticketOrderRepository;
-
-    @Autowired
-    TicketOrderService ticketOrderService;
-
-    @Autowired
-    TicketTypeRepository ticketTypeRepository;
-
-    @Autowired
-    TicketOrderEmailService ticketOrderEmailService;
-
-    @Autowired
-    TicketRegistrationService ticketRegistrationService;
-
-    @Autowired
-    RedisTemplate<String, Object> redisTemplate;
+    public TicketOrderStatusService(TicketOrderRepository ticketOrderRepository, TicketOrderService ticketOrderService, TicketTypeRepository ticketTypeRepository, TicketOrderEmailService ticketOrderEmailService, TicketRegistrationService ticketRegistrationService) {
+        this.ticketOrderRepository = ticketOrderRepository;
+        this.ticketOrderService = ticketOrderService;
+        this.ticketTypeRepository = ticketTypeRepository;
+        this.ticketOrderEmailService = ticketOrderEmailService;
+        this.ticketRegistrationService = ticketRegistrationService;
+    }
 
 
     /**

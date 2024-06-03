@@ -20,14 +20,17 @@ import java.util.Map;
 @RequestMapping("/events/{eventNo}/tickets")
 public class TicketTypeController {
 
-    @Autowired
-    private EventService eventService;
+    private final EventService eventService;
 
-    @Autowired
-    private TicketTypeService ticketTypeService;
+    private final TicketTypeService ticketTypeService;
 
+    private final RedisTemplate<String, Object> redisTemplate;
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    public TicketTypeController(EventService eventService, TicketTypeService ticketTypeService, RedisTemplate<String, Object> redisTemplate) {
+        this.eventService = eventService;
+        this.ticketTypeService = ticketTypeService;
+        this.redisTemplate = redisTemplate;
+    }
 
 
     @GetMapping("")

@@ -23,11 +23,13 @@ import java.util.List;
 @Controller
 @RequestMapping("/events")
 public class EventController {
+    private final EventService eventService;
+    private final EventCategoryService eventCategoryService;
     @Autowired
-    private EventService eventService;
-
-    @Autowired
-    private EventCategoryService eventCategoryService;
+    public EventController(EventService eventService, EventCategoryService eventCategoryService) {
+        this.eventService = eventService;
+        this.eventCategoryService = eventCategoryService;
+    }
 
     private final int PAGE_SIZE = 6; // 每頁顯示的活動數量
 

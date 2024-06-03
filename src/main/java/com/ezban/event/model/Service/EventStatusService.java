@@ -14,11 +14,15 @@ import java.util.List;
 
 @Service
 public class EventStatusService {
-    @Autowired
-    private EventRepository eventRepository;
+    private final EventRepository eventRepository;
+
+    private final EventService eventService;
 
     @Autowired
-    private EventService eventService;
+    public EventStatusService(EventRepository eventRepository, EventService eventService) {
+        this.eventRepository = eventRepository;
+        this.eventService = eventService;
+    }
 
     /**
      * 手動上架活動

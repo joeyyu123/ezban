@@ -16,12 +16,16 @@ import java.util.Map;
 
 @Controller
 public class EcpayController {
-    @Autowired
-    private TicketOrderService ticketOrderService;
+    private final TicketOrderService ticketOrderService;
 
 
+    private final TicketOrderEmailService ticketOrderEmailService;
+
     @Autowired
-    private TicketOrderEmailService ticketOrderEmailService;
+    public EcpayController(TicketOrderService ticketOrderService, TicketOrderEmailService ticketOrderEmailService) {
+        this.ticketOrderService = ticketOrderService;
+        this.ticketOrderEmailService = ticketOrderEmailService;
+    }
 
     // 用來測試能不能連接到伺服器用，之後可以移除
     @GetMapping("/ecpay/return")

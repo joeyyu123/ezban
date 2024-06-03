@@ -15,8 +15,12 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class EcpayService {
 
+    private final TicketOrderService ticketOrderService;
+
     @Autowired
-    TicketOrderService ticketOrderService;
+    public EcpayService(TicketOrderService ticketOrderService) {
+        this.ticketOrderService = ticketOrderService;
+    }
 
     public String genAioCheckOutALL(Integer ticketOrderNo) {
         TicketOrder ticketOrder = ticketOrderService.findById(ticketOrderNo);

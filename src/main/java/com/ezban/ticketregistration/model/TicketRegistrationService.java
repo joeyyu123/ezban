@@ -21,11 +21,13 @@ import java.util.List;
 
 @Service
 public class TicketRegistrationService {
+    private final TicketRegistrationRepository registrationFormRepository;
+    private final RegistrationFormService registrationFormService;
     @Autowired
-    TicketRegistrationRepository registrationFormRepository;
-
-    @Autowired
-    RegistrationFormService registrationFormService;
+    public TicketRegistrationService(TicketRegistrationRepository registrationFormRepository, RegistrationFormService registrationFormService) {
+        this.registrationFormRepository = registrationFormRepository;
+        this.registrationFormService = registrationFormService;
+    }
 
 
     public void save(TicketRegistration ticketRegistration) {

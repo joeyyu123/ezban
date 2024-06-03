@@ -10,8 +10,11 @@ import java.util.List;
 @Service
 public class TicketOrderDetailService implements ServiceDemo<TicketOrderDetail> {
 
+    private final TicketOrderDetailRepository repository;
     @Autowired
-    private TicketOrderDetailRepository repository;
+    public TicketOrderDetailService(TicketOrderDetailRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public TicketOrderDetail add(TicketOrderDetail vo) {

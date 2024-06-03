@@ -20,14 +20,15 @@ import java.util.List;
 
 @Controller
 public class TicketOrderDetailController {
+    private final HostService hostService;
+    private final TicketOrderService ticketOrderService;
+    private final TicketOrderDetailService ticketOrderDetailService;
     @Autowired
-    private HostService hostService;
-
-    @Autowired
-    private TicketOrderService ticketOrderService;
-
-    @Autowired
-    private TicketOrderDetailService ticketOrderDetailService;
+    public TicketOrderDetailController(HostService hostService, TicketOrderService ticketOrderService, TicketOrderDetailService ticketOrderDetailService) {
+        this.hostService = hostService;
+        this.ticketOrderService = ticketOrderService;
+        this.ticketOrderDetailService = ticketOrderDetailService;
+    }
 
 
     @GetMapping("/events/orders/{orderNo}")

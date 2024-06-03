@@ -13,11 +13,14 @@ import java.util.List;
 
 @Service
 public class RegistrationFormService {
-    @Autowired
-    RegistrationFormRepository registrationFormRepository;
+    private final RegistrationFormRepository registrationFormRepository;
 
+    private final TicketOrderDetailService ticketOrderDetailService;
     @Autowired
-    TicketOrderDetailService ticketOrderDetailService;
+    public RegistrationFormService(RegistrationFormRepository registrationFormRepository, TicketOrderDetailService ticketOrderDetailService) {
+        this.registrationFormRepository = registrationFormRepository;
+        this.ticketOrderDetailService = ticketOrderDetailService;
+    }
 
     public RegistrationForm findByEventNo(String eventNo) {
         return registrationFormRepository.getByEventNo(eventNo);

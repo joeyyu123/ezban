@@ -34,20 +34,21 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/backstage")
 public class BackstageEventController {
-    @Autowired
-    HostService hostService;
+    private final HostService hostService;
+
+    private final EventService eventService;
+
+    private final EventCategoryService eventCategoryService;
+
+    private final TicketOrderStatusService ticketOrderStatusService;
 
     @Autowired
-    EventService eventService;
-
-    @Autowired
-    EventCategoryService eventCategoryService;
-
-    @Autowired
-    TicketOrderStatusService ticketOrderStatusService;
-
-    @Autowired
-    RegistrationFormService registrationFormService;
+    public BackstageEventController(HostService hostService, EventService eventService, EventCategoryService eventCategoryService, TicketOrderStatusService ticketOrderStatusService) {
+        this.hostService = hostService;
+        this.eventService = eventService;
+        this.eventCategoryService = eventCategoryService;
+        this.ticketOrderStatusService = ticketOrderStatusService;
+    }
 
 
     /**

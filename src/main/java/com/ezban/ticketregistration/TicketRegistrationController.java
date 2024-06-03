@@ -17,11 +17,14 @@ import java.util.List;
 @Controller
 public class TicketRegistrationController {
 
-    @Autowired
-    private TicketRegistrationService ticketRegistrationService;
+    private final TicketRegistrationService ticketRegistrationService;
 
+    private final TicketOrderDetailService ticketOrderDetailService;
     @Autowired
-    private TicketOrderDetailService ticketOrderDetailService;
+    public TicketRegistrationController(TicketRegistrationService ticketRegistrationService, TicketOrderDetailService ticketOrderDetailService) {
+        this.ticketRegistrationService = ticketRegistrationService;
+        this.ticketOrderDetailService = ticketOrderDetailService;
+    }
 
     @PostMapping("/events/registrations")
     public ResponseEntity<?> registerEvent(@RequestBody String request) {

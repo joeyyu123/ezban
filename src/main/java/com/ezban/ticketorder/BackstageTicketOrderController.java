@@ -25,17 +25,17 @@ import java.util.Objects;
 @RequestMapping("/backstage/events/{eventNo}")
 public class BackstageTicketOrderController {
 
+    private final HostService hostService;
+    private final EventService eventService;
+    private final TicketOrderService ticketOrderService;
+    private final TicketOrderStatusService ticketOrderStatusService;
     @Autowired
-    private HostService hostService;
-
-    @Autowired
-    private EventService eventService;
-
-    @Autowired
-    TicketOrderService ticketOrderService;
-
-    @Autowired
-    private TicketOrderStatusService ticketOrderStatusService;
+    public BackstageTicketOrderController(HostService hostService, EventService eventService, TicketOrderService ticketOrderService, TicketOrderStatusService ticketOrderStatusService) {
+        this.hostService = hostService;
+        this.eventService = eventService;
+        this.ticketOrderService = ticketOrderService;
+        this.ticketOrderStatusService = ticketOrderStatusService;
+    }
 
     @GetMapping("/orders")
     public String showOrders(Model model, Principal principal,

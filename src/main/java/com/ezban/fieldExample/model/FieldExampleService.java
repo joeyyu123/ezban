@@ -11,9 +11,11 @@ import java.util.Optional;
 @Service
 public class FieldExampleService {
 
+    private final FieldExampleRepository repository;
     @Autowired
-    private FieldExampleRepository repository;
-
+    public FieldExampleService(FieldExampleRepository repository) {
+        this.repository = repository;
+    }
 
 
     public List<FieldExample> findAllSortByIdNumber() {

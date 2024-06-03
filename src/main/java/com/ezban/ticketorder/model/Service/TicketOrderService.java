@@ -30,26 +30,21 @@ import java.util.Set;
 
 @Service
 public class TicketOrderService implements ServiceDemo<TicketOrder> {
+    private final HostService hostService;
+    private final TicketTypeService ticketTypeService;
+    private final TicketOrderDetailService ticketOrderDetailService;
+    private final TicketOrderRepository ticketOrderRepository;
+    private final TicketTypeRepository ticketTypeRepository;
+    private final QrcodeTicketRepository qrcodeTicketrepository;
     @Autowired
-    private HostService hostService;
-
-    @Autowired
-    private TicketTypeService ticketTypeService;
-
-    @Autowired
-    private TicketOrderDetailService ticketOrderDetailService;
-
-    @Autowired
-    private TicketOrderRepository ticketOrderRepository;
-
-    @Autowired
-    private TicketTypeRepository ticketTypeRepository;
-
-    @Autowired
-    private MemberService memberService;
-
-    @Autowired
-    private QrcodeTicketRepository qrcodeTicketrepository;
+    public TicketOrderService(HostService hostService, TicketTypeService ticketTypeService, TicketOrderDetailService ticketOrderDetailService, TicketOrderRepository ticketOrderRepository, TicketTypeRepository ticketTypeRepository, QrcodeTicketRepository qrcodeTicketrepository) {
+        this.hostService = hostService;
+        this.ticketTypeService = ticketTypeService;
+        this.ticketOrderDetailService = ticketOrderDetailService;
+        this.ticketOrderRepository = ticketOrderRepository;
+        this.ticketTypeRepository = ticketTypeRepository;
+        this.qrcodeTicketrepository = qrcodeTicketrepository;
+    }
 
     public  List<TicketOrder> findByMember(Member member) {
         return ticketOrderRepository.findByMember(member, Sort.by("ticketOrderTime").descending());

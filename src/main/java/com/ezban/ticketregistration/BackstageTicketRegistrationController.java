@@ -30,14 +30,17 @@ import java.util.List;
 @Controller
 public class BackstageTicketRegistrationController {
 
-    @Autowired
-    private TicketRegistrationService ticketRegistrationService;
+    private final TicketRegistrationService ticketRegistrationService;
 
-    @Autowired
-    private RegistrationFormService registrationFormService;
+    private final RegistrationFormService registrationFormService;
 
+    private final EventService eventService;
     @Autowired
-    EventService eventService;
+    public BackstageTicketRegistrationController(TicketRegistrationService ticketRegistrationService, RegistrationFormService registrationFormService, EventService eventService) {
+        this.ticketRegistrationService = ticketRegistrationService;
+        this.registrationFormService = registrationFormService;
+        this.eventService = eventService;
+    }
 
     @GetMapping("/backstage/events/{eventNo}/ticket-registrations")
     public String showTicketRegistrations(Principal principal, Model model, @PathVariable("eventNo") String eventNo) {
