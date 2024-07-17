@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -32,6 +34,10 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private ClientRegistrationRepository clientRegistrationRepository;
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -43,57 +49,10 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .requestMatchers()
-                .antMatchers("/",
-                        "/login",
-                        "/logout",
-                        "/loginPage",
-                        "/register",
-                        "/forgotPassword",
-                        "/auth/status",
-                        "/events/**",
-                        "/saveevent/**",
-                        "/frontstage/memberchat/**",
-                        "/frontstage/qrcodeticket/**",
-                        "/cart/**",
-                        "/product/**",
-                        "/productorder/**",
-                        "/productorderdetail/**",
-                        "/productreport/**",
-                        "/saveproduct/**",
-                        "/eventCommentsReview/**",
-                        "/members/**",
-                        "/qa")
-                .and()
-
                 .authorizeRequests()
-                .antMatchers("/login",
-                        "loginPage",
-                        "/register",
-                        "/forgotPassword",
-                        "/auth/status",
-                        "/cart/items",
-                        "/",
-                        "/product/**",
-                        "/productorder/**",
-                        "/productorderdetail/**",
-                        "/productreport/**",
-                        "/saveproduct/**").permitAll()
-                .antMatchers("/events/orders/**",
-                        "/events/order/**",
-                        "/events/*/tickets",
-                        "/cart/**",
-                        "/productorder/**",
-                        "/productorderdetail/**",
-                        "/productreport/**",
-                        "/saveproduct/**",
-                        "/saveevent/**",
-                        "/frontstage/memberchat/**",
-                        "/frontstage/qrcodeticket/**",
-                        "/eventCommentsReview/**",
-                        "/members/**").hasRole("Member")
+                .antMatchers("/", "/login", "/logout", "/loginPage", "/register", "/forgotPassword", "/auth/status", "/events/**", "/saveevent/**", "/frontstage/memberchat/**", "/frontstage/qrcodeticket/**", "/cart/**", "/product/**", "/productorder/**", "/productorderdetail/**", "/productreport/**", "/saveproduct/**", "/eventCommentsReview/**", "/members/**", "/qa").permitAll()
+                .antMatchers("/events/orders/**", "/events/order/**", "/events/*/tickets", "/cart/**", "/productorder/**", "/productorderdetail/**", "/productreport/**", "/saveproduct/**", "/saveevent/**", "/frontstage/memberchat/**", "/frontstage/qrcodeticket/**", "/eventCommentsReview/**", "/members/**").hasRole("Member")
                 .and()
-
                 .formLogin()
                 .loginPage("/loginPage")
                 .loginProcessingUrl("/login")
@@ -101,8 +60,13 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler(memberAuthenticationFailureHandler())
                 .permitAll()
                 .and()
+                .oauth2Login()
+                .loginPage("/loginPage")
+                .defaultSuccessUrl("/", true)
+                .failureUrl("/loginPage?error=true")
+                .and()
                 .logout()
-                .logoutUrl("/logout") // 确保登出URL正确
+                .logoutUrl("/logout")
                 .logoutSuccessUrl("/")
                 .permitAll()
                 .and()
@@ -115,9 +79,8 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder memberPasswordEncoder() {
         return NoOpPasswordEncoder.getInstance();
-
-//        return new BCryptPasswordEncoder(); // 加密要這行
     }
+
     @Bean
     public AuthenticationSuccessHandler memberAuthenticationSuccessHandler() {
         return (request, response, authentication) -> {
@@ -142,6 +105,4 @@ public class MemberSecurityConfig extends WebSecurityConfigurerAdapter {
             return ResponseEntity.ok(principal != null);
         }
     }
-
 }
-

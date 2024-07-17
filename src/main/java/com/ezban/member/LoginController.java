@@ -1,5 +1,6 @@
 package com.ezban.member;
 
+import com.ezban.member.model.CaptchaService;
 import com.ezban.member.model.Member;
 import com.ezban.member.model.MemberAuthenticate;
 import com.ezban.member.model.MemberMailService;
@@ -19,6 +20,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+
+import java.util.Collections;
+
 @Controller
 public class LoginController {
 
@@ -33,20 +41,73 @@ public class LoginController {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	
+	@Autowired
+    private CaptchaService captchaService;
 
 	@PostMapping("/login")
 	@ResponseBody
-	public ResponseEntity<String> login(@RequestBody Member loginRequest, HttpSession session) {
-		Optional<Member> optionalMember = memRepository.findByMemberMail(loginRequest.getMemberMail());
-		if (optionalMember.isPresent()) {
-			Member mem = optionalMember.get();
-			if (passwordEncoder.matches(loginRequest.getMemberPwd(), mem.getMemberPwd())) {
-				session.setAttribute("loggedInUser", mem);
-				return ResponseEntity.ok("登入成功！");
-			}
-		}
-		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("登入失敗：帳號或密碼錯誤。");
+	public ResponseEntity<String> login(
+	        @RequestParam Map<String, String> loginRequest,
+	        @RequestParam("recaptchaResponse") String recaptchaResponse,
+	        HttpSession session) {
+	    try {
+	        if (!captchaService.verifyCaptcha(recaptchaResponse)) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("驗證無效碼或已過期");
+	        }
+
+	        String memberMail = loginRequest.get("memberMail");
+	        String memberPwd = loginRequest.get("memberPwd");
+
+	        Optional<Member> optionalMember = memRepository.findByMemberMail(memberMail);
+	        if (optionalMember.isPresent()) {
+	            Member mem = optionalMember.get();
+	            if (passwordEncoder.matches(memberPwd, mem.getMemberPwd())) {
+	                session.setAttribute("loggedInUser", mem);
+	                return ResponseEntity.ok("登入成功！");
+	            }
+	        }
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("登入失敗：帳號或密碼錯誤。");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("伺服器錯誤，請稍後再試。");
+	    }
 	}
+
+	
+	@PostMapping("/googleLogin")
+    @ResponseBody
+    public ResponseEntity<String> googleLogin(@RequestBody GoogleLoginRequest googleLoginRequest, HttpSession session) {
+        // 这里可以进行 Google ID token 的验证和用户处理
+        Optional<Member> optionalMember = verifyGoogleToken(googleLoginRequest.getToken());
+        if (optionalMember.isPresent()) {
+            Member mem = optionalMember.get();
+            session.setAttribute("loggedInUser", mem);
+            return ResponseEntity.ok("Google 登入成功！");
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Google 登入失敗");
+    }
+	
+	private Optional<Member> verifyGoogleToken(String token) {
+	    try {
+	        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
+	                GoogleNetHttpTransport.newTrustedTransport(),
+	                JacksonFactory.getDefaultInstance()
+	        ).setAudience(Collections.singletonList("565507201095-j4t6d076snim2vggb855s8ld2ks7ts1d.apps.googleusercontent.com")).build();
+
+	        GoogleIdToken idToken = verifier.verify(token);
+	        if (idToken != null) {
+	            GoogleIdToken.Payload payload = idToken.getPayload();
+	            String email = payload.getEmail();
+	            // 根据 email 从数据库中查找用户
+	            return memRepository.findByMemberMail(email);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return Optional.empty();
+	}
+
 
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
@@ -226,4 +287,16 @@ public class LoginController {
 			this.memberPwd = memberPwd;
 		}
 	}
+	
+	public static class GoogleLoginRequest {
+        private String token;
+
+        public String getToken() {
+            return token;
+        }
+
+        public void setToken(String token) {
+            this.token = token;
+        }
+    }
 }
