@@ -93,7 +93,7 @@ public class LoginController {
 	        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
 	                GoogleNetHttpTransport.newTrustedTransport(),
 	                JacksonFactory.getDefaultInstance()
-	        ).setAudience(Collections.singletonList("565507201095-j4t6d076snim2vggb855s8ld2ks7ts1d.apps.googleusercontent.com")).build();
+	        ).setAudience(Collections.singletonList("client.registration.google.client-id")).build();
 
 	        GoogleIdToken idToken = verifier.verify(token);
 	        if (idToken != null) {

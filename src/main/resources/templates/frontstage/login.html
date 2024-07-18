@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EZBAN 會員登入</title>
     <!-- Google Sign-In meta tag -->
-    <meta name="google-signin-client_id" content="565507201095-j4t6d076snim2vggb855s8ld2ks7ts1d.apps.googleusercontent.com">
+    <meta name="google-signin-client_id" content="client.registration.google.client-id">
     <!-- Google Sign-In script -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
@@ -129,7 +129,7 @@
                     <input type="password" id="memberPwd" name="password" class="login-input"
                            placeholder="請輸入會員密碼" required>
                 </div>
-                <div class="g-recaptcha" data-sitekey="6Ld4ngwqAAAAAKOHrxjh-B-wZJKBFrb9xeMPVvCc"></div>
+                <div class="g-recaptcha" data-sitekey="g-recaptcha data-sitekey"></div>
                 <div class="button-container">
                     <button type="submit" class="login-btn">Login</button>
                     <!-- Google Sign-In button container -->
@@ -146,7 +146,7 @@
     <script>
         window.onload = function() {
             google.accounts.id.initialize({
-                client_id: '565507201095-j4t6d076snim2vggb855s8ld2ks7ts1d.apps.googleusercontent.com',
+                client_id: 'client.registration.google.client-id',
                 callback: handleCredentialResponse
             });
             google.accounts.id.renderButton(
