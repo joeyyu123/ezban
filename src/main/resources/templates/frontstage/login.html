@@ -1,9 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EZBAN會員登入</title>
+    <title>EZBAN 會員登入</title>
+    <!-- Google Sign-In meta tag -->
+    <meta name="google-signin-client_id" content="565507201095-j4t6d076snim2vggb855s8ld2ks7ts1d.apps.googleusercontent.com">
+    <!-- Google Sign-In script -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         /* General styles */
         body, html {
@@ -110,75 +114,79 @@
             text-decoration: underline;
         }
     </style>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script>
-        function handleCredentialResponse(response) {
-            console.log("Encoded JWT ID token: " + response.credential);
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "/googleLogin");
-            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    window.location.href = "/";
-                } else {
-                    document.getElementById("warningMsg").textContent = "Google 登入失敗";
-                }
-            };
-            xhr.send(JSON.stringify({ token: response.credential }));
-        }
+</head>
+<body>
+    <div class="container">
+        <h2 class="title">EZBAN</h2>
+        <div class="login-form">
+            <h3 class="form-title">會員登入</h3>
+            <form id="loginForm" action="/login" method="post" onsubmit="return validateRecaptcha()">
+                <div class="form-group">
+                    <input type="email" id="memberMail" name="username" class="login-input"
+                           placeholder="請輸入會員帳號" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="memberPwd" name="password" class="login-input"
+                           placeholder="請輸入會員密碼" required>
+                </div>
+                <div class="g-recaptcha" data-sitekey="6Ld4ngwqAAAAAKOHrxjh-B-wZJKBFrb9xeMPVvCc"></div>
+                <div class="button-container">
+                    <button type="submit" class="login-btn">Login</button>
+                    <!-- Google Sign-In button container -->
+                    <div id="googleSignInDiv" style="flex: 1;"></div>
+                </div>
+            </form>
+            <div class="warning" id="warningMsg" th:if="${param.error}">帳號或密碼錯誤</div>
+            <a href="forgotPassword" id="forgotPassword">忘記密碼？</a>
+            <a href="registerPage" id="register">新會員註冊</a>
+        </div>
+    </div>
 
-        window.onload = function () {
+    <!-- Google Sign-In script initialization -->
+    <script>
+        window.onload = function() {
             google.accounts.id.initialize({
                 client_id: '565507201095-j4t6d076snim2vggb855s8ld2ks7ts1d.apps.googleusercontent.com',
                 callback: handleCredentialResponse
             });
             google.accounts.id.renderButton(
-                document.getElementById("googleSignInDiv"),
-                { theme: "outline", size: "large" }
+                document.getElementById('googleSignInDiv'),
+                { theme: 'outline', size: 'large' }  // customization attributes
             );
-            google.accounts.id.prompt();
+        };
+
+        function handleCredentialResponse(response) {
+            console.log("Encoded JWT ID token: " + response.credential);
+            // Use the ID token for authentication on the server
+            fetch('/googleLogin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ token: response.credential })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/';
+                } else {
+                    document.getElementById('warningMsg').innerText = 'Google 登入失敗';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('warningMsg').innerText = 'Google 登入失敗';
+            });
+        }
+
+        function validateRecaptcha() {
+            const response = grecaptcha.getResponse();
+            if (response.length === 0) {
+                alert("Please complete the reCAPTCHA.");
+                return false;
+            }
+            return true;
         }
     </script>
-</head>
-<body>
-
-<div class="container">
-    <h2 class="title">EZBAN</h2>
-    <div class="login-form">
-        <h3 class="form-title">會員登入</h3>
-        <form id="loginForm" action="/login" method="post" onsubmit="return validateRecaptcha()">
-            <div class="form-group">
-                <input type="email" id="memberMail" name="username" class="login-input"
-                       placeholder="請輸入會員帳號" required>
-            </div>
-            <div class="form-group">
-                <input type="password" id="memberPwd" name="password" class="login-input"
-                       placeholder="請輸入會員密碼" required>
-            </div>
-            <div class="g-recaptcha" data-sitekey="6Ld4ngwqAAAAAKOHrxjh-B-wZJKBFrb9xeMPVvCc"></div>
-            <div class="button-container">
-                <button type="submit" class="login-btn">Login</button>
-                <div id="googleSignInDiv" style="flex: 1;"></div>
-            </div>
-        </form>
-        <div class="warning" id="warningMsg" th:if="${param.error}">帳號或密碼錯誤</div>
-        <a href="forgotPassword" id="forgotPassword">忘記密碼？</a>
-        <a href="registerPage" id="register">新會員註冊</a>
-    </div>
-</div>
-
-<script>
-function validateRecaptcha() {
-    var response = grecaptcha.getResponse();
-    if (response.length === 0) {
-        document.getElementById("warningMsg").textContent = "請完成reCAPTCHA驗證";
-        return false;
-    }
-    document.getElementById("recaptchaResponse").value = response;
-    return true;
-}
-</script>
-
 </body>
 </html>
